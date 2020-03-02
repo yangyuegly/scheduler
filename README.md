@@ -35,6 +35,8 @@ An app to help students off meal plan with food situation.
   - community feature for students in different dorms
   - a more efficient meal credit sharing algorithm
   - splitting delivery fee
+- Most challenging:
+  - organizing different features and provide a user interface that's not clustered.
 
 ### Idea 2
 

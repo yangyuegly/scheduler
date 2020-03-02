@@ -5,20 +5,23 @@
 **Team Strengths and Weaknesses:**
 
 - Jane Yang
-  Strength: Back-end, database, systems
-  Weakness: front-end design
+
+  - Strength: Back-end, database, systems
+  - Weakness: front-end design
 
 - Rachel
-  strengths: time management, sticking to a plan, algorithms, testing sufficiently, working on the weekends, waking up early to go to unpopular TA hours times, asking for help
-  weaknesses: getting stressed without a specific plan, getting overwhelmed by details, I’m confused by object oriented programming, getting too frustrated and leaving instead of continuing to work on a problem, html and css
+
+  - strengths: time management, sticking to a plan, algorithms, testing sufficiently, working on the weekends, waking up early to go to unpopular TA hours times, asking for help
+  - weaknesses: getting stressed without a specific plan, getting overwhelmed by details, I’m confused by object oriented programming, getting too frustrated and leaving instead of continuing to work on a problem, html and css
 
 - Shenandoah
-  Strengths: determination; time management; know when to call a break; starting projects early; I’m good at functional programming and testing.
-  Weakness: I’m a bit slow in grasping concepts. I need to take my time to understand the different requirements and concepts taught in class.I sometimes can’t focus if I’m thinking about something and I let it interrupt my schedule but I’m improving now and it’s been getting much better. In terms of code, I’m not good at front-end design.
+
+  - Strengths: determination; time management; know when to call a break; starting projects early; I’m good at functional programming and testing.
+  - Weakness: I’m a bit slow in grasping concepts. I need to take my time to understand the different requirements and concepts taught in class.I sometimes can’t focus if I’m thinking about something and I let it interrupt my schedule but I’m improving now and it’s been getting much better. In terms of code, I’m not good at front-end design.
 
 - Abby
-  Strengths: attention to details, organization, willing to take the time to thoroughly understand topics
-  Weaknesses: easily stressed, art-related activities, speed of decision making, focus on details too much before determining the general outline
+  - Strengths: attention to details, organization, willing to take the time to thoroughly understand topics
+  - Weaknesses: easily stressed, art-related activities, speed of decision making, focus on details too much before determining the general outline
 
 **Project Idea(s):** _Fill this in with three unique ideas! (Due by March 2)_
 
@@ -28,9 +31,10 @@ An app to help students off meal plan with food situation.
 
 - Problem: both students off meal plan and the environment can benefit from shared resources.
 - Our app would have the following features to address the problem:
-  - sharing utensils/ ingredients/condiments
-  - verifying students in different dorms
-  - food
+  - a platform for students to share utensils/ ingredients/condiments
+  - community feature for students in different dorms
+  - a more efficient meal credit sharing algorithm
+  - splitting delivery fee
 
 ### Idea 2
 

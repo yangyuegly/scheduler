@@ -36,6 +36,8 @@ A webapp to help students off meal plan with cooking and finding food:
 - Most challenging:
   - organizing different features and providing a user interface that's not clustered.
   - determining how convenient it is for a user to meet another user in order to borrow something
+  
+Rejected - This is a typical "task" app and it does not provide interesting design decisions
 
 ### Idea 2
 
@@ -50,6 +52,8 @@ A webapp that does exam scheduling for different courses in different universiti
 - Most challenging:
   - the algorithm to minimize conflicts because the dataset will be large since it will have all the students and courses at Brown
   - allow flexibility for the user to specify other concerns 
+  
+Approved - Lots of time should be spent on accumulating data and the algorithm itself, likely dynamic programming
 
 ### Idea 3
 
@@ -66,6 +70,10 @@ An automatic course plan planner:
   - on the front end: displaying the courses on the schedule in a dynamic way (allow users to click on courses they want to display or hide, color-coding different courses/possible schedules, displaying multiple courses in the same time)
   - using a map algorithm to determine if the distance between course locations is too far to go 
   - pulling the data on the workload of a course from the Critical Review, which is a website online
+  
+Approved - how courses are clustered show be the main focus. There should be differentiation from Maps if distance between classes is taken into account 
+
+Note: You do not need to resubmit your final project ideas.
 
 **Mentor TA:** _Put your mentor TA's name and email here once you're assigned one!_
 

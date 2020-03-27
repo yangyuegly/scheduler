@@ -23,18 +23,37 @@ import java.util.HashSet;
 public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V, E>> {
   // edge table keeps track of weights
   private Database db;
-  private HashSet<E> graph;
+  private int[][] weightMatrix;
+  private int numColor; //the max num of color a user can take in
+  private int numVertices;
+  private int ts; //time slots 
+  private int cl; //concurrency level 
+  private HashMap<Integer, Integer> degree;
+  private int[][] colors; //double indexed color
+                            //first param: 
 
   /**
    * Constructor for the graph. It takes in a datastore and instantiates a hashset that
    * represents a graph.
    * @param db a datastore
    */
-  public UndirectedWeightedGraph(Database db) {
+  public UndirectedWeightedGraph(Database db, int numVertices) {
     // two nodes may be connected iff 1) they were in the same movie 2) they share
     // initial
-    this.graph = new HashSet<E>();
+    this.numVertices = numVertices;
+    this.weightMatrix = new int[numVertices][numVertices];
+    //wij denotes the number of students in both i and j
+        //k is the range of J given by the user
     this.db = db;
+    this.degree = new HashMap<>();
+    
+  }
+
+  /**
+   * Add all edges to the graph
+   * @param edges
+   */
+  public void addAllEdges(HashSet<E> edges) {
 
   }
 
@@ -49,6 +68,9 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
   }
 
  
+  public void graphColoring(int ts, int cl) {
+
+  }
 }
 
 

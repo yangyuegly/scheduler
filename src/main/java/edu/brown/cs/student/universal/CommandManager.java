@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
  * This class is used to create a Read-Evaluate-Print Loop.
  *
  */
-public class Repl {
+public class CommandManager {
 
   /**
    * This is a field for this class.
@@ -31,7 +31,7 @@ public class Repl {
    *   represent the keywords for certain commands, and the ICommands
    *   represent the commands that can be put into this Repl
    */
-  public Repl(Map<String, ICommand> instructions) {
+  public CommandManager(Map<String, ICommand> instructions) {
     possibleCommands = instructions;
   }
 
@@ -39,7 +39,7 @@ public class Repl {
    * This method runs the read-eval-print-loop, prompting the user,
    *   evaluating their commands, and printing responses.
    */
-  public void runRepl() {
+  public void run() {
     String input = "";
     BufferedReader reader = new BufferedReader(
         new InputStreamReader(System.in));

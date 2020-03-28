@@ -39,7 +39,7 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
    */
   public UndirectedWeightedGraph(Database db, int numVertices) {
     // two nodes may be connected iff 1) they were in the same movie 2) they share
-    // initial
+    // initial 
     this.numVertices = numVertices;
     this.weightMatrix = new int[numVertices][numVertices];
     //wij denotes the number of students in both i and j
@@ -54,7 +54,9 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
    * @param edges
    */
   public void addAllEdges(HashSet<E> edges) {
-
+    for (E e : edges) {
+      weightMatrix[e.getHead().getID()][e.getTail().getID()] = e.getWeight();
+    }
   }
 
   /**

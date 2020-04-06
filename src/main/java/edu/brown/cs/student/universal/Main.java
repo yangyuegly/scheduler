@@ -26,7 +26,7 @@ public final class Main {
    * The following are fields for this class.
    *
    * DEFAULT_PORT - an int, which represents the default port of this program
-   * 
+   *
    */
   private static final int DEFAULT_PORT = 4567;
   // field for each command
@@ -59,7 +59,7 @@ public final class Main {
 
     Map<String, ICommand> commands = new HashMap<>();
     // add commmand objects to commands Map
-    
+
     CommandManager manager = new CommandManager(commands);
 
     if (options.has("gui")) {

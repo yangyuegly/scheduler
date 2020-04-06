@@ -30,7 +30,7 @@ public interface IVertex<V, E> {
    * Sets the cost of getting to the vertex.
    * @param cost the cost that we want to set the vertex to
    */
-  void setCost(Double cost);
+  void setCost(int cost);
 
   /**
    * Sets the used boolean to b.
@@ -58,8 +58,8 @@ public interface IVertex<V, E> {
 
   /**
    * Gets the id of the vertex.
-   * @return the id of the vertex as a string
+   * @return the id of the vertex as a integer
    */
-  String getID();
+  Integer getID();
 }
 

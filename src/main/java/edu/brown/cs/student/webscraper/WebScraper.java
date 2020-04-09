@@ -66,6 +66,7 @@ public class WebScraper{
 
   private void addConflicts() {
     Set<String> keys = deptToCourses.keySet();
+    int count = 0;
     for(String k: keys) {
       List<String> courses = deptToCourses.get(k);
 
@@ -74,7 +75,7 @@ public class WebScraper{
 
       for(int i = 1; i < courses.size(); i++) {
         //make a new edge from courses.get(0) and courses.get(i)
-        org.bson.Document doc = new org.bson.Document("class", courses.get(0))
+        org.bson.Document doc = new org.bson.Document("id", count).append("class", courses.get(0))
             .append("conflict", courses.get(i));
         conflict.put(courses.get(0), courses.get(i));
         if(!(conflict.get(courses.get(i)) != null &&
@@ -82,6 +83,7 @@ public class WebScraper{
             conflict.get(courses.get(0))!= null &&
             conflict.get(courses.get(0)).equals(courses.get(i)))) {
           collection.insertOne(doc);
+          count++;
         }
       }
 

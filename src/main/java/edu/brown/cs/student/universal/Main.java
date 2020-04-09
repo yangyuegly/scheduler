@@ -7,6 +7,10 @@ import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.mongodb.MongoClient;
+import com.mongodb.MongoCredential;
+import com.mongodb.client.MongoDatabase;
+
 import freemarker.template.Configuration;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
@@ -29,6 +33,15 @@ public final class Main {
    *
    */
   private static final int DEFAULT_PORT = 4567;
+
+  private MongoClient mongo = new MongoClient("localhost", 27017);
+
+  // Creating Credentials
+  private MongoCredential credential;
+
+
+  //Accessing the database
+  static MongoDatabase database;
   // field for each command
 
   /**
@@ -46,6 +59,10 @@ public final class Main {
     this.args = args;
   }
 
+  public static MongoDatabase getDatabase() {
+    return Main.database;
+  }
+
   private void run() {
     // Parse command line arguments
     OptionParser parser = new OptionParser();
@@ -53,6 +70,10 @@ public final class Main {
     parser.accepts("port").withRequiredArg().ofType(Integer.class)
     .defaultsTo(DEFAULT_PORT);
     OptionSet options = parser.parse(args);
+
+    credential = MongoCredential.createCredential("sampleUser", "myDb",
+        "password".toCharArray());
+    database = mongo.getDatabase("myDb");
 
     // create new objects to assist with running the program
     // initialize commands

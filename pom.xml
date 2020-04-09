@@ -30,6 +30,12 @@
       <version>6.0-alpha-3</version>
     </dependency>
 
+    <dependency>
+    <groupId>org.mongodb</groupId>
+    <artifactId>mongo-java-driver</artifactId>
+    <version>3.4.2</version>
+  </dependency>
+
     <!--
         junit is a testing framework.
         http://junit.org/junit4/.

@@ -12,10 +12,15 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import com.mongodb.client.MongoCollection;
+
+import edu.brown.cs.student.universal.Main;
+
 public class WebScraper{
 
   private String collegeName = "";
   private Map<String, List<String>> deptToCourses = new HashMap<>();
+  private Map<String, String> conflict = new HashMap<>();
 
   public void setCollege(String collegeName) {
     this.collegeName = collegeName;
@@ -63,11 +68,23 @@ public class WebScraper{
     Set<String> keys = deptToCourses.keySet();
     for(String k: keys) {
       List<String> courses = deptToCourses.get(k);
-      //make a set of IEdges
+
+      Main.getDatabase().createCollection("conflicts");
+      MongoCollection<org.bson.Document> collection = Main.getDatabase().getCollection("conflicts");
+
       for(int i = 1; i < courses.size(); i++) {
         //make a new edge from courses.get(0) and courses.get(i)
-        //add to the set above
+        org.bson.Document doc = new org.bson.Document("class", courses.get(0))
+            .append("conflict", courses.get(i));
+        conflict.put(courses.get(0), courses.get(i));
+        if(!(conflict.get(courses.get(i)) != null &&
+            conflict.get(courses.get(i)).equals(courses.get(0)) &&
+            conflict.get(courses.get(0))!= null &&
+            conflict.get(courses.get(0)).equals(courses.get(i)))) {
+          collection.insertOne(doc);
+        }
       }
+
     }
   }
 

@@ -8,6 +8,8 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import org.eclipse.jetty.http.PathMap.MappedEntry;
+
 import edu.brown.cs.student.database.Database;
 
 import java.util.ArrayList;
@@ -29,35 +31,55 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
   private int[][] weightMatrix;
   private int numColor; //the max num of color a user can take in
   private int numVertices;//the number of mini-events
-  private int ts; //time slots 
-  private HashMap<Integer, Integer> degree;
-  private int[][] colors; //double indexed color
-                          //first param: day of the exam (to be minimized)
-                          //second param: time slots (provided by registrar)
+  private int TS; //time slots 
+  private final int CONCURENCY_LIMIT; 
+  private SortedSet<Map.Entry<Integer, Integer>> degree;
+  private Map<Integer, ArrayList<Integer>> result;
+  private ArrayList<Integer[]> colors = new ArrayList<Integer[]>(); //double indexed color
+                        //the length of array: time slots (provided by registrar)
+                      //arrayList index: day of the exam (to be minimized)
+                      //value: current concurrency limit
   private int k; //the range of num of time slots, concurency level
-
+  private final int MAX_SCHEDULE_DAYS;
 
   /**
    * Constructor for the graph. It takes in a datastore and instantiates a hashset that
    * represents a graph.
    * @param db a datastore
    */
-  public UndirectedWeightedGraph(Database db, int numVertices) {
+  public UndirectedWeightedGraph(Database db, int numVertices, int CONCURENCY_LIMIT, int MAX_SCHEDULE_DAYS) {
     // two nodes may be connected iff 1) they were in the same movie 2) they share
     // initial 
     this.numVertices = numVertices;
 
+    this.CONCURENCY_LIMIT = CONCURENCY_LIMIT;
+    this.result = new HashMap<>();
+    this.MAX_SCHEDULE_DAYS = MAX_SCHEDULE_DAYS;
     //initialize graph
     this.weightMatrix = new int[numVertices][numVertices];
     for (int i = 0; i < numVertices; i++) {
       for (int j = 0; j < numVertices; j++) {
-        this.weightMatrix[i][j] = 0; 
+        this.weightMatrix[i][j] = 0;
       }
     }
+
+    for (int j = 0; j < MAX_SCHEDULE_DAYS; j++) {
+      //initializing the color array
+      Integer[] ts = new Integer[TS];
+      for (int i = 0; i < TS; i++) {
+        ts[i] = CONCURENCY_LIMIT;
+      }
+      colors.add(ts);
+    }
+
+
+    
+  
     //wij denotes the number of students in both i and j
     //k is the range of J given by the user
     this.db = db;
-    this.degree = new HashMap<>();
+    this.degree = new TreeSet<Map.Entry<Integer, Integer>>();
+    this.result = new HashMap<Integer, ArrayList<Integer>>();
   }
 
   /**
@@ -96,7 +118,42 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
   }
 
   public void graphColoring(int ts, int cl) {
+    int numColoredCourses = 0;
+    while (numColoredCourses < numVertices) {
+      //for the first course
+      if (numColoredCourses == 0) {
+        ArrayList<Integer> indices = getFirstNodeColor();
+        result.put(0,indices);
+      } else {
+        
+      }
+    }
+  }
 
+
+  /**
+   * Return an arraylist of two integers representing color
+   * 0: the day
+   * 1: the time slot
+   * @param courseID - the course to be colored
+   * @return the color assigned or null
+   */
+  public ArrayList<Integer> getFirstNodeColor() {
+    ArrayList<Integer> result = new ArrayList<Integer>();
+    for (int i = 0; i < MAX_SCHEDULE_DAYS; i++) {
+      for (int j = 0; j < TS; j++) {
+        if (colors.get(i)[j] > 0) {
+          colors.get(i)[j]--;
+          result.add(i);
+          result.add(j);
+          break; 
+        }
+      }
+    }
+    if (result.size() == 0) 
+      throw new NullPointerException("Unable to find first color");
+  
+    return result;
   }
 
   /**
@@ -112,19 +169,14 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
     return (i - 1) * k + j;
   }
 
-  public UndirectedWeightedGraph() {
+
+
+  public ArrayList<Integer> getSmallestAvailableColor(int courseID) {
+    List<Integer> AdjList = new ArrayList<>();
+
+    
   }
 
-  public UndirectedWeightedGraph(Database db, int[][] weightMatrix, int numColor, int numVertices, int ts, HashMap<Integer,Integer> degree, int[][] colors, int k) {
-    this.db = db;
-    this.weightMatrix = weightMatrix;
-    this.numColor = numColor;
-    this.numVertices = numVertices;
-    this.ts = ts;
-    this.degree = degree;
-    this.colors = colors;
-    this.k = k;
-  }
 
   public Database getDb() {
     return this.db;
@@ -158,35 +210,20 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
     this.numVertices = numVertices;
   }
 
-  public int getTs() {
-    return this.ts;
-  }
-
-  public void setTs(int ts) {
-    this.ts = ts;
-  }
-
-  public HashMap<Integer,Integer> getDegree() {
-    return this.degree;
-  }
+ 
 
   /**
    * calculate all nodes' degrees
    */
   public void setDegree() {
+    HashMap<Integer, Integer> idToDegree = new HashMap<Integer, Integer>();
+
     for (int i = 0; i < numVertices; i++) {
-      degree.put(i, findDegrees(i));
+      idToDegree.put(i, findDegrees(i));
     }
-    entriesSortedByValues(degree);
+    degree = entriesSortedByValues(idToDegree);
   }
 
-  public int[][] getColors() {
-    return this.colors;
-  }
-
-  public void setColors(int[][] colors) {
-    this.colors = colors;
-  }
 
   public int getK() {
     return this.k;
@@ -241,7 +278,7 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
       ", numColor='" + getNumColor() + "'" +
       ", numVertices='" + getNumVertices() + "'" +
       ", ts='" + getTs() + "'" +
-      ", degree='" + getDegree() + "'" +
+      ", degree='" + "'" +
       ", colors='" + getColors() + "'" +
       ", k='" + getK() + "'" +
       "}";

@@ -32,6 +32,9 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
   private int numColor; //the max num of color a user can take in
   private int numVertices;//the number of mini-events
   private int TS; //time slots 
+  private int exameBreak = 0; 
+
+
   private final int CONCURENCY_LIMIT; 
   private SortedSet<Map.Entry<Integer, Integer>> degree;
   private Map<Integer, ArrayList<Integer>> result;
@@ -107,15 +110,7 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
     return d; 
   }
   
-  /**
-   * Get edges between two nodes.
-   *
-   * @param a the vertex that you want to get the edges for
-   * @return a list of incident edges
-   */
-  public Set<E> getAllEdges(V a) {
-    return a.getIncidentEdges();
-  }
+
 
   public void graphColoring(int ts, int cl) {
     int numColoredCourses = 0;
@@ -146,14 +141,30 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
           colors.get(i)[j]--;
           result.add(i);
           result.add(j);
-          break; 
+          break;
         }
       }
     }
-    if (result.size() == 0) 
+    if (result.size() == 0)
       throw new NullPointerException("Unable to find first color");
-  
+
     return result;
+  }
+
+  /**
+   * Get the adjacency list of the courses
+   * @param courseID
+   * @return
+   */
+  public List<Integer> getAdjList(Integer courseID) {
+    List<Integer> result = new ArrayList<Integer>();
+  
+    for (int i = 0; i < numVertices; i++) {
+      if (weightMatrix[courseID][i] != 0) {
+        result.add(weightMatrix[courseID][i]);
+      }
+    }
+    return result; 
   }
 
   /**
@@ -170,14 +181,59 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
   }
 
 
-
   public ArrayList<Integer> getSmallestAvailableColor(int courseID) {
-    List<Integer> AdjList = new ArrayList<>();
+    
+    boolean valid = false; 
+    List<Integer> adj = getAdjList(courseID);
+    for (int i = 0; i < numVertices; i++) {
+      for (int j = 0; j < TS; j++) {
+        List<Integer> currColor = new ArrayList<>(List.of(i,j));
+        valid = true;
+        for (int r = 0; r < adj.size(); r++) {
+          //get the color of the adjacent node
+          List<Integer> color = (result.get(adj.get(r)));
+          if (color != null) {
+            //check if that color is the same as the current
+            if (color.get(0) != i || color.get(1) != j) {
+              if (calculateExternalDistance(color, currColor) == 0) {
+                // if we don't want back-to-back exams
+                if (calculateInternalDistance(color, currColor) <= this.exameBreak) {
+                  
+                }
+              }
+            }
+          }
+        }
+      }
+    }
 
     
   }
 
+/**
+ * Calculate the internal distance between the color
+ * i.e. how many time slots apart 
+ * @param a
+ * @param b
+ * @return
+ */
+public Integer calculateInternalDistance(List<Integer> a, List<Integer> b) {
+  assert (a.size() == 2 && b.size() == 2);
+  return (Math.abs(a.get(1) - b.get(1)));
+}
+  
 
+/**
+ * Calculate the external distance between the color
+ * i.e. how many time days apart 
+ * @param a
+ * @param b
+ * @return
+ */
+public Integer calculateExternalDistance(List<Integer> a, List<Integer> b) {
+  assert  (a.size()  == 2 && b.size() == 2);
+  return (Math.abs(a.get(0) - b.get(0))); 
+}
   public Database getDb() {
     return this.db;
   }
@@ -229,6 +285,51 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
     return this.k;
   }
 
+  public int getTS() {
+    return this.TS;
+  }
+
+  public void setTS(int TS) {
+    this.TS = TS;
+  }
+
+  public int getExameBreak() {
+    return this.exameBreak;
+  }
+
+  public void setExameBreak(int exameBreak) {
+    this.exameBreak = exameBreak;
+  }
+
+  public int getCONCURENCY_LIMIT() {
+    return this.CONCURENCY_LIMIT;
+  }
+
+
+  public SortedSet<Map.Entry<Integer,Integer>> getDegree() {
+    return this.degree;
+  }
+
+
+  public Map<Integer,ArrayList<Integer>> getResult() {
+    return this.result;
+  }
+
+  public void setResult(Map<Integer,ArrayList<Integer>> result) {
+    this.result = result;
+  }
+
+  public ArrayList<Integer[]> getColors() {
+    return this.colors;
+  }
+
+  public void setColors(ArrayList<Integer[]> colors) {
+    this.colors = colors;
+  }
+
+  public int getMAX_SCHEDULE_DAYS() {
+    return this.MAX_SCHEDULE_DAYS;
+  }
   public void setK(int k) {
     this.k = k;
   }

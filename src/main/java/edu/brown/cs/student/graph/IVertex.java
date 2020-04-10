@@ -8,17 +8,7 @@ import java.util.Set;
  */
 public interface IVertex<V, E> {
 
-  /**
-   * gets the incident edges of the vertex.
-   * @return a set of incident edges
-   */
-  Set<E> getIncidentEdges();
 
-  /**
-   * adds incident edges to a given vertex.
-   * @param list list of edges to add to the incident edges
-   */
-  void addIncidentEdges(Set<E> list);
 
   /**
    * Gets the cost of the getting to the vertex.

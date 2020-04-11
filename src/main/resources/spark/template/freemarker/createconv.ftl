@@ -8,8 +8,8 @@
   <p>
   <h3>Log in:</h3>
   <form method="POST" action="/login">
-    <label for="email">Email: </label><br>
-     <input name="email" id="email" size="30" required></input><br><br>
+    <label for="event_name">Add an event: </label><br>
+     <input name="name" id="email" size="30" required></input><br><br>
      <label for="password">Password: </label><br>
      <input name="password" id="password" type="password" size="30" required></input>
      <br>${message}

@@ -5,24 +5,38 @@ import java.util.List;
 import edu.brown.cs.student.graph.IVertex;
 
 public class Event implements IVertex<Event> {
-
+  Integer id;
+  List<Event> adjList;
+  Integer degree; //?
+  
+  /**
+   * Constructor for the Event class.
+   * @param myID
+   */
+  public Event(Integer myID) {
+    this.id = myID;
+  }
+  
+  
+  
   @Override
   public Integer getID() {
-    // TODO Auto-generated method stub
-    return null;
+    return id;
   }
 
   @Override
   public List<Event> getAdjList() {
-    // TODO Auto-generated method stub
-    return null;
+    return adjList;
   }
 
   @Override
   public Integer getDegree() {
-    // TODO Auto-generated method stub
-    return null;
+    return degree;
   }
+  
+ 
+  
+  
 
 }
 

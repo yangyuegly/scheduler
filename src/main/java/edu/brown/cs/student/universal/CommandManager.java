@@ -64,7 +64,7 @@ public class CommandManager {
             comm.execute(trimmedInput);
           }
         } else {
-          System.exit(0);
+          return;
         }
 
       } catch (IOException excep) {

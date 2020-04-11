@@ -25,7 +25,7 @@ import java.util.HashSet;
  * @param <V> an object that implements Vertex
  * @param <E> an object that implements Edge
  */
-public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V, E>> {
+public class UndirectedWeightedGraph<V extends IVertex<V>, E extends IEdge<V>> {
   // edge table keeps track of weights
   private Database db;
   private int[][] weightMatrix;
@@ -44,6 +44,7 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
                       //value: current concurrency limit
   private int k; //the range of num of time slots, concurency level
   private final int MAX_SCHEDULE_DAYS;
+  private SortedSet nodesByDegrees;
 
   /**
    * Constructor for the graph. It takes in a datastore and instantiates a hashset that
@@ -118,9 +119,9 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
       //for the first course
       if (numColoredCourses == 0) {
         ArrayList<Integer> indices = getFirstNodeColor();
-        result.put(0,indices);
+        result.put(sortedEntries.get(0),indices);
       } else {
-        
+        ArrayList<Integer> indices = getSmallestAvailableColor();
       }
     }
   }
@@ -181,13 +182,18 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
   }
 
 
-  public ArrayList<Integer> getSmallestAvailableColor(int courseID) {
-    
-    boolean valid = false; 
+  /**
+   * Get the smallest available color
+   * @param courseID
+   * @return
+   */
+  public List<Integer> getSmallestAvailableColor(int courseID) {
+
+    boolean valid = false;
     List<Integer> adj = getAdjList(courseID);
     for (int i = 0; i < numVertices; i++) {
       for (int j = 0; j < TS; j++) {
-        List<Integer> currColor = new ArrayList<>(List.of(i,j));
+        List<Integer> currColor = new ArrayList<>(List.of(i, j));
         valid = true;
         for (int r = 0; r < adj.size(); r++) {
           //get the color of the adjacent node
@@ -198,18 +204,22 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
               if (calculateExternalDistance(color, currColor) == 0) {
                 // if we don't want back-to-back exams
                 if (calculateInternalDistance(color, currColor) <= this.exameBreak) {
-                  
+                  valid = false;
                 }
+              }
+              //if the color has been used up to its cl
+              else if (colors.get(i)[j] <= 0) {
+                valid = false;
               }
             }
           }
         }
+        if (valid) return currColor;
       }
     }
-
-    
+    return null; 
   }
-
+  
 /**
  * Calculate the internal distance between the color
  * i.e. how many time slots apart 
@@ -347,6 +357,9 @@ public Integer calculateExternalDistance(List<Integer> a, List<Integer> b) {
           @Override
           public int compare(Map.Entry<K, V> e1, Map.Entry<K, V> e2) {
             int res = e1.getValue().compareTo(e2.getValue());
+                if (res == 0) {
+                      int res = e1.getValue().getDegree();
+            }
             return res != 0 ? res : 1;
           }
         });
@@ -378,7 +391,7 @@ public Integer calculateExternalDistance(List<Integer> a, List<Integer> b) {
       ", weightMatrix='" + getWeightMatrix() + "'" +
       ", numColor='" + getNumColor() + "'" +
       ", numVertices='" + getNumVertices() + "'" +
-      ", ts='" + getTs() + "'" +
+      ", ts='" + "'" +
       ", degree='" + "'" +
       ", colors='" + getColors() + "'" +
       ", k='" + getK() + "'" +

@@ -23,7 +23,8 @@ public class LoginHandler implements TemplateViewRoute  {
     QueryParamsMap queryMap = req.queryMap();
     String email = queryMap.value("email");
     String password = queryMap.value("password");
-    // User currUser = AuthenticationDatabase.checkLogin(email, password);
+//     User currUser = AuthenticationDatabase.checkLogin(email, password);
+    
     
 //    if (currUser == null) {
 //      // invalid login

@@ -7,5 +7,6 @@
   </head>
   <body>
      ${content}
+     <script src="js/add_conv_name.js"></script>
   </body>
 </html>

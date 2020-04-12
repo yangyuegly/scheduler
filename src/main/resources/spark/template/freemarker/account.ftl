@@ -10,8 +10,7 @@
   ${eventLinks}
   <br>
   <br>
-  <a href=/create_convention>Create a new convention manually</a>
-  <a href=/upload_convention>Create a new convention by uploading a file</a>
+  <a href="/create_convention">Create a new convention</a>
 </div>
 
 </#assign>

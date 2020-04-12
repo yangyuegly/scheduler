@@ -11,7 +11,7 @@ import com.mongodb.MongoClient;
 import com.mongodb.MongoCredential;
 import com.mongodb.client.MongoDatabase;
 
-import edu.brown.cs.student.gui.CreateConventionHandler;
+import edu.brown.cs.student.gui.AddEventHandler;
 import edu.brown.cs.student.gui.HomeHandler;
 import edu.brown.cs.student.gui.LoginHandler;
 import edu.brown.cs.student.gui.UploadHandler;
@@ -120,8 +120,9 @@ public final class Main {
     // handlers and such
     Spark.get("/home", new HomeHandler(), freeMarker);
     Spark.post("/login", new LoginHandler(), freeMarker);
+    Spark.post("/add_event", new AddEventHandler(), freeMarker);
    // Spark.get("/create_account", route);
-    Spark.get("/create_convention", new CreateConventionHandler(), freeMarker);
+    // Spark.get("/create_convention", new CreateConventionHandler(), freeMarker);
    //  Spark.get("/upload_convention", new UploadHandler(), freeMarker);
     
   }

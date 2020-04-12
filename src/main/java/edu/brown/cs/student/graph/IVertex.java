@@ -15,7 +15,8 @@ public interface IVertex<V> {
    */
   Integer getID();
 
-  List<V> getAdjList();
+  List<V> getAdjList(); //should the return edges?
+  
   
   Integer getDegree();
 }

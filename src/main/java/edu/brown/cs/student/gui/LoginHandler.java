@@ -26,17 +26,18 @@ public class LoginHandler implements TemplateViewRoute  {
     QueryParamsMap queryMap = req.queryMap();
     String email = queryMap.value("email");
     String password = queryMap.value("password");
-//TODO: handle userAuthenticationException
-
+//    User currUser = Database.checkLogin(email, password);
+//    
+//    
 //    if (currUser == null) {
 //      // invalid login
 //      Map<String, Object> variables = ImmutableMap.of("title",
 //          "Scheduler", "message", "Incorrect username or password.  Try again.");
 //      return new ModelAndView(variables, "home.ftl");
 //    }
-    
+//    
 //    List<Convention> conventions = currUser.getConventions();
-
+//
 //    if (conventions == null) {
 //      Map<String, Object> variables = ImmutableMap.of("title",
 //          "Scheduler", "eventLinks", "");

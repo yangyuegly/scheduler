@@ -3,6 +3,7 @@ package edu.brown.cs.student.accounts;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.brown.cs.student.database.Database;
 import edu.brown.cs.student.scheduler.Convention;
 
 /**
@@ -35,8 +36,8 @@ public class User {
    * @return a List of conventions, which represents the conventions that
    *   this user is managing
    */
-  public List<Convention> getConventions() {
-    // return Database.getConventions(email); // ?
+  public List<String[]> getConventions() {
+    //return Database.getConventionsNamesIds(email); 
 
 
     return new ArrayList<>();

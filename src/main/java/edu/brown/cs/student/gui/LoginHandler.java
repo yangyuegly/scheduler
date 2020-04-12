@@ -4,14 +4,17 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.common.collect.ImmutableMap;
+import com.mongodb.client.MongoCollection;
 
 import edu.brown.cs.student.scheduler.Convention;
+import edu.brown.cs.student.universal.Main;
 import spark.ModelAndView;
 import spark.QueryParamsMap;
 import spark.Request;
 import spark.Response;
 import spark.TemplateViewRoute;
-
+import java.util.ArrayList;
+import java.util.List;
 /**
  * This class is used to handle requests to log in.  It implements
  *   TemplateViewRoute.
@@ -23,8 +26,8 @@ public class LoginHandler implements TemplateViewRoute  {
     QueryParamsMap queryMap = req.queryMap();
     String email = queryMap.value("email");
     String password = queryMap.value("password");
-    // User currUser = AuthenticationDatabase.checkLogin(email, password);
-    
+//TODO: handle userAuthenticationException
+
 //    if (currUser == null) {
 //      // invalid login
 //      Map<String, Object> variables = ImmutableMap.of("title",

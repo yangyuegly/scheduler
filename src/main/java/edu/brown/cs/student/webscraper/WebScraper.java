@@ -70,7 +70,6 @@ public class WebScraper{
     for(String k: keys) {
       List<String> courses = deptToCourses.get(k);
 
-      Main.getDatabase().createCollection("conflicts");
       MongoCollection<org.bson.Document> collection = Main.getDatabase().getCollection("conflicts");
 
       for(int i = 1; i < courses.size(); i++) {

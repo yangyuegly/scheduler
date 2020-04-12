@@ -74,6 +74,8 @@ public final class Main {
     credential = MongoCredential.createCredential("sampleUser", "myDb",
         "password".toCharArray());
     database = mongo.getDatabase("myDb");
+    database.createCollection("conflicts");
+    database.createCollection("users");
 
     // create new objects to assist with running the program
     // initialize commands

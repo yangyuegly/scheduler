@@ -13,6 +13,8 @@ import com.mongodb.client.MongoDatabase;
 
 import edu.brown.cs.student.gui.AddEventHandler;
 import edu.brown.cs.student.gui.ConventionHomeHandler;
+import edu.brown.cs.student.gui.CreateAccountHandler;
+import edu.brown.cs.student.gui.CreateAccountSubmitHandler;
 import edu.brown.cs.student.gui.CreateConventionHandler;
 import edu.brown.cs.student.gui.HomeHandler;
 import edu.brown.cs.student.gui.LoginHandler;
@@ -129,9 +131,10 @@ public final class Main {
     //Spark.get("/stars", new StarsFrontHandler(), freeMarker);
     // handlers and such
     Spark.get("/home", new HomeHandler(), freeMarker);
+    Spark.get("/create_account", new CreateAccountHandler(), freeMarker);
+    Spark.post("/create_account", new CreateAccountSubmitHandler(), freeMarker);
     Spark.post("/login", new LoginHandler(), freeMarker);
     Spark.post("/add_event", new AddEventHandler(), freeMarker);
-   // Spark.get("/create_account", route);
     Spark.get("/create_convention", new CreateConventionHandler(), freeMarker);
    //  Spark.get("/upload_convention", new UploadHandler(), freeMarker);
    Spark.get("/convention_home/:id", new ConventionHomeHandler(), freeMarker);

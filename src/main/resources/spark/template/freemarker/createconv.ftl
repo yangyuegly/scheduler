@@ -12,11 +12,11 @@
     <input name="convName" id="convName" size="30" required><br><br>
     <label for="startDate">Start date:</label>
     <input type="date" id="startDate" name="startDate" min=${currDay} max="2100-01-01" required>
-    <label for="endDate">End date:</label>
-    <input type="date" id="endDate" name="endDate" min=${currDay} max="2100-01-01" required>
+    <label for="numDays">Number of Days:</label>
+    <input type="number" id="numDays" name="numDays" min="0" step="1" required>
     <br>
-    <label for="duration">How many minutes long is each event in this convention?</label>
-    <input list="duration_suggestions" type="number" name="duration" min="1" required>
+    <label for="eventDuration">How many minutes long is each event in this convention?</label>
+    <input list="duration_suggestions" type="number" name="eventDuration" min="1" required>
     <datalist id="duration_suggestions">
       <option value="30" />
       <option value="60" />
@@ -28,11 +28,12 @@
     <label for="startTime"> start: </label>
     <input type="time" id="startTime" name="startTime">
     <label for="endTime"> end:</label>
-    <input type="time" id="endTime" name="endTime"> 
+    <input type="time" id="endTime" name="endTime">
 
     <input type="submit" value="Add event">
     <br>
   </form>
+  ${errorMessage}
 </div>
 
 </#assign>

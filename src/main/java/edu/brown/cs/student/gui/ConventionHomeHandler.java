@@ -20,9 +20,22 @@ public class ConventionHomeHandler implements TemplateViewRoute {
     QueryParamsMap queryMap = req.queryMap();
     String name = queryMap.value("convName");
     String startDate = queryMap.value("startDate");
-    String endDate = queryMap.value("endState");
+    String numDaysString = queryMap.value("numDays");
+    String eventDuration = queryMap.value("eventDuration");
     String startTime = queryMap.value("startTime");
     String endTime = queryMap.value("endTime");
+    
+    int numDays = 0;
+    
+    try {
+      numDays = Integer.parseInt(numDaysString);
+    } catch (NumberFormatException err) {
+      Map<String, Object> variables = ImmutableMap.of("title",
+          "Scheduler", "errorMessage", "The number of days must be an integer.");
+      
+      return new ModelAndView(variables, "createconv.ftl");
+    }
+    
     
     
     
@@ -31,6 +44,6 @@ public class ConventionHomeHandler implements TemplateViewRoute {
     
     
     
-    return new ModelAndView(variables, "home.ftl");
+    return new ModelAndView(variables, "home.ftl"); // fix
   }
 }

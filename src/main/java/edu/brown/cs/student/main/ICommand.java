@@ -1,4 +1,4 @@
-package edu.brown.cs.student.universal;
+package edu.brown.cs.student.main;
 
 /**
  * This class is used to represent a command that can be typed into a REPL

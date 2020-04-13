@@ -1,6 +1,6 @@
 package edu.brown.cs.student.scheduler;
 
-import edu.brown.cs.student.universal.ICommand;
+import edu.brown.cs.student.main.ICommand;
 
 /**
  * This class is used to schedule the user's convention. It implements the

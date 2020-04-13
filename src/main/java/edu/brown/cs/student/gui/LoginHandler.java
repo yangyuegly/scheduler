@@ -6,8 +6,8 @@ import java.util.Map;
 import com.google.common.collect.ImmutableMap;
 import com.mongodb.client.MongoCollection;
 
+import edu.brown.cs.student.main.Main;
 import edu.brown.cs.student.scheduler.Convention;
-import edu.brown.cs.student.universal.Main;
 import spark.ModelAndView;
 import spark.QueryParamsMap;
 import spark.Request;

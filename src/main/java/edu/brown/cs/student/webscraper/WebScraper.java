@@ -14,7 +14,7 @@ import org.jsoup.select.Elements;
 
 import com.mongodb.client.MongoCollection;
 
-import edu.brown.cs.student.universal.Main;
+import edu.brown.cs.student.main.Main;
 
 public class WebScraper{
 

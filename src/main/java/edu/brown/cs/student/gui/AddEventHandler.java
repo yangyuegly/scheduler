@@ -11,7 +11,7 @@ import spark.Response;
 import spark.TemplateViewRoute;
 
 /**
- * This class is used to display the add event page with the convention name.
+ * This class is used to setup and display the add event page with the convention name.
  */
 public class AddEventHandler implements TemplateViewRoute {
 
@@ -19,12 +19,10 @@ public class AddEventHandler implements TemplateViewRoute {
   public ModelAndView handle(Request req, Response res) {
     QueryParamsMap queryMap = req.queryMap();
     String convName = queryMap.value("convName");
-
-//    Map<String, Object> variables = ImmutableMap.of("title",
-//        "Scheduler", "eventLinks", eventString);
-//    return new ModelAndView(variables, "add_event.ftl");
     
-    return null;
+    Map<String, Object> variables = ImmutableMap.of("title",
+        "Scheduler", "convName", convName);
+    return new ModelAndView(variables, "add_event.ftl");
   }
 
 }

@@ -1,4 +1,4 @@
-package edu.brown.cs.student.universal;
+package edu.brown.cs.student.main;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,6 +12,8 @@ import com.mongodb.MongoCredential;
 import com.mongodb.client.MongoDatabase;
 
 import edu.brown.cs.student.gui.AddEventHandler;
+import edu.brown.cs.student.gui.ConventionHomeHandler;
+import edu.brown.cs.student.gui.CreateConventionHandler;
 import edu.brown.cs.student.gui.HomeHandler;
 import edu.brown.cs.student.gui.LoginHandler;
 import edu.brown.cs.student.gui.UploadHandler;
@@ -47,6 +49,12 @@ public final class Main {
   //Accessing the database
   static MongoDatabase database;
   // field for each command
+  
+  // Is this where these go? concurrency??
+//  LoadCommand loadCommand;
+//  LoginCommand loginCommand;
+//  ScheduleCommand schedCommand;
+//  
 
   /**
    * The initial method called when execution begins.
@@ -124,8 +132,9 @@ public final class Main {
     Spark.post("/login", new LoginHandler(), freeMarker);
     Spark.post("/add_event", new AddEventHandler(), freeMarker);
    // Spark.get("/create_account", route);
-    // Spark.get("/create_convention", new CreateConventionHandler(), freeMarker);
+    Spark.get("/create_convention", new CreateConventionHandler(), freeMarker);
    //  Spark.get("/upload_convention", new UploadHandler(), freeMarker);
+   Spark.get("/convention_home/:id", new ConventionHomeHandler(), freeMarker);
     
   }
   

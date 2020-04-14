@@ -18,7 +18,7 @@ public class User {
    *   this user is managing
    */
   private String email;
-  private List<Convention> conventions = null;
+  private List<Convention> conventions = new ArrayList<>();
   
   /**
    * This is a constructor for this class.
@@ -35,11 +35,10 @@ public class User {
    * @return a List of conventions, which represents the conventions that
    *   this user is managing
    */
-  public List<String[]> getConventions() {
+  public List<Convention> getConventions() {
+    return conventions;
     //return Database.getConventionsNamesIds(email); 
 
-
-    return new ArrayList<>();
   }
 
 }

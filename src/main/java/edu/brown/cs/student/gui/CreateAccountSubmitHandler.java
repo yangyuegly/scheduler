@@ -30,8 +30,6 @@ public class CreateAccountSubmitHandler implements TemplateViewRoute {
     Map<String, Object> variables = ImmutableMap.of("title",
         "Scheduler", "eventLinks", "");
     
-    
-    
     return new ModelAndView(variables, "account.ftl");
   }
 

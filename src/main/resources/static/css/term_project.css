@@ -1,6 +1,7 @@
 body {
     background-color: white;
     font-family: sans-serif;
+    font-size: 15px;
     padding: 0;
     margin: 0;
     background-image: url("interlaced.png");
@@ -27,3 +28,9 @@ body {
 .main-content {
   padding: 10px 18px 10px 18px;
 }
+
+textarea, input {
+  font-family: sans-serif;
+  font-size: 15px;
+}
+

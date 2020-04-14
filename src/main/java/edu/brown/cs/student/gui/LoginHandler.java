@@ -6,6 +6,7 @@ import java.util.Map;
 import com.google.common.collect.ImmutableMap;
 import com.mongodb.client.MongoCollection;
 
+import edu.brown.cs.student.accounts.User;
 import edu.brown.cs.student.main.Main;
 import edu.brown.cs.student.scheduler.Convention;
 import spark.ModelAndView;
@@ -30,29 +31,33 @@ public class LoginHandler implements TemplateViewRoute  {
     // use the LoginCommand
     
 //    User currUser = Database.checkLogin(email, password);
-//    
-//    
-//    if (currUser == null) {
-//      // invalid login
-//      Map<String, Object> variables = ImmutableMap.of("title",
-//          "Scheduler", "message", "Incorrect username or password.  Try again.");
-//      return new ModelAndView(variables, "home.ftl");
-//    }
-//    
-//    List<Convention> conventions = currUser.getConventions();
-//
-//    if (conventions == null) {
-//      Map<String, Object> variables = ImmutableMap.of("title",
-//          "Scheduler", "eventLinks", "");
-//      return new ModelAndView(variables, "account.ftl");
-//    }
+    
+    //FOR TESTING ONLY
+    User currUser = new User("clickclackmoo@cows.com");
+    
+    
+    if (currUser == null) {
+      // invalid login
+      Map<String, Object> variables = ImmutableMap.of("title",
+          "Scheduler", "message", "Incorrect username or password.  Try again.");
+      return new ModelAndView(variables, "home.ftl");
+    }
+    
+    
+    List<Convention> conventions = currUser.getConventions();
+
+    if (conventions.isEmpty()) {
+      Map<String, Object> variables = ImmutableMap.of("title",
+          "Scheduler", "eventLinks", "");
+      return new ModelAndView(variables, "account.ftl");
+    }
 
     String eventString = "<p>Here are your conventions.  Click one to edit or schedule it!</p><br>";
 
-//    for (Convention currConv : conventions) {
-//      String convLink = "<a href=/convention/" + currConv.getID() + ">" + currConv.getName() + "</a>";
-//      eventString+= convLink + "<br>";
-//    }
+    for (Convention currConv : conventions) {
+      String convLink = "<a href=/convention/" + currConv.getID() + ">" + currConv.getName() + "</a>";
+      eventString+= convLink + "<br>";
+    }
 
     Map<String, Object> variables = ImmutableMap.of("title",
         "Scheduler", "eventLinks", eventString);

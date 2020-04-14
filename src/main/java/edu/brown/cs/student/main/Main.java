@@ -15,6 +15,7 @@ import edu.brown.cs.student.gui.AddEventHandler;
 import edu.brown.cs.student.gui.ConventionHomeHandler;
 import edu.brown.cs.student.gui.CreateAccountHandler;
 import edu.brown.cs.student.gui.CreateAccountSubmitHandler;
+import edu.brown.cs.student.gui.CreateConvSubmitHandler;
 import edu.brown.cs.student.gui.CreateConventionHandler;
 import edu.brown.cs.student.gui.HomeHandler;
 import edu.brown.cs.student.gui.LoginHandler;
@@ -140,8 +141,10 @@ public final class Main {
     Spark.post("/login", new LoginHandler(), freeMarker);
     Spark.post("/add_event", new AddEventHandler(), freeMarker);
     Spark.get("/create_convention", new CreateConventionHandler(), freeMarker);
+    Spark.post("/create_convention", new CreateConvSubmitHandler(), freeMarker);
    //  Spark.get("/upload_convention", new UploadHandler(), freeMarker);
-   Spark.get("/convention_home/:id", new ConventionHomeHandler(), freeMarker);
+    Spark.get("/convention/:id", new ConventionHomeHandler(), freeMarker);
+
 
   }
 

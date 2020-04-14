@@ -18,7 +18,6 @@ import edu.brown.cs.student.gui.CreateAccountSubmitHandler;
 import edu.brown.cs.student.gui.CreateConventionHandler;
 import edu.brown.cs.student.gui.HomeHandler;
 import edu.brown.cs.student.gui.LoginHandler;
-import edu.brown.cs.student.gui.UploadHandler;
 import freemarker.template.Configuration;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
@@ -51,12 +50,12 @@ public final class Main {
   //Accessing the database
   static MongoDatabase database;
   // field for each command
-  
+
   // Is this where these go? concurrency??
 //  LoadCommand loadCommand;
 //  LoginCommand loginCommand;
 //  ScheduleCommand schedCommand;
-//  
+//
 
   /**
    * The initial method called when execution begins.
@@ -101,7 +100,7 @@ public final class Main {
 
     if (options.has("gui")) {
       runSparkServer((int) options.valueOf("port"));
-      
+
     }
 
     manager.run();
@@ -139,12 +138,12 @@ public final class Main {
     Spark.get("/create_convention", new CreateConventionHandler(), freeMarker);
    //  Spark.get("/upload_convention", new UploadHandler(), freeMarker);
    Spark.get("/convention_home/:id", new ConventionHomeHandler(), freeMarker);
-    
+
   }
-  
+
   // Know who's attending? Upload a file with everything or add them manually.
   // Don't know? Send out a form to find out.
-  
+
 
   /**
    * Display an error page when an exception occurs in the server.

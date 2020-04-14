@@ -90,9 +90,7 @@
             </goals>
             <configuration>
               <transformers>
-                <transformer>
-                  <mainClass>edu.brown.cs.student.webscraper.WebScraper</mainClass>
-                </transformer>
+                <transformer />
               </transformers>
             </configuration>
           </execution>

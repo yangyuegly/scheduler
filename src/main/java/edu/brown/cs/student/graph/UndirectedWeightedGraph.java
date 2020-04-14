@@ -10,7 +10,6 @@ import java.util.TreeSet;
 
 import org.eclipse.jetty.http.PathMap.MappedEntry;
 
-import edu.brown.cs.student.database.Database;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -27,7 +26,7 @@ import java.util.HashSet;
  */
 public class UndirectedWeightedGraph<V extends IVertex<V>, E extends IEdge<V>> {
   // edge table keeps track of weights
-  private Database db;
+  // private Database db;
   private int[][] weightMatrix;
   private int numColor; //the max num of color a user can take in
   private int numVertices;//the number of mini-events
@@ -51,7 +50,7 @@ public class UndirectedWeightedGraph<V extends IVertex<V>, E extends IEdge<V>> {
    * represents a graph.
    * @param db a datastore
    */
-  public UndirectedWeightedGraph(Database db, int numVertices, int CONCURENCY_LIMIT, int MAX_SCHEDULE_DAYS) {
+  public UndirectedWeightedGraph(int numVertices, int CONCURENCY_LIMIT, int MAX_SCHEDULE_DAYS) {
     // two nodes may be connected iff 1) they were in the same movie 2) they share
     // initial 
     this.numVertices = numVertices;
@@ -81,7 +80,7 @@ public class UndirectedWeightedGraph<V extends IVertex<V>, E extends IEdge<V>> {
   
     //wij denotes the number of students in both i and j
     //k is the range of J given by the user
-    this.db = db;
+    // this.db = db;
     this.degree = new TreeSet<Map.Entry<Integer, Integer>>();
     this.result = new HashMap<Integer, ArrayList<Integer>>();
   }
@@ -119,9 +118,9 @@ public class UndirectedWeightedGraph<V extends IVertex<V>, E extends IEdge<V>> {
       //for the first course
       if (numColoredCourses == 0) {
         ArrayList<Integer> indices = getFirstNodeColor();
-        result.put(sortedEntries.get(0),indices);
+        // result.put(sortedEntries.get(0),indices);
       } else {
-        ArrayList<Integer> indices = getSmallestAvailableColor();
+        // ArrayList<Integer> indices = getSmallestAvailableColor();
       }
     }
   }
@@ -244,13 +243,13 @@ public Integer calculateExternalDistance(List<Integer> a, List<Integer> b) {
   assert  (a.size()  == 2 && b.size() == 2);
   return (Math.abs(a.get(0) - b.get(0))); 
 }
-  public Database getDb() {
-    return this.db;
-  }
+  // public Database getDb() {
+  //   return this.db;
+  // }
 
-  public void setDb(Database db) {
-    this.db = db;
-  }
+  // public void setDb(Database db) {
+  //   this.db = db;
+  // }
 
   public int[][] getWeightMatrix() {
     return this.weightMatrix;
@@ -287,7 +286,7 @@ public Integer calculateExternalDistance(List<Integer> a, List<Integer> b) {
     for (int i = 0; i < numVertices; i++) {
       idToDegree.put(i, findDegrees(i));
     }
-    degree = entriesSortedByValues(idToDegree);
+    // degree = entriesSortedByValues(idToDegree);
   }
 
 
@@ -350,44 +349,44 @@ public Integer calculateExternalDistance(List<Integer> a, List<Integer> b) {
    * @param Map<K,V>
    * @return SortedSet<>
    */
-  private static <K,V extends Comparable<? super V>>
-    SortedSet<Map.Entry<K, V>> entriesSortedByValues(Map<K, V> map) {
-    SortedSet<Map.Entry<K, V>> sortedEntries = new TreeSet<Map.Entry<K, V>>(
-        new Comparator<Map.Entry<K, V>>() {
-          @Override
-          public int compare(Map.Entry<K, V> e1, Map.Entry<K, V> e2) {
-            int res = e1.getValue().compareTo(e2.getValue());
-                if (res == 0) {
-                      int res = e1.getValue().getDegree();
-            }
-            return res != 0 ? res : 1;
-          }
-        });
-    sortedEntries.addAll(map.entrySet());
-    return sortedEntries;
-  }
+  // private static <K,V extends Comparable<? super V>>
+  //   SortedSet<Map.Entry<K, V>> entriesSortedByValues(Map<K, V> map) {
+  //   SortedSet<Map.Entry<K, V>> sortedEntries = new TreeSet<Map.Entry<K, V>>(
+  //       new Comparator<Map.Entry<K, V>>() {
+  //         @Override
+  //         public int compare(Map.Entry<K, V> e1, Map.Entry<K, V> e2) {
+  //           int res = e1.getValue().compareTo(e2.getValue());
+  //               if (res == 0) {
+  //                     Integer res = e1.getValue().getDegree();
+  //           }
+  //           return res != 0 ? res : 1;
+  //         }
+  //       });
+  //   sortedEntries.addAll(map.entrySet());
+  //   return sortedEntries;
+  // }
 
 
-  @Override
-    public boolean equals(Object o) {
-        if (o == this)
-            return true;
-        if (!(o instanceof UndirectedWeightedGraph)) {
-            return false;
-        }
-        UndirectedWeightedGraph undirectedWeightedGraph = (UndirectedWeightedGraph) o;
-        return Objects.equals(db, undirectedWeightedGraph.db) && Objects.equals(weightMatrix, undirectedWeightedGraph.weightMatrix) && numColor == undirectedWeightedGraph.numColor && numVertices == undirectedWeightedGraph.numVertices && ts == undirectedWeightedGraph.ts && Objects.equals(degree, undirectedWeightedGraph.degree) && Objects.equals(colors, undirectedWeightedGraph.colors) && k == undirectedWeightedGraph.k;
-  }
+  // @Override
+  //   public boolean equals(Object o) {
+  //       if (o == this)
+  //           return true;
+  //       if (!(o instanceof UndirectedWeightedGraph)) {
+  //           return false;
+  //       }
+  //       UndirectedWeightedGraph undirectedWeightedGraph = (UndirectedWeightedGraph) o;
+  //       return Objects.equals(db, undirectedWeightedGraph.db) && Objects.equals(weightMatrix, undirectedWeightedGraph.weightMatrix) && numColor == undirectedWeightedGraph.numColor && numVertices == undirectedWeightedGraph.numVertices && ts == undirectedWeightedGraph.ts && Objects.equals(degree, undirectedWeightedGraph.degree) && Objects.equals(colors, undirectedWeightedGraph.colors) && k == undirectedWeightedGraph.k;
+  // }
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(db, weightMatrix, numColor, numVertices, ts, degree, colors, k);
-  }
+  // @Override
+  // public int hashCode() {
+  //   return Objects.hash(db, weightMatrix, numColor, numVertices, ts, degree, colors, k);
+  // }
 
   @Override
   public String toString() {
     return "{" +
-      " db='" + getDb() + "'" +
+      // " db='" + getDb() + "'" +
       ", weightMatrix='" + getWeightMatrix() + "'" +
       ", numColor='" + getNumColor() + "'" +
       ", numVertices='" + getNumVertices() + "'" +

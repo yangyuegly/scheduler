@@ -101,15 +101,15 @@ public class LoadCommand {
 
       BasicDBObject query = new BasicDBObject();
       query.put("convention_id", conventionID);
-  
 
-      BasicDBObject update = new BasicDBObject();
-      update.put("$push", {"conflicts": {"event1id": entry.getKey().getevent1id(), 
-        "event2id": entry.getKey().getevent2id, "weight": entry.getValue()});
+      // BasicDBObject update = new BasicDBObject();
+      // update.put("$push", {"conflicts": {"event1id": entry.getKey().getevent1id(), 
+      //   "event2id": entry.getKey().getevent2id, "weight": entry.getValue()});
 
-      Main.getDatabase().getCollection("conflicts").updateOne(query,update);
+      // Main.getDatabase().getCollection("conflicts").updateOne(query,update);
+      }
     }
 
   }
 
-}
+

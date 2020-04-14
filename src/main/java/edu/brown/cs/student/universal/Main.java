@@ -111,6 +111,7 @@ public final class Main {
   }
 
   private void runSparkServer(int port) {
+    System.out.println("port");
     Spark.port(port);
     Spark.externalStaticFileLocation("src/main/resources/static");
     Spark.exception(Exception.class, new ExceptionPrinter());

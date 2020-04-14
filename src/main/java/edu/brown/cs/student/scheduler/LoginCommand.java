@@ -3,8 +3,8 @@ package edu.brown.cs.student.scheduler;
 import com.mongodb.client.MongoCollection;
 
 import edu.brown.cs.student.exception.UserAuthenticationException;
-import edu.brown.cs.student.universal.ICommand;
-import edu.brown.cs.student.universal.Main;
+import edu.brown.cs.student.main.ICommand;
+import edu.brown.cs.student.main.Main;
 
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;

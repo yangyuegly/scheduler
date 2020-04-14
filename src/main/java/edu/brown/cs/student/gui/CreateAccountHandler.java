@@ -11,18 +11,15 @@ import spark.Response;
 import spark.TemplateViewRoute;
 
 /**
- * This class is used to setup and display the add event page with the convention name.
+ * This class is used to display the page to create a new account.
  */
-public class AddEventHandler implements TemplateViewRoute {
-
+public class CreateAccountHandler implements TemplateViewRoute {
+  
   @Override
   public ModelAndView handle(Request req, Response res) {
-    QueryParamsMap queryMap = req.queryMap();
-    String convName = queryMap.value("convName");
-    
     Map<String, Object> variables = ImmutableMap.of("title",
-        "Scheduler", "convName", convName);
-    return new ModelAndView(variables, "add_event.ftl");
+        "Scheduler", "errorMessage", "");
+    
+    return new ModelAndView(variables, "create_account.ftl");
   }
-
 }

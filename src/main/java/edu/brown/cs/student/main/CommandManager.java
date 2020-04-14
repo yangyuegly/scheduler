@@ -1,4 +1,4 @@
-package edu.brown.cs.student.universal;
+package edu.brown.cs.student.main;
 
 import java.io.BufferedReader;
 import java.io.IOException;

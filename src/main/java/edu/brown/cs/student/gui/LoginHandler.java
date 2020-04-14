@@ -6,8 +6,8 @@ import java.util.Map;
 import com.google.common.collect.ImmutableMap;
 import com.mongodb.client.MongoCollection;
 
+import edu.brown.cs.student.main.Main;
 import edu.brown.cs.student.scheduler.Convention;
-import edu.brown.cs.student.universal.Main;
 import spark.ModelAndView;
 import spark.QueryParamsMap;
 import spark.Request;
@@ -26,6 +26,9 @@ public class LoginHandler implements TemplateViewRoute  {
     QueryParamsMap queryMap = req.queryMap();
     String email = queryMap.value("email");
     String password = queryMap.value("password");
+    
+    // use the LoginCommand
+    
 //    User currUser = Database.checkLogin(email, password);
 //    
 //    

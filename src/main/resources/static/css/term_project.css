@@ -1,8 +1,9 @@
 body {
-    background-color: #F8D07B;
+    background-color: white;
     font-family: sans-serif;
     padding: 0;
     margin: 0;
+    background-image: url("interlaced.png");
 }
 
 .sched-header {

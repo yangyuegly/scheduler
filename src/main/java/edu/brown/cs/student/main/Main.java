@@ -87,8 +87,12 @@ public final class Main {
     credential = MongoCredential.createCredential("sampleUser", "myDb",
         "password".toCharArray());
     database = mongo.getDatabase("myDb");
-    database.createCollection("conflicts");
-    database.createCollection("users");
+//    database.createCollection("conflicts");
+//    database.createCollection("users");
+
+//    WebScraper web = new WebScraper();
+//    web.setCollege("clemson");
+//    web.scrape();
 
     // create new objects to assist with running the program
     // initialize commands

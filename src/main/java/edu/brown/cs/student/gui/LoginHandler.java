@@ -48,19 +48,19 @@ public class LoginHandler implements TemplateViewRoute  {
 
     if (conventions.isEmpty()) {
       Map<String, Object> variables = ImmutableMap.of("title",
-          "Scheduler", "eventLinks", "");
+          "Scheduler", "conventionLinks", "");
       return new ModelAndView(variables, "account.ftl");
     }
 
-    String eventString = "<p>Here are your conventions.  Click one to edit or schedule it!</p><br>";
+    String convString = "<p>Here are your conventions.  Click one to edit or schedule it!</p><br>";
 
     for (Convention currConv : conventions) {
       String convLink = "<a href=/convention/" + currConv.getID() + ">" + currConv.getName() + "</a>";
-      eventString+= convLink + "<br>";
+      convString+= convLink + "<br>";
     }
 
     Map<String, Object> variables = ImmutableMap.of("title",
-        "Scheduler", "eventLinks", eventString);
+        "Scheduler", "conventionLinks", convString);
     return new ModelAndView(variables, "account.ftl");
   }
 

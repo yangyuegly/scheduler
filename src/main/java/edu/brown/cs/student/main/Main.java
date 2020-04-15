@@ -14,7 +14,7 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.MongoClientSettings;
 // import com.mongodb.MongoClientOptions;
 
-
+import edu.brown.cs.student.gui.AccountHomeHandler;
 import edu.brown.cs.student.gui.AddEventHandler;
 import edu.brown.cs.student.gui.ConventionHomeHandler;
 import edu.brown.cs.student.gui.CreateAccountHandler;
@@ -23,6 +23,7 @@ import edu.brown.cs.student.gui.CreateConvSubmitHandler;
 import edu.brown.cs.student.gui.CreateConventionHandler;
 import edu.brown.cs.student.gui.HomeHandler;
 import edu.brown.cs.student.gui.LoginHandler;
+import edu.brown.cs.student.gui.SaveConventionHandler;
 import freemarker.template.Configuration;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
@@ -90,13 +91,13 @@ public final class Main {
     OptionSet options = parser.parse(args);
 
     // credential = MongoCredential.createCredential("sampleUser", "myDb",
-    //     "password".toCharArray());
+         "password".toCharArray());
     database = mongo.getDatabase("myDb");
     System.out.println("created db?");
     database.createCollection("conflicts");
     System.out.println("created conflicts?");
     database.createCollection("users");
-    System.out.println("created users?");
+//    System.out.println("created users?");
 //    database.createCollection("conflicts");
 //    database.createCollection("users");
 
@@ -147,10 +148,12 @@ public final class Main {
     Spark.get("/home", new HomeHandler(), freeMarker);
     Spark.get("/create_account", new CreateAccountHandler(), freeMarker);
     Spark.post("/create_account", new CreateAccountSubmitHandler(), freeMarker);
-    Spark.post("/login", new LoginHandler(), freeMarker);
+    Spark.get("/account", new AccountHomeHandler(), freeMarker);
+    Spark.post("/account", new LoginHandler(), freeMarker);
     Spark.post("/add_event", new AddEventHandler(), freeMarker);
     Spark.get("/create_convention", new CreateConventionHandler(), freeMarker);
     Spark.post("/create_convention", new CreateConvSubmitHandler(), freeMarker);
+    Spark.post("/save_convention", new SaveConventionHandler());
    //  Spark.get("/upload_convention", new UploadHandler(), freeMarker);
     Spark.get("/convention/:id", new ConventionHomeHandler(), freeMarker);
 

@@ -12,15 +12,13 @@ import spark.Response;
 import spark.TemplateViewRoute;
 
 /**
- * This class is used to display a user's account home page.  It implements TemplateViewRoute.
+ * This class is used to display a user's account home page when the user is logged in.  
+ *   It implements TemplateViewRoute.
  */
 public class AccountHomeHandler implements TemplateViewRoute {
 
   @Override
   public ModelAndView handle(Request req, Response res) {
-    QueryParamsMap queryMap = req.queryMap();
-    String email = queryMap.value("email");
-    String password = queryMap.value("password");
     // User currUser = AuthenticationDatabase.checkLogin(email, password);
     
 //    if (currUser == null) {
@@ -29,9 +27,11 @@ public class AccountHomeHandler implements TemplateViewRoute {
 //          "Scheduler", "message", "Incorrect username or password.  Try again.");
 //      return new ModelAndView(variables, "home.ftl");
 //    }
+    
+    // get convention data
 
     Map<String, Object> variables = ImmutableMap.of("title",
-        "Scheduler", "connectingPath", ""); // give it information about events and such
+        "Scheduler", "conventionLinks", ""); // give it information about events and such
     return new ModelAndView(variables, "account.ftl");
   }
 }

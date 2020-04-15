@@ -7,7 +7,7 @@
 <div class="main-content">
   <p>
   <h3>Log in:</h3>
-  <form method="POST" action="/login">
+  <form method="POST" action="/account">
     <label for="email">Email: </label>
      <input name="email" id="email" size="30" required><br><br>
      <label for="password">Password: </label>

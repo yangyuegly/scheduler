@@ -5,7 +5,7 @@ package edu.brown.cs.student.graph;
  * @param <V> A vertex object
  * @param <E> An edge object
  */
-public interface IEdge<V> {
+public interface IEdge<V,E> {
 
   /**
    * Gets the src vertex in a directed edge.

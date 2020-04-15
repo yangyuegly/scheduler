@@ -8,6 +8,8 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import com.mongodb.client.MongoDatabase;
+
 import org.eclipse.jetty.http.PathMap.MappedEntry;
 
 //import edu.brown.cs.student.database.Database;
@@ -16,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 
 //source: https://www.researchgate.net/publication/220413840_A_New_Exam_Scheduling_Algorithm_Using_Graph_Coloring
 /**
@@ -25,40 +28,43 @@ import java.util.HashSet;
  * @param <V> an object that implements Vertex
  * @param <E> an object that implements Edge
  */
-public class UndirectedWeightedGraph<V extends IVertex<V>, E extends IEdge<V>> {
+public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,E>> {
   // edge table keeps track of weights
-  // private Database db;
+  private MongoDatabase db;
   private int[][] weightMatrix;
   private int numColor; //the max num of color a user can take in
   private int numVertices;//the number of mini-events
   private int TS; //time slots 
   private int exameBreak = 0; 
-
+  private Map<Integer,V> nodes; //map node Id to vertex object 
 
   private final int CONCURENCY_LIMIT; 
-  private SortedSet<Map.Entry<Integer, Integer>> degree;
-  private Map<Integer, ArrayList<Integer>> result;
-  private ArrayList<Integer[]> colors = new ArrayList<Integer[]>(); //double indexed color
+  private SortedSet<Map.Entry<Integer,V>> degree; //a sorted set
+  private Map<V, List<Integer>> result;
+  private List<Integer[]> colors = new ArrayList<Integer[]>(); //double indexed color
                         //the length of array: time slots (provided by registrar)
                       //arrayList index: day of the exam (to be minimized)
                       //value: current concurrency limit
   private int k; //the range of num of time slots, concurency level
   private final int MAX_SCHEDULE_DAYS;
-  private SortedSet nodesByDegrees;
 
   /**
    * Constructor for the graph. It takes in a datastore and instantiates a hashset that
    * represents a graph.
    * @param db a datastore
    */
-  public UndirectedWeightedGraph(int numVertices, int CONCURENCY_LIMIT, int MAX_SCHEDULE_DAYS) {
+  public UndirectedWeightedGraph(MongoDatabase db, List<V> vertices, int CONCURENCY_LIMIT, int MAX_SCHEDULE_DAYS) {
     // two nodes may be connected iff 1) they were in the same movie 2) they share
     // initial 
-    this.numVertices = numVertices;
+    this.numVertices = vertices.size();
 
     this.CONCURENCY_LIMIT = CONCURENCY_LIMIT;
     this.result = new HashMap<>();
     this.MAX_SCHEDULE_DAYS = MAX_SCHEDULE_DAYS;
+    this.nodes = new HashMap<Integer, V>();
+    for (V i : vertices) {
+      nodes.put(i.getID(), i);
+    }
     //initialize graph
     this.weightMatrix = new int[numVertices][numVertices];
     for (int i = 0; i < numVertices; i++) {
@@ -75,15 +81,14 @@ public class UndirectedWeightedGraph<V extends IVertex<V>, E extends IEdge<V>> {
       }
       colors.add(ts);
     }
-
-
+    
     
   
     //wij denotes the number of students in both i and j
     //k is the range of J given by the user
     // this.db = db;
-    this.degree = new TreeSet<Map.Entry<Integer, Integer>>();
-    this.result = new HashMap<Integer, ArrayList<Integer>>();
+    this.degree = new TreeSet<Map.Entry<Integer,V>>();
+    this.result = new HashMap<V, List<Integer>>();
   }
 
   /**
@@ -93,6 +98,7 @@ public class UndirectedWeightedGraph<V extends IVertex<V>, E extends IEdge<V>> {
   public void addAllEdges(HashSet<E> edges) {
     for (E e : edges) {
       weightMatrix[e.getHead().getID()][e.getTail().getID()] = e.getWeight();
+      nodes.get(e.getHead().getID()).addToAdjList(e);
     }
   }
 
@@ -100,30 +106,52 @@ public class UndirectedWeightedGraph<V extends IVertex<V>, E extends IEdge<V>> {
 /**
  * Find the degree of vertices 
  * @param id
- * @return
+ * @return the size of the node's adjacency list
  */
   public int findDegrees(int id) {
-    int d = 0;
-    for (int w : weightMatrix[id]) {
-      if (w > 0)
-        d++;
-    }
-    return d; 
+    return nodes.get(id).getAdjList().size(); 
   }
   
 
-
+/**
+ * 
+ * @param ts
+ * @param cl
+ */
   public void graphColoring(int ts, int cl) {
     int numColoredCourses = 0;
-    while (numColoredCourses < numVertices) {
+    Iterator<Map.Entry<Integer, V>> iter = degree.iterator();
+    while (iter.hasNext()) {
+      V curr = iter.next().getValue();
+      //if the current node is not colored
+      if (!result.containsKey(curr)) {
       //for the first course
       if (numColoredCourses == 0) {
         ArrayList<Integer> indices = getFirstNodeColor();
-        // result.put(sortedEntries.get(0),indices);
+        result.put(curr,indices);
+        numColoredCourses ++;
       } else {
-        // ArrayList<Integer> indices = getSmallestAvailableColor();
+        //color the current course
+        List<Integer> indices = getSmallestAvailableColor(curr.getID());
+        if (indices.size()==2) {
+          result.put(curr, indices);
+          numColoredCourses++;
+          //decrement the concurrency limit for a color
+          colors.get(indices.get(0))[indices.get(1)] --;
+        }
+        for (V i : curr.getAdjList()) {
+          //check if an adjacent node is colored
+          if (!result.containsKey(i)) {
+            List<Integer> adjColors = getSmallestAvailableColor(i.getID());
+            if (adjColors.size() == 2) {
+              result.put(i, adjColors);
+            }
+          }
+        }
+
       }
     }
+   }
   }
 
 
@@ -152,21 +180,8 @@ public class UndirectedWeightedGraph<V extends IVertex<V>, E extends IEdge<V>> {
     return result;
   }
 
-  /**
-   * Get the adjacency list of the courses
-   * @param courseID
-   * @return
-   */
-  public List<Integer> getAdjList(Integer courseID) {
-    List<Integer> result = new ArrayList<Integer>();
-  
-    for (int i = 0; i < numVertices; i++) {
-      if (weightMatrix[courseID][i] != 0) {
-        result.add(weightMatrix[courseID][i]);
-      }
-    }
-    return result; 
-  }
+
+
 
   /**
    * define the  weight  of  a  color to be W (RIJ) =  (I-1)*k + J; 
@@ -190,7 +205,7 @@ public class UndirectedWeightedGraph<V extends IVertex<V>, E extends IEdge<V>> {
   public List<Integer> getSmallestAvailableColor(int courseID) {
 
     boolean valid = false;
-    List<Integer> adj = getAdjList(courseID);
+    List<V> adj = nodes.get(courseID).getAdjList();
     for (int i = 0; i < numVertices; i++) {
       for (int j = 0; j < TS; j++) {
         List<Integer> currColor = new ArrayList<>(List.of(i, j));
@@ -244,13 +259,13 @@ public Integer calculateExternalDistance(List<Integer> a, List<Integer> b) {
   assert  (a.size()  == 2 && b.size() == 2);
   return (Math.abs(a.get(0) - b.get(0))); 
 }
-  // public Database getDb() {
-  //   return this.db;
-  // }
+  public MongoDatabase getDb() {
+    return this.db;
+  }
 
-  // public void setDb(Database db) {
-  //   this.db = db;
-  // }
+  public void setDb(MongoDatabase db) {
+    this.db = db;
+  }
 
   public int[][] getWeightMatrix() {
     return this.weightMatrix;
@@ -282,12 +297,8 @@ public Integer calculateExternalDistance(List<Integer> a, List<Integer> b) {
    * calculate all nodes' degrees
    */
   public void setDegree() {
-    HashMap<Integer, Integer> idToDegree = new HashMap<Integer, Integer>();
-
-    for (int i = 0; i < numVertices; i++) {
-      idToDegree.put(i, findDegrees(i));
-    }
-    // degree = entriesSortedByValues(idToDegree);
+  
+    degree = entriesSortedByValues(nodes);
   }
 
 
@@ -316,20 +327,20 @@ public Integer calculateExternalDistance(List<Integer> a, List<Integer> b) {
   }
 
 
-  public SortedSet<Map.Entry<Integer,Integer>> getDegree() {
+  public SortedSet<Map.Entry<Integer,V>> getDegree() {
     return this.degree;
   }
 
 
-  public Map<Integer,ArrayList<Integer>> getResult() {
+  public Map<V,List<Integer>> getResult() {
     return this.result;
   }
 
-  public void setResult(Map<Integer,ArrayList<Integer>> result) {
+  public void setResult(Map<V,List<Integer>> result) {
     this.result = result;
   }
 
-  public ArrayList<Integer[]> getColors() {
+  public List<Integer[]> getColors() {
     return this.colors;
   }
 
@@ -350,44 +361,47 @@ public Integer calculateExternalDistance(List<Integer> a, List<Integer> b) {
    * @param Map<K,V>
    * @return SortedSet<>
    */
-  // private static <K,V extends Comparable<? super V>>
-  //   SortedSet<Map.Entry<K, V>> entriesSortedByValues(Map<K, V> map) {
-  //   SortedSet<Map.Entry<K, V>> sortedEntries = new TreeSet<Map.Entry<K, V>>(
-  //       new Comparator<Map.Entry<K, V>>() {
-  //         @Override
-  //         public int compare(Map.Entry<K, V> e1, Map.Entry<K, V> e2) {
-  //           int res = e1.getValue().compareTo(e2.getValue());
-  //               if (res == 0) {
-  //                     Integer res = e1.getValue().getDegree();
-  //           }
-  //           return res != 0 ? res : 1;
-  //         }
-  //       });
-  //   sortedEntries.addAll(map.entrySet());
-  //   return sortedEntries;
-  // }
+  private <K, T extends IVertex<T,E>>
+    SortedSet<Map.Entry<K, T>> entriesSortedByValues(Map<K, T> map) {
+    SortedSet<Map.Entry<K, T>> sortedEntries = new TreeSet<Map.Entry<K, T>>(
+      //sort the nodes in the weight matrix in a descending
+      // order  based  on  the  degree  of  nodes. 
+        new Comparator<Map.Entry<K, T>>() {
+          @Override
+              public int compare(Map.Entry<K, T> e1, Map.Entry<K, T> e2) {
+            //compare by degree of nodes
+            Integer res = e1.getValue().getDegree().compareTo(e2.getValue().getDegree());
+                if (res == 0) {
+                      res = e1.getValue().getDegree();
+            }
+            return res != 0 ? res : 1;
+          }
+        });
+    sortedEntries.addAll(map.entrySet());
+    return sortedEntries;
+  }
 
 
-  // @Override
-  //   public boolean equals(Object o) {
-  //       if (o == this)
-  //           return true;
-  //       if (!(o instanceof UndirectedWeightedGraph)) {
-  //           return false;
-  //       }
-  //       UndirectedWeightedGraph undirectedWeightedGraph = (UndirectedWeightedGraph) o;
-  //       return Objects.equals(db, undirectedWeightedGraph.db) && Objects.equals(weightMatrix, undirectedWeightedGraph.weightMatrix) && numColor == undirectedWeightedGraph.numColor && numVertices == undirectedWeightedGraph.numVertices && ts == undirectedWeightedGraph.ts && Objects.equals(degree, undirectedWeightedGraph.degree) && Objects.equals(colors, undirectedWeightedGraph.colors) && k == undirectedWeightedGraph.k;
-  // }
+  @Override
+    public boolean equals(Object o) {
+        if (o == this)
+            return true;
+        if (!(o instanceof UndirectedWeightedGraph)) {
+            return false;
+        }
+        UndirectedWeightedGraph undirectedWeightedGraph = (UndirectedWeightedGraph) o;
+        return Objects.equals(db, undirectedWeightedGraph.db) && Objects.equals(weightMatrix, undirectedWeightedGraph.weightMatrix) && numColor == undirectedWeightedGraph.numColor && numVertices == undirectedWeightedGraph.numVertices && TS == undirectedWeightedGraph.TS && Objects.equals(degree, undirectedWeightedGraph.degree) && Objects.equals(colors, undirectedWeightedGraph.colors) && k == undirectedWeightedGraph.k;
+  }
 
-  // @Override
-  // public int hashCode() {
-  //   return Objects.hash(db, weightMatrix, numColor, numVertices, ts, degree, colors, k);
-  // }
+  @Override
+  public int hashCode() {
+    return Objects.hash(db, weightMatrix, numColor, numVertices, TS, degree, colors, k);
+  }
 
   @Override
   public String toString() {
     return "{" +
-      // " db='" + getDb() + "'" +
+      " db='" + getDb() + "'" +
       ", weightMatrix='" + getWeightMatrix() + "'" +
       ", numColor='" + getNumColor() + "'" +
       ", numVertices='" + getNumVertices() + "'" +

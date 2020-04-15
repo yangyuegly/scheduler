@@ -7,7 +7,7 @@ import java.util.Set;
  * @param <V> a vertex
  * @param <E> an edge
  */
-public interface IVertex<V> {
+public interface IVertex<V, E>{
 
   /**
    * Gets the id of the vertex.
@@ -16,8 +16,13 @@ public interface IVertex<V> {
   Integer getID();
 
   List<V> getAdjList(); //should the return edges?
-  
+
+  void addToAdjList(E adj);
   
   Integer getDegree();
+
+  void setColor(List<Integer> c);
+
+  List<Integer> getColor();
 }
 

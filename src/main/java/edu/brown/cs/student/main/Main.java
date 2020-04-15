@@ -7,9 +7,13 @@ import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.mongodb.MongoClient;
-import com.mongodb.MongoCredential;
+import com.mongodb.ConnectionString;
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.MongoClientSettings;
+// import com.mongodb.MongoClientOptions;
+
 
 import edu.brown.cs.student.gui.AddEventHandler;
 import edu.brown.cs.student.gui.ConventionHomeHandler;
@@ -42,10 +46,10 @@ public final class Main {
    */
   private static final int DEFAULT_PORT = 4567;
 
-  private MongoClient mongo = new MongoClient("localhost", 27017);
+  MongoClient mongo = MongoClients.create();
 
   // Creating Credentials
-  private MongoCredential credential;
+  // private MongoCredential credential;
 
 
   //Accessing the database
@@ -85,11 +89,14 @@ public final class Main {
     .defaultsTo(DEFAULT_PORT);
     OptionSet options = parser.parse(args);
 
-    credential = MongoCredential.createCredential("sampleUser", "myDb",
-        "password".toCharArray());
+    // credential = MongoCredential.createCredential("sampleUser", "myDb",
+    //     "password".toCharArray());
     database = mongo.getDatabase("myDb");
+    System.out.println("created db?");
     database.createCollection("conflicts");
+    System.out.println("created conflicts?");
     database.createCollection("users");
+    System.out.println("created users?");
 
     // create new objects to assist with running the program
     // initialize commands

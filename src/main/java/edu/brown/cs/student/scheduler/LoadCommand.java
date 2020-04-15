@@ -12,9 +12,13 @@ import edu.brown.cs.student.exception.UserAuthenticationException;
 import edu.brown.cs.student.main.ICommand;
 import edu.brown.cs.student.main.Main;
 
-import com.mongodb.MongoClient;
-import com.mongodb.MongoClientURI;
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoClient;
+import com.mongodb.MongoClientSettings;
+import com.mongodb.ConnectionString;
 import com.mongodb.ServerAddress;
+import com.mongodb.MongoCredential;
+
 
 import com.mongodb.client.MongoDatabase;
 

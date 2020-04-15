@@ -15,7 +15,6 @@ import com.mongodb.MongoClientSettings;
 // import com.mongodb.MongoClientOptions;
 
 import edu.brown.cs.student.gui.AccountHomeHandler;
-import edu.brown.cs.student.gui.AddEventHandler;
 import edu.brown.cs.student.gui.ConventionHomeHandler;
 import edu.brown.cs.student.gui.CreateAccountHandler;
 import edu.brown.cs.student.gui.CreateAccountSubmitHandler;
@@ -91,13 +90,13 @@ public final class Main {
     OptionSet options = parser.parse(args);
 
     // credential = MongoCredential.createCredential("sampleUser", "myDb",
-         "password".toCharArray());
+//         "password".toCharArray());
     database = mongo.getDatabase("myDb");
     System.out.println("created db?");
     database.createCollection("conflicts");
     System.out.println("created conflicts?");
     database.createCollection("users");
-//    System.out.println("created users?");
+    System.out.println("created users?");
 //    database.createCollection("conflicts");
 //    database.createCollection("users");
 
@@ -150,7 +149,6 @@ public final class Main {
     Spark.post("/create_account", new CreateAccountSubmitHandler(), freeMarker);
     Spark.get("/account", new AccountHomeHandler(), freeMarker);
     Spark.post("/account", new LoginHandler(), freeMarker);
-    Spark.post("/add_event", new AddEventHandler(), freeMarker);
     Spark.get("/create_convention", new CreateConventionHandler(), freeMarker);
     Spark.post("/create_convention", new CreateConvSubmitHandler(), freeMarker);
     Spark.post("/save_convention", new SaveConventionHandler());

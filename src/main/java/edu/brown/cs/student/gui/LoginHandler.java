@@ -33,7 +33,11 @@ public class LoginHandler implements TemplateViewRoute  {
 //    User currUser = Database.checkLogin(email, password);
     
     //FOR TESTING ONLY
-    User currUser = new User("clickclackmoo@cows.com");
+    User currUser = new User(email);
+    
+    // sets the cookie so it expires after two hours
+    res.cookie("user", email, 120 * 60 * 1000);  
+    
     
     
     if (currUser == null) {

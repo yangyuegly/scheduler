@@ -24,6 +24,9 @@ public class CreateAccountSubmitHandler implements TemplateViewRoute {
     String email = queryMap.value("email");
     String password = queryMap.value("password");
     
+    // sets the cookie so it expires after two hours
+    res.cookie("user", email, 120 * 60 * 1000);  
+    
     // add them to database!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     MongoDatabase database = Main.getDatabase();
     

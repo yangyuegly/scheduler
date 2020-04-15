@@ -20,6 +20,15 @@ public class CreateConventionHandler implements TemplateViewRoute {
 
   @Override
   public ModelAndView handle(Request request, Response response) throws Exception {
+    String userEmail = request.cookie("user");
+    
+    if (userEmail == null) {
+      // user is not logged in
+      Map<String, Object> variables = ImmutableMap.of("title",
+          "Scheduler", "message", "Please log in");
+      return new ModelAndView(variables, "home.ftl");
+    }
+    
     //gets the current date (user can't schedule an event in the past)
     Calendar cal = Calendar.getInstance();
     int month = cal.get(Calendar.MONTH) + 1;
@@ -27,8 +36,6 @@ public class CreateConventionHandler implements TemplateViewRoute {
     int year = cal.get(Calendar.YEAR);
     
     String date = year + "-" + month + "-" + day;
-    
-    
     
     Map<String, Object> variables = ImmutableMap.of("title",
         "Scheduler", "currDay", date, "errorMessage", "");

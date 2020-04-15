@@ -17,34 +17,30 @@ public class ConventionHomeHandler implements TemplateViewRoute {
 
   @Override
   public ModelAndView handle(Request req, Response res) {
-    QueryParamsMap queryMap = req.queryMap();
-    String name = queryMap.value("convName");
-    String startDate = queryMap.value("startDate");
-    String numDaysString = queryMap.value("numDays");
-    String eventDuration = queryMap.value("eventDuration");
-    String startTime = queryMap.value("startTime");
-    String endTime = queryMap.value("endTime");
-    String id = req.params(":id");
+    // get events in this convention from the database, display their names and 
+    // give the user options to schedule, etc
     
-    int numDays = 0; //need to do that
+    String conventionID = req.params(":id");
+    String userEmail = req.cookie("user");
     
-    try {
-      numDays = Integer.parseInt(numDaysString);
-    } catch (NumberFormatException err) {
+    if (userEmail == null) {
+      // user is not logged in
       Map<String, Object> variables = ImmutableMap.of("title",
-          "Scheduler", "errorMessage", "The number of days must be an integer.");
-      
-      return new ModelAndView(variables, "setup_conv.ftl");
+          "Scheduler", "message", "Please log in");
+      return new ModelAndView(variables, "home.ftl");
     }
     
+    // use the database to confirm that the user with userEmail is authorized to view the 
+    // convention with conventionID
     
+    // get convention name from database
     
+    //send the events to the page somehow
     
+    // fix
     Map<String, Object> variables = ImmutableMap.of("title",
-        "Scheduler", "message", "");
+        "Scheduler", "convName", "");
     
-    
-    
-    return new ModelAndView(variables, "setup_conv.ftl"); // fix
+    return new ModelAndView(variables, "convention_home.ftl"); // fix
   }
 }

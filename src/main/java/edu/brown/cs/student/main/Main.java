@@ -19,10 +19,10 @@ import edu.brown.cs.student.gui.AddEventHandler;
 import edu.brown.cs.student.gui.ConventionHomeHandler;
 import edu.brown.cs.student.gui.CreateAccountHandler;
 import edu.brown.cs.student.gui.CreateAccountSubmitHandler;
+import edu.brown.cs.student.gui.CreateConvSubmitHandler;
 import edu.brown.cs.student.gui.CreateConventionHandler;
 import edu.brown.cs.student.gui.HomeHandler;
 import edu.brown.cs.student.gui.LoginHandler;
-import edu.brown.cs.student.gui.UploadHandler;
 import freemarker.template.Configuration;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
@@ -55,12 +55,12 @@ public final class Main {
   //Accessing the database
   static MongoDatabase database;
   // field for each command
-  
+
   // Is this where these go? concurrency??
 //  LoadCommand loadCommand;
 //  LoginCommand loginCommand;
 //  ScheduleCommand schedCommand;
-//  
+//
 
   /**
    * The initial method called when execution begins.
@@ -97,6 +97,12 @@ public final class Main {
     System.out.println("created conflicts?");
     database.createCollection("users");
     System.out.println("created users?");
+//    database.createCollection("conflicts");
+//    database.createCollection("users");
+
+//    WebScraper web = new WebScraper();
+//    web.setCollege("clemson");
+//    web.scrape();
 
     // create new objects to assist with running the program
     // initialize commands
@@ -108,7 +114,7 @@ public final class Main {
 
     if (options.has("gui")) {
       runSparkServer((int) options.valueOf("port"));
-      
+
     }
 
     manager.run();
@@ -144,14 +150,16 @@ public final class Main {
     Spark.post("/login", new LoginHandler(), freeMarker);
     Spark.post("/add_event", new AddEventHandler(), freeMarker);
     Spark.get("/create_convention", new CreateConventionHandler(), freeMarker);
+    Spark.post("/create_convention", new CreateConvSubmitHandler(), freeMarker);
    //  Spark.get("/upload_convention", new UploadHandler(), freeMarker);
-   Spark.get("/convention_home/:id", new ConventionHomeHandler(), freeMarker);
-    
+    Spark.get("/convention/:id", new ConventionHomeHandler(), freeMarker);
+
+
   }
-  
+
   // Know who's attending? Upload a file with everything or add them manually.
   // Don't know? Send out a form to find out.
-  
+
 
   /**
    * Display an error page when an exception occurs in the server.

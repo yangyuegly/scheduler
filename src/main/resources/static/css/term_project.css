@@ -1,8 +1,10 @@
 body {
-    background-color: #F8D07B;
+    background-color: white;
     font-family: sans-serif;
+    font-size: 15px;
     padding: 0;
     margin: 0;
+    background-image: url("interlaced.png");
 }
 
 .sched-header {
@@ -26,3 +28,9 @@ body {
 .main-content {
   padding: 10px 18px 10px 18px;
 }
+
+textarea, input {
+  font-family: sans-serif;
+  font-size: 15px;
+}
+

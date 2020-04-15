@@ -28,6 +28,12 @@ public class WebScraper{
   private Map<String, List<String>> deptToCourses = new HashMap<>();
   private Map<String, String> conflict = new HashMap<>();
 
+  public WebScraper() {
+    collegeName = "";
+    deptToCourses = new HashMap<>();
+    conflict = new HashMap<>();
+  }
+
   public void setCollege(String collegeName) {
     this.collegeName = collegeName;
   }
@@ -86,7 +92,7 @@ public class WebScraper{
     return "scrape";
   }
 
-  private void addConflicts() {
+  public void addConflicts() {
     Set<String> keys = deptToCourses.keySet();
     int count = 0;
     for(String k: keys) {
@@ -94,17 +100,24 @@ public class WebScraper{
 
       MongoCollection<org.bson.Document> collection = Main.getDatabase().getCollection("conflicts");
 
-      for(int i = 1; i < courses.size(); i++) {
+      for(int i = 0; i < courses.size(); i++) {
+        String first = courses.get(i);
+        for(int j = i + 1; j < courses.size(); j++) {
+          String second = courses.get(j);
         //make a new edge from courses.get(0) and courses.get(i)
-        org.bson.Document doc = new org.bson.Document("id", count).append("class", courses.get(0))
-            .append("conflict", courses.get(i));
-        conflict.put(courses.get(0), courses.get(i));
-        if(!(conflict.get(courses.get(i)) != null &&
-            conflict.get(courses.get(i)).equals(courses.get(0)) &&
-            conflict.get(courses.get(0))!= null &&
-            conflict.get(courses.get(0)).equals(courses.get(i)))) {
-          collection.insertOne(doc);
-          count++;
+          org.bson.Document doc = new org.bson.Document("id", count).append("class", courses.get(0))
+              .append("conflict", courses.get(i));
+          conflict.put(first, second);
+          if(conflict.containsKey(first)) {
+            if(!conflict.get(first).equals(second)) {
+              collection.insertOne(doc);
+              count++;
+            }
+          }else {
+            collection.insertOne(doc);
+            count++;
+          }
+
         }
       }
 

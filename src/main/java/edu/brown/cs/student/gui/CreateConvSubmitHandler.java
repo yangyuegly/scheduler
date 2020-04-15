@@ -43,12 +43,16 @@ public class CreateConvSubmitHandler implements TemplateViewRoute {
     } catch (NumberFormatException err) {
       Map<String, Object> variables = ImmutableMap.of("title",
           "Scheduler", "errorMessage", "The number of days must be an integer.");
-      return new ModelAndView(variables, "create_conv.ftl");
+      return new ModelAndView(variables, "setup_conv.ftl");
     }
     if (submitType.equals("Add events by hand")) {
+//      Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "convName", 
+//          name, "id", id.toString());
+//      return new ModelAndView(variables, "add_event.ftl");
+      
       Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "convName", 
-          name, "id", id.toString());
-      return new ModelAndView(variables, "add_event.ftl");
+          name, "existingEvents", "");
+      return new ModelAndView(variables, "convention_home.ftl");
     } else {
       Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "convName", 
           name, "message", "");

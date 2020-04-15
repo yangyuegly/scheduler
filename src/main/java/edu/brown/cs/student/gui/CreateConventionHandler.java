@@ -33,7 +33,7 @@ public class CreateConventionHandler implements TemplateViewRoute {
     Map<String, Object> variables = ImmutableMap.of("title",
         "Scheduler", "currDay", date, "errorMessage", "");
     
-    return new ModelAndView(variables, "create_conv.ftl");    
+    return new ModelAndView(variables, "setup_conv.ftl");    
   }
   
   

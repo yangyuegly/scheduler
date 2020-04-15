@@ -4,7 +4,7 @@ import java.util.List;
 
 import edu.brown.cs.student.graph.IVertex;
 
-public class Event implements IVertex<Event> {
+public class Event implements IVertex<Event, Convention> {
   Integer id;
   List<Event> adjList;
   Integer degree; //?
@@ -33,9 +33,30 @@ public class Event implements IVertex<Event> {
   public Integer getDegree() {
     return degree;
   }
-  
- 
-  
+
+
+
+  @Override
+  public void addToAdjList(Convention adj) {
+    // TODO Auto-generated method stub
+    
+  }
+
+
+
+  @Override
+  public void setColor(List<Integer> c) {
+    // TODO Auto-generated method stub
+    
+  }
+
+
+
+  @Override
+  public List<Integer> getColor() {
+    // TODO Auto-generated method stub
+    return null;
+  }
   
 
 }

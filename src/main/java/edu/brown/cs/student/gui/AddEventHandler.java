@@ -18,7 +18,7 @@ public class AddEventHandler implements TemplateViewRoute {
   @Override
   public ModelAndView handle(Request req, Response res) {
     QueryParamsMap queryMap = req.queryMap();
-    String convID = req.params(":id");
+//    String convID = req.params(":id");
     
     String name = queryMap.value("name");
     String desc = queryMap.value("description");
@@ -26,9 +26,13 @@ public class AddEventHandler implements TemplateViewRoute {
     
     //put the event and attendees into the database
 
-    Map<String, Object> variables = ImmutableMap.of("title",
-        "Scheduler");
-    return new ModelAndView(variables, "add_event.ftl");
+//    Map<String, Object> variables = ImmutableMap.of("title",
+//        "Scheduler");
+//    return new ModelAndView(variables, "add_event.ftl");
+    
+    Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "convName", 
+        name);
+    return new ModelAndView(variables, "convention_home.ftl");
   }
 
 }

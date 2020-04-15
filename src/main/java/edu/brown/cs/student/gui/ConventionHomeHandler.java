@@ -34,7 +34,7 @@ public class ConventionHomeHandler implements TemplateViewRoute {
       Map<String, Object> variables = ImmutableMap.of("title",
           "Scheduler", "errorMessage", "The number of days must be an integer.");
       
-      return new ModelAndView(variables, "create_conv.ftl");
+      return new ModelAndView(variables, "setup_conv.ftl");
     }
     
     
@@ -45,6 +45,6 @@ public class ConventionHomeHandler implements TemplateViewRoute {
     
     
     
-    return new ModelAndView(variables, "create_conv.ftl"); // fix
+    return new ModelAndView(variables, "setup_conv.ftl"); // fix
   }
 }

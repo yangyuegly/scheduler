@@ -7,10 +7,11 @@
 <div class="main-content">
   <p>
   <h3>Welcome Back</h3>
-  ${eventLinks}
+  ${conventionLinks}
   <br>
   <br>
-  <a href=/create_convention>Create a new convention</a>
+  <a href=/create_convention>Create a new convention</a><br>
+  
 </div>
 
 </#assign>

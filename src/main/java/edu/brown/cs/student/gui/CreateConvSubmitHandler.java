@@ -14,8 +14,17 @@ import spark.TemplateViewRoute;
 
 public class CreateConvSubmitHandler implements TemplateViewRoute {
   @Override
-  public ModelAndView handle(Request req, Response res) {
-    QueryParamsMap queryMap = req.queryMap();
+  public ModelAndView handle(Request request, Response response) {
+    String userEmail = request.cookie("user");
+    
+    if (userEmail == null) {
+      // user is not logged in
+      Map<String, Object> variables = ImmutableMap.of("title",
+          "Scheduler", "message", "Please log in");
+      return new ModelAndView(variables, "home.ftl");
+    }
+    
+    QueryParamsMap queryMap = request.queryMap();
     String name = queryMap.value("convName");
     String startDate = queryMap.value("startDate");
     String numDaysString = queryMap.value("numDays");
@@ -26,14 +35,6 @@ public class CreateConvSubmitHandler implements TemplateViewRoute {
     
     int numDays;
     
-    Random rand = new Random();
-    boolean avail = false;
-    // we want a six digit id that has not been used
-    Integer id = rand.nextInt((999999-100000) + 1) + 100000;
-//    while (!avail) {
-//     // avail = Main.getDatabase().checkID();
-//      id = rand.nextInt((999999-100000) + 1) + 100000;
-//    }
     //add to database
     
     
@@ -45,11 +46,8 @@ public class CreateConvSubmitHandler implements TemplateViewRoute {
           "Scheduler", "errorMessage", "The number of days must be an integer.");
       return new ModelAndView(variables, "setup_conv.ftl");
     }
+    
     if (submitType.equals("Add events by hand")) {
-//      Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "convName", 
-//          name, "id", id.toString());
-//      return new ModelAndView(variables, "add_event.ftl");
-      
       Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "convName", 
           name, "existingEvents", "");
       return new ModelAndView(variables, "convention_home.ftl");

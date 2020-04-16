@@ -25,6 +25,10 @@ body {
   letter-spacing: 2px;
 }
 
+.errorMessage {
+  color: red;
+}
+
 .main-content {
   padding: 10px 18px 10px 18px;
 }
@@ -33,4 +37,3 @@ textarea, input {
   font-family: sans-serif;
   font-size: 15px;
 }
-

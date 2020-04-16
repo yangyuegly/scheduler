@@ -33,7 +33,11 @@ public class LoginHandler implements TemplateViewRoute  {
 //    User currUser = Database.checkLogin(email, password);
     
     //FOR TESTING ONLY
-    User currUser = new User("clickclackmoo@cows.com");
+    User currUser = new User(email);
+    
+    // sets the cookie so it expires after two hours
+    res.cookie("user", email, 120 * 60 * 1000);  
+    
     
     
     if (currUser == null) {
@@ -48,19 +52,19 @@ public class LoginHandler implements TemplateViewRoute  {
 
     if (conventions.isEmpty()) {
       Map<String, Object> variables = ImmutableMap.of("title",
-          "Scheduler", "eventLinks", "");
+          "Scheduler", "conventionLinks", "");
       return new ModelAndView(variables, "account.ftl");
     }
 
-    String eventString = "<p>Here are your conventions.  Click one to edit or schedule it!</p><br>";
+    String convString = "<p>Here are your conventions.  Click one to edit or schedule it!</p><br>";
 
     for (Convention currConv : conventions) {
       String convLink = "<a href=/convention/" + currConv.getID() + ">" + currConv.getName() + "</a>";
-      eventString+= convLink + "<br>";
+      convString+= convLink + "<br>";
     }
 
     Map<String, Object> variables = ImmutableMap.of("title",
-        "Scheduler", "eventLinks", eventString);
+        "Scheduler", "conventionLinks", convString);
     return new ModelAndView(variables, "account.ftl");
   }
 

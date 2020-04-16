@@ -10,8 +10,9 @@
   ${conventionLinks}
   <br>
   <br>
-  <a href=/create_convention>Create a new convention</a><br>
-  
+  <a href=/create_convention>Create a new convention</a>
+  <br><br><br>
+  <a href=/create_exam_conv>Schedule exams for the college of your choice</a>
 </div>
 
 </#assign>

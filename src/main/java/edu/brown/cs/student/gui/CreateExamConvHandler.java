@@ -1,23 +1,21 @@
 package edu.brown.cs.student.gui;
 
-
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import com.google.common.collect.ImmutableMap;
 
-import edu.brown.cs.student.main.Main;
+import edu.brown.cs.student.webscraper.WebScraper;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
 import spark.TemplateViewRoute;
-/**
- * Class that is a handler for the creating a convention page.
- *
- */
-public class CreateConventionHandler implements TemplateViewRoute {
 
+public class CreateExamConvHandler implements TemplateViewRoute {
+  
   @Override
   public ModelAndView handle(Request request, Response response) {
     String userEmail = request.cookie("user");
@@ -37,14 +35,26 @@ public class CreateConventionHandler implements TemplateViewRoute {
     
     String date = year + "-" + month + "-" + day;
     
-    Map<String, Object> variables = ImmutableMap.of("title",
-        "Scheduler", "currDay", date, "errorMessage", "");
+    // get the names of the schools on Coursicle so they appear as suggestions
+    String schoolSuggestions = "";
+    WebScraper scraper = new WebScraper();
+    Map<String, String> idToSchoolMap = scraper.getcoursesToIDs();
+    List<String> schoolNamesList = new ArrayList<>();
     
-    return new ModelAndView(variables, "setup_conv.ftl");    
+    for (String schoolName : idToSchoolMap.values()) {
+      schoolNamesList.add(schoolName);
+    }
+    
+    Collections.sort(schoolNamesList);
+    
+    for (String schoolName : schoolNamesList) {
+      schoolSuggestions = schoolSuggestions + "<option value=\"" + schoolName + "\" />";
+    }
+    
+    Map<String, Object> variables = ImmutableMap.of("title",
+        "Scheduler", "schoolSuggestions", schoolSuggestions, "currDay", date, "errorMessage", "");
+    
+    return new ModelAndView(variables, "create_exam_conv.ftl");    
   }
-  
-  
 
 }
-
-

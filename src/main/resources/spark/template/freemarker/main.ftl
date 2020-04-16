@@ -10,5 +10,6 @@
      <script src="js/jquery-2.1.1.js"></script>
      <script src="js/add_conv_name.js"></script>
      <script src="js/build_convention.js"></script>
+     <script src="js/choose_school.js"></script>
   </body>
 </html>

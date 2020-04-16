@@ -22,20 +22,60 @@ public class WebScraper{
 
   //might have to change this
 //  public static final String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36";
-  public static final String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.157 Safari/537.36";
-
+//  public static final String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.157 Safari/537.36";
+  public static final String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36";
   private String collegeName = "";
   private Map<String, List<String>> deptToCourses = new HashMap<>();
   private Map<String, String> conflict = new HashMap<>();
+  private Map<String, String> coursesToIDs = new HashMap<>();
 
   public WebScraper() {
     collegeName = "";
     deptToCourses = new HashMap<>();
     conflict = new HashMap<>();
+    getAllColleges();
   }
 
   public void setCollege(String collegeName) {
     this.collegeName = collegeName;
+  }
+
+  public Map<String, String> getcoursesToIDs(){
+    return this.coursesToIDs;
+  }
+
+  public void getAllColleges() {
+    try {
+      String website = "https://www.coursicle.com/";
+      URLConnection connection = (new URL(website)).openConnection();
+
+      try {
+        Thread.sleep(2000);
+      } catch (InterruptedException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      } //Delay to comply with rate limiting
+      connection.setRequestProperty("User-Agent", USER_AGENT);
+
+      // Here we create a document object and use JSoup to fetch the website
+      Document doc = Jsoup.connect(website).userAgent(USER_AGENT).timeout(0).get();
+
+      Elements colleges = doc.getElementsByClass("tileElement");
+
+      for(Element c: colleges) {
+        String id = c.getElementsByTag("a").attr("href");
+        System.out.println("ID: " + id.replace("/", ""));
+        if(id.equals("")) {
+          break;
+        }
+        String fullname = c.getElementsByTag("a").attr("fullname");
+        System.out.println("Full name: " + fullname);
+        coursesToIDs.put(id, fullname);
+      }
+    }catch (IOException e) {
+      e.printStackTrace();
+    }
+
   }
 
 

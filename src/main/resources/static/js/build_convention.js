@@ -65,7 +65,7 @@ const saveConv = () => {
     // Parse the JSON response into a JavaScript object.
     //const responseObject = JSON.parse(responseJSON);
 
-    $.get("/account", response => {});
+    //$.get("/account", response => {});
   });
 }
 

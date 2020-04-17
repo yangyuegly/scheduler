@@ -2,23 +2,33 @@ package edu.brown.cs.student.scheduler;
 
 import java.util.Objects;
 
-public class Conflict {
-    Integer event1id;
-    Integer event2id;
-    Integer weight; 
+import edu.brown.cs.student.graph.IEdge;
 
-  public Conflict(Integer event1id, Integer event2id, Integer weight) {
-    this.event1id = event1id;
-    this.event2id = event2id;
+public class Conflict implements IEdge<Event, Conflict> {
+  Event event1;
+  Event event2;
+  Integer weight; 
+
+  public Conflict(Event event1, Event event2, Integer weight) {
+    this.event1 = event1;
+    this.event2 = event2;
     this.weight = weight;
   }
 
-  public Conflict() {
+  public Event getHead() {
+    return this.event1;
   }
 
-  public Conflict(Integer event1id, Integer event2id) {
-    this.event1id = event1id;
-    this.event2id = event2id;
+  public void setHead(Event event1) {
+    this.event1 = event1;
+  }
+
+  public Event getTail() {
+    return this.event2;
+  }
+
+  public void setTail(Event event2) {
+    this.event2 = event2;
   }
 
   public Integer getWeight() {
@@ -29,34 +39,18 @@ public class Conflict {
     this.weight = weight;
   }
 
+  public Conflict event1(Event event1) {
+    this.event1 = event1;
+    return this;
+  }
+
+  public Conflict event2(Event event2) {
+    this.event2 = event2;
+    return this;
+  }
+
   public Conflict weight(Integer weight) {
     this.weight = weight;
-    return this;
-  }
-
-  public Integer getEvent1id() {
-    return this.event1id;
-  }
-
-  public void setEvent1id(Integer event1id) {
-    this.event1id = event1id;
-  }
-
-  public Integer getEvent2id() {
-    return this.event2id;
-  }
-
-  public void setEvent2id(Integer event2id) {
-    this.event2id = event2id;
-  }
-
-  public Conflict event1id(Integer event1id) {
-    this.event1id = event1id;
-    return this;
-  }
-
-  public Conflict event2id(Integer event2id) {
-    this.event2id = event2id;
     return this;
   }
 
@@ -68,21 +62,21 @@ public class Conflict {
             return false;
         }
         Conflict conflict = (Conflict) o;
-        return Objects.equals(event1id, conflict.event1id) && Objects.equals(event2id, conflict.event2id);
+        return Objects.equals(event1, conflict.event1) && Objects.equals(event2, conflict.event2);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(event1id, event2id);
+    return Objects.hash(event1, event2);
   }
 
   @Override
   public String toString() {
     return "{" +
-      " event1id='" + getEvent1id() + "'" +
-      ", event2id='" + getEvent2id() + "'" +
+      " event1='" + getHead() + "'" +
+      ", event2='" + getTail() + "'" +
+      ", weight='" + getWeight() + "'" +
       "}";
   }
-
 
 }

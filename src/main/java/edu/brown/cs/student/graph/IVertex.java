@@ -15,7 +15,7 @@ public interface IVertex<V, E>{
    */
   Integer getID();
 
-  List<V> getAdjList(); //should the return edges?
+  List<E> getAdjList(); //should the return edges?
 
   void addToAdjList(E adj);
   

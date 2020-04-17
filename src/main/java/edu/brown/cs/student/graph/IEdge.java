@@ -29,13 +29,13 @@ public interface IEdge<V,E> {
    * Set the weight of the edge.
    * @param w the weight that the edge will be set to
    */
-  void setWeight(int w);
+  void setWeight(Integer w);
 
   /**
    * Gets the weight of the edge.
-   * @return the weight of the edge as a double
+   * @return the weight of the edge as a integer
    */
-  int getWeight();
+  Integer getWeight();
 
   /**
    * Gets the tail of the edge which is the end node that

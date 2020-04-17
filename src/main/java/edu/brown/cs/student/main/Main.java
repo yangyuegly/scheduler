@@ -95,8 +95,9 @@ public final class Main {
 //     credential = MongoCredential.createCredential("sampleUser", "myDb",
 //         "password".toCharArray());
 //    database = mongo.getDatabase("myDb");
-//    System.out.println("created db?");
-//    database.createCollection("conflicts");
+    //    System.out.println("created db?");
+    database.createCollection("events");
+    database.createCollection("conflicts");
 //    System.out.println("created conflicts?");
 //    database.createCollection("users");
 //    System.out.println("created users?");

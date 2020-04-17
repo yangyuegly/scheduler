@@ -9,34 +9,33 @@ import com.google.common.base.Objects;
 
 import edu.brown.cs.student.graph.UndirectedWeightedGraph;
 import edu.brown.cs.student.main.ICommand;
+import edu.brown.cs.student.main.Main;
 
 /**
  * This class is used to schedule the user's convention. It implements the
  * ICommand interface.
  */
 public class ScheduleCommand implements ICommand {
-  UndirectedWeightedGraph<Event, Conflict> g = null;
-  List<Event> nodes = new ArrayList<>();
-  Set<Conflict> edges = new HashSet<>();
+  UndirectedWeightedGraph<Event, Conflict> graph = null;
+  List<Event> nodes;
+  Set<Conflict> edges;
 
-  public ScheduleCommand() {
+  public ScheduleCommand(UndirectedWeightedGraph<Event,Conflict> graph) {
+    this.graph = graph;
+    this.nodes = new ArrayList<>();
+    this.edges = new HashSet<>();
   }
 
-  public ScheduleCommand(UndirectedWeightedGraph<Event,Conflict> g, List<Event> nodes, Set<Conflict> edges) {
-    this.g = g;
-    this.nodes = nodes;
-    this.edges = edges;
+  public UndirectedWeightedGraph<Event,Conflict> getGraph() {
+    return this.graph;
   }
 
-  public UndirectedWeightedGraph<Event,Conflict> getG() {
-    return this.g;
-  }
-
-  public void setG(UndirectedWeightedGraph<Event,Conflict> g) {
-    this.g = g;
+  public void setGraph(UndirectedWeightedGraph<Event,Conflict> graph) {
+    this.graph = graph;
   }
 
   public List<Event> getNodes() {
+    Main.getDatabase().getCollection(""); 
     return this.nodes;
   }
 
@@ -52,8 +51,8 @@ public class ScheduleCommand implements ICommand {
     this.edges = edges;
   }
 
-  public ScheduleCommand g(UndirectedWeightedGraph<Event,Conflict> g) {
-    this.g = g;
+  public ScheduleCommand graph(UndirectedWeightedGraph<Event,Conflict> graph) {
+    this.graph = graph;
     return this;
   }
 
@@ -67,6 +66,8 @@ public class ScheduleCommand implements ICommand {
     return this;
   }
 
+
+
   @Override
     public boolean equals(Object o) {
         if (o == this)
@@ -75,23 +76,23 @@ public class ScheduleCommand implements ICommand {
             return false;
         }
         ScheduleCommand scheduleCommand = (ScheduleCommand) o;
-        return Objects.equals(g, scheduleCommand.g) && Objects.equals(nodes, scheduleCommand.nodes) && Objects.equals(edges, scheduleCommand.edges);
+        return Objects.equals(graph, scheduleCommand.graph) && Objects.equals(nodes, scheduleCommand.nodes) && Objects.equals(edges, scheduleCommand.edges);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(g, nodes, edges);
+    return Objects.hash(graph, nodes, edges);
   }
 
   @Override
   public String toString() {
     return "{" +
-      " g='" + getG() + "'" +
+      " graph='" + getGraph() + "'" +
       ", nodes='" + getNodes() + "'" +
       ", edges='" + getEdges() + "'" +
       "}";
   }
-  
+
   @Override
   public String getKeyword() {
     // TODO Auto-generated method stub

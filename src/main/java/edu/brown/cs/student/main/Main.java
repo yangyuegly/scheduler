@@ -24,6 +24,8 @@ import edu.brown.cs.student.gui.CreateExamConvHandler;
 import edu.brown.cs.student.gui.HomeHandler;
 import edu.brown.cs.student.gui.LoginHandler;
 import edu.brown.cs.student.gui.SaveConventionHandler;
+import edu.brown.cs.student.gui.SchedExamSubmitHandler;
+import edu.brown.cs.student.gui.UploadHandler;
 import freemarker.template.Configuration;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
@@ -92,11 +94,11 @@ public final class Main {
 
 //     credential = MongoCredential.createCredential("sampleUser", "myDb",
 //         "password".toCharArray());
-    database = mongo.getDatabase("myDb");
-    System.out.println("created db?");
-    database.createCollection("conflicts");
-    System.out.println("created conflicts?");
-    database.createCollection("users");
+//    database = mongo.getDatabase("myDb");
+//    System.out.println("created db?");
+//    database.createCollection("conflicts");
+//    System.out.println("created conflicts?");
+//    database.createCollection("users");
 //    System.out.println("created users?");
 //    database.createCollection("conflicts");
 //    database.createCollection("users");
@@ -151,10 +153,11 @@ public final class Main {
     Spark.get("/account", new AccountHomeHandler(), freeMarker);
     Spark.post("/account", new LoginHandler(), freeMarker);
     Spark.get("/create_convention", new CreateConventionHandler(), freeMarker);
-    Spark.post("/create_convention", new CreateConvSubmitHandler(), freeMarker);
+    Spark.post("/create_convention/:id", new CreateConvSubmitHandler(), freeMarker);
     Spark.post("/save_convention", new SaveConventionHandler());
     Spark.get("/create_exam_conv", new CreateExamConvHandler(), freeMarker);
-   //  Spark.get("/upload_convention", new UploadHandler(), freeMarker);
+    Spark.post("/exam_schedule", new SchedExamSubmitHandler(), freeMarker);
+    Spark.post("/upload_convention/:id", new UploadHandler(), freeMarker);
     Spark.get("/convention/:id", new ConventionHomeHandler(), freeMarker);
 
 

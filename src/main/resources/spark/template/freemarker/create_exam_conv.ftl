@@ -8,12 +8,11 @@
   <p>
   <h3>Final Exams</h3>
   <br>
-  <form method="POST" action="/create_convention">
+  <form method="POST" action="/exam_schedule">
     <label for="schoolName">What is the name of your school?</label>
-    <input list="schoolSuggestionsList" name="schoolName" required>
-    <datalist id="schoolSuggestionsList">
+    <select id="schoolName" name="schoolName">
       ${schoolSuggestions}
-    </datalist>
+    </select>
     <br>
     <br>
     <label for="startDate">Start date:</label>
@@ -40,7 +39,6 @@
     <br><br>
     <input type="submit" value="Schedule">
   </form>
-  <p class="errorMessage">${errorMessage}</p>
 </div>
 
 

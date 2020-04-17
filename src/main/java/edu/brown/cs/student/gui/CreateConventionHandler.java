@@ -37,8 +37,20 @@ public class CreateConventionHandler implements TemplateViewRoute {
     
     String date = year + "-" + month + "-" + day;
     
+    // create a convention id
+    Random rand = new Random();
+    boolean avail = false;
+    // we want a six digit id that has not been used
+    Integer id = rand.nextInt((999999-100000) + 1) + 100000;
+    //    while (!avail) {
+    //     // avail = Main.getDatabase().checkID();
+    //      id = rand.nextInt((999999-100000) + 1) + 100000;
+    //    }
+    
+    ///store in database (don't get rid of existing events for this convention)!!
+    
     Map<String, Object> variables = ImmutableMap.of("title",
-        "Scheduler", "currDay", date, "errorMessage", "");
+        "Scheduler", "currDay", date, "id", id, "errorMessage", "");
     
     return new ModelAndView(variables, "setup_conv.ftl");    
   }

@@ -7,7 +7,7 @@
 <div class="main-content">
   <p>
   <h3>New convention:</h3>
-  <form method="POST" action="/create_convention">
+  <form method="POST" action="/create_convention/{id}">
     <label for="convName">Convention name: </label><br>
     <input name="convName" id="convName" size="30" required><br><br>
     <label for="startDate">Start date:</label>

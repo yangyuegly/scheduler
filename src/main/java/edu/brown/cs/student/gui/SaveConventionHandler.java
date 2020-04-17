@@ -36,18 +36,6 @@ public class SaveConventionHandler implements Route {
     QueryParamsMap queryMap = req.queryMap();
     String existingEventsString = queryMap.value("existingEvents");
     
-    // create a convention id
-    Random rand = new Random();
-    boolean avail = false;
-    // we want a six digit id that has not been used
-    Integer id = rand.nextInt((999999-100000) + 1) + 100000;
-    //    while (!avail) {
-    //     // avail = Main.getDatabase().checkID();
-    //      id = rand.nextInt((999999-100000) + 1) + 100000;
-    //    }
-    
-    ///store in database (don't get rid of existing events for this convention)!!
-    
     // get convention links
     
     

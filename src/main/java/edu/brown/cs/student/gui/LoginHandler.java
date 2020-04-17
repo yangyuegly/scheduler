@@ -36,7 +36,7 @@ public class LoginHandler implements TemplateViewRoute  {
     User currUser = new User(email);
     
     // sets the cookie so it expires after two hours
-    res.cookie("user", email, 120 * 60 * 1000);  
+    res.cookie("user", email, 72000000); //120 * 60 * 1000);  
     
     
     

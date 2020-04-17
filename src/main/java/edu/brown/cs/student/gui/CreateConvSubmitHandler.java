@@ -25,6 +25,7 @@ public class CreateConvSubmitHandler implements TemplateViewRoute {
     }
     
     QueryParamsMap queryMap = request.queryMap();
+    String id = request.params(":id");
     String name = queryMap.value("convName");
     String startDate = queryMap.value("startDate");
     String numDaysString = queryMap.value("numDays");
@@ -34,8 +35,9 @@ public class CreateConvSubmitHandler implements TemplateViewRoute {
     String submitType = queryMap.value("submitType");
     
     int numDays;
+   
     
-    //add to database
+    ///store in database (don't get rid of existing events for this convention)!!
     
     
     
@@ -43,22 +45,21 @@ public class CreateConvSubmitHandler implements TemplateViewRoute {
       numDays = Integer.parseInt(numDaysString);
     } catch (NumberFormatException err) {
       Map<String, Object> variables = ImmutableMap.of("title",
-          "Scheduler", "errorMessage", "The number of days must be an integer.");
+          "Scheduler", "id", id.toString(), "id", id.toString(), "errorMessage",
+          "The number of days must be an integer.");
       return new ModelAndView(variables, "setup_conv.ftl");
     }
     
     if (submitType.equals("Add events by hand")) {
       Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "convName", 
-          name, "existingEvents", "");
+          name, "existingEvents", "", "id", id);
       return new ModelAndView(variables, "convention_home.ftl");
     } else {
+      
       Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "convName", 
-          name, "message", "");
+          name, "id", id.toString(), "message", "");
       return new ModelAndView(variables, "upload_conv.ftl");
     }
   }
-  
-  
-  
 }
   

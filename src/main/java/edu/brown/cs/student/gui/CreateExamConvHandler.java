@@ -14,6 +14,10 @@ import spark.Request;
 import spark.Response;
 import spark.TemplateViewRoute;
 
+/**
+ * This class is used to display the create_exam_conv page, so the user can schedule
+ *   final exams for the college of their choice.
+ */
 public class CreateExamConvHandler implements TemplateViewRoute {
   
   @Override
@@ -48,11 +52,12 @@ public class CreateExamConvHandler implements TemplateViewRoute {
     Collections.sort(schoolNamesList);
     
     for (String schoolName : schoolNamesList) {
-      schoolSuggestions = schoolSuggestions + "<option value=\"" + schoolName + "\" />";
+      schoolSuggestions = schoolSuggestions + "<option value=\"" + schoolName + "\" />" 
+        + schoolName + "</option>";
     }
     
     Map<String, Object> variables = ImmutableMap.of("title",
-        "Scheduler", "schoolSuggestions", schoolSuggestions, "currDay", date, "errorMessage", "");
+        "Scheduler", "schoolSuggestions", schoolSuggestions, "currDay", date);
     
     return new ModelAndView(variables, "create_exam_conv.ftl");    
   }

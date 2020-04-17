@@ -60,8 +60,6 @@ const saveConv = () => {
   const myJson = JSON.stringify(existingEvents);
   const postParameters = { existingEvents: myJson };
 
-
-
   // post request to "/save_convention" with added events
   $.post("/save_convention", postParameters, responseJSON => {
     // Parse the JSON response into a JavaScript object.

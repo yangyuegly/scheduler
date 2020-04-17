@@ -110,10 +110,6 @@ public class LoadCommand {
     //   nodes.add(new Event(entry.getValue(), entry.getKey()));
     // }
 
-    Document nestDoc = new Document("convention_id", conventionID).append("conflicts",
-        Arrays.asList());
-    MongoCollection<Document> collection = Main.getDatabase().getCollection("conflicts");
-    collection.insertOne(nestDoc);
     Gson gson = new Gson();
     List<BasicDBObject> conflictArray = new ArrayList<>();
 
@@ -125,9 +121,6 @@ public class LoadCommand {
       // edges.add(entry.getKey());
       BasicDBObject obj = BasicDBObject.parse(gson.toJson(entry.getKey()));
       conflictArray.add(obj);
-
-      Document updateQuery = new Document();
-      updateQuery.append("$set", new Document().append("_id", "test"));
 
       // BasicDBObject update = new BasicDBObject();
       // update.put("$push", {"conflicts": {"event1id": entry.getKey().getevent1id(), 

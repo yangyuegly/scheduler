@@ -35,7 +35,7 @@ public class ScheduleCommand implements ICommand {
   }
 
   public List<Event> getNodes() {
-    Main.getDatabase().getCollection(""); 
+    Main.getDatabase().getCollection("events"); 
     return this.nodes;
   }
 

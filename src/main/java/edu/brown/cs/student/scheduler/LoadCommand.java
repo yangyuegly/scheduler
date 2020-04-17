@@ -20,15 +20,18 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoClient;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.ConnectionString;
+import com.mongodb.DBObject;
 import com.mongodb.ServerAddress;
 import com.mongodb.MongoCredential;
 
 
 import com.mongodb.client.MongoDatabase;
 
+import org.bson.BsonArray;
 import org.bson.Document;
 import java.util.Arrays;
 
+import com.google.gson.Gson;
 import com.mongodb.BasicDBObject;
 import com.mongodb.Block;
 
@@ -70,9 +73,7 @@ public class LoadCommand {
 
   }
 
-  public void execute(List<String> input) {
-    
-    String conventionID = "";
+  public void execute(List<String> input, String conventionID) {
     int count = 0;
     //map conflict to number of conflicts
     Map<Conflict, Integer> frequencyMap = new HashMap<>();
@@ -105,31 +106,39 @@ public class LoadCommand {
     }
 
     //fill the vertices 
-    for (Map.Entry<String, Integer> entry : nameToId.entrySet()) {
-      nodes.add(new Event(entry.getValue(), entry.getKey()));
-    }
-
+    // for (Map.Entry<String, Integer> entry : nameToId.entrySet()) {
+    //   nodes.add(new Event(entry.getValue(), entry.getKey()));
+    // }
 
     Document nestDoc = new Document("convention_id", conventionID).append("conflicts",
         Arrays.asList());
     MongoCollection<Document> collection = Main.getDatabase().getCollection("conflicts");
     collection.insertOne(nestDoc);
+    Gson gson = new Gson();
+    List<BasicDBObject> conflictArray = new ArrayList<>();
+
+    BasicDBObject query = new BasicDBObject();
 
     for (Map.Entry<Conflict, Integer> entry : frequencyMap.entrySet()) {
       //set weight for each conflict
       entry.getKey().setWeight(entry.getValue());
-      edges.add(entry.getKey());
-      
-      BasicDBObject query = new BasicDBObject();
-      query.put("convention_id", conventionID);
+      // edges.add(entry.getKey());
+      BasicDBObject obj = BasicDBObject.parse(gson.toJson(entry.getKey()));
+      conflictArray.add(obj);
+
+      Document updateQuery = new Document();
+      updateQuery.append("$set", new Document().append("_id", "test"));
 
       // BasicDBObject update = new BasicDBObject();
       // update.put("$push", {"conflicts": {"event1id": entry.getKey().getevent1id(), 
       //   "event2id": entry.getKey().getevent2id, "weight": entry.getValue()});
 
       // Main.getDatabase().getCollection("conflicts").updateOne(query,update);
-      }
     }
+    Document doc = new Document("convention_id", conventionID).append("conflicts", conflictArray);
+    Main.getDatabase().getCollection("conflicts").insertOne(doc);
+
+  }
 
   }
 

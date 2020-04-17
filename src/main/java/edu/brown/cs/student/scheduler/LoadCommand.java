@@ -24,7 +24,6 @@ import com.mongodb.DBObject;
 import com.mongodb.ServerAddress;
 import com.mongodb.MongoCredential;
 
-
 import com.mongodb.client.MongoDatabase;
 
 import org.bson.BsonArray;
@@ -46,13 +45,13 @@ import com.mongodb.client.result.UpdateResult;
  *  convention_id: 1,
  *  conflicts: [
  *    {
- *      event1_id: 1,
- *      event2_id: 2,
+ *      event1: 1,
+ *      event2: 2,
  *      weight: 3
  *  },
  *  {
- *      event1_id: 1,
- *      event2_id: 3,
+ *      event1: 1,
+ *      event2: 3,
  *      weight: 3
  *  }
  * ],
@@ -75,18 +74,18 @@ public class LoadCommand {
 
   public void execute(List<String[]> input, String conventionID) {
     int count = 0;
-    //map conflict to number of conflicts
+    // map conflict to number of conflicts
     Map<Conflict, Integer> frequencyMap = new HashMap<>();
     Map<String, Integer> nameToId = new HashMap<>();
-    //loop through rows in csv
+    // loop through rows in csv
     for (String[] r : input) {
       List<String> row = Arrays.asList(r);
-      //i = 0 corresponds to attendee
+      // i = 0 corresponds to attendee
       for (int i = 1; i < row.size(); i++) {
         String first = row.get(i);
-        //if an event has not appeared before
+        // if an event has not appeared before
         if (!nameToId.containsKey(first)) {
-          //assign an id to the event
+          // assign an id to the event
           nameToId.put(first, count);
           count++;
         }
@@ -98,48 +97,41 @@ public class LoadCommand {
           }
           Conflict conflict = new Conflict(new Event(nameToId.get(first), first),
               new Event(nameToId.get(second), second), null);
-          //add to the weight if the conflict doesn't exist or add the conflict itself
+          // add to the weight if the conflict doesn't exist or add the conflict itself
           frequencyMap.put(conflict, frequencyMap.getOrDefault(conflict, 0) + 1);
         }
       }
 
     }
 
-    //fill the vertices 
+    // fill the vertices
     // for (Map.Entry<String, Integer> entry : nameToId.entrySet()) {
-    //   nodes.add(new Event(entry.getValue(), entry.getKey()));
+    // nodes.add(new Event(entry.getValue(), entry.getKey()));
     // }
 
-    Document nestDoc = new Document("convention_id", conventionID).append("conflicts",
-        Arrays.asList());
-    MongoCollection<Document> collection = Main.getDatabase().getCollection("conflicts");
-    collection.insertOne(nestDoc);
     Gson gson = new Gson();
     List<BasicDBObject> conflictArray = new ArrayList<>();
+    List<BasicDBObject> eventArray = new ArrayList<>();
 
-    BasicDBObject query = new BasicDBObject();
+    // insert into the event table
+    for (Map.Entry<String, Integer> entry : nameToId.entrySet()) {
+      Event e = new Event(entry.getValue(), entry.getKey());
+      BasicDBObject eventObject = BasicDBObject.parse(gson.toJson(e));
+      eventArray.add(eventObject);
+    }
+    Document currEvent = new Document("convention_id", conventionID).append("events", eventArray);
+    Main.getDatabase().getCollection("events").insertOne(currEvent);
 
     for (Map.Entry<Conflict, Integer> entry : frequencyMap.entrySet()) {
-      //set weight for each conflict
+      // set weight for each conflict
       entry.getKey().setWeight(entry.getValue());
       // edges.add(entry.getKey());
       BasicDBObject obj = BasicDBObject.parse(gson.toJson(entry.getKey()));
       conflictArray.add(obj);
-
-      Document updateQuery = new Document();
-      updateQuery.append("$set", new Document().append("_id", "test"));
-
-      // BasicDBObject update = new BasicDBObject();
-      // update.put("$push", {"conflicts": {"event1id": entry.getKey().getevent1id(), 
-      //   "event2id": entry.getKey().getevent2id, "weight": entry.getValue()});
-
-      // Main.getDatabase().getCollection("conflicts").updateOne(query,update);
     }
     Document doc = new Document("convention_id", conventionID).append("conflicts", conflictArray);
     Main.getDatabase().getCollection("conflicts").insertOne(doc);
 
   }
 
-  }
-
-
+}

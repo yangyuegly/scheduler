@@ -26,9 +26,8 @@ public class User {
    *
    * @param userEmail - a String, which represents the user's email
    */
-  public User(String userEmail, String password) {
+  public User(String userEmail) {
     this.email = userEmail;
-    this.password = password; 
   }
 
   /**

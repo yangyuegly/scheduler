@@ -153,6 +153,7 @@ public class WebScraper {
     collection.insertOne(nestDoc);
     Gson gson = new Gson();
     List<BasicDBObject> conflictArray = new ArrayList<>();
+    List<BasicDBObject> eventArray = new ArrayList<>();
 
     BasicDBObject query = new BasicDBObject();
 
@@ -178,6 +179,10 @@ public class WebScraper {
               eventID++;
               Event event2 = new Event(eventID, second);
               eventID++;
+              BasicDBObject eventObject = BasicDBObject.parse(gson.toJson(event1));
+              eventArray.add(eventObject);
+              BasicDBObject eventObject1 = BasicDBObject.parse(gson.toJson(event2));
+              eventArray.add(eventObject1);
               Conflict conflict = new Conflict(event1, event2, 100);
               BasicDBObject obj = BasicDBObject.parse(gson.toJson(conflict));
               conflictArray.add(obj);
@@ -189,6 +194,10 @@ public class WebScraper {
               eventID++;
               Event event2 = new Event(eventID, second);
               eventID++;
+              BasicDBObject eventObject = BasicDBObject.parse(gson.toJson(event1));
+              eventArray.add(eventObject);
+              BasicDBObject eventObject1 = BasicDBObject.parse(gson.toJson(event2));
+              eventArray.add(eventObject1);
               Conflict conflict = new Conflict(event1, event2, 100);
               BasicDBObject obj = BasicDBObject.parse(gson.toJson(conflict));
               conflictArray.add(obj);
@@ -199,6 +208,10 @@ public class WebScraper {
             eventID++;
             Event event2 = new Event(eventID, second);
             eventID++;
+            BasicDBObject eventObject = BasicDBObject.parse(gson.toJson(event1));
+            eventArray.add(eventObject);
+            BasicDBObject eventObject1 = BasicDBObject.parse(gson.toJson(event2));
+            eventArray.add(eventObject1);
             Conflict conflict = new Conflict(event1, event2, 100);
             BasicDBObject obj = BasicDBObject.parse(gson.toJson(conflict));
             conflictArray.add(obj);
@@ -212,6 +225,9 @@ public class WebScraper {
     org.bson.Document doc = new org.bson.Document("convention_id", conventionID).append("conflicts",
         conflictArray);
     Main.getDatabase().getCollection("conflicts").insertOne(doc);
+
+    org.bson.Document currEvent = new org.bson.Document("convention_id", conventionID).append("events", eventArray);
+    Main.getDatabase().getCollection("events").insertOne(currEvent);
   }
 
 }

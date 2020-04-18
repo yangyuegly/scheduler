@@ -8,11 +8,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.mongodb.ConnectionString;
-import com.mongodb.client.MongoClients;
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoDatabase;
 import com.mongodb.MongoClientSettings;
-// import com.mongodb.MongoClientOptions;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoDatabase;
 
 import edu.brown.cs.student.gui.AccountHomeHandler;
 import edu.brown.cs.student.gui.ConventionHomeHandler;
@@ -49,12 +48,12 @@ public final class Main {
    */
   private static final int DEFAULT_PORT = 4567;
 
-  MongoClient mongo = MongoClients.create();
-  
 
-  // Creating Credentials
-  // private MongoCredential credential;
+  ConnectionString connString;
 
+
+  MongoClientSettings settings;
+  MongoClient mongo;
 
   //Accessing the database
   static MongoDatabase database;
@@ -93,21 +92,18 @@ public final class Main {
     .defaultsTo(DEFAULT_PORT);
     OptionSet options = parser.parse(args);
 
-//     credential = MongoCredential.createCredential("sampleUser", "myDb",
-//         "password".toCharArray());
-//    database = mongo.getDatabase("myDb");
-    //    System.out.println("created db?");
-//    database.createCollection("events");
-//    database.createCollection("conflicts");
-//    System.out.println("created conflicts?");
-//    database.createCollection("users");
-//    System.out.println("created users?");
-//    database.createCollection("conflicts");
-//    database.createCollection("users");
+    connString = new ConnectionString(
+        "mongodb://sduraide:cs32scheduler@scheduler-shard-00-00-rw75k.mongodb.net:27017,scheduler-shard-00-01-rw75k.mongodb.net:27017,scheduler-shard-00-02-rw75k.mongodb.net:27017/test?ssl=true&replicaSet=scheduler-shard-0&authSource=admin&retryWrites=true&w=majority"
+    );
 
-//    WebScraper web = new WebScraper();
-//    web.setCollege("clemson");
-//    web.scrape();
+    settings = MongoClientSettings.builder()
+        .applyConnectionString(connString)
+        .retryWrites(true)
+        .build();
+    mongo = MongoClients.create(settings);
+    //created db in cluster in MongoDBAtlas including collections: users, events, conflicts
+    database = mongo.getDatabase("test");
+
 
     // create new objects to assist with running the program
     // initialize commands

@@ -34,7 +34,7 @@ public class ScheduleCommand implements ICommand {
   }
 
   public List<Event> getNodes() {
-    Main.getDatabase().getCollection("events"); 
+    Main.getDatabase().getCollection("events");
     return this.nodes;
   }
 
@@ -105,3 +105,4 @@ public class ScheduleCommand implements ICommand {
   }
 
 }
+>>>>>>> da8c55e7a0af1bdde6dea9967f7ce3e1589095c8

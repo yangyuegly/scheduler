@@ -22,7 +22,7 @@ public class ConventionHomeHandler implements TemplateViewRoute {
     
     String conventionID = req.params(":id");
     String userEmail = req.cookie("user");
-    
+    //DATABASE CALL - check if logged in
     if (userEmail == null) {
       // user is not logged in
       Map<String, Object> variables = ImmutableMap.of("title",

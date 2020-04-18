@@ -50,6 +50,7 @@ public final class Main {
   private static final int DEFAULT_PORT = 4567;
 
   MongoClient mongo = MongoClients.create();
+  
 
   // Creating Credentials
   // private MongoCredential credential;
@@ -96,8 +97,8 @@ public final class Main {
 //         "password".toCharArray());
 //    database = mongo.getDatabase("myDb");
     //    System.out.println("created db?");
-    database.createCollection("events");
-    database.createCollection("conflicts");
+//    database.createCollection("events");
+//    database.createCollection("conflicts");
 //    System.out.println("created conflicts?");
 //    database.createCollection("users");
 //    System.out.println("created users?");
@@ -120,8 +121,14 @@ public final class Main {
       runSparkServer((int) options.valueOf("port"));
 
     }
+    
+  //allowing us to upload a file ???????????????????????????????????????????????????????????????????
+    File uploadDir = new File("uploaded-file");
+    uploadDir.mkdir();
 
     manager.run();
+    
+    
   }
 
   private static FreeMarkerEngine createEngine() {

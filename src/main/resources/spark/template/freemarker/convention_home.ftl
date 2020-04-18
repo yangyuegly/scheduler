@@ -5,11 +5,10 @@
 </div>
 
 <div class="main-content">
-  <p>
   <h2>${convName}</h2>
   <br>
-  <h3>Existing Events:</h2>
-  <p id="eventNames"></p>
+  <h3>Existing Events:</h3>
+  <p id="eventNames">No events yet.</p>
   <br>
   <div id="addEventsDiv">
     <h3 id="addEventLabel">Add another event:</h3>
@@ -37,7 +36,7 @@
     <p id="schedExpl">If you have all of your attendees, schedule now!</p>
     <button id="schedule">Schedule now</button>
   </div>
-  
+
 </div>
 
 </#assign>

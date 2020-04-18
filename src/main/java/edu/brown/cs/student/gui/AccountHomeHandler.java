@@ -27,7 +27,7 @@ public class AccountHomeHandler implements TemplateViewRoute {
           "Scheduler", "message", "Please log in");
       return new ModelAndView(variables, "home.ftl");
     }
-    
+    //DATABASE CALL -- just the convention name and id
     // get convention data using req.cookie("user"); to get the email
     
     // store convention links using ids in "/convention/:id" format, send to page

@@ -45,7 +45,7 @@ public class CreateConvSubmitHandler implements TemplateViewRoute {
       numDays = Integer.parseInt(numDaysString);
     } catch (NumberFormatException err) {
       Map<String, Object> variables = ImmutableMap.of("title",
-          "Scheduler", "id", id.toString(), "id", id.toString(), "errorMessage",
+          "Scheduler", "id", id.toString(), "errorMessage",
           "The number of days must be an integer.");
       return new ModelAndView(variables, "setup_conv.ftl");
     }

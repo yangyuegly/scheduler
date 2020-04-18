@@ -50,7 +50,7 @@ public class CreateConventionHandler implements TemplateViewRoute {
     ///store in database (don't get rid of existing events for this convention)!!
     
     Map<String, Object> variables = ImmutableMap.of("title",
-        "Scheduler", "currDay", date, "id", id, "errorMessage", "");
+        "Scheduler", "currDay", date, "id", id.toString(), "errorMessage", "");
     
     return new ModelAndView(variables, "setup_conv.ftl");    
   }

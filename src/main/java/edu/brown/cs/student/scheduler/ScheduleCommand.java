@@ -3,12 +3,16 @@ package edu.brown.cs.student.scheduler;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
+<<<<<<< HEAD
 import com.google.common.base.Objects;
 import com.mongodb.client.MongoDatabase;
 
 import edu.brown.cs.student.accounts.User;
+=======
+>>>>>>> 17ee6c0cdd60ddddaa6a31d2996aeadc992dbb0d
 import edu.brown.cs.student.graph.UndirectedWeightedGraph;
 import edu.brown.cs.student.main.ICommand;
 import edu.brown.cs.student.main.Main;
@@ -122,3 +126,4 @@ public class ScheduleCommand implements ICommand {
   }
 
 }
+>>>>>>> da8c55e7a0af1bdde6dea9967f7ce3e1589095c8

@@ -72,14 +72,14 @@ public class LoadCommand {
 
   }
 
-  public void execute(List<String> input, String conventionID) {
+  public void execute(List<String[]> input, String conventionID) {
     int count = 0;
     // map conflict to number of conflicts
     Map<Conflict, Integer> frequencyMap = new HashMap<>();
     Map<String, Integer> nameToId = new HashMap<>();
     // loop through rows in csv
-    for (String r : input) {
-      List<String> row = Arrays.asList(r.split(","));
+    for (String[] r : input) {
+      List<String> row = Arrays.asList(r);
       // i = 0 corresponds to attendee
       for (int i = 1; i < row.size(); i++) {
         String first = row.get(i);

@@ -18,6 +18,7 @@ public class User {
    *   this user is managing
    */
   private String email;
+  private String password;
   private List<Convention> conventions = new ArrayList<>();
   
   /**
@@ -25,8 +26,9 @@ public class User {
    *
    * @param userEmail - a String, which represents the user's email
    */
-  public User(String userEmail) {
-    email = userEmail;
+  public User(String userEmail, String password) {
+    this.email = userEmail;
+    this.password = password; 
   }
 
   /**

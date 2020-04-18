@@ -6,13 +6,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-<<<<<<< HEAD
-import com.google.common.base.Objects;
 import com.mongodb.client.MongoDatabase;
-
+import static com.mongodb.client.model.Projections.*;
 import edu.brown.cs.student.accounts.User;
-=======
->>>>>>> 17ee6c0cdd60ddddaa6a31d2996aeadc992dbb0d
 import edu.brown.cs.student.graph.UndirectedWeightedGraph;
 import edu.brown.cs.student.main.ICommand;
 import edu.brown.cs.student.main.Main;
@@ -20,6 +16,7 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoClient;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.ConnectionString;
+import com.mongodb.DBObject;
 import com.mongodb.ServerAddress;
 import com.mongodb.MongoCredential;
 
@@ -38,6 +35,8 @@ import com.mongodb.client.MongoCursor;
 import static com.mongodb.client.model.Filters.*;
 import com.mongodb.client.result.DeleteResult;
 import static com.mongodb.client.model.Updates.*;
+import static org.junit.Assert.assertEquals;
+
 import com.mongodb.client.result.UpdateResult;
 /**
  * This class is used to schedule the user's convention. It implements the
@@ -47,13 +46,17 @@ public class ScheduleCommand implements ICommand {
   UndirectedWeightedGraph<Event, Conflict> graph = null;
   List<Event> nodes;
   Set<Conflict> edges;
-  Convention convention; 
+  Convention convention;
+  Integer CONCURENCY_LIMIT, MAX_SCHEDULE_DAYS;
 
-  public ScheduleCommand(UndirectedWeightedGraph<Event, Conflict> graph, Convention convention) {
+  public ScheduleCommand(
+      UndirectedWeightedGraph<Event, Conflict> graph, 
+      Convention convention, Integer CONCURENCY_LIMIT, Integer MAX_SCHEDULE_DAYS) {
     this.graph = graph;
     this.nodes = new ArrayList<>();
     this.edges = new HashSet<>();
-    this.convention = convention; 
+    this.convention = convention;
+    this.MAX_SCHEDULE_DAYS = MAX_SCHEDULE_DAYS; 
   }
 
   public UndirectedWeightedGraph<Event, Conflict> getGraph() {
@@ -61,28 +64,68 @@ public class ScheduleCommand implements ICommand {
   }
   
   public void execute() {
-
+    extractNodes();
+    extractEdges();
+    // this.graph = UndirectedWeightedGraph<Event,Conflict>(nodes, CONCURENCY_LIMIT, MAX_SCHEDULE_DAYS);
+    // graph.addAllEdges(this.edges);
   }
 
   public void setGraph(UndirectedWeightedGraph<Event,Conflict> graph) {
     this.graph = graph;
   }
 
-  public List<Event> getNodes() {
-    MongoCollection<org.bson.Document> eventCollection = Main.getDatabase().getCollection("events");
+  /**
+   * Get events stored in the database associated with a unique convention ID
+   * @return
+   */
+  private void extractNodes() {
+    MongoCollection<Document> eventCollection = Main.getDatabase().getCollection("events");
     BasicDBObject query = new BasicDBObject();
     query.put("conventionID", convention.getID());
-    eventCollection.find();
-    return this.nodes;
+    Document doc = eventCollection.find(query).first();
+
+    //iterate through the events found
+    BasicDBList eventList = (BasicDBList)doc.get("events");
+    for (int i = 0; i < eventList.size(); i++) {
+      BasicDBObject eventObj = (BasicDBObject) eventList.get(i);
+      Event e = new Event(eventObj.getInt("id"), eventObj.getString("name"));
+      nodes.add(e);
+    }
   }
 
   public void setNodes(List<Event> nodes) {
     this.nodes = nodes;
   }
 
-  public Set<Conflict> getEdges() {
-    return this.edges;
-  }
+  /**
+   * extract
+   */
+  private void extractEdges() {
+    MongoCollection<Document> conflicCollection= Main.getDatabase().getCollection("conflicts");
+    BasicDBObject query = new BasicDBObject();
+    query.put("conventionID", convention.getID());
+
+    //the row storing the corresponding events 
+    // Document doc = conflicCollection.find(query).first();
+  
+    //iterate through the events found
+    List<Document> conflictList = (List<Document>) 
+    conflicCollection.find().projection(fields(include("conflicts"),
+        excludeId()))
+        .map(document -> document.get("conflicts")).first();
+    
+    //unsure if this works
+    for (int i = 0; i < conflictList.size(); i++) {
+      Document conflictDoc = conflictList.get(i);
+      Document event1Doc = (Document) conflictDoc.get("event1");
+      Document event2Doc = (Document) conflictDoc.get("event2");
+      Integer weight = conflictDoc.getInteger("weight");
+      Event e1 = new Event(event1Doc.getInteger("id"), event1Doc.getString("name"));
+      Event e2 = new Event(event2Doc.getInteger("id"), event2Doc.getString("name"));
+      Conflict c = new Conflict(e1, e2, weight);
+      edges.add(c);
+    }
+   }
 
   public void setEdges(Set<Conflict> edges) {
     this.edges = edges;
@@ -108,8 +151,6 @@ public class ScheduleCommand implements ICommand {
   public String toString() {
     return "{" +
       " graph='" + getGraph() + "'" +
-      ", nodes='" + getNodes() + "'" +
-      ", edges='" + getEdges() + "'" +
       "}";
   }
 
@@ -126,4 +167,3 @@ public class ScheduleCommand implements ICommand {
   }
 
 }
->>>>>>> da8c55e7a0af1bdde6dea9967f7ce3e1589095c8

@@ -109,7 +109,7 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
  */
 public int findDegrees(int id) {
     return nodes.get(id).getAdjList().size(); 
-  }
+}
   
 
 /**

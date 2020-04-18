@@ -42,7 +42,7 @@ import com.mongodb.client.result.UpdateResult;
 
 /**
  * {
- *  convention_id: 1,
+ *  conventionID: 1,
  *  conflicts: [
  *    {
  *      event1: 1,
@@ -119,7 +119,7 @@ public class LoadCommand {
       BasicDBObject eventObject = BasicDBObject.parse(gson.toJson(e));
       eventArray.add(eventObject);
     }
-    Document currEvent = new Document("convention_id", conventionID).append("events", eventArray);
+    Document currEvent = new Document("conventionID", conventionID).append("events", eventArray);
     Main.getDatabase().getCollection("events").insertOne(currEvent);
 
     for (Map.Entry<Conflict, Integer> entry : frequencyMap.entrySet()) {
@@ -129,7 +129,7 @@ public class LoadCommand {
       BasicDBObject obj = BasicDBObject.parse(gson.toJson(entry.getKey()));
       conflictArray.add(obj);
     }
-    Document doc = new Document("convention_id", conventionID).append("conflicts", conflictArray);
+    Document doc = new Document("conventionID", conventionID).append("conflicts", conflictArray);
     Main.getDatabase().getCollection("conflicts").insertOne(doc);
 
   }

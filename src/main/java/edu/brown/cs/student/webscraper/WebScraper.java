@@ -39,7 +39,7 @@ public class WebScraper {
   private Map<String, String> coursesToIDs = new HashMap<>();
   private int conventionID;
 
-  public WebScraper(int conventionID) {
+  public WebScraper(Integer conventionID) {
     collegeName = "";
     deptToCourses = new HashMap<>();
     conflict = new HashMap<>();
@@ -147,7 +147,7 @@ public class WebScraper {
     Set<String> keys = deptToCourses.keySet();
     int eventID = 0;
     int count = 0;
-    org.bson.Document nestDoc = new org.bson.Document("convention_id", conventionID)
+    org.bson.Document nestDoc = new org.bson.Document("conventionID", conventionID)
         .append("conflicts", Arrays.asList());
     MongoCollection<org.bson.Document> collection = Main.getDatabase().getCollection("conflicts");
     collection.insertOne(nestDoc);
@@ -209,7 +209,7 @@ public class WebScraper {
       }
     }
 
-    org.bson.Document doc = new org.bson.Document("convention_id", conventionID).append("conflicts",
+    org.bson.Document doc = new org.bson.Document("conventionID", conventionID).append("conflicts",
         conflictArray);
     Main.getDatabase().getCollection("conflicts").insertOne(doc);
   }

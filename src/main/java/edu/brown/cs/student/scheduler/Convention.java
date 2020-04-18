@@ -20,7 +20,7 @@ public class Convention {
    *   that in which the key event is scheduled 
    */
   private String name;
-  private String id;
+  private Integer id;
   private List<Event> events = new ArrayList<>();
   private Map<Event, String> eventToTimeMap = new HashMap<>();
   // more?
@@ -31,7 +31,7 @@ public class Convention {
    * @param convName - a String, which represents the name of this convention
    * @param convId  - a String, which represents the id of this convention
    */
-  public Convention(String convName, String convId) {
+  public Convention(String convName, Integer convId) {
     name = convName;
     id = convId;
   }
@@ -50,7 +50,7 @@ public class Convention {
    *
    * @return a String, which represents the id of this convention
    */
-  public String getID() {
+  public Integer getID() {
     return id;
   }
 

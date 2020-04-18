@@ -6,11 +6,35 @@ import java.util.List;
 import java.util.Set;
 
 import com.google.common.base.Objects;
+import com.mongodb.client.MongoDatabase;
 
+import edu.brown.cs.student.accounts.User;
 import edu.brown.cs.student.graph.UndirectedWeightedGraph;
 import edu.brown.cs.student.main.ICommand;
 import edu.brown.cs.student.main.Main;
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoClient;
+import com.mongodb.MongoClientSettings;
+import com.mongodb.ConnectionString;
+import com.mongodb.ServerAddress;
+import com.mongodb.MongoCredential;
 
+
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.MongoCollection;
+
+import org.bson.Document;
+import java.util.Arrays;
+
+import com.mongodb.BasicDBList;
+import com.mongodb.BasicDBObject;
+import com.mongodb.Block;
+
+import com.mongodb.client.MongoCursor;
+import static com.mongodb.client.model.Filters.*;
+import com.mongodb.client.result.DeleteResult;
+import static com.mongodb.client.model.Updates.*;
+import com.mongodb.client.result.UpdateResult;
 /**
  * This class is used to schedule the user's convention. It implements the
  * ICommand interface.
@@ -19,15 +43,21 @@ public class ScheduleCommand implements ICommand {
   UndirectedWeightedGraph<Event, Conflict> graph = null;
   List<Event> nodes;
   Set<Conflict> edges;
+  Convention convention; 
 
-  public ScheduleCommand(UndirectedWeightedGraph<Event,Conflict> graph) {
+  public ScheduleCommand(UndirectedWeightedGraph<Event, Conflict> graph, Convention convention) {
     this.graph = graph;
     this.nodes = new ArrayList<>();
     this.edges = new HashSet<>();
+    this.convention = convention; 
   }
 
-  public UndirectedWeightedGraph<Event,Conflict> getGraph() {
+  public UndirectedWeightedGraph<Event, Conflict> getGraph() {
     return this.graph;
+  }
+  
+  public void execute() {
+
   }
 
   public void setGraph(UndirectedWeightedGraph<Event,Conflict> graph) {
@@ -35,7 +65,10 @@ public class ScheduleCommand implements ICommand {
   }
 
   public List<Event> getNodes() {
-    Main.getDatabase().getCollection("events"); 
+    MongoCollection<org.bson.Document> eventCollection = Main.getDatabase().getCollection("events");
+    BasicDBObject query = new BasicDBObject();
+    query.put("conventionID", convention.getID());
+    eventCollection.find();
     return this.nodes;
   }
 
@@ -66,23 +99,6 @@ public class ScheduleCommand implements ICommand {
     return this;
   }
 
-
-
-  @Override
-    public boolean equals(Object o) {
-        if (o == this)
-            return true;
-        if (!(o instanceof ScheduleCommand)) {
-            return false;
-        }
-        ScheduleCommand scheduleCommand = (ScheduleCommand) o;
-        return Objects.equals(graph, scheduleCommand.graph) && Objects.equals(nodes, scheduleCommand.nodes) && Objects.equals(edges, scheduleCommand.edges);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(graph, nodes, edges);
-  }
 
   @Override
   public String toString() {

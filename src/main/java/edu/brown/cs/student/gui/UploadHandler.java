@@ -63,11 +63,9 @@ public class UploadHandler implements TemplateViewRoute {
     
     
     // fix!!!!!!!!!!!!!!!1
-//    Map<String, Object> variables = ImmutableMap.of("title",
-//        "Scheduler", "message", "Please log in");
-//    return new ModelAndView(variables, "home.ftl");
-    
-    return null;
+    Map<String, Object> variables = ImmutableMap.of("title", // fix!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        "Scheduler", "message", "Please log in");
+    return new ModelAndView(variables, "home.ftl");
     
   }
   

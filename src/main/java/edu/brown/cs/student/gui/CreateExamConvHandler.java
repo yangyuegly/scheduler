@@ -41,20 +41,20 @@ public class CreateExamConvHandler implements TemplateViewRoute {
     
     // get the names of the schools on Coursicle so they appear as suggestions
     String schoolSuggestions = "";
-    WebScraper scraper = new WebScraper();
-    Map<String, String> idToSchoolMap = scraper.getcoursesToIDs();
+    //WebScraper scraper = new WebScraper(); -- takes in convention id!!!!
+//    Map<String, String> idToSchoolMap = scraper.getcoursesToIDs();
     List<String> schoolNamesList = new ArrayList<>();
     
-    for (String schoolName : idToSchoolMap.values()) {
-      schoolNamesList.add(schoolName);
-    }
-    
-    Collections.sort(schoolNamesList);
-    
-    for (String schoolName : schoolNamesList) {
-      schoolSuggestions = schoolSuggestions + "<option value=\"" + schoolName + "\" />" 
-        + schoolName + "</option>";
-    }
+//    for (String schoolName : idToSchoolMap.values()) {
+//      schoolNamesList.add(schoolName);
+//    }
+//    
+//    Collections.sort(schoolNamesList);
+//    
+//    for (String schoolName : schoolNamesList) {
+//      schoolSuggestions = schoolSuggestions + "<option value=\"" + schoolName + "\" />" 
+//        + schoolName + "</option>";
+//    }
     
     Map<String, Object> variables = ImmutableMap.of("title",
         "Scheduler", "schoolSuggestions", schoolSuggestions, "currDay", date);

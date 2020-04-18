@@ -121,14 +121,8 @@ public class CSVParser {
       while ((line != null) && valid) {
         String[] splitLine = line.split(",");
 
-        if (numCols != splitLine.length) {
-          System.err.println("ERROR: The number of columns is inconsistent");
-          valid = false;
-          fileData = null;
-        } else {
-          fileData.add(splitLine);
-          line = bufReader.readLine();
-        }
+        fileData.add(splitLine);
+        line = bufReader.readLine();
       }
 
       bufReader.close();

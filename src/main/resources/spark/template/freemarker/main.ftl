@@ -7,7 +7,7 @@
   </head>
   <body>
      ${content}
-     <script src="js/jquery-2.1.1.js"></script>
-     <script src="js/build_convention.js"></script>
+     <script src="/js/jquery-2.1.1.js"></script>
+     <script src="/js/build_convention.js"></script>
   </body>
 </html>

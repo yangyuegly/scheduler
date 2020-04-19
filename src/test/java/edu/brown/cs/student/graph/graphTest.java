@@ -56,4 +56,10 @@ public class graphTest {
   @Test
   public void getSmallestAvailableColorTest() {
   }
+
+  // @Test
+  // public void graphColoringTest() {
+  //   graph.graphColoring(5, 5);
+  //   assertEquals(1, (int)events.get(0).getColor().get(0));
+  // }
 }

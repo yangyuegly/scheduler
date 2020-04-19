@@ -24,6 +24,20 @@ public class Event implements IVertex<Event, Conflict> {
     this.name = name; 
   }
 
+  /**
+    * Get the heaviest weight among v's adjacency list 
+    * to aid sorting
+    * @return
+    */
+  
+  public Integer getHeaviestWeight() {
+    int max = 0;
+    for (Conflict i : this.getAdjList()) {
+      max = i.getWeight() > max ? i.getWeight() : max;
+    }
+    return max; 
+  }
+  
   public Integer getId() {
     return this.id;
   }

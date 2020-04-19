@@ -69,7 +69,6 @@ import com.mongodb.client.result.UpdateResult;
 public class LoadCommand {
 
   public LoadCommand() {
-
   }
 
   public void execute(List<String[]> input, String conventionID) {

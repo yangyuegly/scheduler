@@ -16,7 +16,7 @@ public class Event implements IVertex<Event, Conflict> {
   public Event() {
   }
 
-  public Event(Integer id, String name ) {
+  public Event(Integer id, String name) {
     this.id = id;
     this.adjList = new ArrayList<>();
     this.degree = 0;

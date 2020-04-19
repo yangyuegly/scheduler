@@ -18,7 +18,14 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoCollection;
 
 import org.bson.Document;
+
+import java.security.spec.KeySpec;
 import java.util.Arrays;
+
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+
 import com.mongodb.Block;
 
 import com.mongodb.client.MongoCursor;
@@ -26,9 +33,20 @@ import static com.mongodb.client.model.Filters.*;
 import com.mongodb.client.result.DeleteResult;
 import static com.mongodb.client.model.Updates.*;
 import com.mongodb.client.result.UpdateResult;
-public class LoginCommand {
 
-  public static void execute(String email, String password) {        
+public class LoginCommand {
+  
+  private static final String UNICODE_FORMAT = "UTF8";
+  public static final String DESEDE_ENCRYPTION_SCHEME = "DESede";
+  private KeySpec ks;
+  private SecretKeyFactory skf;
+  private Cipher cipher;
+  byte[] arrayBytes;
+  private String myEncryptionKey;
+  private String myEncryptionScheme;
+  SecretKey key;
+
+  public void execute(String email, String password) {        
     MongoCollection<org.bson.Document> userCollection = Main.getDatabase().getCollection("users");
     Document currUser = userCollection.find(eq("email", email)).first();
     System.out.println(currUser.toJson());
@@ -36,22 +54,22 @@ public class LoginCommand {
       throw new UserAuthenticationException("User does not exist on system");
     }
     else {
-      if (!password.equals(currUser.get("password"))) {
+      String encryptedPassword = currUser.getString("encryptedPassword");
+      byte[] salt = currUser.("encryptedPassword");
+      if (!password.equals()) {
         throw new UserAuthenticationException("User authentication failed; password mismatch");
       }
     }
   }
 
-  /**
-   * This method returns a String that represents the keyword for this
-   *   ICommand (for example, if the command was Echo, this method would
-   *   return "echo").
-   *
-   * @return a String, which represents the keyword of this ICommand
-   */
-  public  String getKeyword() {
-    return "login";
-  };
+  public String decryptePassword(String userInputPassword) {
+                
+            // decrypt the text
+            cipher.init(Cipher.DECRYPT_MODE, aesKey);
+            String decrypted = new String(cipher.doFinal(encrypted));
+            System.err.println(decrypted);
+  }
+
   
 
   

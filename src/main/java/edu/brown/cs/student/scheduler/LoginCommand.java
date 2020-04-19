@@ -43,13 +43,13 @@ public class LoginCommand {
   private KeySpec ks;
   private SecretKeyFactory skf;
   private Cipher cipher;
-  byte[] arrayBytes;
   private String myEncryptionKey;
   private String myEncryptionScheme;
   SecretKey key;
 
-  public void execute(String email, String password) {        
+  public Boolean execute(String email, String password) {        
     MongoCollection<org.bson.Document> userCollection = Main.getDatabase().getCollection("users");
+    System.out.println(userCollection);
     Document currUser = userCollection.find(eq("email", email)).first();
     System.out.println(currUser.toJson());
     if (currUser.isEmpty()) {
@@ -63,6 +63,7 @@ public class LoginCommand {
         throw new UserAuthenticationException("User authentication failed; password mismatch");
       }
     }
+    return true; 
   }
 
   public String decryptePassword(String userInputPassword, String salt) {

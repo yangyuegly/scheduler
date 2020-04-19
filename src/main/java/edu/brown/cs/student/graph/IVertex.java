@@ -21,6 +21,7 @@ public interface IVertex<V, E>{
   
   Integer getDegree();
 
+  Integer getHeaviestWeight();
   void setColor(List<Integer> c);
 
   List<Integer> getColor();

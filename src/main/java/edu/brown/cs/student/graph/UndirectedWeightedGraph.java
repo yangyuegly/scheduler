@@ -366,9 +366,10 @@ public Integer calculateExternalDistance(List<Integer> a, List<Integer> b) {
           @Override
               public int compare(Map.Entry<K, T> e1, Map.Entry<K, T> e2) {
             //compare by degree of nodes
-            Integer res = e1.getValue().getDegree().compareTo(e2.getValue().getDegree());
+                Integer res = e1.getValue().getDegree().compareTo(e2.getValue().getDegree());
+            //compare by heaviest weight if has the same degree
                 if (res == 0) {
-                      res = e1.getValue().getDegree();
+                      res = e1.getValue().getHeaviestWeight()< e2.getValue().getHeaviestWeight()? -1: 1;
             }
             return res != 0 ? res : 1;
           }
@@ -378,21 +379,21 @@ public Integer calculateExternalDistance(List<Integer> a, List<Integer> b) {
   }
 
 
-  @Override
-    public boolean equals(Object o) {
-        if (o == this)
-            return true;
-        if (!(o instanceof UndirectedWeightedGraph)) {
-            return false;
-        }
-        UndirectedWeightedGraph undirectedWeightedGraph = (UndirectedWeightedGraph) o;
-        return Objects.equals(weightMatrix, undirectedWeightedGraph.weightMatrix) && numColor == undirectedWeightedGraph.numColor && numVertices == undirectedWeightedGraph.numVertices && TS == undirectedWeightedGraph.TS && Objects.equals(degree, undirectedWeightedGraph.degree) && Objects.equals(colors, undirectedWeightedGraph.colors) && k == undirectedWeightedGraph.k;
-  }
+  // @Override
+  //   public boolean equals(Object o) {
+  //       if (o == this)
+  //           return true;
+  //       if (!(o instanceof UndirectedWeightedGraph)) {
+  //           return false;
+  //       }
+  //       UndirectedWeightedGraph<V,E> undirectedWeightedGraph = (UndirectedWeightedGraph<V,E>) o;
+  //       return Objects.equals(weightMatrix, undirectedWeightedGraph.weightMatrix) && numColor == undirectedWeightedGraph.numColor && numVertices == undirectedWeightedGraph.numVertices && TS == undirectedWeightedGraph.TS && Objects.equals(degree, undirectedWeightedGraph.degree) && Objects.equals(colors, undirectedWeightedGraph.colors) && k == undirectedWeightedGraph.k;
+  // }
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(weightMatrix, numColor, numVertices, TS, degree, colors, k);
-  }
+  // @Override
+  // public int hashCode() {
+  //   return Objects.hash(weightMatrix, numColor, numVertices, TS, degree, colors, k);
+  // }
 
   @Override
   public String toString() {

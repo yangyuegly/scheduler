@@ -42,11 +42,11 @@ import com.mongodb.client.result.UpdateResult;
  * ICommand interface.
  */
 public class ScheduleCommand {
-  UndirectedWeightedGraph<Event, Conflict> graph = null;
   List<Event> nodes;
-  Set<Conflict> edges;
+  HashSet<Conflict> edges;
   Convention convention;
   Integer CONCURENCY_LIMIT, MAX_SCHEDULE_DAYS;
+  UndirectedWeightedGraph<Event, Conflict> graph;
 
   public ScheduleCommand(
       UndirectedWeightedGraph<Event, Conflict> graph, 
@@ -55,6 +55,7 @@ public class ScheduleCommand {
     this.nodes = new ArrayList<>();
     this.edges = new HashSet<>();
     this.convention = convention;
+    this.CONCURENCY_LIMIT = CONCURENCY_LIMIT;
     this.MAX_SCHEDULE_DAYS = MAX_SCHEDULE_DAYS; 
   }
 
@@ -65,8 +66,8 @@ public class ScheduleCommand {
   public void execute() {
     extractNodes();
     extractEdges();
-    // this.graph = UndirectedWeightedGraph<Event,Conflict>(nodes, CONCURENCY_LIMIT, MAX_SCHEDULE_DAYS);
-    // graph.addAllEdges(this.edges);
+    this.graph = new UndirectedWeightedGraph<Event, Conflict>(this.nodes, this.CONCURENCY_LIMIT, this.MAX_SCHEDULE_DAYS);
+    graph.addAllEdges(this.edges);
   }
 
   public void setGraph(UndirectedWeightedGraph<Event,Conflict> graph) {
@@ -104,9 +105,6 @@ public class ScheduleCommand {
     BasicDBObject query = new BasicDBObject();
     query.put("conventionID", convention.getID());
 
-    //the row storing the corresponding events 
-    // Document doc = conflicCollection.find(query).first();
-  
     //iterate through the events found
     List<Document> conflictList = (List<Document>) 
     conflicCollection.find().projection(fields(include("conflicts"),
@@ -126,7 +124,7 @@ public class ScheduleCommand {
     }
    }
 
-  public void setEdges(Set<Conflict> edges) {
+  public void setEdges(HashSet<Conflict> edges) {
     this.edges = edges;
   }
 
@@ -140,7 +138,7 @@ public class ScheduleCommand {
     return this;
   }
 
-  public ScheduleCommand edges(Set<Conflict> edges) {
+  public ScheduleCommand edges(HashSet<Conflict> edges) {
     this.edges = edges;
     return this;
   }

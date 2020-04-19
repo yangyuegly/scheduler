@@ -37,7 +37,6 @@ import static com.mongodb.client.model.Filters.*;
 import com.mongodb.client.result.DeleteResult;
 import static com.mongodb.client.model.Updates.*;
 import com.mongodb.client.result.UpdateResult;
-import static java.util.Base64.
 
 public class RegisterCommand {
 
@@ -45,15 +44,13 @@ public class RegisterCommand {
   public static final String DESEDE_ENCRYPTION_SCHEME = "DESede";
   private KeySpec ks;
   private SecretKeyFactory skf;
-  private Cipher cipher;
-  byte[] arrayBytes;
-  private String myEncryptionKey;
-  private String myEncryptionScheme;
   SecretKey key;
+  public RegisterCommand() {
+
+  }
 
 
-
-  public static void execute(String email, String password) {
+  public void execute(String email, String password) {
     BasicDBList list = new BasicDBList();
     byte[] salt = getSalt();
     String encryptedPassword = encrypt(password, salt);
@@ -68,7 +65,7 @@ public class RegisterCommand {
     userCollection.insertOne(user);
   }
   
-  private static String encrypt(String password, byte[] salt){
+  public static String encrypt(String password, byte[] salt){
     try{
 
             // Create key and cipher
@@ -94,7 +91,7 @@ public class RegisterCommand {
         }
   }
 
-  private static byte[] getSalt() {
+  public static byte[] getSalt() {
     byte[] salt = new byte[16];//bytes to be filled
     SecureRandom sr = new SecureRandom(); // secureRandom number
     sr.nextBytes(salt);// fill bytes

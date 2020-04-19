@@ -1,5 +1,45 @@
 package edu.brown.cs.student.gui;
 
-public class CalendarHandler {
+import java.util.Map;
 
+import com.google.common.collect.ImmutableMap;
+
+import spark.ModelAndView;
+import spark.Request;
+import spark.Response;
+import spark.TemplateViewRoute;
+
+public class CalendarHandler implements TemplateViewRoute {
+
+  @Override
+  public ModelAndView handle(Request req, Response res) {
+
+    // get events in this convention from the database, display their names and 
+    // give the user options to schedule, etc
+    
+    String conventionID = req.params(":id");
+    String userEmail = req.cookie("user");
+
+    if (userEmail == null) {
+      // user is not logged in
+      Map<String, Object> variables = ImmutableMap.of("title",
+          "Scheduler", "message", "Please log in");
+      return new ModelAndView(variables, "home.ftl");
+    }
+    
+
+//     boolean authorized = Database.checkPermission(userEmail, conventionID);
+//    if (!authorized) {
+//      Map<String, Object> variables = ImmutableMap.of("title",
+//          "Scheduler");
+//      return new ModelAndView(variables, "unauthorized.ftl");
+//    }
+    String name = "";
+    //name = Database.getConventionNameFromID();
+    Map<String, Object> variables = ImmutableMap.of("title",
+      "Scheduler", "name", name);
+    return new ModelAndView(variables, "calendar_page.ftl");
+  }
+
+    
 }

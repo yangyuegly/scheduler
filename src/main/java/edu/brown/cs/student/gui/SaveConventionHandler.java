@@ -38,7 +38,7 @@ public class SaveConventionHandler implements Route {
     
     QueryParamsMap queryMap = req.queryMap();
     String existingEventsString = queryMap.value("existingEvents");
-    
+    System.out.println(existingEventsString);
     // get convention links
     
     

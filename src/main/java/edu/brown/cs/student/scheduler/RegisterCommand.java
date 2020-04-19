@@ -37,7 +37,7 @@ import static com.mongodb.client.model.Filters.*;
 import com.mongodb.client.result.DeleteResult;
 import static com.mongodb.client.model.Updates.*;
 import com.mongodb.client.result.UpdateResult;
-import static java.util.Base64.
+//import static java.util.Base64.
 
 public class RegisterCommand {
 

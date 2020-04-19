@@ -6,7 +6,6 @@ let existingEvents = [];
 // jquery fields used to access HTML objects
 const $name = $("#name");
 const $description = $("#description");
-const $attendees = $("#attendees");
 const $eventNames = $("#eventNames");
 
 // url of the current page
@@ -24,7 +23,7 @@ $(document).ready(() => {
   $('#addEvent').click(addEvent);
   $('#doneAddingEvents').click(doneAdding);
   $('#save').click(saveConv);
-  $('#schedule').click(schedule);
+
 
   // hide HTML elements that are used after all events are added
   $('#completedDiv').css("visibility", "hidden");
@@ -35,7 +34,7 @@ $(document).ready(() => {
   This handles adding the new event.
 */
 const addEvent = () => {
-  let newEvent = [$name.val(), $description.val(), $attendees.val()];
+  let newEvent = [$name.val(), $description.val()];
   existingEvents.push(newEvent);
 
   eventNamesString += "<p>" + $name.val() + "</p>";
@@ -46,7 +45,6 @@ const addEvent = () => {
   // clear the input boxes
   $name.val("");
   $description.val("");
-  $attendees.val("");
 }
 
 /*
@@ -72,19 +70,6 @@ const saveConv = () => {
 
     //$.get("/account", response => {});
   });
-}
 
-// do!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-const schedule = () => {
-  // build javascript object that contains the data for the POST request.
-  //const postParameters = { flags: selection.join(" ") };
 
-  //const $message = $("#message");
-
-  // post request to "/setflags" endpoint with toggle settings selected
-  //$.post("/setflags", postParameters, responseJSON => {
-    // Parse the JSON response into a JavaScript object.
-  //  const responseObject = JSON.parse(responseJSON);
-  //  $message.html(responseObject.props);
-  //});
 }

@@ -103,6 +103,7 @@ public final class Main {
     mongo = MongoClients.create(settings);
     //created db in cluster in MongoDBAtlas including collections: users, events, conflicts
     database = mongo.getDatabase("test");
+    System.out.println("TEST DATABASE RAN");
 
     if (options.has("gui")) {
       runSparkServer((int) options.valueOf("port"));
@@ -147,7 +148,7 @@ public final class Main {
     Spark.post("/create_convention/:id", new CreateConvSubmitHandler(), freeMarker);
     Spark.post("/save_convention", new SaveConventionHandler());
     Spark.get("/create_exam_conv", new CreateExamConvHandler(), freeMarker);
-    Spark.post("/exam_schedule", new SchedExamSubmitHandler(), freeMarker);
+    Spark.post("/exam_schedule/:id", new SchedExamSubmitHandler(), freeMarker);
     Spark.post("/upload_convention/:id", new UploadHandler(), freeMarker);
     Spark.get("/convention/:id", new ConventionHomeHandler(), freeMarker);
 

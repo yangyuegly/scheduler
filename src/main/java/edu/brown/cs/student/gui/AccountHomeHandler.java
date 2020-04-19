@@ -27,13 +27,15 @@ public class AccountHomeHandler implements TemplateViewRoute {
     
     if (userEmail == null) {
       // user is not logged in
+      String currUserMessage = "<a href=/home>Log in</a>";
       Map<String, Object> variables = ImmutableMap.of("title",
-          "Scheduler", "message", "Please log in");
+          "Scheduler", "currUserMessage", currUserMessage, "message", "Please log in");
       return new ModelAndView(variables, "home.ftl");
     }
+
     User currUser = new User(userEmail);
     //List<Convention> currConvs = currUser.getConventions(); //don't have all events filled out
-   //faking it !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+   //just here temporarily to test !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     List<Convention> currConvsTest = new ArrayList<>();
     Convention testConvention = new Convention("777");
     testConvention.setName("Book Signing");
@@ -42,7 +44,7 @@ public class AccountHomeHandler implements TemplateViewRoute {
     
     String conventionLinks = "";
     if (!currConvsTest.isEmpty()) {
-      conventionLinks = "Here are your current conventions:<br>";
+      conventionLinks = "<p>Here are your conventions.  Click one to add events or to schedule it!</p>";
     }
     
     for (Convention conv : currConvsTest) {
@@ -51,8 +53,12 @@ public class AccountHomeHandler implements TemplateViewRoute {
       conventionLinks = conventionLinks + link;
     }
     
+    String currUserMessage = "<label>Logged in as <a href=/account>" + userEmail + "</a></label>" +
+        "<br><a href=/logout>Log out</a>";
+    
     Map<String, Object> variables = ImmutableMap.of("title",
-        "Scheduler", "conventionLinks", conventionLinks, "error", ""); 
+        "Scheduler", "currUserMessage", currUserMessage, "conventionLinks", conventionLinks,
+        "error", ""); 
     return new ModelAndView(variables, "account.ftl");
   }
 }

@@ -1,8 +1,6 @@
 package edu.brown.cs.student.gui;
 
-import java.util.Calendar;
 import java.util.Map;
-import java.util.Random;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -20,10 +18,12 @@ public class CreateConvSubmitHandler implements TemplateViewRoute {
     
     if (userEmail == null) {
       // user is not logged in
-      Map<String, Object> variables = ImmutableMap.of("title",
-          "Scheduler", "message", "Please log in");
-      return new ModelAndView(variables, "home.ftl");
+      response.redirect("/home");
+      return null; // ????????????????????????????????????????????????????????????????????????????????
     }
+    
+    String currUserMessage = "<label>Logged in as <a href=/account>" + userEmail
+        + "</a></label>" + "<br><a href=/logout>Log out</a>";
     
     QueryParamsMap queryMap = request.queryMap();
     String id = request.params(":id");
@@ -34,18 +34,18 @@ public class CreateConvSubmitHandler implements TemplateViewRoute {
     String endTime = queryMap.value("endTime");
     String submitType = queryMap.value("submitType");
     
-
-
     int numDays;
     int eventDur;
+
     try {
       String numDaysString = queryMap.value("numDays");
       numDays = Integer.parseInt(numDaysString);
       String eventDuration = queryMap.value("eventDuration");
       eventDur = Integer.parseInt(eventDuration);
+
     } catch (NumberFormatException err) {
       Map<String, Object> variables = ImmutableMap.of("title",
-          "Scheduler", "id", id.toString(), "errorMessage",
+          "Scheduler", "currUserMessage", currUserMessage, "id", id.toString(), "errorMessage",
           "The number of days must be an integer.");
       return new ModelAndView(variables, "setup_conv.ftl");
     }
@@ -56,13 +56,13 @@ public class CreateConvSubmitHandler implements TemplateViewRoute {
    //boolean added = Database.addConvData(newConv); 
     
     if (submitType.equals("Add events by hand")) {
-      Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "convName", 
-          name, "existingEvents", "", "id", id);
+      Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "currUserMessage",
+          currUserMessage, "convName", name, "existingEvents", "No events yet.", "id", id);
       return new ModelAndView(variables, "convention_home.ftl");
     } else {
       
-      Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "convName", 
-          name, "id", id.toString(), "message", "");
+      Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "currUserMessage",
+          currUserMessage, "convName", name, "id", id.toString(), "message", "");
       return new ModelAndView(variables, "upload_conv.ftl");
     }
   }

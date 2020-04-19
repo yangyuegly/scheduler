@@ -6,6 +6,7 @@ import com.google.common.collect.ImmutableMap;
 import com.mongodb.client.MongoDatabase;
 
 import edu.brown.cs.student.main.Main;
+import edu.brown.cs.student.scheduler.RegisterCommand;
 import spark.ModelAndView;
 import spark.QueryParamsMap;
 import spark.Request;
@@ -19,29 +20,35 @@ import spark.TemplateViewRoute;
 public class CreateAccountSubmitHandler implements TemplateViewRoute {
   
   @Override
-  public ModelAndView handle(Request req, Response res) {
-    QueryParamsMap queryMap = req.queryMap();
+  public ModelAndView handle(Request request, Response response) {
+    QueryParamsMap queryMap = request.queryMap();
     String email = queryMap.value("email");
     String password = queryMap.value("password");
     
+    RegisterCommand registerComm = new RegisterCommand();
     
-    boolean add = false; //fix this, see below
+    // add the user to the database -- what if the email is already in there?????????????????????????????
+    registerComm.execute(email, password);
+    
     // boolean add = Database.addUser(email, password);
-    if (!add) {
-      // redirect back to login page ???
-      Map<String, Object> variables = ImmutableMap.of("title",
-          "Scheduler", "errorMessage", "");
-      
-      return new ModelAndView(variables, "create_account.ftl");
-    } else {
+//    if (!add) {
+//      // redirect back to login page ???
+//      Map<String, Object> variables = ImmutableMap.of("title",
+//          "Scheduler", "errorMessage", "");
+//      
+//      return new ModelAndView(variables, "create_account.ftl");
+//    } else {
  // sets the cookie so it expires after two hours
-    res.cookie("user", email, 120 * 60 * 1000);  
+    response.cookie("user", email, 120 * 60 * 1000);  
     
-    Map<String, Object> variables = ImmutableMap.of("title",
-        "Scheduler", "conventionLinks", "", "error", "");
+    response.redirect("/account"); // return null????????????????????????????????????????????????????????????????
+    return null;
     
-      return new ModelAndView(variables, "account.ftl");
-  }
+//    Map<String, Object> variables = ImmutableMap.of("title",
+//        "Scheduler", "conventionLinks", "", "error", "");
+//    
+//      return new ModelAndView(variables, "account.ftl");
+//  }
   }
 
 }

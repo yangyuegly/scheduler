@@ -42,8 +42,9 @@ public class UploadHandler implements TemplateViewRoute {
     
     if (userEmail == null) {
       // user is not logged in
-      Map<String, Object> variables = ImmutableMap.of("title",
-          "Scheduler", "message", "Please log in");
+      String currUserMessage = "<a href=/home>Log in</a>";
+      Map<String, Object> variables = ImmutableMap.of("title", "Scheduler",
+          "currUserMessage", currUserMessage, "message", "Please log in");
       return new ModelAndView(variables, "home.ftl");
     }
     StringBuilder textBuilder = new StringBuilder();
@@ -65,12 +66,19 @@ public class UploadHandler implements TemplateViewRoute {
     //process this now
     
     // call the load command
+    
+    // schedule!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    
+    // go to the schedule page
+    response.redirect("/schedule/" + id);
+    
+    return null;
 
        
     // fix!!!!!!!!!!!!!!!1
-    Map<String, Object> variables = ImmutableMap.of("title", // fix!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        "Scheduler", "message", "Send to schedule page!!!");
-    return new ModelAndView(variables, "home.ftl"); //send to schedule page
+//    Map<String, Object> variables = ImmutableMap.of("title", // fix!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//        "Scheduler", "message", "Send to schedule page!!!");
+//    return new ModelAndView(variables, "home.ftl"); //send to schedule page
     
   }
   

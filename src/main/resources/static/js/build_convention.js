@@ -23,6 +23,7 @@ $(document).ready(() => {
   $('#addEvent').click(addEvent);
   $('#doneAddingEvents').click(doneAdding);
   $('#save').click(saveConv);
+  $('#schedule').click(schedule);
 
 
   // hide HTML elements that are used after all events are added
@@ -57,19 +58,40 @@ const doneAdding = () => {
   $('#completedDiv').css("visibility", "visible");
 }
 
-// do!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+/*
+  Function that gets called when the save button is clicked.  This uses a post
+  request to send the new events to the program, and then causes the page
+  to change to the account page.
+*/
 const saveConv = () => {
   // build javascript object that contains the data for the POST request.
   const myJson = JSON.stringify(existingEvents);
   const postParameters = { existingEvents: myJson };
 
   // post request to "/save_convention" with added events
-  $.post("/save_convention", postParameters, responseJSON => {
-    // Parse the JSON response into a JavaScript object.
-    //const responseObject = JSON.parse(responseJSON);
+  $.post("/save_convention", postParameters, responseJSON => {});
 
-    //$.get("/account", response => {});
-  });
+  // go to the account page
+  window.location.pathname = '/account';
+};
 
+/*
+  Function that gets called when the schedule button is clicked.  This uses a
+  post request to send the new events to the program so they can be saved.
+  Then, it changes the page to the calendar page.
+*/
+const schedule = () => {
+  // build javascript object that contains the data for the POST request.
+  const myJson = JSON.stringify(existingEvents);
+  const postParameters = { existingEvents: myJson };
 
-}
+  // post request to "/save_convention" with added events
+  $.post("/save_convention", postParameters, responseJSON => {});
+
+  const url = window.location.href;
+  var splitURL = url.split("/");
+  var id = splitURL[4];
+
+  // go to the schedule page
+  window.location.pathname = '/schedule/' + id;
+};

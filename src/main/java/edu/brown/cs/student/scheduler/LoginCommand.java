@@ -51,18 +51,13 @@ public class LoginCommand {
 
   public void execute(String email, String password) {        
     MongoCollection<org.bson.Document> userCollection = Main.getDatabase().getCollection("users");
-    System.out.println("gets user collection"); //prints this
-    if (userCollection == null) {
-      System.out.println("USER COLLECTION IS NULL");
-    }
     
   //  Document currUser = userCollection.find(eq("email", email)).first();
     BasicDBObject query = new BasicDBObject("email", new BasicDBObject("$eq", email));
     Document currUser = userCollection.find(query).first();
     
-    System.out.println("gets curr user"); //does not print this
-    System.out.println(currUser.toJson());
-    if (currUser.isEmpty()) {
+    // System.out.println(currUser.toJson());
+    if ((currUser == null) || currUser.isEmpty()) {
       throw new UserAuthenticationException("User does not exist on system");
     }
     else {

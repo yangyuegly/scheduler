@@ -16,9 +16,22 @@ import spark.TemplateViewRoute;
 public class HomeHandler implements TemplateViewRoute {
 // make cute/cool later .........................................................................................
   @Override
-  public ModelAndView handle(Request req, Response res) {
+  public ModelAndView handle(Request request, Response response) {
+    String userEmail = request.cookie("user");
+    
+    String currUserMessage;
+    
+    if (userEmail == null) {
+      currUserMessage = "<a href=/home>Log in</a>";
+    } else {
+      // they are already logged in
+      response.redirect("/account");
+      return null;
+    }
+    
+    
     Map<String, Object> variables = ImmutableMap.of("title",
-        "Scheduler", "message", "");
+        "Scheduler", "currUserMessage", currUserMessage, "message", "");
     return new ModelAndView(variables, "home.ftl");
   }
 }

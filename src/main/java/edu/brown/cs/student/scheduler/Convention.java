@@ -102,8 +102,24 @@ public class Convention {
    * @return -- a list of all the associated events
    */
   public List<Event> getEvents(){
-    //return Database.getEvents(this.id);
-    return new ArrayList<>();
+    if (events == null) {
+      //events = Database.getEvents(this.id);
+    }
+    
+    return events;
+  }
+  
+  /**
+   * This method adds an event to this convention.
+   * 
+   * @param newEvent - an Event object, which represents the event being added
+   */
+  public void addEvent(Event newEvent) {
+    if (events == null) {
+      events = new ArrayList<>();
+    }
+
+    events.add(newEvent);
   }
   /**
    * Getter to get the id. 

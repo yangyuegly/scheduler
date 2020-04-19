@@ -14,6 +14,7 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 
 import edu.brown.cs.student.gui.AccountHomeHandler;
+import edu.brown.cs.student.gui.CalendarHandler;
 import edu.brown.cs.student.gui.ConventionHomeHandler;
 import edu.brown.cs.student.gui.CreateAccountHandler;
 import edu.brown.cs.student.gui.CreateAccountSubmitHandler;
@@ -22,6 +23,7 @@ import edu.brown.cs.student.gui.CreateConventionHandler;
 import edu.brown.cs.student.gui.CreateExamConvHandler;
 import edu.brown.cs.student.gui.HomeHandler;
 import edu.brown.cs.student.gui.LoginHandler;
+import edu.brown.cs.student.gui.LogoutHandler;
 import edu.brown.cs.student.gui.SaveConventionHandler;
 import edu.brown.cs.student.gui.SchedExamSubmitHandler;
 import edu.brown.cs.student.gui.UploadHandler;
@@ -137,8 +139,6 @@ public final class Main {
     FreeMarkerEngine freeMarker = createEngine();
 
     // Setup Spark Routes
-    //Spark.get("/stars", new StarsFrontHandler(), freeMarker);
-    // handlers and such
     Spark.get("/home", new HomeHandler(), freeMarker);
     Spark.get("/create_account", new CreateAccountHandler(), freeMarker);
     Spark.post("/create_account", new CreateAccountSubmitHandler(), freeMarker);
@@ -148,11 +148,11 @@ public final class Main {
     Spark.post("/create_convention/:id", new CreateConvSubmitHandler(), freeMarker);
     Spark.post("/save_convention", new SaveConventionHandler());
     Spark.get("/create_exam_conv", new CreateExamConvHandler(), freeMarker);
+    Spark.get("/schedule/:id",  new CalendarHandler(), freeMarker);
     Spark.post("/exam_schedule/:id", new SchedExamSubmitHandler(), freeMarker);
     Spark.post("/upload_convention/:id", new UploadHandler(), freeMarker);
     Spark.get("/convention/:id", new ConventionHomeHandler(), freeMarker);
-
-
+    Spark.get("logout", new LogoutHandler(), freeMarker);
   }
 
   // Know who's attending? Upload a file with everything or add them manually.

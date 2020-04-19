@@ -16,9 +16,18 @@ import spark.TemplateViewRoute;
 public class CreateAccountHandler implements TemplateViewRoute {
   
   @Override
-  public ModelAndView handle(Request req, Response res) {
+  public ModelAndView handle(Request request, Response response) {
+    String currUserEmail = request.cookie("user");
+    
+    if (currUserEmail != null) {
+      response.redirect("/account");
+      return null;
+    }
+    
+    String currUserMessage = "<a href=/home>Log in</a>";
+    
     Map<String, Object> variables = ImmutableMap.of("title",
-        "Scheduler", "errorMessage", "");
+        "Scheduler", "currUserMessage", currUserMessage, "errorMessage", "");
     
     return new ModelAndView(variables, "create_account.ftl");
   }

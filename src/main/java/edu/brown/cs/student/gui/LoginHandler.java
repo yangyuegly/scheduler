@@ -29,17 +29,17 @@ public class LoginHandler implements TemplateViewRoute  {
     QueryParamsMap queryMap = req.queryMap();
     String email = queryMap.value("email");
     String password = queryMap.value("password");
-    LoginCommand loginComm = new LoginCommand();
-    try {
-    loginComm.execute(email, password);
-    System.out.println("DONE EXECUTING!");
-    } catch (UserAuthenticationException e) {
-      System.out.println("CAUGHT SOMETHING");
-      String message = e.getMessage();
-      Map<String, Object> variables = ImmutableMap.of("title", // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
-          "Scheduler", "message", message);
-      return new ModelAndView(variables, "home.ftl");
-    }
+//    LoginCommand loginComm = new LoginCommand();
+//    try {
+//    loginComm.execute(email, password);
+//    System.out.println("DONE EXECUTING!");
+//    } catch (UserAuthenticationException e) {
+//      System.out.println("CAUGHT SOMETHING");
+//      String message = e.getMessage();
+//      Map<String, Object> variables = ImmutableMap.of("title", // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
+//          "Scheduler", "message", message);
+//      return new ModelAndView(variables, "home.ftl");
+//    }
     
     // sets the cookie so it expires after two hours
     res.cookie("user", email, 72000000); //120 * 60 * 1000);  

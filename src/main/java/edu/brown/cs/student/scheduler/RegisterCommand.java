@@ -15,10 +15,9 @@ import com.mongodb.MongoCredential;
 
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoCollection;
-
+import java.util.Base64;
 import org.bson.Document;
 import java.util.Arrays;
-import java.util.Base64;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
@@ -38,7 +37,7 @@ import static com.mongodb.client.model.Filters.*;
 import com.mongodb.client.result.DeleteResult;
 import static com.mongodb.client.model.Updates.*;
 import com.mongodb.client.result.UpdateResult;
-import java.util.Base64;
+import static java.util.Base64.
 
 public class RegisterCommand {
 
@@ -58,7 +57,9 @@ public class RegisterCommand {
     BasicDBList list = new BasicDBList();
     byte[] salt = getSalt();
     String encryptedPassword = encrypt(password, salt);
-    String saltToString = Base64.getEncoder().encode(salt);
+
+    String saltToString = Base64.getEncoder().encodeToString(salt);//convert salt to string
+
     MongoCollection<Document> userCollection = Main.getDatabase().getCollection("users");
     Document user = new Document("email", email).append("encryptedPassword", encryptedPassword)
     .append("salt", saltToString)
@@ -71,15 +72,21 @@ public class RegisterCommand {
     try{
 
             // Create key and cipher
-
             Key aesKey = new SecretKeySpec(salt, "AES");
             Cipher cipher = Cipher.getInstance("AES");
-
             // encrypt the text
             cipher.init(Cipher.ENCRYPT_MODE, aesKey);
             byte[] encrypted = cipher.doFinal(password.getBytes());
             System.err.println(new String(encrypted));
-            String encryptedPw = new String(encrypted);
+            
+            StringBuilder sb = new StringBuilder();
+            for (byte b: encrypted) {
+                sb.append((char)b);
+            }
+            // the encrypted String
+            String encryptedPw = sb.toString();
+            System.out.println("encrypted:" + encryptedPw);
+            
             return encryptedPw; 
         } catch(Exception e) {
           e.printStackTrace();

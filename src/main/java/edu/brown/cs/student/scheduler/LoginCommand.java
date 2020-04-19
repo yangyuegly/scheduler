@@ -18,12 +18,15 @@ import com.mongodb.client.MongoCollection;
 
 import org.bson.Document;
 
+import java.security.Key;
 import java.security.spec.KeySpec;
 import java.util.Arrays;
+import java.util.Base64;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.SecretKeySpec;
 
 import com.mongodb.Block;
 
@@ -54,19 +57,36 @@ public class LoginCommand {
     }
     else {
       String encryptedPassword = currUser.getString("encryptedPassword");
-      byte[] salt = currUser.("encryptedPassword");
-      if (!password.equals()) {
+      String salt = currUser.getString("salt");
+      String decryptionResult = decryptePassword(encryptedPassword, salt);
+      if (!password.equals(decryptionResult)) {
         throw new UserAuthenticationException("User authentication failed; password mismatch");
       }
     }
   }
 
-  public String decryptePassword(String userInputPassword) {
-                
-            // decrypt the text
-            cipher.init(Cipher.DECRYPT_MODE, aesKey);
-            String decrypted = new String(cipher.doFinal(encrypted));
-            System.err.println(decrypted);
+  public String decryptePassword(String userInputPassword, String salt) {
+
+    //convert bytes to string
+    byte[] saltDecoded = Base64.getDecoder().decode(salt);
+
+    //convert user password to string
+    byte[] bb = new byte[userInputPassword.length()];
+    for (int i = 0; i < userInputPassword.length(); i++) {
+      bb[i] = (byte) userInputPassword.charAt(i);
+    }
+    
+    // decrypt the text
+    try {
+    Key aesKey = new SecretKeySpec(saltDecoded, "AES");
+    Cipher cipher = Cipher.getInstance("AES");
+    cipher.init(Cipher.DECRYPT_MODE, aesKey);
+    String decrypted = new String(cipher.doFinal(bb));
+    return decrypted;
+  } catch (Exception e) {
+    throw new NullPointerException("Unable to decrypte password");
+
+    }
   }
 
   

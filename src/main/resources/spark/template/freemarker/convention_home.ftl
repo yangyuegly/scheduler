@@ -18,10 +18,6 @@
     <label for="description" id="descriptionLabel">Event description: </label><br>
     <textarea rows="3" cols="80" name="description" id="description"></textarea><br><br>
     <br>
-    <label for="attendees" id="attendeesLabel">If you already know who is attending this event,
-      please enter their names with each name on its own line.  If you do not
-      yet know your attendees, you can leave this blank.</label>
-    <textarea rows="10" cols="80" name="attendees" id="attendees"></textarea><br><br>
     <button id="addEvent">Add event</button>
 
     <button id="doneAddingEvents">Done adding events</button>
@@ -33,8 +29,6 @@
       schedule.</p>
     <button id="save">Save and schedule later</button><br>
 
-    <p id="schedExpl">If you have all of your attendees, schedule now!</p>
-    <button id="schedule">Schedule now</button>
   </div>
 
 </div>

@@ -47,8 +47,8 @@ public class SchedExamSubmitHandler implements TemplateViewRoute {
     
     // schedule it
     
-    Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "message", ""); // fix!!!!!!!!!!!!!!
-      return new ModelAndView(variables, "upload_conv.ftl");
+    Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "name", schoolName + " Final Exams"); // fix!!!!!!!!!!!!!!
+      return new ModelAndView(variables, "calendar_page.ftl");
 
   }
 

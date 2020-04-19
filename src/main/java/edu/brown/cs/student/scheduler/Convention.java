@@ -76,7 +76,7 @@ public class Convention {
   public String getName() {
     if (name == null) {
      // Database.getConventionNameFromID(this.getID());
-      return ""; //delete, see above
+      return "name is null"; //delete, see above
     } else {
       return name;
     }

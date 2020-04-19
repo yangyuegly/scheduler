@@ -1,4 +1,5 @@
 package edu.brown.cs.student.gui;
+import java.util.ArrayList;
 import java.util.List;
 // don't think we need it, all commented out
 import java.util.Map;
@@ -31,12 +32,23 @@ public class AccountHomeHandler implements TemplateViewRoute {
       return new ModelAndView(variables, "home.ftl");
     }
     User currUser = new User(userEmail);
-    List<Convention> currConvs = currUser.getConventions(); //don't have all events filled out
+    //List<Convention> currConvs = currUser.getConventions(); //don't have all events filled out
+   //faking it !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    List<Convention> currConvsTest = new ArrayList<>();
+    Convention testConvention = new Convention("777");
+    testConvention.setName("Book Signing");
+    currConvsTest.add(testConvention);
+    // /faking it
+    
     String conventionLinks = "";
-    for (Convention conv : currConvs) {
+    if (!currConvsTest.isEmpty()) {
+      conventionLinks = "Here are your current conventions:<br>";
+    }
+    
+    for (Convention conv : currConvsTest) {
       String id = conv.getID();
       String link = "<a href=/convention/" + id + ">" + conv.getName() + "</a><br>";
-      conventionLinks+=link;
+      conventionLinks = conventionLinks + link;
     }
     
     Map<String, Object> variables = ImmutableMap.of("title",

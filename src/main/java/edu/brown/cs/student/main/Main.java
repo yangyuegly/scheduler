@@ -104,15 +104,6 @@ public final class Main {
     //created db in cluster in MongoDBAtlas including collections: users, events, conflicts
     database = mongo.getDatabase("test");
 
-
-    // create new objects to assist with running the program
-    // initialize commands
-
-    Map<String, ICommand> commands = new HashMap<>();
-    // add commmand objects to commands Map
-
-    CommandManager manager = new CommandManager(commands);
-
     if (options.has("gui")) {
       runSparkServer((int) options.valueOf("port"));
 
@@ -121,10 +112,6 @@ public final class Main {
   //allowing us to upload a file ???????????????????????????????????????????????????????????????????
     File uploadDir = new File("uploaded-file");
     uploadDir.mkdir();
-
-    manager.run();
-    
-    
   }
 
   private static FreeMarkerEngine createEngine() {

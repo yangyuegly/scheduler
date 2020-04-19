@@ -8,7 +8,7 @@
   <p>
   <h3>Final Exams</h3>
   <br>
-  <form method="POST" action="/exam_schedule">
+  <form method="POST" action="/exam_schedule/${id}">
     <label for="schoolName">What is the name of your school?</label>
     <select id="schoolName" name="schoolName">
       ${schoolSuggestions}

@@ -41,11 +41,11 @@ public class CreateConventionHandler implements TemplateViewRoute {
     Random rand = new Random();
     boolean avail = false;
     // we want a six digit id that has not been used
-    Integer id = rand.nextInt((999999-100000) + 1) + 100000;
-    //    while (!avail) {
-    //     // avail = Main.getDatabase().checkID();
-    //      id = rand.nextInt((999999-100000) + 1) + 100000;
-    //    }
+    Integer id = null;
+//    while (!avail) {
+     id = rand.nextInt((999999-100000) + 1) + 100000;
+     // avail = Database.addConvID(userEmail, id);
+//     }
     
     ///store in database (don't get rid of existing events for this convention)!!
     

@@ -5,7 +5,6 @@
 </div>
 
 <div class="main-content">
-  <p>
   <h3>Welcome Back</h3>
   ${conventionLinks}
   <br>

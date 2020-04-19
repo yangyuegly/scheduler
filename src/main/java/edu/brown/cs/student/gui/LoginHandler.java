@@ -7,8 +7,10 @@ import com.google.common.collect.ImmutableMap;
 import com.mongodb.client.MongoCollection;
 
 import edu.brown.cs.student.accounts.User;
+import edu.brown.cs.student.exception.UserAuthenticationException;
 import edu.brown.cs.student.main.Main;
 import edu.brown.cs.student.scheduler.Convention;
+import edu.brown.cs.student.scheduler.LoginCommand;
 import spark.ModelAndView;
 import spark.QueryParamsMap;
 import spark.Request;
@@ -27,27 +29,19 @@ public class LoginHandler implements TemplateViewRoute  {
     QueryParamsMap queryMap = req.queryMap();
     String email = queryMap.value("email");
     String password = queryMap.value("password");
-    
-    // use the LoginCommand
-    
-//    User currUser = Database.checkLogin(email, password);
-    
-    //FOR TESTING ONLY
-    User currUser = new User(email);
+    LoginCommand loginComm = new LoginCommand();
+//    try {
+//    loginComm.execute(email, password);
+//    } catch (UserAuthenticationException e) {
+//      String message = e.getMessage();
+//      Map<String, Object> variables = ImmutableMap.of("title", // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
+//          "Scheduler", "message", message);
+//      return new ModelAndView(variables, "home.ftl");
+//    }
     
     // sets the cookie so it expires after two hours
     res.cookie("user", email, 72000000); //120 * 60 * 1000);  
-    
-    
-    
-    if (currUser == null) {
-      // invalid login
-      Map<String, Object> variables = ImmutableMap.of("title",
-          "Scheduler", "message", "Incorrect username or password.  Try again.");
-      return new ModelAndView(variables, "home.ftl");
-    }
-    
-    
+    User currUser = new User(email);
     List<Convention> conventions = currUser.getConventions();
 
     if (conventions.isEmpty()) {

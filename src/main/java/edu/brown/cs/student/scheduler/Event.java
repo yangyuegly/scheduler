@@ -38,6 +38,9 @@ public class Event implements IVertex<Event, Conflict> {
     this.degree = degree;
   }
   
+  public String getName() {
+    return name;
+  }
   
   @Override
   public Integer getID() {

@@ -63,6 +63,8 @@ public class UploadHandler implements TemplateViewRoute {
           e.printStackTrace();
         }
     //process this now
+    
+    // call the load command
 
        
     // fix!!!!!!!!!!!!!!!1

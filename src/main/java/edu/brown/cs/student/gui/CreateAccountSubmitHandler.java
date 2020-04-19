@@ -24,16 +24,24 @@ public class CreateAccountSubmitHandler implements TemplateViewRoute {
     String email = queryMap.value("email");
     String password = queryMap.value("password");
     
-    // sets the cookie so it expires after two hours
+    
+    boolean add = false; //fix this, see below
+    // boolean add = Database.addUser(email, password);
+    if (!add) {
+      // redirect back to login page ???
+      Map<String, Object> variables = ImmutableMap.of("title",
+          "Scheduler", "errorMessage", "");
+      
+      return new ModelAndView(variables, "create_account.ftl");
+    } else {
+ // sets the cookie so it expires after two hours
     res.cookie("user", email, 120 * 60 * 1000);  
     
-    // add them to database!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    MongoDatabase database = Main.getDatabase();
-    
     Map<String, Object> variables = ImmutableMap.of("title",
-        "Scheduler", "eventLinks", "");
+        "Scheduler", "conventionLinks", "", "error", "");
     
-    return new ModelAndView(variables, "account.ftl");
+      return new ModelAndView(variables, "account.ftl");
+  }
   }
 
 }

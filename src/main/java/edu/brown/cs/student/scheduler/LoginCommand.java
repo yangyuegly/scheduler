@@ -3,7 +3,6 @@ package edu.brown.cs.student.scheduler;
 import com.mongodb.client.MongoCollection;
 
 import edu.brown.cs.student.exception.UserAuthenticationException;
-import edu.brown.cs.student.main.ICommand;
 import edu.brown.cs.student.main.Main;
 
 import com.mongodb.client.MongoClients;
@@ -41,18 +40,5 @@ public class LoginCommand {
       }
     }
   }
-
-  /**
-   * This method returns a String that represents the keyword for this
-   *   ICommand (for example, if the command was Echo, this method would
-   *   return "echo").
-   *
-   * @return a String, which represents the keyword of this ICommand
-   */
-  public  String getKeyword() {
-    return "login";
-  };
-  
-
   
 }

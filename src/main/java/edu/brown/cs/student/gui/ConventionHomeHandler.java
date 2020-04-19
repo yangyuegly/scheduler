@@ -1,9 +1,12 @@
 package edu.brown.cs.student.gui;
 
+import java.util.List;
 import java.util.Map;
 
 import com.google.common.collect.ImmutableMap;
 
+import edu.brown.cs.student.scheduler.Convention;
+import edu.brown.cs.student.scheduler.Event;
 import spark.ModelAndView;
 import spark.QueryParamsMap;
 import spark.Request;
@@ -17,12 +20,13 @@ public class ConventionHomeHandler implements TemplateViewRoute {
 
   @Override
   public ModelAndView handle(Request req, Response res) {
+
     // get events in this convention from the database, display their names and 
     // give the user options to schedule, etc
     
     String conventionID = req.params(":id");
     String userEmail = req.cookie("user");
-    //DATABASE CALL - check if logged in
+
     if (userEmail == null) {
       // user is not logged in
       Map<String, Object> variables = ImmutableMap.of("title",
@@ -30,16 +34,28 @@ public class ConventionHomeHandler implements TemplateViewRoute {
       return new ModelAndView(variables, "home.ftl");
     }
     
-    // use the database to confirm that the user with userEmail is authorized to view the 
-    // convention with conventionID
+
+//     boolean authorized = Database.checkPermission(userEmail, conventionID);
+//    if (!authorized) {
+//      Map<String, Object> variables = ImmutableMap.of("title",
+//          "Scheduler");
+//      return new ModelAndView(variables, "unauthorized.ftl");
+//    }
+
     
-    // get convention name from database
+    // get convention object w/all events from database based on id
+    Convention currConv = new Convention(conventionID);
+    String convName = currConv.getName();
+    List<Event> events = currConv.getEvents();
+    String existingEvents = "";
+    for (Event event : events) {
+      existingEvents+="<p>" + event.getName() + "</p>";
     
-    //send the events to the page somehow
+    }
     
     // fix
     Map<String, Object> variables = ImmutableMap.of("title",
-        "Scheduler", "convName", "");
+        "Scheduler", "convName", convName, "existingEvents", existingEvents);
     
     return new ModelAndView(variables, "convention_home.ftl"); // fix
   }

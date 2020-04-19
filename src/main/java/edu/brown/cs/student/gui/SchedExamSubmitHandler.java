@@ -20,6 +20,7 @@ public class SchedExamSubmitHandler implements TemplateViewRoute {
   @Override
   public ModelAndView handle(Request request, Response response) {
     String userEmail = request.cookie("user");
+    String id = request.params(":id");
     
     if (userEmail == null) {
       // user is not logged in
@@ -37,11 +38,11 @@ public class SchedExamSubmitHandler implements TemplateViewRoute {
     String endTime = queryMap.value("endTime");
     String submitType = queryMap.value("submitType");
     
-    int numDays = Integer.parseInt(numDaysString);;
+    int numDays = Integer.parseInt(numDaysString);
     
-    //add to database?????????????????????????????????????????????????????????????????????????????????????
-    
-    // WebScraper scaper = new WebScraper(); takes in convention id!!!
+    int idInt = Integer.parseInt(id);
+   
+     WebScraper scraper = new WebScraper(idInt);// takes in convention id!!!
     // need to call setSchool() - do we do this with the ID or the name?  If it's the id, how do we get it?
     
     // schedule it

@@ -14,7 +14,7 @@ import spark.TemplateViewRoute;
  *   TemplateViewRoute.
  */
 public class HomeHandler implements TemplateViewRoute {
-
+// make cute/cool later .........................................................................................
   @Override
   public ModelAndView handle(Request req, Response res) {
     Map<String, Object> variables = ImmutableMap.of("title",

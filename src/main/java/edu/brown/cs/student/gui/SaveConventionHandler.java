@@ -24,7 +24,10 @@ public class SaveConventionHandler implements Route {
 
   @Override
   public String handle(Request req, Response response) throws Exception {
+    // TO DO: we need to get the id in javascript
     String userEmail = req.cookie("user");
+    String conventionID = req.params(":id");
+    //Database.checkPermission(userEmail, conventionID);
     
     if (userEmail == null) {
       // user is not logged in

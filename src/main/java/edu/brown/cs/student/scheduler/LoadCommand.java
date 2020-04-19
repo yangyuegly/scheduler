@@ -13,7 +13,6 @@ import com.mongodb.client.MongoCollection;
 
 import edu.brown.cs.student.exception.UserAuthenticationException;
 import edu.brown.cs.student.graph.UndirectedWeightedGraph;
-import edu.brown.cs.student.main.ICommand;
 import edu.brown.cs.student.main.Main;
 
 import com.mongodb.client.MongoClients;
@@ -61,7 +60,7 @@ import com.mongodb.client.result.UpdateResult;
  */
 
 /**
- * This class is used to load in a file. It implements the ICommand interface.
+ * This class is used to load in a file.
  */
 
 // (attendees, event1, event2, event3)

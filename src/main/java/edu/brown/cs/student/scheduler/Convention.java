@@ -12,28 +12,60 @@ public class Convention {
 
   /**
    * These are fields for this class.
-   *
+   * startDate - a String, the start date of the convention
+   * numDays - the number of days the convention lasts
+   * eventDuration - how long each event at the convention lasts
+   * startTime - the earliest time that events can begin at the convention, as a String
+   * endTime - the last time that events can end at the convention, as a String
    * name - a String, which represents the name of this convention
    * id - a String, which represents the id of this convention
    * events - a List of Events, which represents the events in this conference
    * eventToTimeMap - a Map of Events to Strings, where the String represents the time block
    *   that in which the key event is scheduled 
    */
-  private String name;
-  private Integer id;
+  private String startDate; 
+  private int numDays;
+  private int eventDuration;
+  private String startTime;
+  private String endTime;
+  
+  private String name = null;
+  private String id;
   private List<Event> events = new ArrayList<>();
   private Map<Event, String> eventToTimeMap = new HashMap<>();
+ 
+  
+  
   // more?
 
   /**
    * This is a constructor for this class.
    *
-   * @param convName - a String, which represents the name of this convention
    * @param convId  - a String, which represents the id of this convention
    */
-  public Convention(String convName, Integer convId) {
-    name = convName;
+
+  public Convention(String convId) {
     id = convId;
+  }
+  
+  
+/**
+ * Alternative constructor
+ * @param convId -- id of the convention
+ * @param startDate -- start date of the convention
+ * @param numDays -- number of days the convention lasts
+ * @param eventDuration -- the length of the events in the convention
+ * @param startTime -- earliest the convention can begin
+ * @param endTime -- latest the convention can end
+ */
+  public Convention(String convId, String startDate, int numDays, int eventDuration,
+      String startTime, String endTime) {
+    this.id = convId;
+    this.startDate = startDate;
+    this.numDays = numDays;
+    this.eventDuration = eventDuration;
+    this.startTime = startTime;
+    this.endTime = endTime;
   }
 
   /**
@@ -42,7 +74,12 @@ public class Convention {
    * @return a String, which represents the name of this convention
    */
   public String getName() {
-    return name;
+    if (name == null) {
+     // Database.getConventionNameFromID(this.getID());
+      return ""; //delete, see above
+    } else {
+      return name;
+    }
   }
 
   /**
@@ -50,10 +87,68 @@ public class Convention {
    *
    * @return a String, which represents the id of this convention
    */
-  public Integer getID() {
+  public String getID() {
     return id;
   }
+/**
+ * Method to set the name of the convention.
+ * @param name -- name of the convention
+ */
+  public void setName(String name) {
+    this.name = name;
+  }
+  /**
+   * Method to get the events associated with the convention.
+   * @return -- a list of all the associated events
+   */
+  public List<Event> getEvents(){
+    //return Database.getEvents(this.id);
+    return new ArrayList<>();
+  }
+  /**
+   * Getter to get the id. 
+   * @return -- id
+   */
+  public String getId() {
+    return id;
+  }
+/**
+ * Getter to get the start date.
+ * @return -- start date of convention
+ */
+  public String getStartDate() {
+    return startDate;
+  }
+/**
+ * Getter to get the number of days the convention lasts.
+ * @return -- number of days the convention lasts.
+ */
+  public int getNumDays() {
+    return numDays;
+  }
 
-  // more
+/**
+ * Getter to get the duration of each of the events in the convention.
+ * @return -- duration of the events
+ */
+  public int getEventDuration() {
+    return eventDuration;
+  }
+
+/**
+ * Getter to get the earliest start time of the convention on a given day.
+ * @return -- start time as a String
+ */
+  public String getStartTime() {
+    return startTime;
+  }
+
+/**
+ * Getter to get the end time of the convention on a given day.
+ * @return -- the end time
+ */
+  public String getEndTime() {
+    return endTime;
+  }
 
 }

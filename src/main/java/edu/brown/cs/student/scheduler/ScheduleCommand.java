@@ -10,7 +10,6 @@ import com.mongodb.client.MongoDatabase;
 import static com.mongodb.client.model.Projections.*;
 import edu.brown.cs.student.accounts.User;
 import edu.brown.cs.student.graph.UndirectedWeightedGraph;
-import edu.brown.cs.student.main.ICommand;
 import edu.brown.cs.student.main.Main;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoClient;
@@ -42,7 +41,7 @@ import com.mongodb.client.result.UpdateResult;
  * This class is used to schedule the user's convention. It implements the
  * ICommand interface.
  */
-public class ScheduleCommand implements ICommand {
+public class ScheduleCommand {
   UndirectedWeightedGraph<Event, Conflict> graph = null;
   List<Event> nodes;
   Set<Conflict> edges;
@@ -154,16 +153,5 @@ public class ScheduleCommand implements ICommand {
       "}";
   }
 
-  @Override
-  public String getKeyword() {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
-  public String execute(String input) {
-    // TODO Auto-generated method stub
-    return null;
-  }
 
 }

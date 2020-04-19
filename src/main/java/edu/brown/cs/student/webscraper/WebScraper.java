@@ -81,7 +81,7 @@ public class WebScraper {
         }
         String fullname = c.getElementsByTag("a").attr("fullname");
         System.out.println("Full name: " + fullname);
-        coursesToIDs.put(id, fullname);
+        coursesToIDs.put(fullname, id);
       }
     } catch (IOException e) {
       e.printStackTrace();

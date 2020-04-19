@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -38,26 +39,41 @@ public class CreateExamConvHandler implements TemplateViewRoute {
     int year = cal.get(Calendar.YEAR);
     
     String date = year + "-" + month + "-" + day;
+ 
+    //generate an id
+    
+    // create a convention id
+    Random rand = new Random();
+    boolean avail = false;
+    // we want a six digit id that has not been used
+    Integer id = null;
+//    while (!avail) {
+     id = rand.nextInt((999999-100000) + 1) + 100000;
+     // avail = Database.addConvID(userEmail, id);
+//     }
+    
     
     // get the names of the schools on Coursicle so they appear as suggestions
     String schoolSuggestions = "";
-    //WebScraper scraper = new WebScraper(); -- takes in convention id!!!!
-//    Map<String, String> idToSchoolMap = scraper.getcoursesToIDs();
+    WebScraper scraper = new WebScraper(id); 
+    Map<String, String> schoolNameToIDMap = scraper.getcoursesToIDs();
     List<String> schoolNamesList = new ArrayList<>();
     
-//    for (String schoolName : idToSchoolMap.values()) {
-//      schoolNamesList.add(schoolName);
-//    }
-//    
-//    Collections.sort(schoolNamesList);
-//    
-//    for (String schoolName : schoolNamesList) {
-//      schoolSuggestions = schoolSuggestions + "<option value=\"" + schoolName + "\" />" 
-//        + schoolName + "</option>";
-//    }
+    for (String schoolName : schoolNameToIDMap.keySet()) {
+      schoolNamesList.add(schoolName);
+     
+    }
+    
+    
+    Collections.sort(schoolNamesList);
+    
+    for (String schoolName : schoolNamesList) {
+      schoolSuggestions = schoolSuggestions + "<option value=\"" + schoolName + "\" />" 
+        + schoolName + "</option>";
+    }
     
     Map<String, Object> variables = ImmutableMap.of("title",
-        "Scheduler", "schoolSuggestions", schoolSuggestions, "currDay", date);
+        "Scheduler", "schoolSuggestions", schoolSuggestions, "currDay", date, "id", id.toString());
     
     return new ModelAndView(variables, "create_exam_conv.ftl");    
   }

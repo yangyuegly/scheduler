@@ -1,10 +1,13 @@
 package edu.brown.cs.student.gui;
+import java.util.List;
 // don't think we need it, all commented out
 import java.util.Map;
 
 
 import com.google.common.collect.ImmutableMap;
 
+import edu.brown.cs.student.accounts.User;
+import edu.brown.cs.student.scheduler.Convention;
 import spark.ModelAndView;
 import spark.QueryParamsMap;
 import spark.Request;
@@ -27,13 +30,17 @@ public class AccountHomeHandler implements TemplateViewRoute {
           "Scheduler", "message", "Please log in");
       return new ModelAndView(variables, "home.ftl");
     }
-    //DATABASE CALL -- just the convention name and id
-    // get convention data using req.cookie("user"); to get the email
+    User currUser = new User(userEmail);
+    List<Convention> currConvs = currUser.getConventions(); //don't have all events filled out
+    String conventionLinks = "";
+    for (Convention conv : currConvs) {
+      String id = conv.getID();
+      String link = "<a href=/convention/" + id + ">" + conv.getName() + "</a><br>";
+      conventionLinks+=link;
+    }
     
-    // store convention links using ids in "/convention/:id" format, send to page
-
     Map<String, Object> variables = ImmutableMap.of("title",
-        "Scheduler", "conventionLinks", ""); // give it information about events and such
+        "Scheduler", "conventionLinks", conventionLinks, "error", ""); 
     return new ModelAndView(variables, "account.ftl");
   }
 }

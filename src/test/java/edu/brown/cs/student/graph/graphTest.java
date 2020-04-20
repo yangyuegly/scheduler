@@ -10,7 +10,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import edu.brown.cs.student.graph.UndirectedWeightedGraph;
 import edu.brown.cs.student.scheduler.Conflict;
 import edu.brown.cs.student.scheduler.Event;
 
@@ -28,7 +27,7 @@ public class graphTest {
     for (Integer i = 0; i < 10; i++) {
       events.add(new Event(i, i.toString()));
     }
-    HashSet<Conflict> conflicts = new HashSet<Conflict>();
+    Set<Conflict> conflicts = new HashSet<Conflict>();
     conflicts.add(new Conflict(events.get(0), events.get(1), 3));
     conflicts.add(new Conflict(events.get(0), events.get(3), 5));
     conflicts.add(new Conflict(events.get(1), events.get(3), 6));
@@ -57,6 +56,10 @@ public class graphTest {
   public void getSmallestAvailableColorTest() {
   }
 
+
+  @Test
+  public void getFirstNodeColorTest() {
+  }
   // @Test
   // public void graphColoringTest() {
   //   graph.graphColoring(5, 5);

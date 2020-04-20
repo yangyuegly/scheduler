@@ -93,7 +93,7 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
    * Add all edges to the graph
    * @param edges
    */
-  public void addAllEdges(HashSet<E> edges) {
+  public void addAllEdges(Set<E> edges) {
     for (E e : edges) {
       weightMatrix[e.getHead().getID()][e.getTail().getID()] = e.getWeight();
       weightMatrix[e.getTail().getID()][e.getHead().getID()] = e.getWeight();
@@ -126,7 +126,7 @@ public int findDegrees(int id) {
       if (!result.contains(curr)) {
       //for the first course
       if (numColoredCourses == 0) {
-        ArrayList<Integer> indices = getFirstNodeColor();
+        List<Integer> indices = getFirstNodeColor();
         curr.setColor(indices);
         result.add(curr);
         numColoredCourses ++;
@@ -167,8 +167,8 @@ public int findDegrees(int id) {
    * @param courseID - the course to be colored
    * @return the color assigned or null
    */
-  public ArrayList<Integer> getFirstNodeColor() {
-    ArrayList<Integer> result = new ArrayList<Integer>();
+  public List<Integer> getFirstNodeColor() {
+    List<Integer> result = new ArrayList<Integer>();
     for (int i = 0; i < MAX_SCHEDULE_DAYS; i++) {
       for (int j = 0; j < TS; j++) {
         if (colors.get(i)[j] > 0) {

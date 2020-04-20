@@ -2,6 +2,9 @@
 
 <div class="sched-header">
   <h1 class="project-title">Scheduler</h1>
+  <div align="right" class="log-in-info">
+    ${currUserMessage}
+  </div>
 </div>
 
 <div class="main-content">
@@ -12,6 +15,7 @@
      <input name="email" id="email" size="30" required><br><br>
      <label for="password">Password: </label>
      <input name="password" id="password" type="password" size="30" required>
+     <br>
      <br>
      <input type="submit" value="Create account">
   </form>

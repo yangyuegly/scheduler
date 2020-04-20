@@ -29,8 +29,9 @@ public class ConventionHomeHandler implements TemplateViewRoute {
 
     if (userEmail == null) {
       // user is not logged in
+      String currUserMessage = "<a href=/home>Log in</a>";
       Map<String, Object> variables = ImmutableMap.of("title",
-          "Scheduler", "message", "Please log in");
+          "Scheduler", "currUserMessage", currUserMessage, "message", "Please log in");
       return new ModelAndView(variables, "home.ftl");
     }
     
@@ -44,18 +45,31 @@ public class ConventionHomeHandler implements TemplateViewRoute {
 
     
     // get convention object w/all events from database based on id
+    
+    
     Convention currConv = new Convention(conventionID);
+    
+    // for testing purposes: // delete!!!!!!!!!!@!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
+    currConv.setName("Book Signing");
+    Event jkEvent = new Event(1, "J. K. Rowling Book Signing");
+    currConv.addEvent(jkEvent);
+    
+    
     String convName = currConv.getName();
     List<Event> events = currConv.getEvents();
     String existingEvents = "";
+
     for (Event event : events) {
       existingEvents+="<p>" + event.getName() + "</p>";
     
     }
     
-    // fix
+    String currUserMessage = "<label>Logged in as <a href=/account>" + userEmail 
+        + "</a></label>" + "<br><a href=/logout>Log out</a>";
+    
     Map<String, Object> variables = ImmutableMap.of("title",
-        "Scheduler", "convName", convName, "existingEvents", existingEvents);
+        "Scheduler", "currUserMessage", currUserMessage, "convName", convName,
+        "existingEvents", existingEvents);
     
     return new ModelAndView(variables, "convention_home.ftl"); // fix
   }

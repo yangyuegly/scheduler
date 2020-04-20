@@ -2,13 +2,16 @@
 
 <div class="sched-header">
   <h1 class="project-title">Scheduler</h1>
+  <div align="right" class="log-in-info">
+    ${currUserMessage}
+  </div>
 </div>
 
 <div class="main-content">
   <h2>${convName}</h2>
   <br>
   <h3>Existing Events:</h3>
-  <p id="eventNames">No events yet.</p>
+  <p id="eventNames">${existingEvents}</p>
   <br>
   <div id="addEventsDiv">
     <h3 id="addEventLabel">Add another event:</h3>
@@ -27,8 +30,9 @@
     <p id="saveExpl">To let people register as attendees on our website, send them this link:
       _____________.  If you do this, their preferences will be included in the
       schedule.</p>
-    <button id="save">Save and schedule later</button><br>
-
+    <button id="save">Save and schedule later</button>
+    <label> or <label>
+    <button id="schedule">Schedule now</button>
   </div>
 
 </div>

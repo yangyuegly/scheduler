@@ -24,10 +24,14 @@ public class SchedExamSubmitHandler implements TemplateViewRoute {
     
     if (userEmail == null) {
       // user is not logged in
+      String currUserMessage = "<a href=/home>Log in</a>";
       Map<String, Object> variables = ImmutableMap.of("title",
-          "Scheduler", "message", "Please log in");
+          "Scheduler", "currUserMessage", currUserMessage, "message", "Please log in");
       return new ModelAndView(variables, "home.ftl");
     }
+    
+    String currUserMessage = "<label>Logged in as <a href=/account>" + userEmail
+        + "</a></label>" + "<br><a href=/logout>Log out</a>";
     
     QueryParamsMap queryMap = request.queryMap();
     String schoolName = queryMap.value("schoolName");
@@ -47,7 +51,8 @@ public class SchedExamSubmitHandler implements TemplateViewRoute {
     
     // schedule it
     
-    Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "name", schoolName + " Final Exams"); // fix!!!!!!!!!!!!!!
+    Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "currUserMessage",
+        currUserMessage, "name", schoolName + " Final Exams"); // fix!!!!!!!!!!!!!!
       return new ModelAndView(variables, "calendar_page.ftl");
 
   }

@@ -38,12 +38,15 @@ public class SaveConventionHandler implements Route {
     
     QueryParamsMap queryMap = req.queryMap();
     String existingEventsString = queryMap.value("existingEvents");
-    System.out.println(existingEventsString);
-    // get convention links
+    
+    // save the new events!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    
+//    String currUserMessage = "<label>Logged in as <a href=/account>" + userEmail
+//        + "</a></label>" + "<br><a href=/logout>Log out</a>";
     
     
     Map<String, Object> variables = ImmutableMap.of("title",
-        "Scheduler", "conventionLinks", "test@!!!!!!!!");
+        "Scheduler", "conventionLinks", "test@!!!!!!!!"); // ????????????????????????????????
     
     Gson gson = new Gson();
     return gson.toJson(variables);  

@@ -10,6 +10,7 @@ import edu.brown.cs.student.accounts.User;
 import edu.brown.cs.student.exception.UserAuthenticationException;
 import edu.brown.cs.student.main.Main;
 import edu.brown.cs.student.scheduler.Convention;
+import edu.brown.cs.student.scheduler.Event;
 import edu.brown.cs.student.scheduler.LoginCommand;
 import spark.ModelAndView;
 import spark.QueryParamsMap;
@@ -25,43 +26,40 @@ import java.util.List;
 public class LoginHandler implements TemplateViewRoute  {
 
   @Override
-  public ModelAndView handle(Request req, Response res) {
-    QueryParamsMap queryMap = req.queryMap();
+  public ModelAndView handle(Request request, Response response) {
+    QueryParamsMap queryMap = request.queryMap();
     String email = queryMap.value("email");
     String password = queryMap.value("password");
-//    LoginCommand loginComm = new LoginCommand();
-//    try {
-//    loginComm.execute(email, password);
-//    System.out.println("DONE EXECUTING!");
-//    } catch (UserAuthenticationException e) {
-//      System.out.println("CAUGHT SOMETHING");
-//      String message = e.getMessage();
-//      Map<String, Object> variables = ImmutableMap.of("title", // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
-//          "Scheduler", "message", message);
-//      return new ModelAndView(variables, "home.ftl");
-//    }
+
+    LoginCommand loginComm = new LoginCommand();
+
+    try {
+      loginComm.execute(email, password);
+
+    } catch (UserAuthenticationException e) {
+      String message = e.getMessage();
+      
+      String currUserEmail = request.cookie("user");
+      String currUserMessage;
+      
+      if (currUserEmail == null) {
+        currUserMessage = "<a href=/home>Log in</a>";
+      } else {
+        currUserMessage = "<label>Logged in as <a href=/account>" + currUserEmail + "</a></label>" +
+          "<br><a href=/logout>Log out</a>";
+      }
+      
+      Map<String, Object> variables = ImmutableMap.of("title",
+          "Scheduler", "currUserMessage", currUserMessage, "message", message);
+      return new ModelAndView(variables, "home.ftl"); // how would we redirect with message????????????????????????
+    }
     
     // sets the cookie so it expires after two hours
-    res.cookie("user", email, 72000000); //120 * 60 * 1000);  
-    User currUser = new User(email);
-    List<Convention> conventions = currUser.getConventions();
-
-    if (conventions.isEmpty()) {
-      Map<String, Object> variables = ImmutableMap.of("title",
-          "Scheduler", "conventionLinks", "");
-      return new ModelAndView(variables, "account.ftl");
-    }
-
-    String convString = "<p>Here are your conventions.  Click one to edit or schedule it!</p><br>";
-
-    for (Convention currConv : conventions) {
-      String convLink = "<a href=/convention/" + currConv.getID() + ">" + currConv.getName() + "</a>";
-      convString+= convLink + "<br>";
-    }
-
-    Map<String, Object> variables = ImmutableMap.of("title",
-        "Scheduler", "conventionLinks", convString);
-    return new ModelAndView(variables, "account.ftl");
+    response.cookie("user", email, 72000000); //120 * 60 * 1000);  
+    
+    response.redirect("/account");
+    
+    return null; // is this ok??? don't think it gets here !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   }
 
 }

@@ -36,7 +36,7 @@ public class DatabaseUtility {
   }
 
   public static void createConvention(String userEmail, Convention convention) {
-    MongoCollection userCollection = Main.getDatabase().getCollection("users");
+    MongoCollection<Document> userCollection = Main.getDatabase().getCollection("users");
     
     
   }

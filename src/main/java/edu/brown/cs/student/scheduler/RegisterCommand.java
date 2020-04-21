@@ -40,10 +40,8 @@ import com.mongodb.client.result.UpdateResult;
 
 public class RegisterCommand {
 
-  private static final String UNICODE_FORMAT = "UTF8";
   public static final String DESEDE_ENCRYPTION_SCHEME = "DESede";
-  private KeySpec ks;
-  private SecretKeyFactory skf;
+
   SecretKey key;
   public RegisterCommand() {
 

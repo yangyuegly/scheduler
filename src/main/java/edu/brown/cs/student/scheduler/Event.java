@@ -115,7 +115,6 @@ public int hashCode() {
 public String toString() {
   return "{" +
     " id='" + getId() + "'" +
-    ", adjList='" + getAdjList() + "'" +
     ", degree='" + getDegree() + "'" +
     ", color='" + getColor() + "'" +
     "}";

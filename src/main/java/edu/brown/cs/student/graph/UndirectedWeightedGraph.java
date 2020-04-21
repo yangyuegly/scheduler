@@ -33,7 +33,7 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
   private int numColor; //the max num of color a user can take in
   private int numVertices;//the number of mini-events
   private int TS; //time slots 
-  private int exameBreak = 0; 
+  private int examBreak = 0; 
   private Map<Integer,V> nodes; //map node Id to vertex object 
 
   private final int CONCURENCY_LIMIT; 
@@ -52,11 +52,12 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
  * @param CONCURENCY_LIMIT
  * @param MAX_SCHEDULE_DAYS
  */
-  public UndirectedWeightedGraph(List<V> vertices, int CONCURENCY_LIMIT, int MAX_SCHEDULE_DAYS) {
+  public UndirectedWeightedGraph(List<V> vertices, int CONCURENCY_LIMIT, int MAX_SCHEDULE_DAYS, int TS) {
     // two nodes may be connected iff 1) they were in the same movie 2) they share
     // initial 
     this.numVertices = vertices.size();
     this.CONCURENCY_LIMIT = CONCURENCY_LIMIT;
+    this.TS = TS; 
     this.result = new HashSet<>();
     this.MAX_SCHEDULE_DAYS = MAX_SCHEDULE_DAYS;
     this.nodes = new HashMap<Integer, V>();
@@ -99,6 +100,7 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
       weightMatrix[e.getTail().getID()][e.getHead().getID()] = e.getWeight();
       nodes.get(e.getHead().getID()).addToAdjList(e);
     }
+    setDegree();
   }
 
   
@@ -147,6 +149,7 @@ public int findDegrees(int id) {
             List<Integer> adjColors = getSmallestAvailableColor(i.getID());
             if (adjColors.size() == 2) {
               i.setColor(adjColors);
+              System.out.println("adjacent:" + i);
               result.add(i);
               numColoredCourses++;
               colors.get(adjColors.get(0))[adjColors.get(1)] --;
@@ -175,14 +178,12 @@ public int findDegrees(int id) {
           colors.get(i)[j]--;
           result.add(i);
           result.add(j);
-          break;
+          return result;
         }
       }
     }
-    if (result.size() == 0)
       throw new NullPointerException("Unable to find first color");
 
-    return result;
   }
 
 
@@ -211,19 +212,21 @@ public int findDegrees(int id) {
 
     boolean valid = false;
     List<E> adj = nodes.get(courseID).getAdjList();
-    for (int i = 0; i < numVertices; i++) {
-      for (int j = 0; j < TS; j++) {
+    for (int i = 0; i < this.MAX_SCHEDULE_DAYS; i++) {
+      for (int j = 0; j < this.TS; j++) {
         List<Integer> currColor = new ArrayList<>(List.of(i, j));
         valid = true;
         for (int r = 0; r < adj.size(); r++) {
           //get the color of the adjacent node
           List<Integer> color = (adj.get(r).getTail().getColor());
-          if (color != null) {
+          if (color != null && !color.isEmpty()) {
+            System.out.println("colors:" + color);
             //check if that color is the same as the current
             if (color.get(0) != i || color.get(1) != j) {
+              System.out.println("i:"+ i +" j "+ j);
               if (calculateExternalDistance(color, currColor) == 0) {
                 // if we don't want back-to-back exams
-                if (calculateInternalDistance(color, currColor) <= this.exameBreak) {
+                if (calculateInternalDistance(color, currColor) <= this.examBreak) {
                   valid = false;
                 }
               }
@@ -231,6 +234,8 @@ public int findDegrees(int id) {
               else if (colors.get(i)[j] <= 0) {
                 valid = false;
               }
+            } else {
+              valid = false;
             }
           }
         }
@@ -317,12 +322,12 @@ public Integer calculateExternalDistance(List<Integer> a, List<Integer> b) {
     this.TS = TS;
   }
 
-  public int getExameBreak() {
-    return this.exameBreak;
+  public int getExamBreak() {
+    return this.examBreak;
   }
 
-  public void setExameBreak(int exameBreak) {
-    this.exameBreak = exameBreak;
+  public void setExameBreak(int examBreak) {
+    this.examBreak = examBreak;
   }
 
   public int getCONCURENCY_LIMIT() {

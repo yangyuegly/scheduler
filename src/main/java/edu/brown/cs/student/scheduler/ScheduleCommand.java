@@ -45,13 +45,16 @@ public class ScheduleCommand {
   List<Event> nodes;
   HashSet<Conflict> edges;
   Convention convention;
+  Integer TS; 
   Integer CONCURENCY_LIMIT, MAX_SCHEDULE_DAYS;
   UndirectedWeightedGraph<Event, Conflict> graph;
 
   public ScheduleCommand(
       UndirectedWeightedGraph<Event, Conflict> graph, 
-      Convention convention, Integer CONCURENCY_LIMIT, Integer MAX_SCHEDULE_DAYS) {
+      Convention convention, Integer CONCURENCY_LIMIT, Integer MAX_SCHEDULE_DAYS,
+      Integer TS) {
     this.graph = graph;
+    this.TS = TS;
     this.nodes = new ArrayList<>();
     this.edges = new HashSet<>();
     this.convention = convention;
@@ -66,7 +69,7 @@ public class ScheduleCommand {
   public void execute() {
     extractNodes();
     extractEdges();
-    this.graph = new UndirectedWeightedGraph<Event, Conflict>(this.nodes, this.CONCURENCY_LIMIT, this.MAX_SCHEDULE_DAYS);
+    this.graph = new UndirectedWeightedGraph<Event, Conflict>(this.nodes, this.CONCURENCY_LIMIT, this.MAX_SCHEDULE_DAYS, this.TS);
     graph.addAllEdges(this.edges);
   }
 

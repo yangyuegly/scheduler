@@ -33,10 +33,17 @@ public class graphTest {
     conflicts.add(new Conflict(events.get(1), events.get(3), 6));
     conflicts.add(new Conflict(events.get(1), events.get(2), 1));
     conflicts.add(new Conflict(events.get(3), events.get(2), 1));
+    
+    conflicts.add(new Conflict(events.get(1), events.get(0), 3));
+    conflicts.add(new Conflict(events.get(3), events.get(0), 5));
+    conflicts.add(new Conflict(events.get(3), events.get(1), 6));
+    conflicts.add(new Conflict(events.get(2), events.get(1), 1));
+    conflicts.add(new Conflict(events.get(2), events.get(3), 1));
     int CL = 10;
     int md = 4;
+    int TS = 5;
     graph = new UndirectedWeightedGraph<>(events, CL ,
-    md);
+    md, TS);
     graph.addAllEdges(conflicts);
 }
 
@@ -47,22 +54,44 @@ public class graphTest {
   public void tearDown() {
 
   }
+
+  @Test
+  public void getAdjListTest() {
+    setUp();
+    assertEquals(2, events.get(0).getAdjList().size());
+  }
+
   @Test
   public void getNumVerticesTest() {
     setUp();
     assertEquals(10, graph.getNumVertices());
   }
-  @Test
-  public void getSmallestAvailableColorTest() {
-  }
 
 
   @Test
   public void getFirstNodeColorTest() {
+    List<Integer> colors = graph.getFirstNodeColor();
+    assertEquals(2, colors.size());
   }
-  // @Test
-  // public void graphColoringTest() {
-  //   graph.graphColoring(5, 5);
-  //   assertEquals(1, (int)events.get(0).getColor().get(0));
-  // }
+  @Test
+  public void getSmallestAvailableColorTest() {
+    List<Integer> colors = graph.getSmallestAvailableColor(0);
+    assertEquals(2, colors.size());
+  }
+  @Test
+  public void graphColoringTest() {
+    graph.graphColoring(5, 5);
+    assertEquals(0, (int) events.get(0).getColor().get(0));
+    assertEquals(0, (int) events.get(0).getColor().get(1));
+    assertEquals(0, (int) events.get(1).getColor().get(0));
+    assertEquals(1, (int) events.get(1).getColor().get(1));
+
+  }
+
+  @Test
+  public void checkConcurrencyLimit() {
+    assertEquals(10, (int)(graph.getColors().get(0)[0]));
+  }
+
 }
+

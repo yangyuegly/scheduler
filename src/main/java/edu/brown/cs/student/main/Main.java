@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.HashMap;
-import java.util.Map;
 
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
@@ -105,13 +103,12 @@ public final class Main {
     mongo = MongoClients.create(settings);
     //created db in cluster in MongoDBAtlas including collections: users, events, conflicts
     database = mongo.getDatabase("test");
-    System.out.println("TEST DATABASE RAN");
 
     if (options.has("gui")) {
       runSparkServer((int) options.valueOf("port"));
 
     }
-    
+
   //allowing us to upload a file ???????????????????????????????????????????????????????????????????
     File uploadDir = new File("uploaded-file");
     uploadDir.mkdir();
@@ -137,6 +134,8 @@ public final class Main {
     Spark.exception(Exception.class, new ExceptionPrinter());
 
     FreeMarkerEngine freeMarker = createEngine();
+
+    Spark.webSocket("/scores", ScoringWebSocket.class);
 
     // Setup Spark Routes
     Spark.get("/home", new HomeHandler(), freeMarker);

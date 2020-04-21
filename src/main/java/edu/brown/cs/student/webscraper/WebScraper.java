@@ -29,10 +29,8 @@ public class WebScraper {
   // public static final String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64;
   // x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169
   // Safari/537.36";
-  // public static final String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64;
-  // x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.157
-  // Safari/537.36";
-  public static final String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36";
+//   public static final String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.157 Safari/537.36";
+  public static final String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36";
   private String collegeName = "";
   private Map<String, List<String>> deptToCourses = new HashMap<>();
   private Map<String, String> conflict = new HashMap<>();
@@ -122,10 +120,10 @@ public class WebScraper {
           // String courseNum = course.getElementsByClass("tileElementText
           // tileElementTextWithSubtext").text();
           String courseTitle = course.getElementsByClass("tileElementHiddenText").text();
-          if (courseTitle != "") {
+          if (courseTitle != "" || courseTitle!= "\n") {
             allCoursesinDept.add(courseTitle);
           }
-
+          System.out.println(courseTitle);
         }
         deptToCourses.put(departmentTitle, allCoursesinDept);
         allCoursesinDept = new ArrayList<>();
@@ -149,7 +147,10 @@ public class WebScraper {
     int count = 0;
     org.bson.Document nestDoc = new org.bson.Document("conventionID", conventionID)
         .append("conflicts", Arrays.asList());
-    MongoCollection<org.bson.Document> collection = Main.getDatabase().getCollection("conflicts");
+    if(Main.getDatabase() == null) {
+      return;
+    }
+    MongoCollection<org.bson.Document> collection = Main.getDatabase().getCollection("conflicts");;
     collection.insertOne(nestDoc);
     Gson gson = new Gson();
     List<BasicDBObject> conflictArray = new ArrayList<>();

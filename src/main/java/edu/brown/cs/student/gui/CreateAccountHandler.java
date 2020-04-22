@@ -24,10 +24,7 @@ public class CreateAccountHandler implements TemplateViewRoute {
       return null;
     }
     
-    String currUserMessage = "<a href=/home>Log in</a>";
-    
-    Map<String, Object> variables = ImmutableMap.of("title",
-        "Scheduler", "currUserMessage", currUserMessage, "errorMessage", "");
+    Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "errorMessage", "");
     
     return new ModelAndView(variables, "create_account.ftl");
   }

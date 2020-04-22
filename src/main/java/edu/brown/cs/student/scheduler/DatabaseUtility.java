@@ -12,16 +12,11 @@ import org.bson.conversions.Bson;
 import static com.mongodb.client.model.Filters.*;
 import static com.mongodb.client.model.Updates.*;
 import org.bson.Document;
-import org.bson.conversions.Bson;
 
 import com.google.gson.Gson;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
-import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoCursor;
-import com.mongodb.client.model.Filters;
-import static com.mongodb.client.model.Filters.eq;
 
 import edu.brown.cs.student.main.Main;
 
@@ -39,7 +34,11 @@ public class DatabaseUtility {
     andQuery.put("$and", obj);
 
     long count = userCollection.countDocuments(andQuery);
+<<<<<<< HEAD
     return count != 0;
+=======
+    return count!=0;
+>>>>>>> f56aa6a3bb91e861003e37e7ec756608d7f2707a
 
   }
   
@@ -97,16 +96,21 @@ public Boolean addConventionData(Convention convention) {
   }
   return false;
 }
-  
+
   /**
   * adds the convention data to the database
-  * first checks if there are any existing conventions with conventionID; 
+  * first checks if there are any existing conventions with conventionID;
   * if there is a convention with that ID, return false; otherwise, add the conventionID to the user with userEmail and return true
   * @param userEmail
   * @param conventionID
   * @return a boolean if the given conention id already exist in the database
   */
+<<<<<<< HEAD
   public Boolean addConvID(String userEmail, String conventionID) {
+=======
+  public static Boolean addConvID(String userEmail, String conventionID){
+    MongoCollection<Document> userCollection = Main.getDatabase().getCollection("users");
+>>>>>>> f56aa6a3bb91e861003e37e7ec756608d7f2707a
     Gson gson = new Gson();
     //the key to this document is the convention id
     BasicDBObject query = new BasicDBObject();
@@ -115,6 +119,11 @@ public Boolean addConventionData(Convention convention) {
     Document currCon = userCollection.find(query).first();
     if (currCon != null && !currCon.isEmpty()) {
       return false;
+<<<<<<< HEAD
+=======
+
+//      return true;
+>>>>>>> f56aa6a3bb91e861003e37e7ec756608d7f2707a
     } else {
       //update the convention ID
       String id = currCon.getString("_id");
@@ -169,6 +178,7 @@ public Boolean addConventionData(Convention convention) {
     result[1] = doc.getString("name");
     return result; 
   }
+<<<<<<< HEAD
 
 
   /**
@@ -199,3 +209,6 @@ public Boolean addConventionData(Convention convention) {
   } 
 
 }
+=======
+}
+>>>>>>> f56aa6a3bb91e861003e37e7ec756608d7f2707a

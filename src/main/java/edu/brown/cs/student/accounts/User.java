@@ -38,7 +38,7 @@ public class User {
    */
   public List<Convention> getConventions() {
     return conventions;
-    //return Database.getConventionsNamesIds(email); 
+    //return UtilityDatabase.getConventionsNamesIds(email); 
 
   }
 

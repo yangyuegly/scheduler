@@ -5,6 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.mongodb.client.MongoCollection;
+
+import org.bson.Document;
+
+import edu.brown.cs.student.main.Main;
+
 /**
  * This class is used to represents a convention.  A convention is a group of smaller events.
  */
@@ -32,7 +38,6 @@ public class Convention {
   private String name = null;
   private String id;
   private List<Event> events = new ArrayList<>();
-  private Map<Event, String> eventToTimeMap = new HashMap<>();
  
   
   
@@ -101,12 +106,12 @@ public class Convention {
    * Method to get the events associated with the convention.
    * @return -- a list of all the associated events
    */
-  public List<Event> getEvents(){
-    if (events == null) {
-      //events = Database.getEvents(this.id);
+  public List<Event> getEvents() {
+    if (events == null || events.isEmpty()) {
+      return DatabaseUtility.getEventsFromConventionID(this.id);
+    } else {
+      return events;
     }
-    
-    return events;
   }
   
   /**

@@ -25,6 +25,16 @@
 
     <button id="doneAddingEvents">Done adding events</button>
   </div>
+  
+  <div id="addCollaborator">
+  <h3 id="addCollaboratorLabel">Add a collaborator for this convention:</h3>
+   <label for="colEmail" id="colEmailLabel">User email: </label><br>
+    <input name="colEmail" id="colEmail" size="30" required><br><br>
+    <br>
+    <button id="addEvent">Add Collaborator</button>
+
+    <button id="doneAddingEvents">Done adding collaborators</button>
+  </div>
 
   <div id="completedDiv">
     <p id="saveExpl">To let people register as attendees on our website, send them this link:

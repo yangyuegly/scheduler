@@ -4,16 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bson.Document;
-import org.bson.conversions.Bson;
 
 import com.google.gson.Gson;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
-import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoCursor;
-import com.mongodb.client.model.Filters;
-import static com.mongodb.client.model.Filters.eq;
 
 import edu.brown.cs.student.main.Main;
 
@@ -31,9 +26,9 @@ public class DatabaseUtility {
     obj.add(new BasicDBObject("email", userEmail));
     obj.add(new BasicDBObject("conventions.id", conventionID));
     andQuery.put("$and", obj);
-  
+
     long count = userCollection.countDocuments(andQuery);
-    return count!=0; 
+    return count!=0;
 
   }
 
@@ -41,7 +36,7 @@ public class DatabaseUtility {
     MongoCollection<Document> userCollection = Main.getDatabase().getCollection("users");
 
   }
-  
+
 /**
  * Get a list of events associated with a convention id from the database
  * @param conventionID
@@ -86,16 +81,16 @@ public Boolean addConventionData(Convention convention) {
   }
   return false;
 }
-  
+
   /**
   * adds the convention data to the database
-  * first checks if there are any existing conventions with conventionID; 
+  * first checks if there are any existing conventions with conventionID;
   * if there is a convention with that ID, return false; otherwise, add the conventionID to the user with userEmail and return true
   * @param userEmail
   * @param conventionID
   * @return a boolean if the given conention id already exist in the database
   */
-  public Boolean addConvID(String userEmail, String conventionID){
+  public static Boolean addConvID(String userEmail, String conventionID){
     MongoCollection<Document> userCollection = Main.getDatabase().getCollection("users");
     Gson gson = new Gson();
     //the key to this document is the convention id
@@ -105,7 +100,7 @@ public Boolean addConventionData(Convention convention) {
     Document currCon = userCollection.find(query).first();
 
     if (currCon != null && !currCon.isEmpty()) {
-      return false; 
+      return false;
 
       return true;
     } else {
@@ -114,4 +109,5 @@ public Boolean addConventionData(Convention convention) {
     }
     return false;
   }
+
 }

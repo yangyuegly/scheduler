@@ -8,7 +8,6 @@ import com.google.common.collect.ImmutableMap;
 import edu.brown.cs.student.scheduler.Convention;
 import edu.brown.cs.student.scheduler.Event;
 import spark.ModelAndView;
-import spark.QueryParamsMap;
 import spark.Request;
 import spark.Response;
 import spark.TemplateViewRoute;
@@ -21,9 +20,9 @@ public class ConventionHomeHandler implements TemplateViewRoute {
   @Override
   public ModelAndView handle(Request req, Response res) {
 
-    // get events in this convention from the database, display their names and 
+    // get events in this convention from the database, display their names and
     // give the user options to schedule, etc
-    
+
     String conventionID = req.params(":id");
     String userEmail = req.cookie("user");
 
@@ -34,7 +33,7 @@ public class ConventionHomeHandler implements TemplateViewRoute {
           "Scheduler", "currUserMessage", currUserMessage, "message", "Please log in");
       return new ModelAndView(variables, "home.ftl");
     }
-    
+
 
 //     boolean authorized = Database.checkPermission(userEmail, conventionID);
 //    if (!authorized) {
@@ -43,34 +42,34 @@ public class ConventionHomeHandler implements TemplateViewRoute {
 //      return new ModelAndView(variables, "unauthorized.ftl");
 //    }
 
-    
+
     // get convention object w/all events from database based on id
-    
-    
+
+
     Convention currConv = new Convention(conventionID);
-    
+
     // for testing purposes: // delete!!!!!!!!!!@!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
     currConv.setName("Book Signing");
     Event jkEvent = new Event(1, "J. K. Rowling Book Signing");
     currConv.addEvent(jkEvent);
-    
-    
+
+
     String convName = currConv.getName();
     List<Event> events = currConv.getEvents();
     String existingEvents = "";
 
     for (Event event : events) {
       existingEvents+="<p>" + event.getName() + "</p>";
-    
+
     }
-    
-    String currUserMessage = "<label>Logged in as <a href=/account>" + userEmail 
+
+    String currUserMessage = "<label>Logged in as <a href=/account>" + userEmail
         + "</a></label>" + "<br><a href=/logout>Log out</a>";
-    
+
     Map<String, Object> variables = ImmutableMap.of("title",
         "Scheduler", "currUserMessage", currUserMessage, "convName", convName,
         "existingEvents", existingEvents);
-    
+
     return new ModelAndView(variables, "convention_home.ftl"); // fix
   }
 }

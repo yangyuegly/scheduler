@@ -1,7 +1,7 @@
 body {
     background-color: white;
     font-family: sans-serif;
-    font-size: 15px;
+    font-size: 18px;
     padding: 0;
     margin: 0;
     background-image: url("interlaced.png");
@@ -17,13 +17,14 @@ body {
   padding: 0;
 }
 
+/*
 .project-title {
   color: #ffffff;
   font-size: 60px;
   margin: 0;
   padding: 10px 18px 10px 18px;
   letter-spacing: 2px;
-}
+} */
 
 .log-in-info {
   color: #ffffff;
@@ -45,5 +46,61 @@ body {
 
 textarea, input {
   font-family: sans-serif;
-  font-size: 15px;
+  font-size: 18px;
+  padding: 8px 10px;
+}
+
+button, input[type=submit] {
+  background-color: #12ABDC;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+/* Darker background on mouse-over */
+button:hover, input[type=submit]:hover {
+  background-color: #089CCD;
+}
+
+/* Make it so links don't change color when visited */
+a {
+  color: #12ABDC;
+}
+
+/* This is for items that are only present for screen readers. */
+.sr-only {
+  display: none;
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  background-color: black;
+  font-size: 30px;
+  letter-spacing: 2px;
+  overflow: hidden;
+}
+
+/* Makes the navigation header horizontal */
+li {
+  float: left;
+}
+
+/* Make the links in the navigation header not look like links */
+li a {
+  text-decoration: none;
+  color: white;
+  padding: 14px 16px;
+  display: block;
+  text-align: center;
+}
+
+li a:hover {
+  background-color: #232B2B;
 }

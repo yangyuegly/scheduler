@@ -34,12 +34,12 @@ public class AccountHomeHandler implements TemplateViewRoute {
     }
 
     User currUser = new User(userEmail);
-//    List<Convention> currConvs = currUser.getConventions(); //don't have all events filled out
-//   
-//    
-//    String conventionLinks = "";
+//    List<Convention> currConvs = currUser.getConventions(); //don't have all events filled out !!!!!!!!!!!!!!
+    String conventionLinks = "";
+
 //    if (!currConvs.isEmpty()) {
-//      conventionLinks = "<p>Here are your conventions.  Click one to add events or to schedule it!</p>";
+//      conventionLinks = "<p>Here are your conventions.  Click one to add events or to"
+//          + " schedule it!</p>";
 //    }
 //    
 //    for (Convention conv : currConvs) {

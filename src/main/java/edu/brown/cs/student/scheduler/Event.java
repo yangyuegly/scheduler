@@ -12,16 +12,36 @@ public class Event implements IVertex<Event, Conflict> {
   Integer degree; //
   List<Integer> color;
   String name;
+  String description;
 
   public Event() {
   }
-
+  
   public Event(Integer id, String name) {
     this.id = id;
     this.adjList = new ArrayList<>();
     this.degree = 0;
     this.color = new ArrayList<>();
-    this.name = name; 
+    this.name = name;
+    this.description = "";
+  }
+
+  public Event(Integer id, String name, String description) {
+    this.id = id;
+    this.adjList = new ArrayList<>();
+    this.degree = 0;
+    this.color = new ArrayList<>();
+    this.name = name;
+    this.description = description;
+  }
+
+  /**
+   * This method is used to get this event's description.
+   *
+   * @return a String, which represents the description for this Event
+   */
+  public String getDescription() {
+    return description;
   }
 
   /**

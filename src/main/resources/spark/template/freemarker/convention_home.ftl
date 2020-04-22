@@ -1,12 +1,5 @@
 <#assign content>
 
-<div class="sched-header">
-  <h1 class="project-title">Scheduler</h1>
-  <div align="right" class="log-in-info">
-    ${currUserMessage}
-  </div>
-</div>
-
 <div class="main-content">
   <h2>${convName}</h2>
   <br>

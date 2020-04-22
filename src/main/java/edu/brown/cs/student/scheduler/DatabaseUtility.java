@@ -34,7 +34,6 @@ public class DatabaseUtility {
 
   public static void createConvention(String userEmail, Convention convention) {
     MongoCollection<Document> userCollection = Main.getDatabase().getCollection("users");
-
   }
 
 /**
@@ -109,5 +108,4 @@ public Boolean addConventionData(Convention convention) {
     }
     return false;
   }
-
 }

@@ -27,14 +27,13 @@ public class AccountHomeHandler implements TemplateViewRoute {
     
     if (userEmail == null) {
       // user is not logged in
-      String currUserMessage = "<a href=/home>Log in</a>";
       Map<String, Object> variables = ImmutableMap.of("title",
-          "Scheduler", "currUserMessage", currUserMessage, "message", "Please log in");
+          "Scheduler", "message", "Please log in");
       return new ModelAndView(variables, "home.ftl");
     }
 
     User currUser = new User(userEmail);
-    //List<Convention> currConvs = currUser.getConventions(); //don't have all events filled out
+    List<Convention> currConvs = currUser.getConventions(); //don't have all events filled out
    //just here temporarily to test !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     List<Convention> currConvsTest = new ArrayList<>();
     Convention testConvention = new Convention("777");
@@ -53,12 +52,8 @@ public class AccountHomeHandler implements TemplateViewRoute {
       conventionLinks = conventionLinks + link;
     }
     
-    String currUserMessage = "<label>Logged in as <a href=/account>" + userEmail + "</a></label>" +
-        "<br><a href=/logout>Log out</a>";
-    
     Map<String, Object> variables = ImmutableMap.of("title",
-        "Scheduler", "currUserMessage", currUserMessage, "conventionLinks", conventionLinks,
-        "error", ""); 
+        "Scheduler", "conventionLinks", conventionLinks, "error", ""); 
     return new ModelAndView(variables, "account.ftl");
   }
 }

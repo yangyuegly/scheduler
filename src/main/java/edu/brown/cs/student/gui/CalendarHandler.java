@@ -22,9 +22,8 @@ public class CalendarHandler implements TemplateViewRoute {
 
     if (userEmail == null) {
       // user is not logged in
-      String currUserMessage = "<a href=/home>Log in</a>";
       Map<String, Object> variables = ImmutableMap.of("title",
-          "Scheduler", "currUserMessage", currUserMessage, "message", "Please log in");
+          "Scheduler", "message", "Please log in");
       return new ModelAndView(variables, "home.ftl");
     }
     
@@ -38,11 +37,7 @@ public class CalendarHandler implements TemplateViewRoute {
     String name = "";
     //name = Database.getConventionNameFromID();
     
-    String currUserMessage = "<label>Logged in as <a href=/account>" + userEmail + "</a></label>" +
-        "<br><a href=/logout>Log out</a>";
-    
-    Map<String, Object> variables = ImmutableMap.of("title",
-      "Scheduler", "currUserMessage", currUserMessage, "name", name);
+    Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "name", name);
     return new ModelAndView(variables, "calendar_page.ftl");
   }
 

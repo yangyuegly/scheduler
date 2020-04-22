@@ -28,9 +28,8 @@ public class ConventionHomeHandler implements TemplateViewRoute {
 
     if (userEmail == null) {
       // user is not logged in
-      String currUserMessage = "<a href=/home>Log in</a>";
       Map<String, Object> variables = ImmutableMap.of("title",
-          "Scheduler", "currUserMessage", currUserMessage, "message", "Please log in");
+          "Scheduler", "message", "Please log in");
       return new ModelAndView(variables, "home.ftl");
     }
 

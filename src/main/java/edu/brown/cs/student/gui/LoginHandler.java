@@ -40,17 +40,8 @@ public class LoginHandler implements TemplateViewRoute  {
       String message = e.getMessage();
       
       String currUserEmail = request.cookie("user");
-      String currUserMessage;
       
-      if (currUserEmail == null) {
-        currUserMessage = "<a href=/home>Log in</a>";
-      } else {
-        currUserMessage = "<label>Logged in as <a href=/account>" + currUserEmail + "</a></label>" +
-          "<br><a href=/logout>Log out</a>";
-      }
-      
-      Map<String, Object> variables = ImmutableMap.of("title",
-          "Scheduler", "currUserMessage", currUserMessage, "message", message);
+      Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "message", message);
       return new ModelAndView(variables, "home.ftl"); // how would we redirect with message????????????????????????
     }
     

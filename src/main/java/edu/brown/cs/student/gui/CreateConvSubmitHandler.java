@@ -22,9 +22,6 @@ public class CreateConvSubmitHandler implements TemplateViewRoute {
       return null; // ????????????????????????????????????????????????????????????????????????????????
     }
     
-    String currUserMessage = "<label>Logged in as <a href=/account>" + userEmail
-        + "</a></label>" + "<br><a href=/logout>Log out</a>";
-    
     QueryParamsMap queryMap = request.queryMap();
     String id = request.params(":id");
     String name = queryMap.value("convName");
@@ -44,9 +41,8 @@ public class CreateConvSubmitHandler implements TemplateViewRoute {
       eventDur = Integer.parseInt(eventDuration);
 
     } catch (NumberFormatException err) {
-      Map<String, Object> variables = ImmutableMap.of("title",
-          "Scheduler", "currUserMessage", currUserMessage, "id", id.toString(), "errorMessage",
-          "The number of days must be an integer.");
+      Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "id", id.toString(),
+          "errorMessage", "The number of days must be an integer.");
       return new ModelAndView(variables, "setup_conv.ftl");
     }
     Convention newConv = new Convention(id, startDate, numDays, eventDur,
@@ -56,13 +52,13 @@ public class CreateConvSubmitHandler implements TemplateViewRoute {
    //boolean added = Database.addConvData(newConv); 
     
     if (submitType.equals("Add events by hand")) {
-      Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "currUserMessage",
-          currUserMessage, "convName", name, "existingEvents", "No events yet.", "id", id);
+      Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "convName", name,
+          "existingEvents", "No events yet.", "id", id);
       return new ModelAndView(variables, "convention_home.ftl");
     } else {
       
-      Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "currUserMessage",
-          currUserMessage, "convName", name, "id", id.toString(), "message", "");
+      Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "convName", name,
+          "id", id.toString(), "message", "");
       return new ModelAndView(variables, "upload_conv.ftl");
     }
   }

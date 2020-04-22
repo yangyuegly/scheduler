@@ -16,7 +16,7 @@
         <div id="loggedInDiv">
           <label>Logged in as <a href=/home id="loginStatusLink"></a></label>
           <br>
-          <a href=/logout>Log out</a>
+          <a href=/logout id="logoutLink">Log out</a>
         </div>
       </div>
     </div>

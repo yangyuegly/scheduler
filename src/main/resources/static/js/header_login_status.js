@@ -20,3 +20,9 @@ $(document).ready(() => {
     $loginStatusLink.text(userEmail);
   }
 });
+
+// $logoutLink.click(function() {
+//   // the user is logging out
+//   $('#notLoggedInDiv').css("display", "block");
+//   $('#loggedInDiv').css("display", "none");
+// });

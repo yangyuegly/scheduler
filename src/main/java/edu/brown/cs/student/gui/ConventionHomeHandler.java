@@ -62,11 +62,8 @@ public class ConventionHomeHandler implements TemplateViewRoute {
 
     }
 
-    String currUserMessage = "<label>Logged in as <a href=/account>" + userEmail
-        + "</a></label>" + "<br><a href=/logout>Log out</a>";
-
     Map<String, Object> variables = ImmutableMap.of("title",
-        "Scheduler", "currUserMessage", currUserMessage, "convName", convName,
+        "Scheduler", "id", conventionID, "convName", convName,
         "existingEvents", existingEvents);
 
     return new ModelAndView(variables, "convention_home.ftl"); // fix

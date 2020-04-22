@@ -47,7 +47,3 @@ textarea, input {
   font-family: sans-serif;
   font-size: 15px;
 }
-
-#notLoggedInDiv, #loggedInDiv {
-  display: none;
-}

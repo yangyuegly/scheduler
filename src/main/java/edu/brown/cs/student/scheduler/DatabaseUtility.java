@@ -101,7 +101,7 @@ public Boolean addConventionData(Convention convention) {
     if (currCon != null && !currCon.isEmpty()) {
       return false;
 
-      return true;
+//      return true;
     } else {
       Document doc = new Document(conventionID, conventionID);
       conventionCollection.insertOne(doc);

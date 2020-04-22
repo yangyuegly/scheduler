@@ -21,10 +21,9 @@
       </div>
     </div>
 
+    <script src="/js/jquery-2.1.1.js"></script>
+    <script src="/js/header_login_status.js"></script>
+
      ${content}
-     <script src="/js/jquery-2.1.1.js"></script>
-     <script src="/js/header_login_status.js"></script>
-     <script src="/js/build_convention.js"></script>
-     <script src="/js/attendee_event_signup.js"></script>
   </body>
 </html>

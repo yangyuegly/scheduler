@@ -8,11 +8,6 @@ const $name = $("#name");
 const $description = $("#description");
 const $eventNames = $("#eventNames");
 
-// url of the current page
-// let url = window.location.href;
-
-
-
 // this string stores the names of the added events in HTML form
 let eventNamesString = "";
 

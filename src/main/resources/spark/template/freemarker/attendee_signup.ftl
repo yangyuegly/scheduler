@@ -18,6 +18,8 @@
   </form>
 </div>
 
+<script src="/js/attendee_event_signup.js"></script>
+
 
 </#assign>
 <#include "main.ftl">

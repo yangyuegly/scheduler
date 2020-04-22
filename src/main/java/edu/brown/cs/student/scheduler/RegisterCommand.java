@@ -25,6 +25,8 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.lang.Object;
+import java.lang.System.Logger;
+
 import com.mongodb.BasicDBList;
 import com.mongodb.Block;
 
@@ -43,9 +45,7 @@ public class RegisterCommand {
   public static final String DESEDE_ENCRYPTION_SCHEME = "DESede";
 
   SecretKey key;
-  public RegisterCommand() {
-
-  }
+  static Logger logger;
 
 
   public void execute(String email, String password) {
@@ -65,7 +65,6 @@ public class RegisterCommand {
   
   public static String encrypt(String password, byte[] salt){
     try{
-
             // Create key and cipher
             Key aesKey = new SecretKeySpec(salt, "AES");
             Cipher cipher = Cipher.getInstance("AES");
@@ -80,7 +79,6 @@ public class RegisterCommand {
             }
             // the encrypted String
             String encryptedPw = sb.toString();
-            System.out.println("encrypted:" + encryptedPw);
             
             return encryptedPw; 
         } catch(Exception e) {

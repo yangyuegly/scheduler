@@ -48,7 +48,6 @@ public class ScheduleCommand {
   Integer TS; 
   Integer CONCURENCY_LIMIT, MAX_SCHEDULE_DAYS;
   UndirectedWeightedGraph<Event, Conflict> graph;
-
   public ScheduleCommand(
       UndirectedWeightedGraph<Event, Conflict> graph, 
       Convention convention, Integer CONCURENCY_LIMIT, Integer MAX_SCHEDULE_DAYS,

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.brown.cs.student.scheduler.Convention;
+import edu.brown.cs.student.scheduler.DatabaseUtility;
 
 /**
  * This class is used to represent a user (a conference organizer).
@@ -37,8 +38,7 @@ public class User {
    *   this user is managing
    */
   public List<Convention> getConventions() {
-    return conventions;
-    //return UtilityDatabase.getConventionsNamesIds(email); 
+    return DatabaseUtility.getUserConventions(email); 
 
   }
 

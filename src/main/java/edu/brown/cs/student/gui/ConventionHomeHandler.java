@@ -1,4 +1,5 @@
 package edu.brown.cs.student.gui;
+//integrated
 
 import java.util.List;
 import java.util.Map;
@@ -6,6 +7,7 @@ import java.util.Map;
 import com.google.common.collect.ImmutableMap;
 
 import edu.brown.cs.student.scheduler.Convention;
+import edu.brown.cs.student.scheduler.DatabaseUtility;
 import edu.brown.cs.student.scheduler.Event;
 import spark.ModelAndView;
 import spark.Request;
@@ -34,25 +36,16 @@ public class ConventionHomeHandler implements TemplateViewRoute {
     }
 
 
-//     boolean authorized = Database.checkPermission(userEmail, conventionID);
-//    if (!authorized) {
-//      Map<String, Object> variables = ImmutableMap.of("title",
-//          "Scheduler");
-//      return new ModelAndView(variables, "unauthorized.ftl");
-//    }
+     boolean authorized = DatabaseUtility.checkPermission(userEmail, conventionID);
+    if (!authorized) {
+      Map<String, Object> variables = ImmutableMap.of("title",
+          "Scheduler");
+      return new ModelAndView(variables, "unauthorized.ftl");
+    }
 
 
     // get convention object w/all events from database based on id
-
-
     Convention currConv = new Convention(conventionID);
-
-    // for testing purposes: // delete!!!!!!!!!!@!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
-    currConv.setName("Book Signing");
-    Event jkEvent = new Event(1, "J. K. Rowling Book Signing");
-    currConv.addEvent(jkEvent);
-
-
     String convName = currConv.getName();
     List<Event> events = currConv.getEvents();
     String existingEvents = "";

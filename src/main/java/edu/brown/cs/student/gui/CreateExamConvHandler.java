@@ -1,5 +1,5 @@
 package edu.brown.cs.student.gui;
-
+//integrated
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -9,6 +9,7 @@ import java.util.Random;
 
 import com.google.common.collect.ImmutableMap;
 
+import edu.brown.cs.student.scheduler.DatabaseUtility;
 import edu.brown.cs.student.webscraper.WebScraper;
 import spark.ModelAndView;
 import spark.Request;
@@ -47,10 +48,10 @@ public class CreateExamConvHandler implements TemplateViewRoute {
     boolean avail = false;
     // we want a six digit id that has not been used
     Integer id = null;
-//    while (!avail) {
+    while (!avail) {
      id = rand.nextInt((999999-100000) + 1) + 100000;
-     // avail = Database.addConvID(userEmail, id);
-//     }
+      avail = DatabaseUtility.addConvID(userEmail, id.toString());
+     }
     
     
     // get the names of the schools on Coursicle so they appear as suggestions

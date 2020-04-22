@@ -15,6 +15,7 @@ import spark.Request;
 import spark.Response;
 import spark.TemplateViewRoute;
 
+//integrated
 /**
  * This class is used to display a user's account home page when the user is logged in.  
  *   It implements TemplateViewRoute.
@@ -33,25 +34,20 @@ public class AccountHomeHandler implements TemplateViewRoute {
     }
 
     User currUser = new User(userEmail);
-    List<Convention> currConvs = currUser.getConventions(); //don't have all events filled out
-   //just here temporarily to test !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    List<Convention> currConvsTest = new ArrayList<>();
-    Convention testConvention = new Convention("777");
-    testConvention.setName("Book Signing");
-    currConvsTest.add(testConvention);
-    // /faking it
-    
-    String conventionLinks = "";
-    if (!currConvsTest.isEmpty()) {
-      conventionLinks = "<p>Here are your conventions.  Click one to add events or to schedule it!</p>";
-    }
-    
-    for (Convention conv : currConvsTest) {
-      String id = conv.getID();
-      String link = "<a href=/convention/" + id + ">" + conv.getName() + "</a><br>";
-      conventionLinks = conventionLinks + link;
-    }
-    
+//    List<Convention> currConvs = currUser.getConventions(); //don't have all events filled out
+//   
+//    
+//    String conventionLinks = "";
+//    if (!currConvs.isEmpty()) {
+//      conventionLinks = "<p>Here are your conventions.  Click one to add events or to schedule it!</p>";
+//    }
+//    
+//    for (Convention conv : currConvs) {
+//      String id = conv.getID();
+//      String link = "<a href=/convention/" + id + ">" + conv.getName() + "</a><br>";
+//      conventionLinks = conventionLinks + link;
+//    }
+
     Map<String, Object> variables = ImmutableMap.of("title",
         "Scheduler", "conventionLinks", conventionLinks, "error", ""); 
     return new ModelAndView(variables, "account.ftl");

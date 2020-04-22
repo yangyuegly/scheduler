@@ -2,7 +2,7 @@ package edu.brown.cs.student.scheduler;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.mongodb.MongoClient;
+//import com.mongodb.MongoClient;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoCollection;
 
@@ -25,7 +25,7 @@ public class DatabaseUtility {
   static MongoCollection<Document> conventionCollection = Main.getDatabase().getCollection("conventions");
 
 
-  public static Boolean checkPermision(String userEmail, String conventionID) {
+  public static boolean checkPermission(String userEmail, String conventionID) {
 
     BasicDBObject andQuery = new BasicDBObject();
     List<BasicDBObject> obj = new ArrayList<BasicDBObject>();
@@ -34,11 +34,9 @@ public class DatabaseUtility {
     andQuery.put("$and", obj);
 
     long count = userCollection.countDocuments(andQuery);
-<<<<<<< HEAD
+
     return count != 0;
-=======
-    return count!=0;
->>>>>>> f56aa6a3bb91e861003e37e7ec756608d7f2707a
+
 
   }
   
@@ -78,9 +76,9 @@ public static List<Event> getEventsFromConventionID(String conventionID) {
  * adds the convention data to the database
  * the ID for this should already be in the database
  * @param convention
- * @return a boolean if the given conention id already exist in the database
+ * @return a boolean if the given convention id already exist in the database
  */
-public Boolean addConventionData(Convention convention) {
+public static Boolean addConventionData(Convention convention) {
 
   MongoCollection<Document> conventionCollection = Main.getDatabase().getCollection("conventions");
   Gson gson = new Gson();
@@ -105,12 +103,9 @@ public Boolean addConventionData(Convention convention) {
   * @param conventionID
   * @return a boolean if the given conention id already exist in the database
   */
-<<<<<<< HEAD
-  public Boolean addConvID(String userEmail, String conventionID) {
-=======
-  public static Boolean addConvID(String userEmail, String conventionID){
-    MongoCollection<Document> userCollection = Main.getDatabase().getCollection("users");
->>>>>>> f56aa6a3bb91e861003e37e7ec756608d7f2707a
+
+  public static boolean addConvID(String userEmail, String conventionID) {
+
     Gson gson = new Gson();
     //the key to this document is the convention id
     BasicDBObject query = new BasicDBObject();
@@ -119,11 +114,6 @@ public Boolean addConventionData(Convention convention) {
     Document currCon = userCollection.find(query).first();
     if (currCon != null && !currCon.isEmpty()) {
       return false;
-<<<<<<< HEAD
-=======
-
-//      return true;
->>>>>>> f56aa6a3bb91e861003e37e7ec756608d7f2707a
     } else {
       //update the convention ID
       String id = currCon.getString("_id");
@@ -178,7 +168,7 @@ public Boolean addConventionData(Convention convention) {
     result[1] = doc.getString("name");
     return result; 
   }
-<<<<<<< HEAD
+
 
 
   /**
@@ -204,11 +194,9 @@ public Boolean addConventionData(Convention convention) {
       Convention c = new Convention(id);
       result.add(c);
     }
+    
     return result; 
 
   } 
 
 }
-=======
-}
->>>>>>> f56aa6a3bb91e861003e37e7ec756608d7f2707a

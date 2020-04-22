@@ -10,7 +10,7 @@ import spark.QueryParamsMap;
 import spark.Request;
 import spark.Response;
 import spark.Route;
-
+//not integrated
 /**
  * This class is used to save a convention and take the user to their account home page.  It
  *   implements Route.
@@ -22,7 +22,11 @@ public class SaveConventionHandler implements Route {
     // TO DO: we need to get the id in javascript
     String userEmail = req.cookie("user");
     String conventionID = req.params(":id");
-    //Database.checkPermission(userEmail, conventionID);
+    boolean permission = DatabaseUtility.checkPermission(userEmail, conventionID);
+    if (!permission) {
+      System.out.println("permission denied");
+      response.redirect("/account");
+    }
 
     if (userEmail == null) {
       // user is not logged in
@@ -32,12 +36,11 @@ public class SaveConventionHandler implements Route {
     }
 
     QueryParamsMap queryMap = req.queryMap();
-    String existingEventsString = queryMap.value("existingEvents");
+    String EventsToAddString = queryMap.value("existingEvents");
+    System.out.println("events to add" + EventsToAddString);
 
     // save the new events!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-//    String currUserMessage = "<label>Logged in as <a href=/account>" + userEmail
-//        + "</a></label>" + "<br><a href=/logout>Log out</a>";
 
   //adding a collaborator
     String collaboratorEmail = queryMap.value("colEmail");

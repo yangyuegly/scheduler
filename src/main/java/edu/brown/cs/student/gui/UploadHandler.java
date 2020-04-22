@@ -1,5 +1,5 @@
 package edu.brown.cs.student.gui;
-
+//not integrated, need to process the uploaded file
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -20,6 +20,7 @@ import java.util.List;
 import com.google.common.collect.ImmutableMap;
 
 import edu.brown.cs.student.csvparser.CSVParser;
+import edu.brown.cs.student.scheduler.DatabaseUtility;
 import spark.ModelAndView;
 import spark.QueryParamsMap;
 import spark.Request;
@@ -38,7 +39,11 @@ public class UploadHandler implements TemplateViewRoute {
     String userEmail = request.cookie("user");
     String id = request.params(":id");
     
-    // check this user can access this convention !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    boolean permission = DatabaseUtility.checkPermission(userEmail, id);
+    if (!permission) {
+      System.out.println("permission denied");
+      response.redirect("/account");
+    }
     
     if (userEmail == null) {
       // user is not logged in

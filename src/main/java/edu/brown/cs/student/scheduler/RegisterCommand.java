@@ -47,7 +47,7 @@ public class RegisterCommand {
   SecretKey key;
   static Logger logger;
 
-
+//this needs to return a boolean
   public void execute(String email, String password) {
     BasicDBList list = new BasicDBList();
     byte[] salt = getSalt();

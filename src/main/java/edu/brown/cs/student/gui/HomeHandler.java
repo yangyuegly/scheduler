@@ -19,19 +19,13 @@ public class HomeHandler implements TemplateViewRoute {
   public ModelAndView handle(Request request, Response response) {
     String userEmail = request.cookie("user");
     
-    String currUserMessage;
-    
-    if (userEmail == null) {
-      currUserMessage = "<a href=/home>Log in</a>";
-    } else {
+    if (userEmail != null) {
       // they are already logged in
       response.redirect("/account");
       return null;
     }
-    
-    
-    Map<String, Object> variables = ImmutableMap.of("title",
-        "Scheduler", "currUserMessage", currUserMessage, "message", "");
+
+    Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "message", "");
     return new ModelAndView(variables, "home.ftl");
   }
 }

@@ -166,5 +166,16 @@ public class Convention {
   public String getEndTime() {
     return endTime;
   }
+  
+  /**
+   * This method is used to get the max number of time slots in this Convention.  It uses
+   *   the time constraints given when the Convention was created to determine how many
+   *   events of the given duration can fit in the time range.
+   *
+   * @return an int, which represents the max number of time slots in this Convention
+   */
+  public int getNumTimeSlots() {
+    return 3; // fix!!! -- just put 3 so the forms page would runn!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  }
 
 }

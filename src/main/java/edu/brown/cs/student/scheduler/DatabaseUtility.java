@@ -29,7 +29,7 @@ public class DatabaseUtility {
     obj.add(new BasicDBObject("email", userEmail));
     obj.add(new BasicDBObject("conventions.id", conventionID));
     andQuery.put("$and", obj);
-  
+
     long count = userCollection.countDocuments(andQuery);
     return count!=0; 
 
@@ -37,7 +37,6 @@ public class DatabaseUtility {
 
   public static void createConvention(String userEmail, Convention convention) {
     MongoCollection<Document> userCollection = Main.getDatabase().getCollection("users");
-    
-    
+
   }
 }

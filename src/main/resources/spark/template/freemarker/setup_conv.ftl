@@ -1,12 +1,5 @@
 <#assign content>
 
-<div class="sched-header">
-  <h1 class="project-title">Scheduler</h1>
-  <div align="right" class="log-in-info">
-    ${currUserMessage}
-  </div>
-</div>
-
 <div class="main-content">
   <h3>New convention:</h3>
   <form method="POST" action="/create_convention/${id}">

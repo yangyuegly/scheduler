@@ -1,9 +1,9 @@
 <#assign content>
 
 <div class="main-content">
-  <p>
-  <h3>Here is your schedule for ${name}:</h3>
+  <h3>You have successfully signed up for ${conventionName}!<h3>
 </div>
+
 
 </#assign>
 <#include "main.ftl">

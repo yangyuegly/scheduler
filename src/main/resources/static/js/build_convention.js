@@ -54,7 +54,7 @@ const addEvent = () => {
   displays the HTML objects associated with being done adding events.
 */
 const doneAdding = () => {
-  $('#addEventsDiv').remove();
+  $('#addEventsDiv').css("display", "none");
   $('#completedDiv').css("visibility", "visible");
 }
 

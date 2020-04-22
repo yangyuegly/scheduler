@@ -14,6 +14,8 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 
 import edu.brown.cs.student.gui.AccountHomeHandler;
+import edu.brown.cs.student.gui.AttendeeSignupHandler;
+import edu.brown.cs.student.gui.AttendeeSignupSubmitHandler;
 import edu.brown.cs.student.gui.CalendarHandler;
 import edu.brown.cs.student.gui.ConventionHomeHandler;
 import edu.brown.cs.student.gui.CreateAccountHandler;
@@ -152,6 +154,8 @@ public final class Main {
     Spark.post("/exam_schedule/:id", new SchedExamSubmitHandler(), freeMarker);
     Spark.post("/upload_convention/:id", new UploadHandler(), freeMarker);
     Spark.get("/convention/:id", new ConventionHomeHandler(), freeMarker);
+    Spark.get("/convention_signup/:id", new AttendeeSignupHandler(), freeMarker);
+    Spark.post("/add_attendee/:id", new AttendeeSignupSubmitHandler(), freeMarker);
     Spark.get("logout", new LogoutHandler(), freeMarker);
   }
 

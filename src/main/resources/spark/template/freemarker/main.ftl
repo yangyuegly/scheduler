@@ -10,9 +10,12 @@
 
     <div class="sched-header">
       <ul>
-        <li><a href=/home>Scheduler</label>     <!-- <h1 class="project-title">Scheduler</h1></li> -->
-        <li><a href=/account>Account</a></li>
+        <li><a href=/home>Home</label>     <!-- <h1 class="project-title">Scheduler</h1></li> -->
+        <li><a href=/account>My Account</a></li>
         <li><a href=/create_convention>Create Convention</a></li>
+        <li><a href=/create_exam_conv>Schedule Exams</a></li>
+        <li><a href=/logout>Logout</a></li>
+
 
         <div align="right" class="log-in-info">
           <div id="notLoggedInDiv">

@@ -34,11 +34,7 @@ public class DatabaseUtility {
     andQuery.put("$and", obj);
 
     long count = userCollection.countDocuments(andQuery);
-<<<<<<< HEAD
     return count != 0;
-=======
-    return count!=0;
->>>>>>> f56aa6a3bb91e861003e37e7ec756608d7f2707a
 
   }
   
@@ -105,32 +101,19 @@ public Boolean addConventionData(Convention convention) {
   * @param conventionID
   * @return a boolean if the given conention id already exist in the database
   */
-<<<<<<< HEAD
   public Boolean addConvID(String userEmail, String conventionID) {
-=======
-  public static Boolean addConvID(String userEmail, String conventionID){
-    MongoCollection<Document> userCollection = Main.getDatabase().getCollection("users");
->>>>>>> f56aa6a3bb91e861003e37e7ec756608d7f2707a
     Gson gson = new Gson();
     //the key to this document is the convention id
     BasicDBObject query = new BasicDBObject();
-    query.put("email", userEmail);
-    query.put("conventions.id", conventionID);
-    Document currCon = userCollection.find(query).first();
-    if (currCon != null && !currCon.isEmpty()) {
-      return false;
-<<<<<<< HEAD
-=======
+    Document conventionExist = userCollection.find(all("conventions", conventionID)).first();
 
-//      return true;
->>>>>>> f56aa6a3bb91e861003e37e7ec756608d7f2707a
-    } else {
-      //update the convention ID
-      String id = currCon.getString("_id");
-      Document sourceDocument = new Document("id", conventionID);
-      userCollection.updateOne(new Document("_id", id).append("email", userEmail),
-          new Document("$push", new Document("conventions.$.id", conventionID)));
+    if (conventionExist != null && !conventionExist.isEmpty()) {
+      return false;//there already exists a convention with the given id
     }
+
+    userCollection.updateOne(new Document("email", userEmail),
+          new Document("$push", new Document("conventions", conventionID)));
+    
     return true;
   }
   
@@ -178,7 +161,6 @@ public Boolean addConventionData(Convention convention) {
     result[1] = doc.getString("name");
     return result; 
   }
-<<<<<<< HEAD
 
 
   /**
@@ -191,11 +173,10 @@ public Boolean addConventionData(Convention convention) {
     BasicDBObject query = new BasicDBObject();
     query.put("email", userEmail);
     long count = userCollection.countDocuments(query);
-    if (count==0) throw new NullPointerException("user email doesn't exist");
-    if (count>0) throw new NullPointerException("user email isn't exist");
-
     Document doc = userCollection.find(query).first();
-
+    if (doc == null) {
+      throw new NullPointerException("user email doesn't exist");
+    }
     BasicDBList conventionList = (BasicDBList)doc.get("conventions");
     for (int i = 0; i < conventionList.size(); i++) {
       String id = (String) conventionList.get(i);
@@ -209,6 +190,3 @@ public Boolean addConventionData(Convention convention) {
   } 
 
 }
-=======
-}
->>>>>>> f56aa6a3bb91e861003e37e7ec756608d7f2707a

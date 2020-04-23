@@ -116,6 +116,9 @@ public static Boolean addConventionData(Convention convention) {
       return false;
     } else {
       //update the convention ID
+      if (currCon == null) {
+        System.out.println("curr Con is null");
+      }
       String id = currCon.getString("_id");
       Document sourceDocument = new Document("id", conventionID);
       userCollection.updateOne(new Document("_id", id).append("email", userEmail),

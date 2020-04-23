@@ -1,6 +1,6 @@
 package edu.brown.cs.student.gui;
 
-//integrated
+//integrated -- add id commented
 import java.util.Calendar;
 import java.util.Map;
 import java.util.Random;
@@ -43,9 +43,10 @@ public class CreateConventionHandler implements TemplateViewRoute {
     boolean avail = false;
     // we want a six digit id that has not been used
     Integer id = null;
-   while (!avail) {
-     id = rand.nextInt((999999-100000) + 1) + 100000;
-     avail = DatabaseUtility.addConvID(userEmail, id.toString());
+    while (!avail) {
+      id = rand.nextInt((999999-100000) + 1) + 100000;
+      avail = true; //delete
+    //  avail = DatabaseUtility.addConvID(userEmail, id.toString());
      }
     
     

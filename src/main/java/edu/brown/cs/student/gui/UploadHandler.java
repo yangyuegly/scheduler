@@ -15,12 +15,16 @@ import java.util.Map;
 import javax.servlet.MultipartConfigElement;
 import javax.servlet.ServletException;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.google.common.collect.ImmutableMap;
 
 import edu.brown.cs.student.csvparser.CSVParser;
+import edu.brown.cs.student.scheduler.Convention;
 import edu.brown.cs.student.scheduler.DatabaseUtility;
+import edu.brown.cs.student.scheduler.LoadCommand;
 import spark.ModelAndView;
 import spark.QueryParamsMap;
 import spark.Request;
@@ -67,23 +71,20 @@ public class UploadHandler implements TemplateViewRoute {
           // TODO Auto-generated catch block
           e.printStackTrace();
         }
-    //process this now
-    
     // call the load command
     
-    // schedule!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    Convention conv = new Convention(id);
+    CSVParser parser = new CSVParser();
+    LoadCommand load = new LoadCommand();
+    load.execute(parser.parse(textBuilder), conv);
     
     // go to the schedule page
     response.redirect("/schedule/" + id);
     
     return null;
-
-       
-    // fix!!!!!!!!!!!!!!!1
-//    Map<String, Object> variables = ImmutableMap.of("title", // fix!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-//        "Scheduler", "message", "Send to schedule page!!!");
-//    return new ModelAndView(variables, "home.ftl"); //send to schedule page
-    
   }
+  
+
+  
   
 }

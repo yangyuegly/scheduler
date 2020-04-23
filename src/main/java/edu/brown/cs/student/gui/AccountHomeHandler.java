@@ -34,6 +34,7 @@ public class AccountHomeHandler implements TemplateViewRoute {
     }
 
     User currUser = new User(userEmail);
+    //comment b/c getConventions not working
 //    List<Convention> currConvs = currUser.getConventions(); //don't have all events filled out
 //   
 //    
@@ -48,6 +49,7 @@ public class AccountHomeHandler implements TemplateViewRoute {
 //      conventionLinks = conventionLinks + link;
 //    }
 
+    String conventionLinks = "";
     Map<String, Object> variables = ImmutableMap.of("title",
         "Scheduler", "conventionLinks", conventionLinks, "error", ""); 
     return new ModelAndView(variables, "account.ftl");

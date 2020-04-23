@@ -1,6 +1,7 @@
 package edu.brown.cs.student.scheduler;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 //import com.mongodb.MongoClient;
 import com.mongodb.client.MongoDatabase;
@@ -10,6 +11,9 @@ import org.bson.Document;
 import org.bson.conversions.Bson;
 
 import static com.mongodb.client.model.Filters.*;
+import static com.mongodb.client.model.Projections.excludeId;
+import static com.mongodb.client.model.Projections.fields;
+import static com.mongodb.client.model.Projections.include;
 import static com.mongodb.client.model.Updates.*;
 import org.bson.Document;
 
@@ -77,7 +81,7 @@ public static List<Event> getEventsFromConventionID(String conventionID) {
  * @return a boolean if the given convention id already exist in the database
  */
 public static Boolean addConventionData(Convention convention) {
-
+  System.out.println("try to add data to " + convention.getId());
   MongoCollection<Document> conventionCollection = Main.getDatabase().getCollection("conventions");
   Gson gson = new Gson();
   BasicDBObject obj = BasicDBObject.parse(gson.toJson(convention));
@@ -101,7 +105,7 @@ public static Boolean addConventionData(Convention convention) {
   * @param conventionID
   * @return a boolean if the given conention id already exist in the database
   */
-  public Boolean addConvID(String userEmail, String conventionID) {
+  public static Boolean addConvID(String userEmail, String conventionID) {
     Gson gson = new Gson();
     //the key to this document is the convention id
     BasicDBObject query = new BasicDBObject();
@@ -115,6 +119,37 @@ public static Boolean addConventionData(Convention convention) {
           new Document("$push", new Document("conventions", conventionID)));
     
     return true;
+  }
+  
+  /**
+   * Method to get conflicts based on a convention id.
+   * @param conventionID -- the id of the convention
+   * @return -- a hashset of all the conflicts in this convention
+   */
+  public static HashSet<Conflict> getConflictsFromConventionID(String conventionID) {
+    HashSet<Conflict> edges = new HashSet<>();
+    MongoCollection<Document> conflicCollection= Main.getDatabase().getCollection("conflicts");
+    BasicDBObject query = new BasicDBObject();
+    query.put("conventionID", conventionID);
+
+    //iterate through the events found
+    List<Document> conflictList = (List<Document>) 
+    conflicCollection.find().projection(fields(include("conflicts"),
+        excludeId()))
+        .map(document -> document.get("conflicts")).first();
+    
+    //unsure if this works
+    for (int i = 0; i < conflictList.size(); i++) {
+      Document conflictDoc = conflictList.get(i);
+      Document event1Doc = (Document) conflictDoc.get("event1");
+      Document event2Doc = (Document) conflictDoc.get("event2");
+      Integer weight = conflictDoc.getInteger("weight");
+      Event e1 = new Event(event1Doc.getInteger("id"), event1Doc.getString("name"));
+      Event e2 = new Event(event2Doc.getInteger("id"), event2Doc.getString("name"));
+      Conflict c = new Conflict(e1, e2, weight);
+      edges.add(c);
+    }
+    return edges;
   }
   
 

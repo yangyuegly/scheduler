@@ -2,6 +2,7 @@ package edu.brown.cs.student.scheduler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -184,4 +185,8 @@ public class Convention {
     return 3; // fix!!! -- just put 3 so the forms page would runn!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   }
 
+  
+  public HashSet<Conflict> getConflicts(){
+    return DatabaseUtility.getConflictsFromConventionID(this.id);
+  }
 }

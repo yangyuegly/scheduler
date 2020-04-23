@@ -46,8 +46,7 @@ public class CreateConventionHandler implements TemplateViewRoute {
 
     while (!avail) {
       id = rand.nextInt((999999-100000) + 1) + 100000;
-      avail = true; //delete
-    //  avail = DatabaseUtility.addConvID(userEmail, id.toString());
+      avail = DatabaseUtility.addConvID(userEmail, id.toString());
      }
     
     

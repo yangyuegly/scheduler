@@ -53,7 +53,10 @@ public class CreateConvSubmitHandler implements TemplateViewRoute {
    boolean added = DatabaseUtility.addConventionData(newConv); 
    if (added) {
      System.out.println("Convention data added");
+   } else {
+     System.out.println("Convention data adding failed");
    }
+   
    
     
     if (submitType.equals("Add events by hand")) {

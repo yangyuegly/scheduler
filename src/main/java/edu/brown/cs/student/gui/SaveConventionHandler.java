@@ -44,7 +44,7 @@ public class SaveConventionHandler implements Route {
 
   //adding a collaborator
     String collaboratorEmail = queryMap.value("colEmail");
-    DatabaseUtility.addConvID(collaboratorEmail, conventionID);
+   // DatabaseUtility.addConvID(collaboratorEmail, conventionID);
 
     Map<String, Object> variables = ImmutableMap.of("title",
         "Scheduler", "conventionLinks", "test@!!!!!!!!"); // ????????????????????????????????

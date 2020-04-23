@@ -4,6 +4,8 @@ import java.util.Map;
 
 import com.google.common.collect.ImmutableMap;
 
+import edu.brown.cs.student.scheduler.Convention;
+import edu.brown.cs.student.scheduler.ScheduleCommand;
 import edu.brown.cs.student.webscraper.WebScraper;
 import spark.ModelAndView;
 import spark.QueryParamsMap;
@@ -44,7 +46,7 @@ public class SchedExamSubmitHandler implements TemplateViewRoute {
      WebScraper scraper = new WebScraper(idInt);// takes in convention id!!!
     // need to call setSchool() - do we do this with the ID or the name?  If it's the id, how do we get it?
 
-    // schedule it
+
 
     Map<String, Object> variables = ImmutableMap.of("title", "Scheduler",
         "name", schoolName + " Final Exams"); // fix!!!!!!!!!!!!!!

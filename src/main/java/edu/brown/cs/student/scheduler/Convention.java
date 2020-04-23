@@ -109,6 +109,7 @@ public class Convention {
   public List<Event> getEvents() {
     if (events == null || events.isEmpty()) {
       return DatabaseUtility.getEventsFromConventionID(this.id);
+      //what will this return if there are none?
     } else {
       return events;
     }

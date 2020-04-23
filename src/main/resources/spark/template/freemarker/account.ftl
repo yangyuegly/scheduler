@@ -1,9 +1,8 @@
 <#assign content>
 
 <div class="main-content">
-  <h3>Welcome</h3>
+  <h2>Welcome!</h2>
   ${conventionLinks}
-  <br>
   <br>
   <p>Create a new convention or schedule exams:</p>
   <a href=/create_convention>Create a new convention</a>

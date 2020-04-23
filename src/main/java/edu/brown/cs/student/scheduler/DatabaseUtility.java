@@ -2,7 +2,7 @@ package edu.brown.cs.student.scheduler;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.mongodb.MongoClient;
+//import com.mongodb.MongoClient;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoCollection;
 
@@ -25,7 +25,7 @@ public class DatabaseUtility {
   static MongoCollection<Document> conventionCollection = Main.getDatabase().getCollection("conventions");
 
 
-  public static Boolean checkPermision(String userEmail, String conventionID) {
+  public static boolean checkPermission(String userEmail, String conventionID) {
 
     BasicDBObject andQuery = new BasicDBObject();
     List<BasicDBObject> obj = new ArrayList<BasicDBObject>();
@@ -74,9 +74,9 @@ public static List<Event> getEventsFromConventionID(String conventionID) {
  * adds the convention data to the database
  * the ID for this should already be in the database
  * @param convention
- * @return a boolean if the given conention id already exist in the database
+ * @return a boolean if the given convention id already exist in the database
  */
-public Boolean addConventionData(Convention convention) {
+public static Boolean addConventionData(Convention convention) {
 
   MongoCollection<Document> conventionCollection = Main.getDatabase().getCollection("conventions");
   Gson gson = new Gson();
@@ -185,6 +185,7 @@ public Boolean addConventionData(Convention convention) {
       Convention c = new Convention(id);
       result.add(c);
     }
+    
     return result; 
 
   } 

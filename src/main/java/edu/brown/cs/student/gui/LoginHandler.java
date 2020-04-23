@@ -1,5 +1,5 @@
 package edu.brown.cs.student.gui;
-
+//integrated
 import java.util.List;
 import java.util.Map;
 
@@ -34,7 +34,7 @@ public class LoginHandler implements TemplateViewRoute  {
     LoginCommand loginComm = new LoginCommand();
 
     try {
-      loginComm.execute(email, password);
+//      loginComm.execute(email, password); -- fix!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     } catch (UserAuthenticationException e) {
       String message = e.getMessage();

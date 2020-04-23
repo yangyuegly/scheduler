@@ -5,12 +5,13 @@ import java.util.Map;
 import com.google.common.collect.ImmutableMap;
 
 import edu.brown.cs.student.scheduler.Convention;
+import edu.brown.cs.student.scheduler.DatabaseUtility;
 import spark.ModelAndView;
 import spark.QueryParamsMap;
 import spark.Request;
 import spark.Response;
 import spark.TemplateViewRoute;
-
+//integrated
 public class CreateConvSubmitHandler implements TemplateViewRoute {
   @Override
   public ModelAndView handle(Request request, Response response) {
@@ -49,7 +50,11 @@ public class CreateConvSubmitHandler implements TemplateViewRoute {
         startTime, endTime);
     
     // need to add Convention parameters to Database
-   //boolean added = Database.addConvData(newConv); 
+   boolean added = DatabaseUtility.addConventionData(newConv); 
+   if (added) {
+     System.out.println("Convention data added");
+   }
+   
     
     if (submitType.equals("Add events by hand")) {
       Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "convName", name,

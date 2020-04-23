@@ -1,6 +1,6 @@
 package edu.brown.cs.student.gui;
 
-
+//integrated -- add id commented
 import java.util.Calendar;
 import java.util.Map;
 import java.util.Random;
@@ -8,6 +8,7 @@ import java.util.Random;
 import com.google.common.collect.ImmutableMap;
 
 import edu.brown.cs.student.main.Main;
+import edu.brown.cs.student.scheduler.DatabaseUtility;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
@@ -42,12 +43,13 @@ public class CreateConventionHandler implements TemplateViewRoute {
     boolean avail = false;
     // we want a six digit id that has not been used
     Integer id = null;
-//    while (!avail) {
-     id = rand.nextInt((999999-100000) + 1) + 100000;
-     // avail = Database.addConvID(userEmail, id);
-//     }
+
+    while (!avail) {
+      id = rand.nextInt((999999-100000) + 1) + 100000;
+      avail = true; //delete
+    //  avail = DatabaseUtility.addConvID(userEmail, id.toString());
+     }
     
-    ///store in database (don't get rid of existing events for this convention)!!
     
     Map<String, Object> variables = ImmutableMap.of("title",
         "Scheduler", "currDay", date, "id", id.toString(), "errorMessage", "");

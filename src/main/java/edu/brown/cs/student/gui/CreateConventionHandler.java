@@ -43,6 +43,7 @@ public class CreateConventionHandler implements TemplateViewRoute {
     boolean avail = false;
     // we want a six digit id that has not been used
     Integer id = null;
+
     while (!avail) {
       id = rand.nextInt((999999-100000) + 1) + 100000;
       avail = true; //delete

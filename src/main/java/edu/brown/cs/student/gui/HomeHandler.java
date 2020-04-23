@@ -17,13 +17,13 @@ public class HomeHandler implements TemplateViewRoute {
 // make cute/cool later .........................................................................................
   @Override
   public ModelAndView handle(Request request, Response response) {
-    String userEmail = request.cookie("user");
-    
-    if (userEmail != null) {
-      // they are already logged in
-      response.redirect("/account");
-      return null;
-    }
+//    String userEmail = request.cookie("user");
+//    
+//    if (userEmail != null) {
+//      // they are already logged in
+//      response.redirect("/account");
+//      return null;
+//    }
 
     Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "message", "");
     return new ModelAndView(variables, "home.ftl");

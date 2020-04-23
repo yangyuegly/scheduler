@@ -1,7 +1,7 @@
 <#assign content>
 
 <div class="main-content">
-  <h3>New convention:</h3>
+  <h2>New convention:</h2>
   <form method="POST" action="/create_convention/${id}">
     <label for="convName">Convention name: </label><br>
     <input name="convName" id="convName" size="30" required><br><br>
@@ -27,7 +27,7 @@
     <input type="time" id="startTime" name="startTime">
     <label for="endTime"> End time:</label>
     <input type="time" id="endTime" name="endTime">
-    <br><br>
+    <br><br><br>
     <input type="submit" name="submitType" value="Add events by hand">
     <label> or </label>
     <input type="submit" name="submitType" value="Upload a file with all events">

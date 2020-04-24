@@ -39,11 +39,13 @@ public class CalendarHandler implements TemplateViewRoute {
 //      return new ModelAndView(variables, "unauthorized.ftl");
 //    }
    
-    Convention myConv = new Convention(conventionID);
+    Convention myConv = new Convention(conventionID); //DatabaseUtility.getConvention(conventionID); // because we need all the fields
     String name = myConv.getName();
+    int numTimeSlots = myConv.getNumTimeSlots();
     
     //want to calculate the time slot
-    ScheduleCommand schedComm = new ScheduleCommand(myConv, 100, myConv.getNumDays(), 10);
+    ScheduleCommand schedComm = new ScheduleCommand(myConv, 100, myConv.getNumDays(), 
+        numTimeSlots); // change concurrency limit !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     
     
     

@@ -40,32 +40,28 @@ public class CreateExamConvHandler implements TemplateViewRoute {
     int year = cal.get(Calendar.YEAR);
     
     String date = year + "-" + month + "-" + day;
- 
-    //generate an id
-    
+     
     // create a convention id
     Random rand = new Random();
     boolean avail = false;
     // we want a six digit id that has not been used
     Integer id = null;
     while (!avail) {
-     id = rand.nextInt((999999-100000) + 1) + 100000;
-     avail = true; //delete
-//      avail = DatabaseUtility.addConvID(userEmail, id.toString()); !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
+      id = rand.nextInt((999999-100000) + 1) + 100000;
+//       avail = true; //delete
+      avail = DatabaseUtility.addConvID(userEmail, id.toString()); //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
      }
     
     
     // get the names of the schools on Coursicle so they appear as suggestions
     String schoolSuggestions = "";
-    WebScraper scraper = new WebScraper(id); 
+    WebScraper scraper = new WebScraper(id);
     Map<String, String> schoolNameToIDMap = scraper.getcoursesToIDs();
     List<String> schoolNamesList = new ArrayList<>();
     
     for (String schoolName : schoolNameToIDMap.keySet()) {
       schoolNamesList.add(schoolName);
-     
     }
-    
     
     Collections.sort(schoolNamesList);
     
@@ -75,9 +71,10 @@ public class CreateExamConvHandler implements TemplateViewRoute {
     }
     
     Map<String, Object> variables = ImmutableMap.of("title", "Scheduler",
-        "schoolSuggestions", schoolSuggestions, "currDay", date, "id", id.toString());
+        "schoolSuggestions", schoolSuggestions, "currDay", date, "id", id.toString(),
+        "errorMessage", "");
     
-    return new ModelAndView(variables, "create_exam_conv.ftl");    
+    return new ModelAndView(variables, "create_exam_conv.ftl");
   }
 
 }

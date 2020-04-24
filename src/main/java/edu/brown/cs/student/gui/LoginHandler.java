@@ -30,11 +30,10 @@ public class LoginHandler implements TemplateViewRoute  {
     QueryParamsMap queryMap = request.queryMap();
     String email = queryMap.value("email");
     String password = queryMap.value("password");
-
     LoginCommand loginComm = new LoginCommand();
 
     try {
-//      loginComm.execute(email, password); -- fix!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      loginComm.execute(email, password);
 
     } catch (UserAuthenticationException e) {
       String message = e.getMessage();

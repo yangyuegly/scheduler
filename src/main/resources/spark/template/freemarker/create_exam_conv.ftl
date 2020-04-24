@@ -35,6 +35,8 @@
     <br><br>
     <input type="submit" value="Schedule">
   </form>
+  <br>
+  <p class="errorMessage">${errorMessage}</p>
 </div>
 
 

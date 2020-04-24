@@ -1,4 +1,8 @@
 package edu.brown.cs.student.gui;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.List;
 //do we intend to save this in the database??
 import java.util.Map;
 
@@ -39,19 +43,66 @@ public class SchedExamSubmitHandler implements TemplateViewRoute {
     String startTime = queryMap.value("startTime");
     String endTime = queryMap.value("endTime");
     String submitType = queryMap.value("submitType");
+    int numDays;
+    int eventDur;
+    Convention newConv;
+    int idInt;
+    
+    try {
+      numDays = Integer.parseInt(numDaysString);
+      eventDur = Integer.parseInt(eventDuration);
+      idInt = Integer.parseInt(id);
+      newConv = new Convention(id, startDate, numDays, eventDur,
+          startTime, endTime);
 
-    int numDays = Integer.parseInt(numDaysString);
-    int idInt = Integer.parseInt(id);
+    } catch (NumberFormatException err) {
+      Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "id", id.toString(),
+          "errorMessage", "The number of days and the date/time fields must be integers.");
+      return new ModelAndView(variables, "setup_conv.ftl");
+    }
+
 
      WebScraper scraper = new WebScraper(idInt);// takes in convention id!!!
-    // need to call setSchool() - do we do this with the ID or the name?  If it's the id, how do we get it?
-
-
-
-    Map<String, Object> variables = ImmutableMap.of("title", "Scheduler",
-        "name", schoolName + " Final Exams"); // fix!!!!!!!!!!!!!!
-
-    return new ModelAndView(variables, "calendar_page.ftl");
+     Map<String, String> schoolNameToIDMap = scraper.getcoursesToIDs();
+     String schoolID = schoolNameToIDMap.get(schoolName);
+     
+     if (schoolID == null) {
+       // the user selected a name that is not available to scrape
+       Calendar cal = Calendar.getInstance();
+       int month = cal.get(Calendar.MONTH) + 1;
+       int day = cal.get(Calendar.DAY_OF_MONTH);
+       int year = cal.get(Calendar.YEAR);
+       
+       String date = year + "-" + month + "-" + day;
+       
+       List<String> schoolNamesList = new ArrayList<>();
+       String schoolSuggestions = "";
+       
+       for (String currSchoolName : schoolNameToIDMap.keySet()) {
+         schoolNamesList.add(currSchoolName);
+        
+       }
+       
+       Collections.sort(schoolNamesList);
+       
+       for (String currSchoolName : schoolNamesList) {
+         schoolSuggestions = schoolSuggestions + "<option value=\"" + currSchoolName + "\" />" 
+           + schoolName + "</option>";
+       }
+       
+       Map<String, Object> variables = ImmutableMap.of("title", "Scheduler",
+           "schoolSuggestions", schoolSuggestions, "currDay", date, "id", id.toString(),
+           "errorMessage", "Please select a school from the list.");
+       
+       return new ModelAndView(variables, "create_exam_conv.ftl");
+     }
+     
+     scraper.setCollege(schoolID);
+     scraper.scrape();
+     
+     // schedule this exam
+     response.redirect("/schedule/" + id);
+     return null;
   }
 
 }

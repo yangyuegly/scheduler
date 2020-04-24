@@ -34,20 +34,21 @@ public class CreateConvSubmitHandler implements TemplateViewRoute {
     
     int numDays;
     int eventDur;
+    Convention newConv;
 
     try {
       String numDaysString = queryMap.value("numDays");
       numDays = Integer.parseInt(numDaysString);
       String eventDuration = queryMap.value("eventDuration");
       eventDur = Integer.parseInt(eventDuration);
+      newConv = new Convention(id, startDate, numDays, eventDur,
+          startTime, endTime);
 
     } catch (NumberFormatException err) {
       Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "id", id.toString(),
-          "errorMessage", "The number of days must be an integer.");
+          "errorMessage", "The number of days and the date/time fields must be integers.");
       return new ModelAndView(variables, "setup_conv.ftl");
     }
-    Convention newConv = new Convention(id, startDate, numDays, eventDur,
-        startTime, endTime);
     
     // need to add Convention parameters to Database
    boolean added = DatabaseUtility.addConventionData(newConv); 

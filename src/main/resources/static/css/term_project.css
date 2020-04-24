@@ -8,25 +8,17 @@ body {
 }
 
 .sched-header {
-  box-sizing: border-box;
+  /* box-sizing: border-box; */
   background-color: black;
   width: 100%;
   top: 0;
   z-index: 999;
   position: static;
   padding: 0;
+  overflow: hidden;
 }
 
-/*
-.project-title {
-  color: #ffffff;
-  font-size: 60px;
-  margin: 0;
-  padding: 10px 18px 10px 18px;
-  letter-spacing: 2px;
-} */
-
-.log-in-info {
+/* .log-in-info {
   color: #ffffff;
   font-size: 20px;
   margin: 0;
@@ -34,7 +26,7 @@ body {
   top:22px;
   right: 10px;
   letter-spacing: 2px;
-}
+} */
 
 .errorMessage {
   color: red;
@@ -82,9 +74,8 @@ ul {
   margin: 0;
   padding: 0;
   background-color: black;
-  font-size: 30px;
+  font-size: 25px;
   letter-spacing: 2px;
-  overflow: hidden;
 }
 
 /* Makes the navigation header horizontal */
@@ -92,15 +83,62 @@ li {
   float: left;
 }
 
-/* Make the links in the navigation header not look like links */
-li a {
+/* Make the links in the navigation header look like boxes */
+li a, .user-dropdown-button {
   text-decoration: none;
   color: white;
-  padding: 20px 20px;
-  display: block;
+  padding: 20px 30px;
+  display: inline-block;
   text-align: center;
+  background-color: black;
 }
 
-li a:hover {
+/*
+.user-dropdown-button {
+  text-decoration: none;
+  color: white;
+  padding: 20px 30px;
+  display: block;
+  text-align: center;
+  background-color: black;
+} */
+
+li a:hover, .user-dropdown:hover, .user-dropdown-button:hover {
   background-color: #232B2B;
+}
+
+/* Makes the user drop-down menu appear relative to the user icon */
+li.user-dropdown {
+  position: relative;
+  display: inline-block;
+  float: left;
+}
+
+.user-dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: white;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.user-dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+}
+
+.user-dropdown-content a:hover {
+  background-color: #ddd;
+}
+
+.user-dropdown:hover .user-dropdown-content {
+  display: block;
+}
+
+/* delete */
+.show {
+  display: block;
 }

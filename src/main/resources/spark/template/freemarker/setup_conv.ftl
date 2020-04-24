@@ -2,7 +2,9 @@
 
 <div class="main-content">
   <h2>New convention:</h2>
-  <form method="POST" action="/create_convention/${id}">
+  
+  
+  <form id="myForm" onsubmit="return validate()" form method="POST" action="/create_convention/${id}">
     <label for="convName">Convention name: </label><br>
     <input name="convName" id="convName" size="30" required><br><br>
     <label for="startDate">Start date:</label>
@@ -36,6 +38,6 @@
   <p class="errorMessage">${errorMessage}</p>
 </div>
 
-
+<script src="/js/setup_conv.js"></script>
 </#assign>
 <#include "main.ftl">

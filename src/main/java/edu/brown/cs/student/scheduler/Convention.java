@@ -5,19 +5,12 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-
-import com.mongodb.client.MongoCollection;
-
-import org.bson.Document;
-
-import edu.brown.cs.student.main.Main;
 
 /**
- * This class is used to represents a convention.  A convention is a group of smaller events.
+ * This class is used to represents a convention. A convention is a group of
+ * smaller events.
  */
 public class Convention {
 
@@ -28,14 +21,15 @@ public class Convention {
    *
    * id - a String, which represents the id of this convention
    *
-   * startDateTime - a LocalDateTime, which represents the start date of the convention
-   *   at time the convention starts
+   * startDateTime - a LocalDateTime, which represents the start date of the
+   * convention at time the convention starts
    *
    * numDays - an int, which represents the number of days the convention lasts
    *
    * eventDuration - how long each event at the convention lasts, in minutes
    *
-   * endTime - a LocalTime, which represents the last time that events can end on a given day
+   * endTime - a LocalTime, which represents the last time that events can end on
+   * a given day
    *
    * events - a List of Events, which represents the events in this conference
    */
@@ -50,30 +44,32 @@ public class Convention {
   /**
    * This is a constructor for this class.
    *
-   * @param convId  - a String, which represents the id of this convention
+   * @param convId - a String, which represents the id of this convention
    */
 
   public Convention(String convId) {
     id = convId;
   }
-  
-  
-/**
- * Alternative constructor
- *
- * @param convId -- a String, which represents the id of the convention
- * @param startDate -- a String of the format "yyyy-mm-dd", which represents the start date of
- *   the convention
- * @param numDays -- an int, which represents number of days the convention lasts
- * @param eventDuration -- an int, which represents the length of the events in the convention
- *   in minutes
- * @param startTime -- a String of the format "hh:mm" (in military time), which represents the
- *   earliest the convention can begin on a given day
- * @param endTime -- a String of the format "hh:mm" (in military time), which represents the
- *   latest the convention can end on a given day
- *   
- * @throws NumberFormatException
- */
+
+  /**
+   * Alternative constructor
+   *
+   * @param convId        -- a String, which represents the id of the convention
+   * @param startDate     -- a String of the format "yyyy-mm-dd", which represents
+   *                      the start date of the convention
+   * @param numDays       -- an int, which represents number of days the
+   *                      convention lasts
+   * @param eventDuration -- an int, which represents the length of the events in
+   *                      the convention in minutes
+   * @param startTime     -- a String of the format "hh:mm" (in military time),
+   *                      which represents the earliest the convention can begin
+   *                      on a given day
+   * @param endTime       -- a String of the format "hh:mm" (in military time),
+   *                      which represents the latest the convention can end on a
+   *                      given day
+   * 
+   * @throws NumberFormatException
+   */
   public Convention(String convId, String startDate, int numDays, int eventDuration,
       String startTime, String endTime) throws NumberFormatException {
 
@@ -106,8 +102,8 @@ public class Convention {
    */
   public String getName() {
     if (name == null) {
-     // Database.getConventionNameFromID(this.getID());
-      return "name is null"; //delete, see above
+      // Database.getConventionNameFromID(this.getID());
+      return "name is null"; // delete, see above
     } else {
       return name;
     }
@@ -121,29 +117,33 @@ public class Convention {
   public String getID() {
     return id;
   }
-/**
- * Method to set the name of the convention.
- * @param name -- name of the convention
- */
+
+  /**
+   * Method to set the name of the convention.
+   * 
+   * @param name -- name of the convention
+   */
   public void setName(String name) {
     this.name = name;
   }
+
   /**
    * Method to get the events associated with the convention.
+   * 
    * @return -- a list of all the associated events
    */
   public List<Event> getEvents() {
     if (events == null) {
       return DatabaseUtility.getEventsFromConventionID(this.id);
-      //what will this return if there are none?
+      // what will this return if there are none?
     } else {
       return events;
     }
   }
-  
+
   /**
    * This method adds an event to this convention.
-   * 
+   *
    * @param newEvent - an Event object, which represents the event being added
    */
   public void addEvent(Event newEvent) {
@@ -155,7 +155,8 @@ public class Convention {
   }
 
   /**
-   * Getter to get the id. 
+   * Getter to get the id.
+   * 
    * @return -- id
    */
   public String getId() {
@@ -165,8 +166,8 @@ public class Convention {
   /**
    * Getter to get the start date and time.
    *
-   * @return -- a LocalDateTime object, which represents the start date and time of
-   *   the convention
+   * @return -- a LocalDateTime object, which represents the start date and time
+   *         of the convention
    */
   public LocalDateTime getStartDateTime() {
     return startDateTime;
@@ -174,6 +175,7 @@ public class Convention {
 
   /**
    * Getter to get the number of days the convention lasts.
+   * 
    * @return -- number of days the convention lasts.
    */
   public int getNumDays() {
@@ -182,6 +184,7 @@ public class Convention {
 
   /**
    * Getter to get the duration of each of the events in the convention.
+   * 
    * @return -- duration of the events
    */
   public int getEventDuration() {
@@ -190,32 +193,33 @@ public class Convention {
 
   /**
    * Getter to get the end time of the convention on a given day.
+   * 
    * @return -- the end time
    */
   public LocalTime getEndTime() {
     return endTime;
   }
-  
+
   /**
-   * This method is used to get the max number of time slots in this Convention.  It uses
-   *   the time constraints given when the Convention was created to determine how many
-   *   events of the given duration can fit in the time range.
+   * This method is used to get the max number of time slots in this Convention.
+   * It uses the time constraints given when the Convention was created to
+   * determine how many events of the given duration can fit in the time range.
    *
-   * @return an int, which represents the max number of time slots in this Convention
+   * @return an int, which represents the max number of time slots in this
+   *         Convention
    */
   public int getNumTimeSlots() {
     LocalDate startDateLocalDate = startDateTime.toLocalDate();
     LocalDateTime endTimeOnStartDay = LocalDateTime.of(startDateLocalDate, endTime);
-    
+
     Duration durationInDay = Duration.between(startDateTime, endTimeOnStartDay);
     Long numMinutesInDay = durationInDay.toMinutes();
     int numEventsInDay = Math.floorDiv(numMinutesInDay.intValue(), eventDuration);
-    
+
     return numEventsInDay * numDays;
   }
 
-  
-  public HashSet<Conflict> getConflicts(){
+  public HashSet<Conflict> getConflicts() {
     return DatabaseUtility.getConflictsFromConventionID(this.id);
   }
 }

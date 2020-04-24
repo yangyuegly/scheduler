@@ -46,9 +46,17 @@ import edu.brown.cs.student.main.Main;
 // store the csv title and user id into the user collection
 public class LoadCommand {
 
+  /**
+   * Constructor for LoadCommand
+   */
   public LoadCommand() {
   }
 
+  /**
+   * Method to insert data in NoSQL
+   * @param input - data from csv file
+   * @param convention - the convention containing all the events in the file
+   */
   public void execute(List<String[]> input, Convention convention) {
     int count = 0;
     // map conflict to number of conflicts
@@ -139,7 +147,7 @@ public class LoadCommand {
       MongoDatabase database = mongo.getDatabase("test");
       database.getCollection("conflicts").insertOne(doc);
     }else {
-      Main.getDatabase().getCollection("events").insertOne(currEvent);
+      Main.getDatabase().getCollection("conflicts").insertOne(doc);
     }
 //    Main.getDatabase().getCollection("conflicts").insertOne(doc);
 

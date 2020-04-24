@@ -16,9 +16,16 @@ public class Event implements IVertex<Event, Conflict> {
 
   public Event() {
   }
-  
+
   public Event(Integer id, String name) {
     this.id = id;
+    this.adjList = new ArrayList<>();
+    this.degree = 0;
+    this.color = new ArrayList<>();
+    this.name = name;
+    this.description = "";
+  }
+  public Event(String name) {
     this.adjList = new ArrayList<>();
     this.degree = 0;
     this.color = new ArrayList<>();
@@ -45,19 +52,20 @@ public class Event implements IVertex<Event, Conflict> {
   }
 
   /**
-    * Get the heaviest weight among v's adjacency list 
+    * Get the heaviest weight among v's adjacency list
     * to aid sorting
     * @return
     */
-  
+
+  @Override
   public Integer getHeaviestWeight() {
     int max = 0;
     for (Conflict i : this.getAdjList()) {
       max = i.getWeight() > max ? i.getWeight() : max;
     }
-    return max; 
+    return max;
   }
-  
+
   public Integer getId() {
     return this.id;
   }
@@ -71,11 +79,11 @@ public class Event implements IVertex<Event, Conflict> {
   public void setDegree(Integer degree) {
     this.degree = degree;
   }
-  
+
   public String getName() {
     return name;
   }
-  
+
   @Override
   public Integer getID() {
     return id;
@@ -86,7 +94,7 @@ public class Event implements IVertex<Event, Conflict> {
     return adjList;
   }
 
-  
+
   /**
    * return size of adjacent list.
    */

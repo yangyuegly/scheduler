@@ -3,41 +3,20 @@ package edu.brown.cs.student.scheduler;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.function.IntFunction;
 
-import com.mongodb.client.MongoCollection;
-
-import edu.brown.cs.student.exception.UserAuthenticationException;
-import edu.brown.cs.student.graph.UndirectedWeightedGraph;
-import edu.brown.cs.student.main.Main;
-
-import com.mongodb.client.MongoClients;
-import com.mongodb.client.MongoClient;
-import com.mongodb.MongoClientSettings;
-import com.mongodb.ConnectionString;
-import com.mongodb.DBObject;
-import com.mongodb.ServerAddress;
-import com.mongodb.MongoCredential;
-
-import com.mongodb.client.MongoDatabase;
-
-import org.bson.BsonArray;
 import org.bson.Document;
-import java.util.Arrays;
 
 import com.google.gson.Gson;
 import com.mongodb.BasicDBObject;
-import com.mongodb.Block;
+import com.mongodb.ConnectionString;
+import com.mongodb.MongoClientSettings;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoDatabase;
 
-import com.mongodb.client.MongoCursor;
-import static com.mongodb.client.model.Filters.*;
-import com.mongodb.client.result.DeleteResult;
-import static com.mongodb.client.model.Updates.*;
-import com.mongodb.client.result.UpdateResult;
+import edu.brown.cs.student.main.Main;
 
 /**
  * {
@@ -54,9 +33,9 @@ import com.mongodb.client.result.UpdateResult;
  *      weight: 3
  *  }
  * ],
- *  
+ *
  * }
- * 
+ *
  */
 
 /**
@@ -118,7 +97,23 @@ public class LoadCommand {
       eventArray.add(eventObject);
     }
     Document currEvent = new Document("conventionID", convention.getID()).append("events", eventArray);
-    Main.getDatabase().getCollection("events").insertOne(currEvent);
+  //for unit testing purposes
+    if(Main.getDatabase() == null) {
+      ConnectionString connString = new ConnectionString(
+          "mongodb://sduraide:cs32scheduler@scheduler-shard-00-00-rw75k.mongodb.net:27017,scheduler-shard-00-01-rw75k.mongodb.net:27017,scheduler-shard-00-02-rw75k.mongodb.net:27017/test?ssl=true&replicaSet=scheduler-shard-0&authSource=admin&retryWrites=true&w=majority"
+      );
+
+      MongoClientSettings settings = MongoClientSettings.builder()
+          .applyConnectionString(connString)
+          .retryWrites(true)
+          .build();
+      MongoClient mongo = MongoClients.create(settings);
+      //created db in cluster in MongoDBAtlas including collections: users, events, conflicts
+      MongoDatabase database = mongo.getDatabase("test");
+      database.getCollection("events").insertOne(currEvent);
+    }else {
+      Main.getDatabase().getCollection("events").insertOne(currEvent);
+    }
 
     for (Map.Entry<Conflict, Integer> entry : frequencyMap.entrySet()) {
       // set weight for each conflict
@@ -128,7 +123,25 @@ public class LoadCommand {
       conflictArray.add(obj);
     }
     Document doc = new Document("conventionID", convention.getID()).append("conflicts", conflictArray);
-    Main.getDatabase().getCollection("conflicts").insertOne(doc);
+
+    //for unit testing purposes
+    if(Main.getDatabase() == null) {
+      ConnectionString connString = new ConnectionString(
+          "mongodb://sduraide:cs32scheduler@scheduler-shard-00-00-rw75k.mongodb.net:27017,scheduler-shard-00-01-rw75k.mongodb.net:27017,scheduler-shard-00-02-rw75k.mongodb.net:27017/test?ssl=true&replicaSet=scheduler-shard-0&authSource=admin&retryWrites=true&w=majority"
+      );
+
+      MongoClientSettings settings = MongoClientSettings.builder()
+          .applyConnectionString(connString)
+          .retryWrites(true)
+          .build();
+      MongoClient mongo = MongoClients.create(settings);
+      //created db in cluster in MongoDBAtlas including collections: users, events, conflicts
+      MongoDatabase database = mongo.getDatabase("test");
+      database.getCollection("conflicts").insertOne(doc);
+    }else {
+      Main.getDatabase().getCollection("events").insertOne(currEvent);
+    }
+//    Main.getDatabase().getCollection("conflicts").insertOne(doc);
 
   }
 

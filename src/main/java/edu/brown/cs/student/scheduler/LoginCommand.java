@@ -22,6 +22,9 @@ import com.mongodb.client.MongoDatabase;
 import edu.brown.cs.student.exception.UserAuthenticationException;
 import edu.brown.cs.student.main.Main;
 
+/**
+ * Method that carries out the login
+ */
 public class LoginCommand {
 
   private static final String UNICODE_FORMAT = "UTF8";
@@ -33,6 +36,12 @@ public class LoginCommand {
   private String myEncryptionScheme;
   SecretKey key;
 
+  /**
+   * Method that logs the user in
+   * @param email - user email
+   * @param password - user password
+   * @return - true is successfully logged in and UserAuthenticationError if not
+   */
   public Boolean execute(String email, String password) {
     MongoCollection<org.bson.Document> userCollection;
     //for unit testing purposes
@@ -72,6 +81,12 @@ public class LoginCommand {
     return true;
   }
 
+  /**
+   * Method to decrypt the password
+   * @param userInputPassword - password user input
+   * @param salt - salt string
+   * @return
+   */
   public String decryptePassword(String userInputPassword, String salt) {
 
     //convert bytes to string

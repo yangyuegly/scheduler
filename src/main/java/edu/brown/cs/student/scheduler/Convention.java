@@ -1,16 +1,8 @@
 package edu.brown.cs.student.scheduler;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-
-import com.mongodb.client.MongoCollection;
-
-import org.bson.Document;
-
-import edu.brown.cs.student.main.Main;
 
 /**
  * This class is used to represents a convention.  A convention is a group of smaller events.
@@ -28,21 +20,17 @@ public class Convention {
    * id - a String, which represents the id of this convention
    * events - a List of Events, which represents the events in this conference
    * eventToTimeMap - a Map of Events to Strings, where the String represents the time block
-   *   that in which the key event is scheduled 
+   *   that in which the key event is scheduled
    */
-  private String startDate; 
+  private String startDate;
   private int numDays;
   private int eventDuration;
   private String startTime;
   private String endTime;
-  
+
   private String name = null;
   private String id;
   private List<Event> events = new ArrayList<>();
- 
-  
-  
-  // more?
 
   /**
    * This is a constructor for this class.
@@ -53,8 +41,8 @@ public class Convention {
   public Convention(String convId) {
     id = convId;
   }
-  
-  
+
+
 /**
  * Alternative constructor
  * @param convId -- id of the convention
@@ -115,10 +103,10 @@ public class Convention {
       return events;
     }
   }
-  
+
   /**
    * This method adds an event to this convention.
-   * 
+   *
    * @param newEvent - an Event object, which represents the event being added
    */
   public void addEvent(Event newEvent) {
@@ -129,7 +117,7 @@ public class Convention {
     events.add(newEvent);
   }
   /**
-   * Getter to get the id. 
+   * Getter to get the id.
    * @return -- id
    */
   public String getId() {
@@ -173,7 +161,7 @@ public class Convention {
   public String getEndTime() {
     return endTime;
   }
-  
+
   /**
    * This method is used to get the max number of time slots in this Convention.  It uses
    *   the time constraints given when the Convention was created to determine how many
@@ -185,7 +173,7 @@ public class Convention {
     return 3; // fix!!! -- just put 3 so the forms page would runn!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   }
 
-  
+
   public HashSet<Conflict> getConflicts(){
     return DatabaseUtility.getConflictsFromConventionID(this.id);
   }

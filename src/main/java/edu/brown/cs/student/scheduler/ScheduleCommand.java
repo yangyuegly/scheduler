@@ -4,40 +4,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
 
-import com.mongodb.client.MongoDatabase;
-import static com.mongodb.client.model.Projections.*;
-import edu.brown.cs.student.accounts.User;
 import edu.brown.cs.student.graph.UndirectedWeightedGraph;
-import edu.brown.cs.student.main.Main;
-import com.mongodb.client.MongoClients;
-import com.mongodb.client.MongoClient;
-import com.mongodb.MongoClientSettings;
-import com.mongodb.ConnectionString;
-import com.mongodb.DBObject;
-import com.mongodb.ServerAddress;
-import com.mongodb.MongoCredential;
-
-
-import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.MongoCollection;
-
-import org.bson.Document;
-import java.util.Arrays;
-
-import com.mongodb.BasicDBList;
-import com.mongodb.BasicDBObject;
-import com.mongodb.Block;
-
-import com.mongodb.client.MongoCursor;
-import static com.mongodb.client.model.Filters.*;
-import com.mongodb.client.result.DeleteResult;
-import static com.mongodb.client.model.Updates.*;
-import static org.junit.Assert.assertEquals;
-
-import com.mongodb.client.result.UpdateResult;
 /**
  * This class is used to schedule the user's convention. It implements the
  * ICommand interface.
@@ -46,10 +14,17 @@ public class ScheduleCommand {
   List<Event> nodes;
   HashSet<Conflict> edges;
   Convention convention;
-  Integer TS; 
+  Integer TS;
   Integer CONCURENCY_LIMIT, MAX_SCHEDULE_DAYS;
   UndirectedWeightedGraph<Event, Conflict> graph;
-  
+
+  /**
+   * Constructor for scheduling events
+   * @param convention - convention to schedule
+   * @param CONCURENCY_LIMIT - Limit for concurrency threads
+   * @param MAX_SCHEDULE_DAYS - Convention duration in days
+   * @param TS
+   */
   public ScheduleCommand(Convention convention, Integer CONCURENCY_LIMIT,
       Integer MAX_SCHEDULE_DAYS, Integer TS) {
    // this.graph = graph;
@@ -58,20 +33,27 @@ public class ScheduleCommand {
     this.edges = new HashSet<>();
     this.convention = convention;
     this.CONCURENCY_LIMIT = CONCURENCY_LIMIT;
-    this.MAX_SCHEDULE_DAYS = MAX_SCHEDULE_DAYS; 
+    this.MAX_SCHEDULE_DAYS = MAX_SCHEDULE_DAYS;
   }
 
+  /**
+   * Getter for graph
+   * @return - graph
+   */
   public UndirectedWeightedGraph<Event, Conflict> getGraph() {
     return this.graph;
   }
-  
+
+  /**
+   * Schedules the events
+   */
   public void execute() {
     extractNodes();
     extractEdges();
     this.graph = new UndirectedWeightedGraph<Event, Conflict>(this.nodes, this.CONCURENCY_LIMIT, this.MAX_SCHEDULE_DAYS, this.TS);
     graph.addAllEdges(this.edges);
     graph.graphColoring(this.TS, this.CONCURENCY_LIMIT);
-    
+
     Map<Integer, Event> nodes = graph.getNodes();
     for (Event event : nodes.values()) {
       List<Integer> color = event.getColor();
@@ -79,6 +61,10 @@ public class ScheduleCommand {
     }
   }
 
+  /**
+   * Setter for graph
+   * @param graph - the graph to be set to
+   */
   public void setGraph(UndirectedWeightedGraph<Event,Conflict> graph) {
     this.graph = graph;
   }
@@ -103,6 +89,10 @@ public class ScheduleCommand {
 //    }
   }
 
+  /**
+   * Setter for nodes
+   * @param nodes - the list of events to be set to
+   */
   public void setNodes(List<Event> nodes) {
     this.nodes = nodes;
   }
@@ -117,11 +107,11 @@ public class ScheduleCommand {
 //    query.put("conventionID", convention.getID());
 //
 //    //iterate through the events found
-//    List<Document> conflictList = (List<Document>) 
+//    List<Document> conflictList = (List<Document>)
 //    conflicCollection.find().projection(fields(include("conflicts"),
 //        excludeId()))
 //        .map(document -> document.get("conflicts")).first();
-//    
+//
 //    //unsure if this works
 //    for (int i = 0; i < conflictList.size(); i++) {
 //      Document conflictDoc = conflictList.get(i);
@@ -135,20 +125,39 @@ public class ScheduleCommand {
 //    }
    }
 
+  /**
+   * Setter for edges
+   * @param edges - edges to be set to
+   */
   public void setEdges(HashSet<Conflict> edges) {
     this.edges = edges;
   }
 
+  /**
+   * Set graph
+   * @param graph - the graph to set it to
+   * @return - this class
+   */
   public ScheduleCommand graph(UndirectedWeightedGraph<Event,Conflict> graph) {
     this.graph = graph;
     return this;
   }
 
+  /**
+   * Set nodes
+   * @param nodes - the nodes to set it to
+   * @return - this class
+   */
   public ScheduleCommand nodes(List<Event> nodes) {
     this.nodes = nodes;
     return this;
   }
 
+  /**
+   * Set edges
+   * @param edges - edges to set it to
+   * @return - this class
+   */
   public ScheduleCommand edges(HashSet<Conflict> edges) {
     this.edges = edges;
     return this;

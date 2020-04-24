@@ -35,9 +35,13 @@ public class WebScraper {
   private Map<String, List<String>> deptToCourses = new HashMap<>();
   private Map<String, String> conflict = new HashMap<>();
   private Map<String, String> coursesToIDs = new HashMap<>();
-  private int conventionID;
+  private String conventionID;
 
-  public WebScraper(Integer conventionID) {
+  /**
+   * Constructor for webscraper
+   * @param conventionID - convention id
+   */
+  public WebScraper(String conventionID) {
     collegeName = "";
     deptToCourses = new HashMap<>();
     conflict = new HashMap<>();
@@ -45,14 +49,25 @@ public class WebScraper {
     this.conventionID = conventionID;
   }
 
+  /**
+   * Set college name
+   * @param collegeName - name of college to be set to
+   */
   public void setCollege(String collegeName) {
     this.collegeName = collegeName;
   }
 
+  /**
+   * Get all the courses from coursicle website
+   * @return
+   */
   public Map<String, String> getcoursesToIDs() {
     return this.coursesToIDs;
   }
 
+  /**
+   * Method to get all colleges from coursicle website
+   */
   public void getAllColleges() {
     try {
       String website = "https://www.coursicle.com/";
@@ -87,7 +102,10 @@ public class WebScraper {
 
   }
 
-  public String scrape() {
+  /**
+   * Scrapes all courses from a given college and adds conflict
+   */
+  public void scrape() {
     try {
       // check if website exists
       String website = "https://www.coursicle.com/" + collegeName + "/courses/";
@@ -133,18 +151,14 @@ public class WebScraper {
     } catch (IOException e) {
       e.printStackTrace();
     }
-
-    return null;
   }
 
-  public String getKeyword() {
-    return "scrape";
-  }
-
-  public void addConflicts() {
+  /**
+   * Method to add conflicts to the database
+   */
+  private void addConflicts() {
     Set<String> keys = deptToCourses.keySet();
     int eventID = 0;
-    int count = 0;
     org.bson.Document nestDoc = new org.bson.Document("conventionID", conventionID)
         .append("conflicts", Arrays.asList());
     if(Main.getDatabase() == null) {
@@ -187,7 +201,6 @@ public class WebScraper {
               Conflict conflict = new Conflict(event1, event2, 100);
               BasicDBObject obj = BasicDBObject.parse(gson.toJson(conflict));
               conflictArray.add(obj);
-              count++;
             }
           } else if (conflict.containsKey(second)) {
             if (!conflict.get(second).equals(first)) {
@@ -202,7 +215,6 @@ public class WebScraper {
               Conflict conflict = new Conflict(event1, event2, 100);
               BasicDBObject obj = BasicDBObject.parse(gson.toJson(conflict));
               conflictArray.add(obj);
-              count++;
             }
           } else {
             Event event1 = new Event(eventID, first);
@@ -216,7 +228,6 @@ public class WebScraper {
             Conflict conflict = new Conflict(event1, event2, 100);
             BasicDBObject obj = BasicDBObject.parse(gson.toJson(conflict));
             conflictArray.add(obj);
-            count++;
           }
 
         }

@@ -1,12 +1,7 @@
 package edu.brown.cs.student.csvparser;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -14,7 +9,12 @@ import java.util.List;
  *
  */
 public class CSVParser {
-  
+
+  /**
+   * Method to parse the CSV file
+   * @param textBuilder - filename
+   * @return - list of rows, where each row is a string [] (row split by spaces)
+   */
   public List<String[]> parse(StringBuilder textBuilder){
     String text = textBuilder.toString();
     List<String> textList = Arrays.asList(text.split("\n"));

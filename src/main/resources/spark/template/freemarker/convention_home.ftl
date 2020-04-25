@@ -55,6 +55,7 @@
 </div>
 
 <script src="/js/build_convention.js"></script>
+<script src="/js/websocket.js"></script>
 
 </#assign>
 <#include "main.ftl">

@@ -144,7 +144,7 @@ public class DatabaseUtility {
   public List<Event> getEventsFromConventionID(String conventionID) {
     List<Event> result = new ArrayList<Event>();
     BasicDBObject query = new BasicDBObject();
-    query.put("convention_id", conventionID);
+    query.put("conventionID", conventionID);
     Document doc = eventCollection.find(query).first();
 
     // iterate through the events found
@@ -215,7 +215,7 @@ public class DatabaseUtility {
     HashSet<Conflict> edges = new HashSet<>();
 //    MongoCollection<Document> conflicCollection = Main.getDatabase().getCollection("conflicts");
     BasicDBObject query = new BasicDBObject();
-    query.put("convention_id", conventionID);
+    query.put("conventionID", conventionID);
 
     // iterate through the events found
     List<Document> conflictList = (List<Document>) conflictCollection.find()
@@ -250,14 +250,14 @@ public class DatabaseUtility {
     BasicDBObject obj = BasicDBObject.parse(gson.toJson(newEvent));
 
     // try to load existing document from MongoDB
-    Document document = eventCollection.find(eq("convention_id", conventionID)).first();
+    Document document = eventCollection.find(eq("conventionID", conventionID)).first();
     if (document == null) {
       System.out.println("cannot find given convention");
       return false;
     }
 
     Bson change = push("events", obj);
-    Bson filter = eq("convention_id", conventionID);
+    Bson filter = eq("conventionID", conventionID);
 
     // check if event is already there
     eventCollection.updateOne(filter, change);

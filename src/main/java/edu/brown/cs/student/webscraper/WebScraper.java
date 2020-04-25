@@ -171,11 +171,7 @@ public class WebScraper {
     int eventID = 0;
     org.bson.Document nestDoc = new org.bson.Document("conventionID", conventionID)
         .append("conflicts", Arrays.asList());
-    if (Main.getDatabase() == null) {
-      return;
-    }
     MongoCollection<org.bson.Document> collection = Main.getDatabase().getCollection("conflicts");
-    ;
     collection.insertOne(nestDoc);
     Gson gson = new Gson();
     List<BasicDBObject> conflictArray = new ArrayList<>();

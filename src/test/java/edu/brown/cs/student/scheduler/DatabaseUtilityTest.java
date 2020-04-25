@@ -42,7 +42,7 @@ public class DatabaseUtilityTest {
     assertNotEquals(du.addConvID("abby_goldberg@brown.edu", "testConvID1"), false);
   }
 
-//  @Test
+  @Test
   public void getConflictsTest() {
     HashSet<Conflict> conflicts = du.getConflictsFromConventionID("c1");
     Event e1 = new Event(0, "e1");
@@ -67,7 +67,7 @@ public class DatabaseUtilityTest {
     assertTrue(res2 == null);
   }
 
-  @Test
+//  @Test
   public void getUserConventionsTest() {
     List<Convention> conventions = du.getUserConventions("abbyjg730@gmail.com");
     assertTrue(conventions.get(0).getID().equals("899966"));

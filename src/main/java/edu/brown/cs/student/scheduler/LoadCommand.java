@@ -54,6 +54,7 @@ public class LoadCommand {
 
   /**
    * Method to insert data in NoSQL
+   *
    * @param input - data from csv file
    * @param convention - the convention containing all the events in the file
    */
@@ -104,22 +105,20 @@ public class LoadCommand {
       BasicDBObject eventObject = BasicDBObject.parse(gson.toJson(e));
       eventArray.add(eventObject);
     }
-    Document currEvent = new Document("conventionID", convention.getID()).append("events", eventArray);
-  //for unit testing purposes
-    if(Main.getDatabase() == null) {
+    Document currEvent = new Document("conventionID", convention.getID()).append("events",
+        eventArray);
+    // for unit testing purposes
+    if (Main.getDatabase() == null) {
       ConnectionString connString = new ConnectionString(
-          "mongodb://sduraide:cs32scheduler@scheduler-shard-00-00-rw75k.mongodb.net:27017,scheduler-shard-00-01-rw75k.mongodb.net:27017,scheduler-shard-00-02-rw75k.mongodb.net:27017/test?ssl=true&replicaSet=scheduler-shard-0&authSource=admin&retryWrites=true&w=majority"
-      );
+          "mongodb://sduraide:cs32scheduler@scheduler-shard-00-00-rw75k.mongodb.net:27017,scheduler-shard-00-01-rw75k.mongodb.net:27017,scheduler-shard-00-02-rw75k.mongodb.net:27017/test?ssl=true&replicaSet=scheduler-shard-0&authSource=admin&retryWrites=true&w=majority");
 
-      MongoClientSettings settings = MongoClientSettings.builder()
-          .applyConnectionString(connString)
-          .retryWrites(true)
-          .build();
+      MongoClientSettings settings = MongoClientSettings.builder().applyConnectionString(connString)
+          .retryWrites(true).build();
       MongoClient mongo = MongoClients.create(settings);
-      //created db in cluster in MongoDBAtlas including collections: users, events, conflicts
+      // created db in cluster in MongoDBAtlas including collections: users, events, conflicts
       MongoDatabase database = mongo.getDatabase("test");
       database.getCollection("events").insertOne(currEvent);
-    }else {
+    } else {
       Main.getDatabase().getCollection("events").insertOne(currEvent);
     }
 
@@ -130,23 +129,21 @@ public class LoadCommand {
       BasicDBObject obj = BasicDBObject.parse(gson.toJson(entry.getKey()));
       conflictArray.add(obj);
     }
-    Document doc = new Document("conventionID", convention.getID()).append("conflicts", conflictArray);
+    Document doc = new Document("conventionID", convention.getID()).append("conflicts",
+        conflictArray);
 
-    //for unit testing purposes
-    if(Main.getDatabase() == null) {
+    // for unit testing purposes
+    if (Main.getDatabase() == null) {
       ConnectionString connString = new ConnectionString(
-          "mongodb://sduraide:cs32scheduler@scheduler-shard-00-00-rw75k.mongodb.net:27017,scheduler-shard-00-01-rw75k.mongodb.net:27017,scheduler-shard-00-02-rw75k.mongodb.net:27017/test?ssl=true&replicaSet=scheduler-shard-0&authSource=admin&retryWrites=true&w=majority"
-      );
+          "mongodb://sduraide:cs32scheduler@scheduler-shard-00-00-rw75k.mongodb.net:27017,scheduler-shard-00-01-rw75k.mongodb.net:27017,scheduler-shard-00-02-rw75k.mongodb.net:27017/test?ssl=true&replicaSet=scheduler-shard-0&authSource=admin&retryWrites=true&w=majority");
 
-      MongoClientSettings settings = MongoClientSettings.builder()
-          .applyConnectionString(connString)
-          .retryWrites(true)
-          .build();
+      MongoClientSettings settings = MongoClientSettings.builder().applyConnectionString(connString)
+          .retryWrites(true).build();
       MongoClient mongo = MongoClients.create(settings);
-      //created db in cluster in MongoDBAtlas including collections: users, events, conflicts
+      // created db in cluster in MongoDBAtlas including collections: users, events, conflicts
       MongoDatabase database = mongo.getDatabase("test");
       database.getCollection("conflicts").insertOne(doc);
-    }else {
+    } else {
       Main.getDatabase().getCollection("conflicts").insertOne(doc);
     }
 //    Main.getDatabase().getCollection("conflicts").insertOne(doc);

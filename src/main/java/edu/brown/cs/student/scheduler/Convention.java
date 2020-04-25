@@ -35,13 +35,22 @@ public class Convention {
    * convention being constructed, else false
    */
   private String name = null;
+
+  @Override
+  public String toString() {
+    return "Convention [name=" + name + ", id=" + id + ", startDateTime=" + startDateTime
+        + ", numDays=" + numDays + ", eventDuration=" + eventDuration + ", endTime=" + endTime
+        + "]";
+  }
+
   private String id = null;
   private LocalDateTime startDateTime;
   private int numDays = -1; // setting this to -1 so we know that it has not been set yet
   private int eventDuration = -1;
   private LocalTime endTime;
   private List<Event> events = null;
-  DatabaseUtility du = new DatabaseUtility();
+  DatabaseUtility du = new DatabaseUtility(); // change to a local variable since it adds this to
+                                              // database while storing
   boolean loadedInDb = false;
 
   /**
@@ -86,6 +95,7 @@ public class Convention {
     this.name = convName;
     this.numDays = numDays;
     this.eventDuration = eventDuration;
+    this.startDateTime = startDateTime;
     this.endTime = endTime;
   }
 

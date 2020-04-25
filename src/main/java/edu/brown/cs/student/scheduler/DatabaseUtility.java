@@ -7,6 +7,7 @@ import static com.mongodb.client.model.Projections.fields;
 import static com.mongodb.client.model.Projections.include;
 import static com.mongodb.client.model.Updates.push;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -283,10 +284,24 @@ public class DatabaseUtility {
 
     String id = doc.getString("id");
     String name = doc.getString("name");
-    LocalDateTime startDateTime = doc.get("startDateTime", LocalDateTime.class);
+    Document sdt = (Document) doc.get("startDateTime");
+    Document date = (Document) sdt.get("date");
+    Document time = (Document) sdt.get("time");
+    LocalDate ld = LocalDate.of(date.getInteger("year"), date.getInteger("month"),
+        date.getInteger("day"));
+    LocalTime lt = LocalTime.of(time.getInteger("hour"), time.getInteger("minute"),
+        time.getInteger("second"), time.getInteger("nano"));
+    LocalDateTime startDateTime = LocalDateTime.of(ld, lt);
+    if (startDateTime == null) {
+      System.out.println("startdatetime is null");
+    } else {
+      System.out.println("startdatetime is not null");
+    }
     int numDays = doc.getInteger("numDays");
     int eventDuration = doc.getInteger("eventDuration");
-    LocalTime endTime = doc.get("endTime", LocalTime.class);
+    Document et = (Document) doc.get("endTime");
+    LocalTime endTime = LocalTime.of(et.getInteger("hour"), et.getInteger("minute"),
+        et.getInteger("second"), et.getInteger("nano"));
 
     return new Convention(id, name, startDateTime, numDays, eventDuration, endTime);
   }

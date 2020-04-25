@@ -59,10 +59,18 @@ public class WebScraper {
 
   /**
    * Get all the courses from coursicle website
-   * @return
+   * @return coursesToIDs
    */
   public Map<String, String> getcoursesToIDs() {
     return this.coursesToIDs;
+  }
+
+  /**
+   * Get all the conflicts from a particular project
+   * @return
+   */
+  public Map<String, String> getconflicts() {
+    return this.conflict;
   }
 
   /**

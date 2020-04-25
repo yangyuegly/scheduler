@@ -6,7 +6,15 @@ import java.util.Objects;
 
 import edu.brown.cs.student.graph.IVertex;
 
+/**
+ * Represents an Event which is the vertex of the graph
+ */
 public class Event implements IVertex<Event, Conflict> {
+
+  /**
+   * Id of event, list of edges, degree of vertex, color of vertex
+   * name and description of vertex
+   */
   Integer id;
   List<Conflict> adjList;
   Integer degree; //
@@ -14,9 +22,17 @@ public class Event implements IVertex<Event, Conflict> {
   String name;
   String description;
 
+  /**
+   * Constructor for Event
+   */
   public Event() {
   }
-  
+
+  /**
+   * Constructor for Event
+   * @param id - id of event
+   * @param name - name of event
+   */
   public Event(Integer id, String name) {
     this.id = id;
     this.adjList = new ArrayList<>();
@@ -26,6 +42,24 @@ public class Event implements IVertex<Event, Conflict> {
     this.description = "";
   }
 
+  /**
+   * Constructor of Event
+   * @param name - name of the event
+   */
+  public Event(String name) {
+    this.adjList = new ArrayList<>();
+    this.degree = 0;
+    this.color = new ArrayList<>();
+    this.name = name;
+    this.description = "";
+  }
+
+  /**
+   * Constructor of event
+   * @param id - id of event
+   * @param name - name of event
+   * @param description - description of event
+   */
   public Event(Integer id, String name, String description) {
     this.id = id;
     this.adjList = new ArrayList<>();
@@ -45,37 +79,60 @@ public class Event implements IVertex<Event, Conflict> {
   }
 
   /**
-    * Get the heaviest weight among v's adjacency list 
+    * Get the heaviest weight among v's adjacency list
     * to aid sorting
-    * @return
+    * @return - heaviest weight
     */
-  
+
+  @Override
   public Integer getHeaviestWeight() {
     int max = 0;
     for (Conflict i : this.getAdjList()) {
       max = i.getWeight() > max ? i.getWeight() : max;
     }
-    return max; 
+    return max;
   }
-  
+
+  /**
+   * Getter method for id of event
+   * @return - id
+   */
   public Integer getId() {
     return this.id;
   }
 
+  /**
+   * Setter method for id
+   * @param id - id of the event to set it to
+   */
   public void setId(Integer id) {
     this.id = id;
   }
+
+  /**
+   * Setter for adjList
+   * @param adjList - val to set it to
+   */
   public void setAdjList(List<Conflict> adjList) {
     this.adjList = adjList;
   }
+
+  /**
+   * Setter for degree
+   * @param degree - degree of the vertex to set it to
+   */
   public void setDegree(Integer degree) {
     this.degree = degree;
   }
-  
+
+  /**
+   * Getter for name
+   * @return - name of event
+   */
   public String getName() {
     return name;
   }
-  
+
   @Override
   public Integer getID() {
     return id;
@@ -86,7 +143,7 @@ public class Event implements IVertex<Event, Conflict> {
     return adjList;
   }
 
-  
+
   /**
    * return size of adjacent list.
    */

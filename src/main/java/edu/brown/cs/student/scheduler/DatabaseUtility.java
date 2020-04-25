@@ -1,17 +1,18 @@
 package edu.brown.cs.student.scheduler;
 
+import static com.mongodb.client.model.Filters.all;
+import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Projections.excludeId;
+import static com.mongodb.client.model.Projections.fields;
+import static com.mongodb.client.model.Projections.include;
+import static com.mongodb.client.model.Updates.push;
+
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-//import com.mongodb.MongoClient;
-import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.MongoCollection;
 
 import org.bson.Document;
 import org.bson.conversions.Bson;
-
-import static com.mongodb.client.model.Filters.*;
-import static com.mongodb.client.model.Updates.*;
-import org.bson.Document;
 
 import com.google.gson.Gson;
 import com.mongodb.BasicDBList;
@@ -20,11 +21,24 @@ import com.mongodb.client.MongoCollection;
 
 import edu.brown.cs.student.main.Main;
 
+/**
+ * This class contains all the Database CRUD functions necessary
+ */
 public class DatabaseUtility {
+
+  /**
+   * Collections stored in MongoDB database
+   */
   static MongoCollection<Document> userCollection = Main.getDatabase().getCollection("users");
   static MongoCollection<Document> conventionCollection = Main.getDatabase().getCollection("conventions");
 
 
+  /**
+   * Method to check if user has access to a particular convention
+   * @param userEmail - email of the user
+   * @param conventionID - convention ID to check
+   * @return - true if user has access and false otherwise
+   */
   public static boolean checkPermission(String userEmail, String conventionID) {
 
     BasicDBObject andQuery = new BasicDBObject();
@@ -37,7 +51,7 @@ public class DatabaseUtility {
     return count != 0;
 
   }
-  
+
   // /**
   //  * -- adds Conflicts between all pairs of events in eventsToAttend (and stores this in the database with currConv)
   //  * @param userEmail
@@ -78,7 +92,6 @@ public static List<Event> getEventsFromConventionID(String conventionID) {
  * data was able to added; false if operation fails
  */
 public static Boolean addConventionData(Convention convention) {
-
   Gson gson = new Gson();
   BasicDBObject obj = BasicDBObject.parse(gson.toJson(convention));
   //the key to this document is the convention id
@@ -99,7 +112,7 @@ public static Boolean addConventionData(Convention convention) {
   * @param conventionID
   * @return a boolean if the given conention id already exist in the database
   */
-  public Boolean addConvID(String userEmail, String conventionID) {
+  public static Boolean addConvID(String userEmail, String conventionID) {
     Gson gson = new Gson();
     //the key to this document is the convention id
     BasicDBObject query = new BasicDBObject();
@@ -111,10 +124,41 @@ public static Boolean addConventionData(Convention convention) {
 
     userCollection.updateOne(new Document("email", userEmail),
           new Document("$push", new Document("conventions", conventionID)));
-    
+
     return true;
   }
-  
+
+  /**
+   * Method to get conflicts based on a convention id.
+   * @param conventionID -- the id of the convention
+   * @return -- a hashset of all the conflicts in this convention
+   */
+  public static HashSet<Conflict> getConflictsFromConventionID(String conventionID) {
+    HashSet<Conflict> edges = new HashSet<>();
+    MongoCollection<Document> conflicCollection= Main.getDatabase().getCollection("conflicts");
+    BasicDBObject query = new BasicDBObject();
+    query.put("conventionID", conventionID);
+
+    //iterate through the events found
+    List<Document> conflictList = (List<Document>)
+    conflicCollection.find().projection(fields(include("conflicts"),
+        excludeId()))
+        .map(document -> document.get("conflicts")).first();
+
+    //unsure if this works
+    for (int i = 0; i < conflictList.size(); i++) {
+      Document conflictDoc = conflictList.get(i);
+      Document event1Doc = (Document) conflictDoc.get("event1");
+      Document event2Doc = (Document) conflictDoc.get("event2");
+      Integer weight = conflictDoc.getInteger("weight");
+      Event e1 = new Event(event1Doc.getInteger("id"), event1Doc.getString("name"));
+      Event e2 = new Event(event2Doc.getInteger("id"), event2Doc.getString("name"));
+      Conflict c = new Conflict(e1, e2, weight);
+      edges.add(c);
+    }
+    return edges;
+  }
+
 
   /**
   * adds an event to a pre-existing convention with conventionID
@@ -141,9 +185,9 @@ public static Boolean addConventionData(Convention convention) {
     eventCollection.updateOne(filter, change);
     return true;
   }
-  
+
 /**gets the convention data for a certain convention
- * 
+ *
  * @param conventionID
  * @return string[0] = id, string[1] = name
  */
@@ -157,14 +201,14 @@ public static Boolean addConventionData(Convention convention) {
     }
     result[0] = doc.getString("id");
     result[1] = doc.getString("name");
-    return result; 
+    return result;
   }
 
 
   /**
-   * 
+   * Gets all the conventions of the User
    * @param userEmail
-   * @return
+   * @return a List<Convention> representing all conventions of the user
    */
   public static List<Convention> getUserConventions(String userEmail) {
     List<Convention> result = new ArrayList<Convention>();
@@ -183,9 +227,9 @@ public static Boolean addConventionData(Convention convention) {
       Convention c = new Convention(id);
       result.add(c);
     }
-    
-    return result; 
 
-  } 
+    return result;
+
+  }
 
 }

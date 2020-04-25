@@ -17,6 +17,9 @@ import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.MongoCollection;
 
+/**
+ * Class to manage collaboration
+ */
 @WebSocket
 public class ScoringWebSocket {
   private static final Gson GSON = new Gson();

@@ -17,7 +17,12 @@ import org.bson.conversions.Bson;
 import com.google.gson.Gson;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
+import com.mongodb.ConnectionString;
+import com.mongodb.MongoClientSettings;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 
 import edu.brown.cs.student.main.Main;
 
@@ -29,9 +34,63 @@ public class DatabaseUtility {
   /**
    * Collections stored in MongoDB database
    */
-  static MongoCollection<Document> userCollection = Main.getDatabase().getCollection("users");
-  static MongoCollection<Document> conventionCollection = Main.getDatabase().getCollection("conventions");
 
+  MongoCollection<Document> userCollection;
+  MongoCollection<Document> conventionCollection;
+  MongoCollection<Document> eventCollection;
+
+  public DatabaseUtility() {
+    if(Main.getDatabase() == null) {
+      ConnectionString connString = new ConnectionString(
+          "mongodb://sduraide:cs32scheduler@scheduler-shard-00-00-rw75k.mongodb.net:27017,scheduler-shard-00-01-rw75k.mongodb.net:27017,scheduler-shard-00-02-rw75k.mongodb.net:27017/test?ssl=true&replicaSet=scheduler-shard-0&authSource=admin&retryWrites=true&w=majority"
+      );
+
+      MongoClientSettings settings = MongoClientSettings.builder()
+          .applyConnectionString(connString)
+          .retryWrites(true)
+          .build();
+      MongoClient mongo = MongoClients.create(settings);
+      //created db in cluster in MongoDBAtlas including collections: users, events, conflicts
+      MongoDatabase database = mongo.getDatabase("test");
+      userCollection = database.getCollection("users");
+    }else {
+      userCollection = Main.getDatabase().getCollection("users");
+    }
+
+    if(Main.getDatabase() == null) {
+      ConnectionString connString = new ConnectionString(
+          "mongodb://sduraide:cs32scheduler@scheduler-shard-00-00-rw75k.mongodb.net:27017,scheduler-shard-00-01-rw75k.mongodb.net:27017,scheduler-shard-00-02-rw75k.mongodb.net:27017/test?ssl=true&replicaSet=scheduler-shard-0&authSource=admin&retryWrites=true&w=majority"
+      );
+
+      MongoClientSettings settings = MongoClientSettings.builder()
+          .applyConnectionString(connString)
+          .retryWrites(true)
+          .build();
+      MongoClient mongo = MongoClients.create(settings);
+      //created db in cluster in MongoDBAtlas including collections: users, events, conflicts
+      MongoDatabase database = mongo.getDatabase("test");
+      conventionCollection = database.getCollection("conventions");
+    }else {
+      conventionCollection = Main.getDatabase().getCollection("conventions");
+    }
+
+    if(Main.getDatabase() == null) {
+      ConnectionString connString = new ConnectionString(
+          "mongodb://sduraide:cs32scheduler@scheduler-shard-00-00-rw75k.mongodb.net:27017,scheduler-shard-00-01-rw75k.mongodb.net:27017,scheduler-shard-00-02-rw75k.mongodb.net:27017/test?ssl=true&replicaSet=scheduler-shard-0&authSource=admin&retryWrites=true&w=majority"
+      );
+
+      MongoClientSettings settings = MongoClientSettings.builder()
+          .applyConnectionString(connString)
+          .retryWrites(true)
+          .build();
+      MongoClient mongo = MongoClients.create(settings);
+      //created db in cluster in MongoDBAtlas including collections: users, events, conflicts
+      MongoDatabase database = mongo.getDatabase("test");
+      eventCollection = database.getCollection("events");
+    }else {
+      eventCollection = Main.getDatabase().getCollection("events");
+    }
+  }
 
   /**
    * Method to check if user has access to a particular convention
@@ -39,12 +98,12 @@ public class DatabaseUtility {
    * @param conventionID - convention ID to check
    * @return - true if user has access and false otherwise
    */
-  public static boolean checkPermission(String userEmail, String conventionID) {
+  public boolean checkPermission(String userEmail, String conventionID) {
 
     BasicDBObject andQuery = new BasicDBObject();
     List<BasicDBObject> obj = new ArrayList<BasicDBObject>();
     obj.add(new BasicDBObject("email", userEmail));
-    obj.add(new BasicDBObject("conventions.id", conventionID));
+    obj.add(new BasicDBObject("conventions", conventionID));
     andQuery.put("$and", obj);
 
     long count = userCollection.countDocuments(andQuery);
@@ -67,18 +126,16 @@ public class DatabaseUtility {
  * @param conventionID
  * @return list of events
  */
-public static List<Event> getEventsFromConventionID(String conventionID) {
+public List<Event> getEventsFromConventionID(String conventionID) {
   List<Event> result = new ArrayList<Event>();
-  MongoCollection<Document> eventCollection = Main.getDatabase().getCollection("events");
   BasicDBObject query = new BasicDBObject();
-  query.put("conventionID", conventionID);
+  query.put("convention_id", conventionID);
   Document doc = eventCollection.find(query).first();
 
   //iterate through the events found
-  BasicDBList eventList = (BasicDBList) doc.get("events");
-  for (int i = 0; i < eventList.size(); i++) {
-    BasicDBObject eventObj = (BasicDBObject) eventList.get(i);
-    Event e = new Event(eventObj.getInt("id"), eventObj.getString("name"));
+  List<Document> eventList = (List<Document>) doc.get("events");
+  for (Document event: eventList) {
+      Event e = new Event(event.getInteger("id"), event.getString("name"));
     result.add(e);
   }
   return result;
@@ -88,19 +145,16 @@ public static List<Event> getEventsFromConventionID(String conventionID) {
  * adds the convention data to the database
  * the ID for this should already be in the database
  * @param convention
- * @return a boolean if the given convention id already exist in the database
+ * @return true if the given convention id already exist in the database and
+ * data was able to added; false if operation fails
  */
-public static Boolean addConventionData(Convention convention) {
-  System.out.println("try to add data to " + convention.getId());
-  MongoCollection<Document> conventionCollection = Main.getDatabase().getCollection("conventions");
+public Boolean addConventionData(Convention convention) {
   Gson gson = new Gson();
   BasicDBObject obj = BasicDBObject.parse(gson.toJson(convention));
   //the key to this document is the convention id
-  BasicDBObject query = new BasicDBObject("conventions.id",
-      new BasicDBObject("$eq", convention.getID()));
-  Document currCon = userCollection.find(query).first();
-  if (currCon != null && !currCon.isEmpty()) {
-    Document doc = new Document(convention.getID(), obj);
+  Document conventionExist = userCollection.find(all("conventions", convention.getID())).first();
+  if (conventionExist != null && !conventionExist.isEmpty()) {
+    Document doc = new Document(obj.toMap());
     conventionCollection.insertOne(doc);
     return true;
   }
@@ -113,9 +167,9 @@ public static Boolean addConventionData(Convention convention) {
   * if there is a convention with that ID, return false; otherwise, add the conventionID to the user with userEmail and return true
   * @param userEmail
   * @param conventionID
-  * @return a boolean if the given conention id already exist in the database
+  * @return a boolean if the given convention id already exist in the database
   */
-  public static Boolean addConvID(String userEmail, String conventionID) {
+  public Boolean addConvID(String userEmail, String conventionID) {
     Gson gson = new Gson();
     //the key to this document is the convention id
     BasicDBObject query = new BasicDBObject();
@@ -213,7 +267,7 @@ public static Boolean addConventionData(Convention convention) {
    * @param userEmail
    * @return a List<Convention> representing all conventions of the user
    */
-  public static List<Convention> getUserConventions(String userEmail) {
+  public List<Convention> getUserConventions(String userEmail) {
     List<Convention> result = new ArrayList<Convention>();
     BasicDBObject query = new BasicDBObject();
     query.put("email", userEmail);

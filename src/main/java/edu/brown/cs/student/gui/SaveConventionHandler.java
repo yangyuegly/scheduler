@@ -37,7 +37,7 @@ public class SaveConventionHandler implements Route {
     if (userEmail == null) {
       // user is not logged in
       // Map<String, Object> variables = ImmutableMap.of("title", -----------------
-      // FIX!!!!!!!!!!!!!!!!!
+
       // "Scheduler", "message", "Please log in");
       // return new ModelAndView(variables, "home.ftl");
     }

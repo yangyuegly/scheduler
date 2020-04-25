@@ -36,12 +36,12 @@ public class LoginHandler implements TemplateViewRoute {
     }
 
     // sets the cookie so it expires after two hours
-    response.cookie("user", email, 72000000); // 120 * 60 * 1000);
+    response.cookie("user", email, 72000000);
 
+    // go to the user's account page
     response.redirect("/account");
 
-    return null; // is this ok??? don't think it gets here
-                 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    return null; // this line will not be reached
   }
 
 }

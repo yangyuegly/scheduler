@@ -1,4 +1,5 @@
 package edu.brown.cs.student.gui;
+
 //integrated
 import java.util.Map;
 
@@ -10,15 +11,15 @@ import spark.Response;
 import spark.TemplateViewRoute;
 
 /**
- * This class is used to handle requests to the front page of our website.  It implements
- *   TemplateViewRoute.
+ * This class is used to handle requests to the front page of our website. It implements
+ * TemplateViewRoute.
  */
 public class HomeHandler implements TemplateViewRoute {
-// make cute/cool later .........................................................................................
+
   @Override
   public ModelAndView handle(Request request, Response response) {
 //    String userEmail = request.cookie("user");
-//    
+//
 //    if (userEmail != null) {
 //      // they are already logged in
 //      response.redirect("/account");

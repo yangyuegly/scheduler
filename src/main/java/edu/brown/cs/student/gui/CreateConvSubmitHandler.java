@@ -1,5 +1,6 @@
 package edu.brown.cs.student.gui;
 
+import java.time.LocalDate;
 import java.util.Map;
 
 import com.google.common.collect.ImmutableMap;
@@ -54,8 +55,13 @@ public class CreateConvSubmitHandler implements TemplateViewRoute {
     boolean added = db.addConventionData(newConv);
 
     if (!added) {
-      System.err.println("Convention data adding failed"); // fix
-                                                           // this!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      // an error occurred
+      LocalDate today = LocalDate.now();
+      Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "currDay", today, "id",
+          id.toString(), "errorMessage",
+          "An error occurred while saving your convention." + " Please try again.");
+
+      return new ModelAndView(variables, "setup_conv.ftl");
     }
 
     if (submitType.equals("Add events by hand")) {

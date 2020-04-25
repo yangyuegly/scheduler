@@ -26,6 +26,7 @@ import edu.brown.cs.student.gui.LoginHandler;
 import edu.brown.cs.student.gui.LogoutHandler;
 import edu.brown.cs.student.gui.SaveConventionHandler;
 import edu.brown.cs.student.gui.SchedExamSubmitHandler;
+import edu.brown.cs.student.gui.SchedulePageHandler;
 import edu.brown.cs.student.gui.UploadHandler;
 import freemarker.template.Configuration;
 import joptsimple.OptionParser;
@@ -50,14 +51,12 @@ public final class Main {
    */
   private static final int DEFAULT_PORT = 4567;
 
-
   ConnectionString connString;
-
 
   MongoClientSettings settings;
   MongoClient mongo;
 
-  //Accessing the database
+  // Accessing the database
   static MongoDatabase database;
   // field for each command
 
@@ -90,20 +89,16 @@ public final class Main {
     // Parse command line arguments
     OptionParser parser = new OptionParser();
     parser.accepts("gui");
-    parser.accepts("port").withRequiredArg().ofType(Integer.class)
-    .defaultsTo(DEFAULT_PORT);
+    parser.accepts("port").withRequiredArg().ofType(Integer.class).defaultsTo(DEFAULT_PORT);
     OptionSet options = parser.parse(args);
 
     connString = new ConnectionString(
-        "mongodb://sduraide:cs32scheduler@scheduler-shard-00-00-rw75k.mongodb.net:27017,scheduler-shard-00-01-rw75k.mongodb.net:27017,scheduler-shard-00-02-rw75k.mongodb.net:27017/test?ssl=true&replicaSet=scheduler-shard-0&authSource=admin&retryWrites=true&w=majority"
-    );
+        "mongodb://sduraide:cs32scheduler@scheduler-shard-00-00-rw75k.mongodb.net:27017,scheduler-shard-00-01-rw75k.mongodb.net:27017,scheduler-shard-00-02-rw75k.mongodb.net:27017/test?ssl=true&replicaSet=scheduler-shard-0&authSource=admin&retryWrites=true&w=majority");
 
-    settings = MongoClientSettings.builder()
-        .applyConnectionString(connString)
-        .retryWrites(true)
+    settings = MongoClientSettings.builder().applyConnectionString(connString).retryWrites(true)
         .build();
     mongo = MongoClients.create(settings);
-    //created db in cluster in MongoDBAtlas including collections: users, events, conflicts
+    // created db in cluster in MongoDBAtlas including collections: users, events, conflicts
     database = mongo.getDatabase("test");
 
     if (options.has("gui")) {
@@ -111,7 +106,8 @@ public final class Main {
 
     }
 
-  //allowing us to upload a file ???????????????????????????????????????????????????????????????????
+    // allowing us to upload a file
+    // ???????????????????????????????????????????????????????????????????
     File uploadDir = new File("uploaded-file");
     uploadDir.mkdir();
   }
@@ -122,8 +118,7 @@ public final class Main {
     try {
       config.setDirectoryForTemplateLoading(templates);
     } catch (IOException ioe) {
-      System.out.printf("ERROR: Unable use %s for template loading.%n",
-          templates);
+      System.out.printf("ERROR: Unable use %s for template loading.%n", templates);
       System.exit(1);
     }
     return new FreeMarkerEngine(config);
@@ -149,7 +144,8 @@ public final class Main {
     Spark.post("/create_convention/:id", new CreateConvSubmitHandler(), freeMarker);
     Spark.post("/save_convention", new SaveConventionHandler());
     Spark.get("/create_exam_conv", new CreateExamConvHandler(), freeMarker);
-    Spark.get("/schedule/:id",  new CalendarHandler(), freeMarker);
+    Spark.get("/schedule/:id", new SchedulePageHandler(), freeMarker);
+    Spark.get("/calendar_events/:id", new CalendarHandler());
     Spark.post("/exam_schedule/:id", new SchedExamSubmitHandler(), freeMarker);
     Spark.post("/upload_convention/:id", new UploadHandler(), freeMarker);
     Spark.get("/convention/:id", new ConventionHomeHandler(), freeMarker);
@@ -160,7 +156,6 @@ public final class Main {
 
   // Know who's attending? Upload a file with everything or add them manually.
   // Don't know? Send out a form to find out.
-
 
   /**
    * Display an error page when an exception occurs in the server.

@@ -18,8 +18,8 @@ import spark.Response;
 import spark.TemplateViewRoute;
 
 /**
- * This class is used to schedule final exams and take the user to the page that
- * displays the schedule.
+ * This class is used to schedule final exams and take the user to the page that displays the
+ * schedule.
  */
 public class SchedExamSubmitHandler implements TemplateViewRoute {
 
@@ -50,7 +50,8 @@ public class SchedExamSubmitHandler implements TemplateViewRoute {
     try {
       numDays = Integer.parseInt(numDaysString);
       eventDur = Integer.parseInt(eventDuration);
-      newConv = new Convention(id, startDate, numDays, eventDur, startTime, endTime);
+      newConv = new Convention(id, schoolName + "Final Exams", startDate, numDays, eventDur,
+          startTime, endTime);
 
     } catch (NumberFormatException err) {
       Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "id", id.toString(),

@@ -44,12 +44,3 @@ if (cookie == "") {
   //$userEmailHeaderLink.text("Logged in as " + userEmail);
   $loginHeaderLink.css("display", "none");
 }
-
-/*
-  Displays the drop-down menu when the user icon is clicked.  If it is clicked
-  while the drop-down is already displayed, the drop-down is hidden.
-*/
-// $userHeaderLink.hover(function() {
-//   $userDropdownContent.css("display", "block");
-//   //document.getElementById("userDropdownContent").classList.toggle("show");
-// });

@@ -12,12 +12,12 @@ import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
 import spark.TemplateViewRoute;
+
 /**
  * Class that is a handler for the creating a convention page.
  *
  */
 public class CreateConventionHandler implements TemplateViewRoute {
-  DatabaseUtility db = new DatabaseUtility();
 
   @Override
   public ModelAndView handle(Request request, Response response) {
@@ -25,12 +25,12 @@ public class CreateConventionHandler implements TemplateViewRoute {
 
     if (userEmail == null) {
       // user is not logged in
-      Map<String, Object> variables = ImmutableMap.of("title", "Scheduler",
-          "message", "Please log in");
+      Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "message",
+          "Please log in");
       return new ModelAndView(variables, "home.ftl");
     }
 
-    //gets the current date (user can't schedule an event in the past)
+    // gets the current date (user can't schedule an event in the past)
     Calendar cal = Calendar.getInstance();
     int month = cal.get(Calendar.MONTH) + 1;
     int day = cal.get(Calendar.DAY_OF_MONTH);
@@ -45,19 +45,15 @@ public class CreateConventionHandler implements TemplateViewRoute {
     Integer id = null;
 
     while (!avail) {
-      id = rand.nextInt((999999-100000) + 1) + 100000;
+      id = rand.nextInt((999999 - 100000) + 1) + 100000;
+      DatabaseUtility db = new DatabaseUtility();
       avail = db.addConvID(userEmail, id.toString());
-     }
+    }
 
-
-    Map<String, Object> variables = ImmutableMap.of("title",
-        "Scheduler", "currDay", date, "id", id.toString(), "errorMessage", "");
+    Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "currDay", date, "id",
+        id.toString(), "errorMessage", "");
 
     return new ModelAndView(variables, "setup_conv.ftl");
   }
 
-
-
 }
-
-

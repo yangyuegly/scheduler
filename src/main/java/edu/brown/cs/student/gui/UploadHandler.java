@@ -26,19 +26,20 @@ import spark.TemplateViewRoute;
 
 /**
  * Class to allow a user to upload a file.
- * 
+ *
  * @author rfuller1
  *
  */
 public class UploadHandler implements TemplateViewRoute {
-  DatabaseUtility db = new DatabaseUtility();
 
   @Override
   public ModelAndView handle(Request request, Response response) {
     String userEmail = request.cookie("user");
     String id = request.params(":id");
 
+    DatabaseUtility db = new DatabaseUtility();
     boolean permission = db.checkPermission(userEmail, id);
+
     if (!permission) {
       System.out.println("permission denied");
       response.redirect("/account");

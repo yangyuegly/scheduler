@@ -18,11 +18,10 @@ import spark.Response;
 import spark.TemplateViewRoute;
 
 /**
- * This class is used to display the create_exam_conv page, so the user can
- * schedule final exams for the college of their choice.
+ * This class is used to display the create_exam_conv page, so the user can schedule final exams for
+ * the college of their choice.
  */
 public class CreateExamConvHandler implements TemplateViewRoute {
-  DatabaseUtility db = new DatabaseUtility();
 
   @Override
   public ModelAndView handle(Request request, Response response) {
@@ -51,6 +50,7 @@ public class CreateExamConvHandler implements TemplateViewRoute {
     while (!avail) {
       id = rand.nextInt((999999 - 100000) + 1) + 100000;
 //       avail = true; //delete
+      DatabaseUtility db = new DatabaseUtility();
       avail = db.addConvID(userEmail, id.toString()); // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
     }
 

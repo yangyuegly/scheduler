@@ -27,6 +27,7 @@ import edu.brown.cs.student.gui.LogoutHandler;
 import edu.brown.cs.student.gui.SaveConventionHandler;
 import edu.brown.cs.student.gui.SchedExamSubmitHandler;
 import edu.brown.cs.student.gui.SchedulePageHandler;
+import edu.brown.cs.student.gui.UnauthorizedHandler;
 import edu.brown.cs.student.gui.UploadHandler;
 import freemarker.template.Configuration;
 import joptsimple.OptionParser;
@@ -151,7 +152,8 @@ public final class Main {
     Spark.get("/convention/:id", new ConventionHomeHandler(), freeMarker);
     Spark.get("/convention_signup/:id", new AttendeeSignupHandler(), freeMarker);
     Spark.post("/add_attendee/:id", new AttendeeSignupSubmitHandler(), freeMarker);
-    Spark.get("logout", new LogoutHandler(), freeMarker);
+    Spark.get("/logout", new LogoutHandler(), freeMarker);
+    Spark.get("/unauthorized", new UnauthorizedHandler(), freeMarker);
   }
 
   // Know who's attending? Upload a file with everything or add them manually.

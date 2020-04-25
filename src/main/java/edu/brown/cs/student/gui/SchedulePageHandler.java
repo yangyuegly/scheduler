@@ -38,7 +38,7 @@ public class SchedulePageHandler implements TemplateViewRoute {
     Convention myConv = new Convention(conventionID); // DatabaseUtility.getConvention(conventionID);
                                                       // // because we need all the fields
                                                       // !!!!!!!!!!!!!!
-    String name = "Fake name"; // myConv.getName();
+    String name = myConv.getName();
 
     Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "name", name);
     return new ModelAndView(variables, "calendar_page.ftl");

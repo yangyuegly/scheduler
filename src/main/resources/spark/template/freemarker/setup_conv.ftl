@@ -2,13 +2,13 @@
 
 <div class="main-content">
   <h2>New convention:</h2>
-  
-  
+
+
   <form id="myForm" onsubmit="return validate()" form method="POST" action="/create_convention/${id}">
     <label for="convName">Convention name: </label><br>
     <input name="convName" id="convName" size="30" required><br><br>
     <label for="startDate">Start date:</label>
-    <input type="date" id="startDate" name="startDate" min=${currDay} max="2100-01-01" required>
+    <input type="date" id="startDate" name="startDate" min="${currDay}" max="2100-01-01" required>
     <br><br>
     <label for="numDays">Number of days:</label>
     <input type="number" id="numDays" name="numDays" min="0" step="1" required>

@@ -1,11 +1,15 @@
 package edu.brown.cs.student.gui;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Map;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 
 import edu.brown.cs.student.scheduler.Convention;
+import edu.brown.cs.student.scheduler.DatabaseUtility;
+import edu.brown.cs.student.scheduler.ScheduleCommand;
 import spark.Request;
 import spark.Response;
 import spark.Route;
@@ -18,13 +22,9 @@ public class CalendarHandler implements Route {
 
   @Override
   public String handle(Request req, Response res) {
-
-    // get events in this convention from the database, display their names and
-    // give the user options to schedule, etc
-
     String conventionID = req.params(":id");
 
-//    String userEmail = req.cookie("user"); // what do we do with this?????????????????????????????????
+//    String userEmail = req.cookie("user"); // what do we do with this - this handler gives information, it doesn't display a page?????????????????????????????????
 //
 //    if (userEmail == null) {
 //      // user is not logged in
@@ -33,34 +33,28 @@ public class CalendarHandler implements Route {
 //      return new ModelAndView(variables, "home.ftl");
 //    }
 
-//    boolean authorized = DatabaseUtility.checkPermission(userEmail, conventionID);
+    DatabaseUtility db = new DatabaseUtility();
+//    boolean authorized = db.checkPermission(userEmail, conventionID); // what do we do with this?????
+//
 //    if (!authorized) {
-//      Map<String, Object> variables = ImmutableMap.of("title",
-//          "Scheduler");
+//      Map<String, Object> variables = ImmutableMap.of("title", "Scheduler");
 //      return new ModelAndView(variables, "unauthorized.ftl");
 //    }
 
-    Convention myConv = new Convention(conventionID); // DatabaseUtility.getConvention(conventionID);
+    Convention myConv = new Convention(conventionID); // db.getConvention(conventionID);
                                                       // // because we need all the fields
                                                       // !!!!!!!!!!!!!!
-    String name = myConv.getName();
-//    int numTimeSlotsPerDay = myConv.getNumTimeSlotsPerDay(); // uncomment
+    int numTimeSlotsPerDay = myConv.getNumTimeSlotsPerDay(); // uncomment
 
-    // uncomment
-//    ScheduleCommand schedComm = new ScheduleCommand(myConv, 100, myConv.getNumDays(), numTimeSlotsPerDay); // change
-    // concurrency
-    // limit
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-//    String scheduleString = schedComm.execute(); // uncomment
-
-    // delete, but use this format in schedComm execute
-    String scheduleString = "[{\"title\": \"Long Event\", \"start\": \"2020-04-12T10:30:00\", \"end\": \"2020-04-12T12:30:00\"}, "
-        + "{\"title\": \"Long Event\", \"start\": \"2020-04-12T10:30:00\", \"end\": \"2020-04-12T12:30:00\"}]";
-
-    String defaultDate = "2020-04-12"; // this should be the start date
+    ScheduleCommand schedComm = new ScheduleCommand(myConv, 100, myConv.getNumDays(),
+        numTimeSlotsPerDay); // change concurrency
+                             // limit!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    String scheduleString = schedComm.execute();
+    LocalDateTime convStartWithTime = myConv.getStartDateTime();
+    LocalDate convStartDay = convStartWithTime.toLocalDate();
 
     Map<String, Object> variables = ImmutableMap.of("eventsForSchedule", scheduleString,
-        "defaultDate", defaultDate);
+        "defaultDate", convStartDay.toString());
     Gson gson = new Gson();
 
     return gson.toJson(variables);

@@ -59,13 +59,6 @@ public final class Main {
 
   // Accessing the database
   static MongoDatabase database;
-  // field for each command
-
-  // Is this where these go? concurrency??
-//  LoadCommand loadCommand;
-//  LoginCommand loginCommand;
-//  ScheduleCommand schedCommand;
-//
 
   /**
    * The initial method called when execution begins.
@@ -104,13 +97,7 @@ public final class Main {
 
     if (options.has("gui")) {
       runSparkServer((int) options.valueOf("port"));
-
     }
-
-    // allowing us to upload a file
-    // ???????????????????????????????????????????????????????????????????
-    File uploadDir = new File("uploaded-file");
-    uploadDir.mkdir();
   }
 
   private static FreeMarkerEngine createEngine() {
@@ -155,9 +142,6 @@ public final class Main {
     Spark.get("/logout", new LogoutHandler(), freeMarker);
     Spark.get("/unauthorized", new UnauthorizedHandler(), freeMarker);
   }
-
-  // Know who's attending? Upload a file with everything or add them manually.
-  // Don't know? Send out a form to find out.
 
   /**
    * Display an error page when an exception occurs in the server.

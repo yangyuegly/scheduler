@@ -42,7 +42,7 @@ public class ConventionHomeHandler implements TemplateViewRoute {
       response.redirect("/unauthorized");
     }
 
-    // get convention object w/all events from database based on id
+    // get convention object with all the events from database based on id
     Convention currConv = new Convention(conventionID);
     String convName = currConv.getName();
     List<Event> events = currConv.getEvents();
@@ -50,12 +50,11 @@ public class ConventionHomeHandler implements TemplateViewRoute {
 
     for (Event event : events) {
       existingEvents += "<p>" + event.getName() + "</p>";
-
     }
 
     Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "id", conventionID,
         "convName", convName, "existingEvents", existingEvents);
 
-    return new ModelAndView(variables, "convention_home.ftl"); // fix
+    return new ModelAndView(variables, "convention_home.ftl");
   }
 }

@@ -1,33 +1,12 @@
 body {
     background-color: white;
-    font-family: sans-serif;
+    font-family: Cabin;
     font-size: 18px;
     padding: 0;
     margin: 0;
     background-image: url("interlaced.png");
 }
 
-.sched-header {
-  box-sizing: border-box;
-  background-color: black;
-  width: 100%;
-  top: 0;
-  z-index: 999;
-  position: static;
-  padding: 0;
-  margin: 0px;
-  overflow: hidden;
-}
-
-/* .log-in-info {
-  color: #ffffff;
-  font-size: 20px;
-  margin: 0;
-  position: absolute;
-  top:22px;
-  right: 10px;
-  letter-spacing: 2px;
-} */
 
 .errorMessage {
   color: red;
@@ -56,10 +35,7 @@ button, input[type=submit] {
   cursor: pointer;
 }
 
-/* Darker background on mouse-over */
-button:hover, input[type=submit]:hover {
-  background-color: #089CCD;
-}
+
 
 /* Make it so links don't change color when visited */
 a {
@@ -72,52 +48,52 @@ a {
 }
 
 
-ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-  background-color: black;
-  font-size: 25px;
-  letter-spacing: 2px;
-  width: 100%;
+
+.navbar {
+  overflow: hidden;
+  background-color: #333;
 }
 
-/* Makes the navigation header horizontal */
-li {
+.navbar a {
   float: left;
-}
-
-/* Make the links in the navigation header look like boxes */
-li a, .user-dropdown-button {
-  text-decoration: none;
+  font-size: 16px;
   color: white;
-  padding: 20px 30px;
-  display: inline-block;
   text-align: center;
-  background-color: black;
+  padding: 14px 16px;
+  text-decoration: none;
 }
 
-li a:hover, .user-dropdown:hover, .user-dropdown-button:hover {
-  background-color: #232B2B;
-}
-
-/* Makes the user drop-down menu appear relative to the user icon */
-li.user-dropdown {
-  position: relative;
-  display: inline-block;
+.dropdown {
   float: left;
+  overflow: hidden;
 }
 
-.user-dropdown-content {
+.dropdown .dropbtn {
+  font-size: 16px;  
+  border: none;
+  outline: none;
+  color: white;
+  padding: 14px 16px;
+  background-color: inherit;
+  font-family: inherit;
+  margin: 0;
+}
+
+.navbar a:hover, .dropdown:hover .dropbtn {
+  background-color: #12ABDC;
+}
+
+.dropdown-content {
   display: none;
   position: absolute;
-  background-color: white;
+  background-color: #f9f9f9;
+  min-width: 160px;
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
   z-index: 1;
 }
 
-.user-dropdown-content a {
-  background-color: white;
+.dropdown-content a {
+  float: none;
   color: black;
   padding: 12px 16px;
   text-decoration: none;
@@ -125,20 +101,13 @@ li.user-dropdown {
   text-align: left;
 }
 
-.user-dropdown-content a:hover {
+.dropdown-content a:hover {
   background-color: #ddd;
 }
 
-.user-dropdown:hover .user-dropdown-content {
+.dropdown:hover .dropdown-content {
   display: block;
 }
 
-/* delete */
-.show {
-  display: block;
-}
 
-/* delete */
-.big {
-  font-size: 70px;
-}
+

@@ -10,6 +10,7 @@ import java.util.Map;
 import com.google.common.collect.ImmutableMap;
 
 import edu.brown.cs.student.scheduler.Convention;
+import edu.brown.cs.student.scheduler.DatabaseUtility;
 import edu.brown.cs.student.webscraper.WebScraper;
 import spark.ModelAndView;
 import spark.QueryParamsMap;
@@ -18,8 +19,8 @@ import spark.Response;
 import spark.TemplateViewRoute;
 
 /**
- * This class is used to schedule final exams and take the user to the page that
- * displays the schedule.
+ * This class is used to schedule final exams and take the user to the page that displays the
+ * schedule.
  */
 public class SchedExamSubmitHandler implements TemplateViewRoute {
 
@@ -50,7 +51,12 @@ public class SchedExamSubmitHandler implements TemplateViewRoute {
     try {
       numDays = Integer.parseInt(numDaysString);
       eventDur = Integer.parseInt(eventDuration);
-      newConv = new Convention(id, startDate, numDays, eventDur, startTime, endTime);
+      newConv = new Convention(id, schoolName + "Final Exams", startDate, numDays, eventDur,
+          startTime, endTime);
+
+      // add this convention to the database
+      DatabaseUtility db = new DatabaseUtility();
+      db.addConventionData(newConv);
 
     } catch (NumberFormatException err) {
       Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "id", id.toString(),
@@ -58,7 +64,8 @@ public class SchedExamSubmitHandler implements TemplateViewRoute {
       return new ModelAndView(variables, "setup_conv.ftl");
     }
 
-    WebScraper scraper = new WebScraper(id);// takes in convention id!!!
+    // Use the WebScraper to add the events and conflicts to the convention
+    WebScraper scraper = new WebScraper(id);
     Map<String, String> schoolNameToIDMap = scraper.getcoursesToIDs();
     String schoolID = schoolNameToIDMap.get(schoolName);
 

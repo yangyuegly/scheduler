@@ -1,14 +1,14 @@
 package edu.brown.cs.student.scheduler;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 
 import edu.brown.cs.student.graph.UndirectedWeightedGraph;
+
 /**
- * This class is used to schedule the user's convention. It implements the
- * ICommand interface.
+ * This class is used to schedule the user's convention. It implements the ICommand interface.
  */
 public class ScheduleCommand {
   List<Event> nodes;
@@ -20,14 +20,15 @@ public class ScheduleCommand {
 
   /**
    * Constructor for scheduling events
+   *
    * @param convention - convention to schedule
    * @param CONCURENCY_LIMIT - Limit for concurrency threads
    * @param MAX_SCHEDULE_DAYS - Convention duration in days
    * @param TS
    */
-  public ScheduleCommand(Convention convention, Integer CONCURENCY_LIMIT,
-      Integer MAX_SCHEDULE_DAYS, Integer TS) {
-   // this.graph = graph;
+  public ScheduleCommand(Convention convention, Integer CONCURENCY_LIMIT, Integer MAX_SCHEDULE_DAYS,
+      Integer TS) {
+    // this.graph = graph;
     this.TS = TS;
     this.nodes = new ArrayList<>();
     this.edges = new HashSet<>();
@@ -37,17 +38,62 @@ public class ScheduleCommand {
   }
 
   /**
-   * Getter for graph
-   * @return - graph
+   * This method turns the given time slot into a LocalDateTime object representing the start date
+   * and time of the slot.
+   *
+   * @param timeSlot - a List of Integers, where the first Integer represents the day of the
+   *        convention that this time slot is located in, and the second Integer represents the
+   *        place of this time slot in that day (ie. 1, if it is the first time slot that day, 2 if
+   *        it is the second, etc)
+   *
+   * @return a LocalDateTime, which represents the start date and time of the given slot.
    */
-  public UndirectedWeightedGraph<Event, Conflict> getGraph() {
-    return this.graph;
+  private LocalDateTime getTimeSlotStart(List<Integer> timeSlot) {
+    LocalDateTime convStart = convention.getStartDateTime();
+    int dayOfSlot = timeSlot.get(0);
+    LocalDateTime slotDayAtStartTime = convStart.plusDays(dayOfSlot);
+    int numMinutesBeforeSlot = timeSlot.get(1) * convention.getEventDuration();
+
+    return slotDayAtStartTime.plusMinutes(numMinutesBeforeSlot);
+  }
+
+  /**
+   * This method turns the scheduled graph into a String that contains events with times and dates
+   * in the format needed for the FullCalendar API.
+   *
+   * @return a String, which represents the format describing events and their times for the
+   *         calendar
+   */
+  private String makeScheduleString() {
+    String scheduleString = "[";
+    boolean firstEvent = true;
+
+    for (Event currEvent : nodes) {
+      String eventName = currEvent.getName();
+      List<Integer> eventTimeSlot = currEvent.getColor();
+      LocalDateTime eventStart = getTimeSlotStart(eventTimeSlot); // cache
+                                                                  // this???????????????????????
+      LocalDateTime eventEnd = eventStart.plusMinutes(convention.getEventDuration());
+
+      String eventString = "{\"title\": \"" + eventName + "\", \"start\": \"" + eventStart
+          + "\", \"end\": \"" + eventEnd + "\"}";
+
+      if (!firstEvent) {
+        scheduleString = scheduleString + ", ";
+      } else {
+        firstEvent = false;
+      }
+
+      scheduleString = scheduleString + eventString;
+    }
+
+    return scheduleString;
   }
 
   /**
    * Schedules the events
    */
-  public void execute() {
+  public String execute() {
     extractNodes();
     extractEdges();
     this.graph = new UndirectedWeightedGraph<Event, Conflict>(this.nodes, this.CONCURENCY_LIMIT,
@@ -55,122 +101,35 @@ public class ScheduleCommand {
     graph.addAllEdges(this.edges);
     graph.graphColoring(this.TS, this.CONCURENCY_LIMIT);
 
-    Map<Integer, Event> nodes = graph.getNodes();
-    for (Event event : nodes.values()) {
-      List<Integer> color = event.getColor();
-      System.out.println("color is" + color.get(0) + " " + color.get(1));
-    }
+    return makeScheduleString();
   }
 
   /**
-   * Setter for graph
-   * @param graph - the graph to be set to
+   * Getter for graph
+   *
+   * @return - graph
    */
-  public void setGraph(UndirectedWeightedGraph<Event,Conflict> graph) {
-    this.graph = graph;
+  public UndirectedWeightedGraph<Event, Conflict> getGraph() {
+    return this.graph;
   }
 
   /**
-   * Get events stored in the database associated with a unique convention ID
-   * @return
+   * This method sets the nodes field to the List of Events in the Convention.
    */
   private void extractNodes() {
     this.nodes = convention.getEvents();
-//    MongoCollection<Document> eventCollection = Main.getDatabase().getCollection("events");
-//    BasicDBObject query = new BasicDBObject();
-//    query.put("conventionID", convention.getID());
-//    Document doc = eventCollection.find(query).first();
-//
-//    //iterate through the events found
-//    BasicDBList eventList = (BasicDBList)doc.get("events");
-//    for (int i = 0; i < eventList.size(); i++) {
-//      BasicDBObject eventObj = (BasicDBObject) eventList.get(i);
-//      Event e = new Event(eventObj.getInt("id"), eventObj.getString("name"));
-//      nodes.add(e);
-//    }
   }
 
   /**
-   * Setter for nodes
-   * @param nodes - the list of events to be set to
-   */
-  public void setNodes(List<Event> nodes) {
-    this.nodes = nodes;
-  }
-
-  /**
-   * extract
+   * This method sets the edges field to the List of Conflicts in the Convention.
    */
   private void extractEdges() {
     this.edges = this.convention.getConflicts();
-//    MongoCollection<Document> conflicCollection= Main.getDatabase().getCollection("conflicts");
-//    BasicDBObject query = new BasicDBObject();
-//    query.put("conventionID", convention.getID());
-//
-//    //iterate through the events found
-//    List<Document> conflictList = (List<Document>)
-//    conflicCollection.find().projection(fields(include("conflicts"),
-//        excludeId()))
-//        .map(document -> document.get("conflicts")).first();
-//
-//    //unsure if this works
-//    for (int i = 0; i < conflictList.size(); i++) {
-//      Document conflictDoc = conflictList.get(i);
-//      Document event1Doc = (Document) conflictDoc.get("event1");
-//      Document event2Doc = (Document) conflictDoc.get("event2");
-//      Integer weight = conflictDoc.getInteger("weight");
-//      Event e1 = new Event(event1Doc.getInteger("id"), event1Doc.getString("name"));
-//      Event e2 = new Event(event2Doc.getInteger("id"), event2Doc.getString("name"));
-//      Conflict c = new Conflict(e1, e2, weight);
-//      edges.add(c);
-//    }
-   }
-
-  /**
-   * Setter for edges
-   * @param edges - edges to be set to
-   */
-  public void setEdges(HashSet<Conflict> edges) {
-    this.edges = edges;
   }
-
-  /**
-   * Set graph
-   * @param graph - the graph to set it to
-   * @return - this class
-   */
-  public ScheduleCommand graph(UndirectedWeightedGraph<Event,Conflict> graph) {
-    this.graph = graph;
-    return this;
-  }
-
-  /**
-   * Set nodes
-   * @param nodes - the nodes to set it to
-   * @return - this class
-   */
-  public ScheduleCommand nodes(List<Event> nodes) {
-    this.nodes = nodes;
-    return this;
-  }
-
-  /**
-   * Set edges
-   * @param edges - edges to set it to
-   * @return - this class
-   */
-  public ScheduleCommand edges(HashSet<Conflict> edges) {
-    this.edges = edges;
-    return this;
-  }
-
 
   @Override
   public String toString() {
-    return "{" +
-      " graph='" + getGraph() + "'" +
-      "}";
+    return "{" + " graph='" + getGraph() + "'" + "}";
   }
-
 
 }

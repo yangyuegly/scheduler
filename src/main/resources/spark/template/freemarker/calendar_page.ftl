@@ -24,14 +24,14 @@
 <link href='https://unpkg.com/@fullcalendar/core@4.4.0/main.min.css' rel='stylesheet' />
 
 
-  
+
 
   <link href='https://unpkg.com/@fullcalendar/daygrid@4.4.0/main.min.css' rel='stylesheet' />
 
   <link href='https://unpkg.com/@fullcalendar/timegrid@4.4.0/main.min.css' rel='stylesheet' />
 
 
-<script src='/assets/demo-to-codepen.js'></script>
+<script src='/js/demo-to-codepen.js'></script>
 
 <script src='https://unpkg.com/@fullcalendar/core@4.4.0/main.min.js'></script>
 
@@ -45,90 +45,18 @@
   <script src='https://unpkg.com/@fullcalendar/timegrid@4.4.0/main.min.js'></script>
 
 
-
-  
-<script>
-
-  document.addEventListener('DOMContentLoaded', function() {
-    var calendarEl = document.getElementById('calendar');
-
-    var calendar = new FullCalendar.Calendar(calendarEl, {
-      plugins: [ 'interaction', 'dayGrid', 'timeGrid' ],
-      defaultView: 'dayGridMonth',
-      defaultDate: '2019-12-07',
-      header: {
-        left: 'prev,next today',
-        center: 'title',
-        right: 'dayGridMonth,timeGridWeek,timeGridDay'
-      },
-      events: [
-        {
-          title: 'Click Clack Moo Event',
-          start: '2020-04-01'
-        },
-        {
-          title: 'Long Event',
-          start: '2020-04-07',
-          end: '2020-04-10'
-        },
-        {
-          groupId: '999',
-          title: 'Repeating Event',
-          start: '2020-04-09T16:00:00'
-        },
-        {
-          groupId: '999',
-          title: 'Repeating Event',
-          start: '2020-04-16T16:00:00'
-        },
-        {
-          title: 'Conference',
-          start: '2020-04-11',
-          end: '2020-04-13'
-        },
-        {
-          title: 'Click Clack Moo Meeting',
-          start: '2020-04-12T10:30:00',
-          end: '2020-04-12T12:30:00'
-        },
-        {
-          title: 'Lunch',
-          start: '2020-04-12T12:00:00'
-        },
-        {
-          title: 'Meeting',
-          start: '2020-04-12T14:30:00'
-        },
-        {
-          title: 'Birthday Party',
-          start: '2020-04-13T07:00:00'
-        },
-        {
-          title: 'Click for Google',
-          url: 'http://google.com/',
-          start: '2020-04-28'
-        }
-      ]
-    });
-
-    calendar.render();
-  });
-
-</script>
+<script src="/js/calendar.js"></script>
 
 </head>
 <body>
   <div class='demo-topbar'>
 
-  
+
 
 </div>
-
   <div id='calendar'></div>
 </body>
 
 </html>
 </#assign>
 <#include "main.ftl">
-
-

@@ -39,6 +39,7 @@ public class WebScraper {
 
   /**
    * Constructor for webscraper
+   *
    * @param conventionID - convention id
    */
   public WebScraper(String conventionID) {
@@ -51,6 +52,7 @@ public class WebScraper {
 
   /**
    * Set college name
+   *
    * @param collegeName - name of college to be set to
    */
   public void setCollege(String collegeName) {
@@ -59,10 +61,20 @@ public class WebScraper {
 
   /**
    * Get all the courses from coursicle website
-   * @return
+   *
+   * @return coursesToIDs
    */
   public Map<String, String> getcoursesToIDs() {
     return this.coursesToIDs;
+  }
+
+  /**
+   * Get all the conflicts from a particular project
+   *
+   * @return
+   */
+  public Map<String, String> getconflicts() {
+    return this.conflict;
   }
 
   /**
@@ -88,12 +100,10 @@ public class WebScraper {
 
       for (Element c : colleges) {
         String id = c.getElementsByTag("a").attr("href");
-        System.out.println("ID: " + id.replace("/", ""));
         if (id.equals("")) {
           break;
         }
         String fullname = c.getElementsByTag("a").attr("fullname");
-        System.out.println("Full name: " + fullname);
         coursesToIDs.put(fullname, id);
       }
     } catch (IOException e) {
@@ -108,7 +118,7 @@ public class WebScraper {
   public void scrape() {
     try {
       // check if website exists
-      String website = "https://www.coursicle.com/" + collegeName + "/courses/";
+      String website = "https://www.coursicle.com" + collegeName + "courses/";
       URLConnection connection = (new URL(website)).openConnection();
       try {
         Thread.sleep(2000);
@@ -138,7 +148,7 @@ public class WebScraper {
           // String courseNum = course.getElementsByClass("tileElementText
           // tileElementTextWithSubtext").text();
           String courseTitle = course.getElementsByClass("tileElementHiddenText").text();
-          if (courseTitle != "" || courseTitle!= "\n") {
+          if (courseTitle != "" || courseTitle != "\n") {
             allCoursesinDept.add(courseTitle);
           }
           System.out.println(courseTitle);
@@ -161,10 +171,7 @@ public class WebScraper {
     int eventID = 0;
     org.bson.Document nestDoc = new org.bson.Document("conventionID", conventionID)
         .append("conflicts", Arrays.asList());
-    if(Main.getDatabase() == null) {
-      return;
-    }
-    MongoCollection<org.bson.Document> collection = Main.getDatabase().getCollection("conflicts");;
+    MongoCollection<org.bson.Document> collection = Main.getDatabase().getCollection("conflicts");
     collection.insertOne(nestDoc);
     Gson gson = new Gson();
     List<BasicDBObject> conflictArray = new ArrayList<>();
@@ -238,7 +245,8 @@ public class WebScraper {
         conflictArray);
     Main.getDatabase().getCollection("conflicts").insertOne(doc);
 
-    org.bson.Document currEvent = new org.bson.Document("convention_id", conventionID).append("events", eventArray);
+    org.bson.Document currEvent = new org.bson.Document("convention_id", conventionID)
+        .append("events", eventArray);
     Main.getDatabase().getCollection("events").insertOne(currEvent);
   }
 

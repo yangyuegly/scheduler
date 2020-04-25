@@ -10,10 +10,11 @@ import spark.QueryParamsMap;
 import spark.Request;
 import spark.Response;
 import spark.Route;
+
 //not integrated
 /**
- * This class is used to save a convention and take the user to their account home page.  It
- *   implements Route.
+ * This class is used to save a convention and take the user to their account home page. It
+ * implements Route.
  */
 public class SaveConventionHandler implements Route {
 
@@ -22,7 +23,10 @@ public class SaveConventionHandler implements Route {
     // TO DO: we need to get the id in javascript
     String userEmail = req.cookie("user");
     String conventionID = req.params(":id");
-    boolean permission = DatabaseUtility.checkPermission(userEmail, conventionID);
+
+    DatabaseUtility db = new DatabaseUtility();
+    boolean permission = db.checkPermission(userEmail, conventionID);
+
     if (!permission) {
       System.out.println("permission denied");
       response.redirect("/account");
@@ -30,24 +34,25 @@ public class SaveConventionHandler implements Route {
 
     if (userEmail == null) {
       // user is not logged in
-      //Map<String, Object> variables = ImmutableMap.of("title",     ----------------- FIX!!!!!!!!!!!!!!!!!
-      //    "Scheduler", "message", "Please log in");
-     // return new ModelAndView(variables, "home.ftl");
+      // Map<String, Object> variables = ImmutableMap.of("title", -----------------
+      // FIX!!!!!!!!!!!!!!!!!
+      // "Scheduler", "message", "Please log in");
+      // return new ModelAndView(variables, "home.ftl");
     }
 
     QueryParamsMap queryMap = req.queryMap();
     String EventsToAddString = queryMap.value("existingEvents");
     System.out.println("events to add" + EventsToAddString);
 
-    // save the new events!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    // save the new
+    // events!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-
-  //adding a collaborator
+    // adding a collaborator
     String collaboratorEmail = queryMap.value("colEmail");
-   // DatabaseUtility.addConvID(collaboratorEmail, conventionID);
+    // DatabaseUtility.addConvID(collaboratorEmail, conventionID);
 
-    Map<String, Object> variables = ImmutableMap.of("title",
-        "Scheduler", "conventionLinks", "test@!!!!!!!!"); // ????????????????????????????????
+    Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "conventionLinks",
+        "test@!!!!!!!!"); // ????????????????????????????????
 
     Gson gson = new Gson();
     return gson.toJson(variables);

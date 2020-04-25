@@ -20,45 +20,41 @@ import spark.TemplateViewRoute;
 public class ConventionHomeHandler implements TemplateViewRoute {
 
   @Override
-  public ModelAndView handle(Request req, Response res) {
+  public ModelAndView handle(Request request, Response response) {
 
     // get events in this convention from the database, display their names and
     // give the user options to schedule, etc
 
-    String conventionID = req.params(":id");
-    String userEmail = req.cookie("user");
+    String conventionID = request.params(":id");
+    String userEmail = request.cookie("user");
 
     if (userEmail == null) {
       // user is not logged in
-      Map<String, Object> variables = ImmutableMap.of("title",
-          "Scheduler", "message", "Please log in");
+      Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "message",
+          "Please log in");
       return new ModelAndView(variables, "home.ftl");
     }
 
+    DatabaseUtility db = new DatabaseUtility();
+    boolean authorized = db.checkPermission(userEmail, conventionID);
 
-     boolean authorized = DatabaseUtility.checkPermission(userEmail, conventionID);
     if (!authorized) {
-      Map<String, Object> variables = ImmutableMap.of("title",
-          "Scheduler");
-      return new ModelAndView(variables, "unauthorized.ftl");
+      response.redirect("/unauthorized");
     }
 
-
-    // get convention object w/all events from database based on id
+    // get convention object with all the events from database based on id
     Convention currConv = new Convention(conventionID);
     String convName = currConv.getName();
     List<Event> events = currConv.getEvents();
     String existingEvents = "";
 
     for (Event event : events) {
-      existingEvents+="<p>" + event.getName() + "</p>";
-
+      existingEvents += "<p>" + event.getName() + "</p>";
     }
 
-    Map<String, Object> variables = ImmutableMap.of("title",
-        "Scheduler", "id", conventionID, "convName", convName,
-        "existingEvents", existingEvents);
+    Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "id", conventionID,
+        "convName", convName, "existingEvents", existingEvents);
 
-    return new ModelAndView(variables, "convention_home.ftl"); // fix
+    return new ModelAndView(variables, "convention_home.ftl");
   }
 }

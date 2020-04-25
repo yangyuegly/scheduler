@@ -7,6 +7,8 @@ import static com.mongodb.client.model.Projections.fields;
 import static com.mongodb.client.model.Projections.include;
 import static com.mongodb.client.model.Updates.push;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -269,19 +271,28 @@ public class DatabaseUtility {
    *
    * @param conventionID
    *
-   * @return string[0] = id, string[1] = name
+   * @return a Convention
    */
-  public String[] getConventionData(String conventionID) {
-    String[] result = new String[2];
+  public Convention getConvention(String conventionID) {
     BasicDBObject query = new BasicDBObject();
     query.put("id", conventionID);
     Document doc = conventionCollection.find(query).first();
     if (doc == null) {
       return null;
     }
-    result[0] = doc.getString("id");
-    result[1] = doc.getString("name");
-    return result;
+
+    String id = doc.getString("id");
+    String name = doc.getString("name");
+    LocalDateTime startDateTime = doc.get("startDateTime", LocalDateTime.class);
+    int numDays = doc.getInteger("numDays");
+    int eventDuration = doc.getInteger("eventDuration");
+    LocalTime endTime = doc.get("endTime", LocalTime.class);
+
+    // delete
+    System.out.println("startDateTime: " + startDateTime);
+    System.out.println("endTime: " + endTime);
+
+    return new Convention(id, name, startDateTime, numDays, eventDuration, endTime);
   }
 
   /**

@@ -58,14 +58,14 @@ public class DatabaseUtilityTest {
   }
 
 //  @Test
-  public void getConventionDataTest() {
-    String[] res1 = du.getConventionData("986329");
-    assertEquals("986329", res1[0]);
-    assertEquals("Hack at Brown 2050", res1[1]);
-
-    String[] res2 = du.getConventionData("nonExisting");
-    assertTrue(res2 == null);
-  }
+//  public void getConventionDataTest() {
+//    String[] res1 = du.getConventionData("986329");
+//    assertEquals("986329", res1[0]);
+//    assertEquals("Hack at Brown 2050", res1[1]);
+//
+//    String[] res2 = du.getConventionData("nonExisting");
+//    assertTrue(res2 == null);
+//  }
 
   @Test
   public void getUserConventionsTest() {

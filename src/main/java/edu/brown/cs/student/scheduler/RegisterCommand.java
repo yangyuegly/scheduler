@@ -35,30 +35,31 @@ public class RegisterCommand {
 
   /**
    * Method that registers a user
+   * 
    * @param email - user email
    * @param password - user password
-   * @return - true if successful, UserAuthenticationException otherwise
+   * 
+   * @return - true if successful
+   * 
+   * @throws UserAuthenticationException otherwise
    */
-  public boolean execute(String email, String password) {
+  public boolean execute(String email, String password) throws UserAuthenticationException {
     BasicDBList list = new BasicDBList();
     byte[] salt = getSalt();
     String encryptedPassword = encrypt(password, salt);
 
-    String saltToString = Base64.getEncoder().encodeToString(salt);//convert salt to string
+    String saltToString = Base64.getEncoder().encodeToString(salt);// convert salt to string
 
     MongoCollection<org.bson.Document> userCollection;
-    //for unit testing purposes
-    if(Main.getDatabase() == null){
+    // for unit testing purposes
+    if (Main.getDatabase() == null) {
       ConnectionString connString = new ConnectionString(
-          "mongodb://sduraide:cs32scheduler@scheduler-shard-00-00-rw75k.mongodb.net:27017,scheduler-shard-00-01-rw75k.mongodb.net:27017,scheduler-shard-00-02-rw75k.mongodb.net:27017/test?ssl=true&replicaSet=scheduler-shard-0&authSource=admin&retryWrites=true&w=majority"
-      );
+          "mongodb://sduraide:cs32scheduler@scheduler-shard-00-00-rw75k.mongodb.net:27017,scheduler-shard-00-01-rw75k.mongodb.net:27017,scheduler-shard-00-02-rw75k.mongodb.net:27017/test?ssl=true&replicaSet=scheduler-shard-0&authSource=admin&retryWrites=true&w=majority");
 
-      MongoClientSettings settings = MongoClientSettings.builder()
-          .applyConnectionString(connString)
-          .retryWrites(true)
-          .build();
+      MongoClientSettings settings = MongoClientSettings.builder().applyConnectionString(connString)
+          .retryWrites(true).build();
       MongoClient mongo = MongoClients.create(settings);
-      //created db in cluster in MongoDBAtlas including collections: users, events, conflicts
+      // created db in cluster in MongoDBAtlas including collections: users, events, conflicts
       MongoDatabase database = mongo.getDatabase("test");
       userCollection = database.getCollection("users");
     } else {
@@ -72,49 +73,48 @@ public class RegisterCommand {
       throw new UserAuthenticationException("User already exists on system");
     }
     Document user = new Document("email", email).append("encryptedPassword", encryptedPassword)
-    .append("salt", saltToString)
-    .append("conventions",
-        list);
+        .append("salt", saltToString).append("conventions", list);
     userCollection.insertOne(user);
     return true;
   }
 
   /**
    * Encrypt password
+   * 
    * @param password - password user input
    * @param salt - salt String
+   * 
    * @return
    */
-  public static String encrypt(String password, byte[] salt){
-    try{
-            // Create key and cipher
-            Key aesKey = new SecretKeySpec(salt, "AES");
-            Cipher cipher = Cipher.getInstance("AES");
-            // encrypt the text
-            cipher.init(Cipher.ENCRYPT_MODE, aesKey);
-            byte[] encrypted = cipher.doFinal(password.getBytes());
-            System.err.println(new String(encrypted));
+  public static String encrypt(String password, byte[] salt) {
+    try {
+      // Create key and cipher
+      Key aesKey = new SecretKeySpec(salt, "AES");
+      Cipher cipher = Cipher.getInstance("AES");
+      // encrypt the text
+      cipher.init(Cipher.ENCRYPT_MODE, aesKey);
+      byte[] encrypted = cipher.doFinal(password.getBytes());
+      System.err.println(new String(encrypted));
 
-            StringBuilder sb = new StringBuilder();
-            for (byte b: encrypted) {
-                sb.append((char)b);
-            }
-            // the encrypted String
-            String encryptedPw = sb.toString();
+      StringBuilder sb = new StringBuilder();
+      for (byte b : encrypted) {
+        sb.append((char) b);
+      }
+      // the encrypted String
+      String encryptedPw = sb.toString();
 
-            return encryptedPw;
-        } catch(Exception e) {
-          e.printStackTrace();
-          throw new NullPointerException("Unable to encrypte password");
-        }
+      return encryptedPw;
+    } catch (Exception e) {
+      e.printStackTrace();
+      throw new NullPointerException("Unable to encrypte password");
+    }
   }
 
   public static byte[] getSalt() {
-    byte[] salt = new byte[16];//bytes to be filled
+    byte[] salt = new byte[16];// bytes to be filled
     SecureRandom sr = new SecureRandom(); // secureRandom number
     sr.nextBytes(salt);// fill bytes
     return salt;
   }
-
 
 }

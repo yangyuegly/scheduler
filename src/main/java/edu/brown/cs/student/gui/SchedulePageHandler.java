@@ -1,11 +1,16 @@
 package edu.brown.cs.student.gui;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import com.google.common.collect.ImmutableMap;
 
 import edu.brown.cs.student.scheduler.Convention;
+import edu.brown.cs.student.scheduler.DatabaseUtility;
+import edu.brown.cs.student.scheduler.Event;
 import spark.ModelAndView;
+import spark.QueryParamsMap;
 import spark.Request;
 import spark.Response;
 import spark.TemplateViewRoute;
@@ -13,26 +18,44 @@ import spark.TemplateViewRoute;
 public class SchedulePageHandler implements TemplateViewRoute {
 
   @Override
-  public ModelAndView handle(Request req, Response res) {
+  public ModelAndView handle(Request request, Response response) {
+    String userEmail = request.cookie("user");
+    String conventionID = request.params(":id");
 
-    // get events in this convention from the database, display their names and
-    // give the user options to schedule, etc
+    DatabaseUtility db = new DatabaseUtility();
+    boolean permission = db.checkPermission(userEmail, conventionID);
 
-    String conventionID = req.params(":id");
-    String userEmail = req.cookie("user");
+    if (!permission) {
+      System.out.println("permission denied");
+      response.redirect("/account");
+    }
 
     if (userEmail == null) {
       // user is not logged in
-      Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "message",
-          "Please log in");
-      return new ModelAndView(variables, "home.ftl");
+      // Map<String, Object> variables = ImmutableMap.of("title", -----------------
+      // FIX!!!!!!!!!!!!!!!!!
+      // "Scheduler", "message", "Please log in");
+      // return new ModelAndView(variables, "home.ftl");
     }
 
-//    boolean authorized = DatabaseUtility.checkPermission(userEmail, conventionID);
-//    if (!authorized) {
-//      Map<String, Object> variables = ImmutableMap.of("title",
-//          "Scheduler");
-//      return new ModelAndView(variables, "unauthorized.ftl");
+    QueryParamsMap queryMap = request.queryMap();
+    String EventsToAddString = queryMap.value("existingEvents"); // deal with
+                                                                 // this!!!!!!!!!!!!!!!!!!!!!!!!
+    System.out.println("events to add" + EventsToAddString);
+
+    List<Event> events = new ArrayList<>(); // get this from request though
+
+    for (Event currEvent : events) {
+      if (!db.addEvent(conventionID, currEvent)) {
+        // the convention ID is not in the database
+        // ?? IDK what to
+        // do!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1!!!!
+      }
+    }
+
+    // adding a collaborator
+    String collaboratorEmail = queryMap.value("colEmail");
+    db.addConvID(collaboratorEmail, conventionID);
 //    }
 
     Convention myConv = new Convention(conventionID); // DatabaseUtility.getConvention(conventionID);

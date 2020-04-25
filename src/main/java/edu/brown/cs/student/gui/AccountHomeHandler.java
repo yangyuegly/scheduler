@@ -1,7 +1,6 @@
 package edu.brown.cs.student.gui;
 
 import java.util.List;
-// don't think we need it, all commented out
 import java.util.Map;
 
 import com.google.common.collect.ImmutableMap;
@@ -41,13 +40,18 @@ public class AccountHomeHandler implements TemplateViewRoute {
     }
 
     for (Convention conv : currConvs) {
-      String id = conv.getID();
-      String link = "<a href=/convention/" + id + ">" + conv.getName() + "</a><br>";
-      conventionLinks = conventionLinks + link;
+      if (conv.isLoaded()) {
+        // if the convention is not loaded in the database, the user never finished creating it,
+        // and it does not need to be displayed
+        String id = conv.getID();
+        String link = "<a href=/convention/" + id + ">" + conv.getName() + "</a><br>";
+        conventionLinks = conventionLinks + link;
+      }
     }
 
     Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "conventionLinks",
         conventionLinks, "error", "");
+
     return new ModelAndView(variables, "account.ftl");
   }
 }

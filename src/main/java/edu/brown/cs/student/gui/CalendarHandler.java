@@ -41,10 +41,8 @@ public class CalendarHandler implements Route {
 //      return new ModelAndView(variables, "unauthorized.ftl");
 //    }
 
-    Convention myConv = new Convention(conventionID); // db.getConvention(conventionID);
-                                                      // // because we need all the fields
-                                                      // !!!!!!!!!!!!!!
-    int numTimeSlotsPerDay = myConv.getNumTimeSlotsPerDay(); // uncomment
+    Convention myConv = db.getConvention(conventionID);
+    int numTimeSlotsPerDay = myConv.getNumTimeSlotsPerDay();
 
     ScheduleCommand schedComm = new ScheduleCommand(myConv, 100, myConv.getNumDays(),
         numTimeSlotsPerDay); // change concurrency

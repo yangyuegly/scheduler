@@ -29,7 +29,6 @@ public class CreateConvSubmitHandler implements TemplateViewRoute {
     String id = request.params(":id");
     String name = queryMap.value("convName");
     String startDate = queryMap.value("startDate");
-
     String startTime = queryMap.value("startTime");
     String endTime = queryMap.value("endTime");
     String submitType = queryMap.value("submitType");

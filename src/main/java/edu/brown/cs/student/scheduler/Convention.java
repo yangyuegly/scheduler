@@ -30,6 +30,9 @@ public class Convention {
    * endTime - a LocalTime, which represents the last time that events can end on a given day
    *
    * events - a List of Events, which represents the events in this conference
+   *
+   * loadedInDb - a boolean, true if the convention was loaded into the database prior to this
+   * convention being constructed, else false
    */
   private String name = null;
   private String id = null;
@@ -39,6 +42,7 @@ public class Convention {
   private LocalTime endTime;
   private List<Event> events = null;
   DatabaseUtility du = new DatabaseUtility();
+  boolean loadedInDb = false;
 
   /**
    * This is a constructor for this class.
@@ -48,6 +52,20 @@ public class Convention {
 
   public Convention(String convId) {
     id = convId;
+
+    // load in the rest of the fields from the database
+    Convention conv = du.getConvention(convId);
+
+    if (conv != null) {
+      loadedInDb = true;
+      this.name = conv.name;
+      this.startDateTime = conv.startDateTime;
+      this.numDays = conv.numDays;
+      this.eventDuration = conv.eventDuration;
+      this.endTime = conv.endTime;
+      this.events = conv.events;
+    }
+
   }
 
   /**
@@ -116,17 +134,22 @@ public class Convention {
   }
 
   /**
+   * This method determines if the convention has been loaded into the database.
+   *
+   * @return true if the convention was loaded into the database prior to this convention being
+   *         constructed, else false
+   */
+  public boolean isLoaded() {
+    return loadedInDb;
+  }
+
+  /**
    * This method is a getter for the name field.
    *
    * @return a String, which represents the name of this convention
    */
   public String getName() {
-    if (name == null) {
-      // Database.getConventionNameFromID(this.getID());
-      return "name is null"; // delete, see above
-    } else {
-      return name;
-    }
+    return name;
   }
 
   /**
@@ -154,11 +177,11 @@ public class Convention {
    */
   public List<Event> getEvents() {
     if (events == null) {
-      return du.getEventsFromConventionID(this.id);
-      // what will this return if there are none?
-    } else {
-      return events;
+      return null;
     }
+
+    // so we aren't returning a private mutable field
+    return new ArrayList<>(events);
   }
 
   /**

@@ -21,10 +21,6 @@ public class ConventionHomeHandler implements TemplateViewRoute {
 
   @Override
   public ModelAndView handle(Request request, Response response) {
-
-    // get events in this convention from the database, display their names and
-    // give the user options to schedule, etc
-
     String conventionID = request.params(":id");
     String userEmail = request.cookie("user");
 
@@ -44,6 +40,10 @@ public class ConventionHomeHandler implements TemplateViewRoute {
 
     // get convention object with all the events from database based on id
     Convention currConv = new Convention(conventionID);
+
+    // check if
+    // loaded!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
+
     String convName = currConv.getName();
     List<Event> events = currConv.getEvents();
     String existingEvents = "";

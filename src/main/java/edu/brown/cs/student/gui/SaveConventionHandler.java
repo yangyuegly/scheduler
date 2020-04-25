@@ -1,11 +1,14 @@
 package edu.brown.cs.student.gui;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 
 import edu.brown.cs.student.scheduler.DatabaseUtility;
+import edu.brown.cs.student.scheduler.Event;
 import spark.QueryParamsMap;
 import spark.Request;
 import spark.Response;
@@ -20,7 +23,6 @@ public class SaveConventionHandler implements Route {
 
   @Override
   public String handle(Request req, Response response) throws Exception {
-    // TO DO: we need to get the id in javascript
     String userEmail = req.cookie("user");
     String conventionID = req.params(":id");
 
@@ -41,15 +43,23 @@ public class SaveConventionHandler implements Route {
     }
 
     QueryParamsMap queryMap = req.queryMap();
-    String EventsToAddString = queryMap.value("existingEvents");
+    String EventsToAddString = queryMap.value("existingEvents"); // deal with
+                                                                 // this!!!!!!!!!!!!!!!!!!!!!!!!
     System.out.println("events to add" + EventsToAddString);
 
-    // save the new
-    // events!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    List<Event> events = new ArrayList<>(); // get this from request though
+
+    for (Event currEvent : events) {
+      if (!db.addEvent(conventionID, currEvent)) {
+        // the convention ID is not in the database
+        // ?? IDK what to
+        // do!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1!!!!
+      }
+    }
 
     // adding a collaborator
     String collaboratorEmail = queryMap.value("colEmail");
-    // DatabaseUtility.addConvID(collaboratorEmail, conventionID);
+    db.addConvID(collaboratorEmail, conventionID);
 
     Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "conventionLinks",
         "test@!!!!!!!!"); // ????????????????????????????????

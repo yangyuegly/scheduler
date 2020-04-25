@@ -16,13 +16,14 @@ import spark.Route;
  *   implements Route.
  */
 public class SaveConventionHandler implements Route {
+  DatabaseUtility db = new DatabaseUtility();
 
   @Override
   public String handle(Request req, Response response) throws Exception {
     // TO DO: we need to get the id in javascript
     String userEmail = req.cookie("user");
     String conventionID = req.params(":id");
-    boolean permission = DatabaseUtility.checkPermission(userEmail, conventionID);
+    boolean permission = db.checkPermission(userEmail, conventionID);
     if (!permission) {
       System.out.println("permission denied");
       response.redirect("/account");

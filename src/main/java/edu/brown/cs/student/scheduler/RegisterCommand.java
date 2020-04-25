@@ -61,7 +61,7 @@ public class RegisterCommand {
       //created db in cluster in MongoDBAtlas including collections: users, events, conflicts
       MongoDatabase database = mongo.getDatabase("test");
       userCollection = database.getCollection("users");
-    }else {
+    } else {
       userCollection = Main.getDatabase().getCollection("users");
     }
     BasicDBObject query = new BasicDBObject("email", new BasicDBObject("$eq", email));

@@ -4,7 +4,7 @@
   <p>
   <h3>Final Exams</h3>
   <br>
-  <form method="POST" action="/exam_schedule/${id}">
+  <form method="POST" onsubmit="return validate()" action="/exam_schedule/${id}">
     <label for="schoolName">What is the name of your school?</label>
     <select id="schoolName" name="schoolName">
       ${schoolSuggestions}
@@ -35,8 +35,11 @@
     <br><br>
     <input type="submit" value="Schedule">
   </form>
+  <br>
+  <p class="errorMessage">${errorMessage}</p>
 </div>
 
+<script src="/js/setup_conv.js"></script>
 
 </#assign>
 <#include "main.ftl">

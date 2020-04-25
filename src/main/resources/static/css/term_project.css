@@ -8,13 +8,14 @@ body {
 }
 
 .sched-header {
-  /* box-sizing: border-box; */
+  box-sizing: border-box;
   background-color: black;
   width: 100%;
   top: 0;
   z-index: 999;
   position: static;
   padding: 0;
+  margin: 0px;
   overflow: hidden;
 }
 
@@ -34,6 +35,7 @@ body {
 
 .main-content {
   padding: 10px 18px 10px 18px;
+  z-index: 30;
 }
 
 textarea, input {
@@ -69,6 +71,7 @@ a {
   display: none;
 }
 
+
 ul {
   list-style-type: none;
   margin: 0;
@@ -76,6 +79,7 @@ ul {
   background-color: black;
   font-size: 25px;
   letter-spacing: 2px;
+  width: 100%;
 }
 
 /* Makes the navigation header horizontal */
@@ -92,16 +96,6 @@ li a, .user-dropdown-button {
   text-align: center;
   background-color: black;
 }
-
-/*
-.user-dropdown-button {
-  text-decoration: none;
-  color: white;
-  padding: 20px 30px;
-  display: block;
-  text-align: center;
-  background-color: black;
-} */
 
 li a:hover, .user-dropdown:hover, .user-dropdown-button:hover {
   background-color: #232B2B;
@@ -123,6 +117,7 @@ li.user-dropdown {
 }
 
 .user-dropdown-content a {
+  background-color: white;
   color: black;
   padding: 12px 16px;
   text-decoration: none;
@@ -141,4 +136,9 @@ li.user-dropdown {
 /* delete */
 .show {
   display: block;
+}
+
+/* delete */
+.big {
+  font-size: 70px;
 }

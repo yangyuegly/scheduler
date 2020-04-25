@@ -1,9 +1,15 @@
 package edu.brown.cs.student.gui;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.List;
 //do we intend to save this in the database??
 import java.util.Map;
 
 import com.google.common.collect.ImmutableMap;
 
+import edu.brown.cs.student.scheduler.Convention;
 import edu.brown.cs.student.webscraper.WebScraper;
 import spark.ModelAndView;
 import spark.QueryParamsMap;
@@ -13,7 +19,7 @@ import spark.TemplateViewRoute;
 
 /**
  * This class is used to schedule final exams and take the user to the page that
- *   displays the schedule.
+ * displays the schedule.
  */
 public class SchedExamSubmitHandler implements TemplateViewRoute {
 
@@ -24,8 +30,8 @@ public class SchedExamSubmitHandler implements TemplateViewRoute {
 
     if (userEmail == null) {
       // user is not logged in
-      Map<String, Object> variables = ImmutableMap.of("title", "Scheduler",
-          "message", "Please log in");
+      Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "message",
+          "Please log in");
       return new ModelAndView(variables, "home.ftl");
     }
 
@@ -37,19 +43,62 @@ public class SchedExamSubmitHandler implements TemplateViewRoute {
     String startTime = queryMap.value("startTime");
     String endTime = queryMap.value("endTime");
     String submitType = queryMap.value("submitType");
+    int numDays;
+    int eventDur;
+    Convention newConv;
 
-    int numDays = Integer.parseInt(numDaysString);
-//    int idInt = Integer.parseInt(id);
+    try {
+      numDays = Integer.parseInt(numDaysString);
+      eventDur = Integer.parseInt(eventDuration);
+      newConv = new Convention(id, startDate, numDays, eventDur, startTime, endTime);
 
-     WebScraper scraper = new WebScraper(id);// takes in convention id!!!
-    // need to call setSchool() - do we do this with the ID or the name?  If it's the id, how do we get it?
+    } catch (NumberFormatException err) {
+      Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "id", id.toString(),
+          "errorMessage", "The number of days and the date/time fields must be integers.");
+      return new ModelAndView(variables, "setup_conv.ftl");
+    }
 
+    WebScraper scraper = new WebScraper(id);// takes in convention id!!!
+    Map<String, String> schoolNameToIDMap = scraper.getcoursesToIDs();
+    String schoolID = schoolNameToIDMap.get(schoolName);
 
+    if (schoolID == null) {
+      // the user selected a name that is not available to scrape
+      Calendar cal = Calendar.getInstance();
+      int month = cal.get(Calendar.MONTH) + 1;
+      int day = cal.get(Calendar.DAY_OF_MONTH);
+      int year = cal.get(Calendar.YEAR);
 
-    Map<String, Object> variables = ImmutableMap.of("title", "Scheduler",
-        "name", schoolName + " Final Exams"); // fix!!!!!!!!!!!!!!
+      String date = year + "-" + month + "-" + day;
 
-    return new ModelAndView(variables, "calendar_page.ftl");
+      List<String> schoolNamesList = new ArrayList<>();
+      String schoolSuggestions = "";
+
+      for (String currSchoolName : schoolNameToIDMap.keySet()) {
+        schoolNamesList.add(currSchoolName);
+
+      }
+
+      Collections.sort(schoolNamesList);
+
+      for (String currSchoolName : schoolNamesList) {
+        schoolSuggestions = schoolSuggestions + "<option value=\"" + currSchoolName + "\" />"
+            + schoolName + "</option>";
+      }
+
+      Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "schoolSuggestions",
+          schoolSuggestions, "currDay", date, "id", id.toString(), "errorMessage",
+          "Please select a school from the list.");
+
+      return new ModelAndView(variables, "create_exam_conv.ftl");
+    }
+
+    scraper.setCollege(schoolID);
+    scraper.scrape();
+
+    // schedule this exam
+    response.redirect("/schedule/" + id);
+    return null;
   }
 
 }

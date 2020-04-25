@@ -14,15 +14,15 @@ let eventNamesString = "";
 /*
   When the document is ready, this runs.
 */
-$(document).ready(() => {
-  $('#addEvent').click(addEvent);
-  $('#doneAddingEvents').click(doneAdding);
-  $('#save').click(saveConv);
-  $('#schedule').click(schedule);
 
+$(document).ready(() => {
+  $("#addEvent").click(addEvent);
+  $("#doneAddingEvents").click(doneAdding);
+  $("#save").click(saveConv);
+  $("#schedule").click(schedule);
 
   // hide HTML elements that are used after all events are added
-  $('#completedDiv').css("visibility", "hidden");
+  $("#completedDiv").css("visibility", "hidden");
 });
 
 /*
@@ -34,6 +34,7 @@ const addEvent = () => {
   existingEvents.push(newEvent);
 
   eventNamesString += "<p>" + $name.val() + "</p>";
+  add_event(eventNamesString); //socket code
 
   // update the existing events on the page
   $eventNames.html(eventNamesString);
@@ -41,7 +42,7 @@ const addEvent = () => {
   // clear the input boxes
   $name.val("");
   $description.val("");
-}
+};
 
 /*
   Function that gets called when the done adding button is clicked.
@@ -49,9 +50,9 @@ const addEvent = () => {
   displays the HTML objects associated with being done adding events.
 */
 const doneAdding = () => {
-  $('#addEventsDiv').css("display", "none");
-  $('#completedDiv').css("visibility", "visible");
-}
+  $("#addEventsDiv").css("display", "none");
+  $("#completedDiv").css("visibility", "visible");
+};
 
 /*
   Function that gets called when the save button is clicked.  This uses a post
@@ -64,10 +65,10 @@ const saveConv = () => {
   const postParameters = { existingEvents: myJson };
 
   // post request to "/save_convention" with added events
-  $.post("/save_convention", postParameters, responseJSON => {});
+  $.post("/save_convention", postParameters, (responseJSON) => {});
 
   // go to the account page
-  window.location.pathname = '/account';
+  window.location.pathname = "/account";
 };
 
 /*
@@ -81,12 +82,12 @@ const schedule = () => {
   const postParameters = { existingEvents: myJson };
 
   // post request to "/save_convention" with added events
-  $.post("/save_convention", postParameters, responseJSON => {});
+  $.post("/save_convention", postParameters, (responseJSON) => {});
 
   const url = window.location.href;
   var splitURL = url.split("/");
   var id = splitURL[4];
 
   // go to the schedule page
-  window.location.pathname = '/schedule/' + id;
+  window.location.pathname = "/schedule/" + id;
 };

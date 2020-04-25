@@ -216,6 +216,6 @@ public class Convention {
   }
 
   public HashSet<Conflict> getConflicts() {
-    return DatabaseUtility.getConflictsFromConventionID(this.id);
+    return du.getConflictsFromConventionID(this.id);
   }
 }

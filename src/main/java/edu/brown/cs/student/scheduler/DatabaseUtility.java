@@ -74,19 +74,17 @@ public static List<Event> getEventsFromConventionID(String conventionID) {
  * adds the convention data to the database
  * the ID for this should already be in the database
  * @param convention
- * @return a boolean if the given convention id already exist in the database
+ * @return true if the given convention id already exist in the database and
+ * data was able to added; false if operation fails
  */
 public static Boolean addConventionData(Convention convention) {
 
-  MongoCollection<Document> conventionCollection = Main.getDatabase().getCollection("conventions");
   Gson gson = new Gson();
   BasicDBObject obj = BasicDBObject.parse(gson.toJson(convention));
   //the key to this document is the convention id
-  BasicDBObject query = new BasicDBObject("conventions.id",
-      new BasicDBObject("$eq", convention.getID()));
-  Document currCon = userCollection.find(query).first();
-  if (currCon != null && !currCon.isEmpty()) {
-    Document doc = new Document(convention.getID(), obj);
+  Document conventionExist = userCollection.find(all("conventions", convention.getID())).first();
+  if (conventionExist != null && !conventionExist.isEmpty()) {
+    Document doc = new Document(obj.toMap());
     conventionCollection.insertOne(doc);
     return true;
   }

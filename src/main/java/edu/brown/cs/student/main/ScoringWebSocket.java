@@ -58,22 +58,22 @@ public class ScoringWebSocket {
     JsonObject newPayload = new JsonObject();
     newPayload.add("id", payload.get("id"));
 
-    //get events from conventionID
-    MongoCollection<Document> eventCollection = Main.getDatabase().getCollection("events");
-    BasicDBObject query = new BasicDBObject();
-    query.put("conventionID", payload.get("conventionID").getAsString());
-    Document doc = eventCollection.find(query).first();
+    // //get events from conventionID
+    // MongoCollection<Document> eventCollection = Main.getDatabase().getCollection("events");
+    // BasicDBObject query = new BasicDBObject();
+    // query.put("conventionID", payload.get("conventionID").getAsString());
+    // Document doc = eventCollection.find(query).first();
 
     //iterate through the events found
-    String score = "";
-    BasicDBList eventList = (BasicDBList)doc.get("events");
-    for (int i = 0; i < eventList.size(); i++) {
-      BasicDBObject eventObj = (BasicDBObject) eventList.get(i);
-      score = score + " " + eventObj.getString("name");
+    // String score = "";
+    // BasicDBList eventList = (BasicDBList)doc.get("events");
+    // for (int i = 0; i < eventList.size(); i++) {
+    //   BasicDBObject eventObj = (BasicDBObject) eventList.get(i);
+    //   score = score + " " + eventObj.getString("name");
 
-    }
+    // }
 
-    newPayload.addProperty("score", score);
+    newPayload.addProperty("text", payload.get("text").getAsString());
 
     toSend.add("payload", newPayload);
 

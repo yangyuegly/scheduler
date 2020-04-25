@@ -1,7 +1,6 @@
 package edu.brown.cs.student.gui;
 
-//integrated -- add id commented
-import java.util.Calendar;
+import java.time.LocalDate;
 import java.util.Map;
 import java.util.Random;
 
@@ -30,27 +29,24 @@ public class CreateConventionHandler implements TemplateViewRoute {
       return new ModelAndView(variables, "home.ftl");
     }
 
-    // gets the current date (user can't schedule an event in the past)
-    Calendar cal = Calendar.getInstance();
-    int month = cal.get(Calendar.MONTH) + 1;
-    int day = cal.get(Calendar.DAY_OF_MONTH);
-    int year = cal.get(Calendar.YEAR);
+    // gets the current date (we don't want the user to schedule an event in the past)
+    LocalDate today = LocalDate.now();
 
-    String date = year + "-" + month + "-" + day;
-
-    // create a convention id
+    // create a convention id - we want a six digit id that has not been used
     Random rand = new Random();
     boolean avail = false;
-    // we want a six digit id that has not been used
     Integer id = null;
 
+    // we want to try to make IDs until we find one that is not already in use
     while (!avail) {
       id = rand.nextInt((999999 - 100000) + 1) + 100000;
       DatabaseUtility db = new DatabaseUtility();
+
+      // if avail is true, this ID is not yet used
       avail = db.addConvID(userEmail, id.toString());
     }
 
-    Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "currDay", date, "id",
+    Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "currDay", today, "id",
         id.toString(), "errorMessage", "");
 
     return new ModelAndView(variables, "setup_conv.ftl");

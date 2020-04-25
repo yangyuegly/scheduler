@@ -66,7 +66,7 @@ public class LoadCommandTest {
     assertTrue(eventNames.contains("event1") && eventNames.contains("event2")
         && eventNames.contains("event3"));
 
-    HashSet<Conflict> conflicts = DatabaseUtility.getConflictsFromConventionID("testConvention");
+    HashSet<Conflict> conflicts = db.getConflictsFromConventionID("testConvention");
 
     Conflict c = new Conflict(new Event("event2"), new Event("event3"), 0);
     assertTrue(conflicts.contains(c));

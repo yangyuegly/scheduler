@@ -1,5 +1,6 @@
 package edu.brown.cs.student.scheduler;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -37,6 +38,59 @@ public class ScheduleCommand {
   }
 
   /**
+   * This method turns the given time slot into a LocalDateTime object representing the start date
+   * and time of the slot.
+   *
+   * @param timeSlot - a List of Integers, where the first Integer represents the day of the
+   *        convention that this time slot is located in, and the second Integer represents the
+   *        place of this time slot in that day (ie. 1, if it is the first time slot that day, 2 if
+   *        it is the second, etc)
+   *
+   * @return a LocalDateTime, which represents the start date and time of the given slot.
+   */
+  private LocalDateTime getTimeSlotStart(List<Integer> timeSlot) {
+    LocalDateTime convStart = convention.getStartDateTime();
+    int dayOfSlot = timeSlot.get(0);
+    LocalDateTime slotDayAtStartTime = convStart.plusDays(dayOfSlot);
+    int numMinutesBeforeSlot = timeSlot.get(1) * convention.getEventDuration();
+
+    return slotDayAtStartTime.plusMinutes(numMinutesBeforeSlot);
+  }
+
+  /**
+   * This method turns the scheduled graph into a String that contains events with times and dates
+   * in the format needed for the FullCalendar API.
+   *
+   * @return a String, which represents the format describing events and their times for the
+   *         calendar
+   */
+  private String makeScheduleString() {
+    String scheduleString = "[";
+    boolean firstEvent = true;
+
+    for (Event currEvent : nodes) {
+      String eventName = currEvent.getName();
+      List<Integer> eventTimeSlot = currEvent.getColor();
+      LocalDateTime eventStart = getTimeSlotStart(eventTimeSlot); // cache
+                                                                  // this???????????????????????
+      LocalDateTime eventEnd = eventStart.plusMinutes(convention.getEventDuration());
+
+      String eventString = "{\"title\": \"" + eventName + "\", \"start\": \"" + eventStart
+          + "\", \"end\": \"" + eventEnd + "\"}";
+
+      if (!firstEvent) {
+        scheduleString = scheduleString + ", ";
+      } else {
+        firstEvent = false;
+      }
+
+      scheduleString = scheduleString + eventString;
+    }
+
+    return scheduleString;
+  }
+
+  /**
    * Schedules the events
    */
   public String execute() {
@@ -47,13 +101,6 @@ public class ScheduleCommand {
     graph.addAllEdges(this.edges);
     graph.graphColoring(this.TS, this.CONCURENCY_LIMIT);
 
-    // delete this
-    for (Event event : nodes) {
-      List<Integer> color = event.getColor();
-      System.out.println("color is" + color.get(0) + " " + color.get(1));
-    }
-
-//    Map<List<Integer>, List<Event>> timeSlotToEventsMap = makeScheduleMap();
     return makeScheduleString();
   }
 
@@ -78,86 +125,6 @@ public class ScheduleCommand {
    */
   private void extractEdges() {
     this.edges = this.convention.getConflicts();
-  }
-
-  /**
-   * Set graph
-   *
-   * @param graph - the graph to set it to
-   *
-   * @return - this class
-   */
-//  public ScheduleCommand graph(UndirectedWeightedGraph<Event, Conflict> graph) {
-//    this.graph = graph;
-//    return this;
-//  }
-
-  /**
-   * Set nodes
-   *
-   * @param nodes - the nodes to set it to
-   *
-   * @return - this class
-   */
-//  public ScheduleCommand nodes(List<Event> nodes) {
-//    this.nodes = nodes;
-//    return this;
-//  }
-
-  /**
-   * Set edges
-   *
-   * @param edges - edges to set it to
-   *
-   * @return - this class
-   */
-//  public ScheduleCommand edges(HashSet<Conflict> edges) {
-//    this.edges = edges;
-//    return this;
-//  }
-
-  /**
-   * This method turns the scheduled graph into a Map of time slots to Events.
-   *
-   * @return Map of Lists of Integers to Lists of Events, where the Lists of Integers represent time
-   *         slots, and the Events represent events that are scheduled for that time slot.
-   */
-//  private Map<List<Integer>, List<Event>> makeScheduleMap() {
-//    Map<List<Integer>, List<Event>> timeSlotToEventsMap = new HashMap<>();
-//
-//    for (Event currEvent : nodes) {
-//      List<Integer> currTimeSlot = currEvent.getColor();
-//      List<Event> eventsInSlot = timeSlotToEventsMap.get(currTimeSlot);
-//
-//      if (eventsInSlot == null) {
-//        // this time slot is not yet in timeSlotToEventsMap
-//        eventsInSlot = new ArrayList<>();
-//        eventsInSlot.add(currEvent);
-//        timeSlotToEventsMap.put(currTimeSlot, eventsInSlot);
-//      } else {
-//        eventsInSlot.add(currEvent);
-//        timeSlotToEventsMap.replace(currTimeSlot, eventsInSlot);
-//      }
-//    }
-//
-//    return timeSlotToEventsMap;
-//  }
-
-  /**
-   * This method turns the scheduled graph into a String that contains events with times and dates
-   * in the format needed for the FullCalendar API.
-   *
-   * @return a String, which represents the format describing events and their times for the
-   *         calendar
-   */
-  private String makeScheduleString() {
-    // this format:
-//    String scheduleString = "[{\"title\": \"Long Event\", \"start\": \"2020-04-12T10:30:00\", \"end\": \"2020-04-12T12:30:00\"}, "
-//        + "{\"title\": \"Long Event\", \"start\": \"2020-04-12T10:30:00\", \"end\": \"2020-04-12T12:30:00\"}]";
-
-//    String scheduleString = "events: ["
-//    for ()
-    return "";
   }
 
   @Override

@@ -22,7 +22,7 @@ public class CreateConvSubmitHandler implements TemplateViewRoute {
     if (userEmail == null) {
       // user is not logged in
       response.redirect("/home");
-      return null; // ????????????????????????????????????????????????????????????????????????????????
+      return null; // this line will not be reached
     }
 
     QueryParamsMap queryMap = request.queryMap();
@@ -54,10 +54,9 @@ public class CreateConvSubmitHandler implements TemplateViewRoute {
     DatabaseUtility db = new DatabaseUtility();
     boolean added = db.addConventionData(newConv);
 
-    if (added) {
-      System.out.println("Convention data added");
-    } else {
-      System.out.println("Convention data adding failed"); // fix this
+    if (!added) {
+      System.err.println("Convention data adding failed"); // fix
+                                                           // this!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     }
 
     if (submitType.equals("Add events by hand")) {

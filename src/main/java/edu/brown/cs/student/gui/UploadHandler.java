@@ -51,24 +51,37 @@ public class UploadHandler implements TemplateViewRoute {
           "Please log in");
       return new ModelAndView(variables, "home.ftl");
     }
+
     StringBuilder textBuilder = new StringBuilder();
     request.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
+
     try (InputStream inputStream = request.raw().getPart("file").getInputStream();
         Reader reader = new BufferedReader(
             new InputStreamReader(inputStream, Charset.forName(StandardCharsets.UTF_8.name())))) {
+
       int c = 0;
+
       while ((c = reader.read()) != -1) {
         textBuilder.append((char) c);
       }
+
     } catch (IOException e) {
-      // TODO Auto-generated catch block
-      // fix!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-      e.printStackTrace();
+      Convention currConv = new Convention(id);
+      String name = currConv.getName();
+
+      Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "convName", name, "id",
+          id.toString(), "message", "An error occurred while reading the file.  Please try again.");
+      return new ModelAndView(variables, "upload_conv.ftl");
+
     } catch (ServletException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      Convention currConv = new Convention(id);
+      String name = currConv.getName();
+
+      Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "convName", name, "id",
+          id.toString(), "message",
+          "A servlet error occurred while reading the file.  Please try again.");
+      return new ModelAndView(variables, "upload_conv.ftl");
     }
-    // call the load command
 
     Convention conv = new Convention(id);
     CSVParser parser = new CSVParser();

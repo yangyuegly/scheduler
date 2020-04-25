@@ -14,6 +14,7 @@ import spark.TemplateViewRoute;
 
 //integrated
 public class CreateConvSubmitHandler implements TemplateViewRoute {
+
   @Override
   public ModelAndView handle(Request request, Response response) {
     String userEmail = request.cookie("user");
@@ -50,20 +51,21 @@ public class CreateConvSubmitHandler implements TemplateViewRoute {
       return new ModelAndView(variables, "setup_conv.ftl");
     }
 
-    // need to add Convention parameters to Database
-    boolean added = DatabaseUtility.addConventionData(newConv);
+    DatabaseUtility db = new DatabaseUtility();
+    boolean added = db.addConventionData(newConv);
+
     if (added) {
       System.out.println("Convention data added");
     } else {
-      System.out.println("Convention data adding failed");
+      System.out.println("Convention data adding failed"); // fix this
     }
 
     if (submitType.equals("Add events by hand")) {
       Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "convName", name,
           "existingEvents", "No events yet.", "id", id);
       return new ModelAndView(variables, "convention_home.ftl");
-    } else {
 
+    } else {
       Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "convName", name, "id",
           id.toString(), "message", "");
       return new ModelAndView(variables, "upload_conv.ftl");

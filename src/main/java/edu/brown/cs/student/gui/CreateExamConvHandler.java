@@ -22,6 +22,7 @@ import spark.TemplateViewRoute;
  * schedule final exams for the college of their choice.
  */
 public class CreateExamConvHandler implements TemplateViewRoute {
+  DatabaseUtility db = new DatabaseUtility();
 
   @Override
   public ModelAndView handle(Request request, Response response) {
@@ -50,7 +51,7 @@ public class CreateExamConvHandler implements TemplateViewRoute {
     while (!avail) {
       id = rand.nextInt((999999 - 100000) + 1) + 100000;
 //       avail = true; //delete
-      avail = DatabaseUtility.addConvID(userEmail, id.toString()); // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
+      avail = db.addConvID(userEmail, id.toString()); // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
     }
 
     // get the names of the schools on Coursicle so they appear as suggestions

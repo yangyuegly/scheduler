@@ -38,6 +38,7 @@ public class Convention {
   private int eventDuration = -1;
   private LocalTime endTime;
   private List<Event> events = null;
+  DatabaseUtility du = new DatabaseUtility();
 
   /**
    * This is a constructor for this class.
@@ -132,7 +133,7 @@ public class Convention {
    */
   public List<Event> getEvents() {
     if (events == null) {
-      return DatabaseUtility.getEventsFromConventionID(this.id);
+      return du.getEventsFromConventionID(this.id);
       // what will this return if there are none?
     } else {
       return events;

@@ -18,6 +18,7 @@ import spark.TemplateViewRoute;
  * This class is used to handle requests to the home page of a convention.
  */
 public class ConventionHomeHandler implements TemplateViewRoute {
+  DatabaseUtility db = new DatabaseUtility();
 
   @Override
   public ModelAndView handle(Request req, Response res) {
@@ -36,7 +37,7 @@ public class ConventionHomeHandler implements TemplateViewRoute {
     }
 
 
-     boolean authorized = DatabaseUtility.checkPermission(userEmail, conventionID);
+     boolean authorized = db.checkPermission(userEmail, conventionID);
     if (!authorized) {
       Map<String, Object> variables = ImmutableMap.of("title",
           "Scheduler");

@@ -145,14 +145,7 @@ public class DatabaseUtility {
       Document doc = new Document(obj.toMap());
       UpdateOptions options = new UpdateOptions().upsert(true);
       // check if convention collection already has this convention
-<<<<<<< HEAD
       conventionCollection.updateOne(query, doc,options);
-=======
-      conventionCollection.insertOne(doc);
-      Document ce = new Document("conventionID", convention.getID()).append("events",
-          Arrays.asList());
-      eventCollection.insertOne(ce);
->>>>>>> 5ea84dfa1dbf48c9259cdf6b86d2da68bc581f5f
       return true;
     }
     return false;

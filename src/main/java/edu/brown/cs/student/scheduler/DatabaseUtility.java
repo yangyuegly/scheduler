@@ -31,6 +31,7 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.ReplaceOptions;
 import com.mongodb.client.model.UpdateOptions;
 
 import edu.brown.cs.student.main.Main;
@@ -132,16 +133,22 @@ public class DatabaseUtility {
    *         added; false if operation fails
    */
   public Boolean addConventionData(Convention convention) {
-    Gson gson = new Gson();
-
-    String eventString = gson.toJson(convention.getEvents());
     Map<String, Object> conventionString = new HashMap<>();
     conventionString.put("id", convention.getID());
     conventionString.put("name", convention.getName());
-    conventionString.put("numDays", convention.getNumDays().toString());
-    conventionString.put("eventDuration", convention.getEventDuration().toString());
-    conventionString.put("endTime", convention.getEndTime().toString());
-    conventionString.put("events", eventString);
+    conventionString.put("numDays", convention.getNumDays());
+    conventionString.put("eventDuration", convention.getEventDuration());
+    conventionString.put("endTime", convention.getEndTime());
+
+    Gson gson = new Gson();
+    String eventString;
+    try {
+      eventString = gson.toJson(convention.getEvents());
+      conventionString.put("events", eventString);
+     } catch (NullPointerException e) {
+       System.out.println("currently no events associated with the convention");
+    }
+
 
 
     // the key to this document is the convention id
@@ -149,9 +156,9 @@ public class DatabaseUtility {
     if (conventionExist != null && !conventionExist.isEmpty()) {
       BasicDBObject query = new BasicDBObject("id", convention.getID());
       Document doc = new Document(conventionString);
-      UpdateOptions options = new UpdateOptions().upsert(true);
+      ReplaceOptions options = new ReplaceOptions().upsert(true);
       // check if convention collection already has this convention
-      conventionCollection.updateOne(query, doc,options);
+      conventionCollection.replaceOne(query, doc,options);
       return true;
     }
     return false;

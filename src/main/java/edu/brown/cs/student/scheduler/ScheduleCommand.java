@@ -87,7 +87,7 @@ public class ScheduleCommand {
       scheduleString = scheduleString + eventString;
     }
 
-    return scheduleString;
+    return scheduleString + "]";
   }
 
   /**
@@ -96,6 +96,7 @@ public class ScheduleCommand {
   public String execute() {
     extractNodes();
     extractEdges();
+
     this.graph = new UndirectedWeightedGraph<Event, Conflict>(this.nodes, this.CONCURENCY_LIMIT,
         this.MAX_SCHEDULE_DAYS, this.TS);
     graph.addAllEdges(this.edges);

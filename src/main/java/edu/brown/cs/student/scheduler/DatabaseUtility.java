@@ -230,6 +230,11 @@ public class DatabaseUtility {
         .projection(fields(include("conflicts"), excludeId()))
         .map(document -> document.get("conflicts")).first();
 
+    if (conflictList == null) {
+      // there are no conflicts
+      return new HashSet<>();
+    }
+
     for (int i = 0; i < conflictList.size(); i++) {
       Document conflictDoc = conflictList.get(i);
       Document event1Doc = (Document) conflictDoc.get("event1");
@@ -240,6 +245,7 @@ public class DatabaseUtility {
       Conflict c = new Conflict(e1, e2, weight);
       edges.add(c);
     }
+
     return edges;
   }
 
@@ -286,9 +292,6 @@ public class DatabaseUtility {
     if (doc == null) {
       return null;
     }
-
-    // delete
-    System.out.println("id: " + conventionID);
 
     String id = doc.getString("id");
     String name = doc.getString("name");

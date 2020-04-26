@@ -51,7 +51,7 @@ public class SchedExamSubmitHandler implements TemplateViewRoute {
     try {
       numDays = Integer.parseInt(numDaysString);
       eventDur = Integer.parseInt(eventDuration);
-      newConv = new Convention(id, schoolName + "Final Exams", startDate, numDays, eventDur,
+      newConv = new Convention(id, schoolName + " Final Exams", startDate, numDays, eventDur,
           startTime, endTime);
 
       // add this convention to the database

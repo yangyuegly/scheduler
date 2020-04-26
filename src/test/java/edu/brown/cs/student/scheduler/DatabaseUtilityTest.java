@@ -47,7 +47,7 @@ public class DatabaseUtilityTest {
     Event e1 = new Event(0, "e1");
     Event e2 = new Event(1, "e2");
     Conflict conflict = new Conflict(e1, e2, 1);
-//    assertTrue(conflicts.contains(conflict));
+    assertTrue(conflicts.contains(conflict));
   }
 
 //  @Test

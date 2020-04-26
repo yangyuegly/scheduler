@@ -26,6 +26,7 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.UpdateOptions;
 
 import edu.brown.cs.student.main.Main;
 
@@ -42,6 +43,7 @@ public class DatabaseUtility {
   MongoCollection<Document> conventionCollection;
   MongoCollection<Document> eventCollection;
   MongoCollection<Document> conflictCollection;
+  MongoDatabase database = Main.getDatabase();
 
   public DatabaseUtility() {
     if (Main.getDatabase() == null) {
@@ -50,59 +52,19 @@ public class DatabaseUtility {
 
       MongoClientSettings settings = MongoClientSettings.builder().applyConnectionString(connString)
           .retryWrites(true).build();
-      MongoClient mongo = MongoClients.create(settings);
+      try (MongoClient mongo = MongoClients.create(settings)){
+        MongoDatabase database = mongo.getDatabase("test");
+      } catch (Exception e) {
+        System.out.println(e.getClass().getName() + e.getMessage());
+      }
       // created db in cluster in MongoDBAtlas including collections: users, events,
       // conflicts
-      MongoDatabase database = mongo.getDatabase("test");
-      userCollection = database.getCollection("users");
     } else {
-      userCollection = Main.getDatabase().getCollection("users");
+      database = Main.getDatabase();
     }
-
-    if (Main.getDatabase() == null) {
-      ConnectionString connString = new ConnectionString(
-          "mongodb://sduraide:cs32scheduler@scheduler-shard-00-00-rw75k.mongodb.net:27017,scheduler-shard-00-01-rw75k.mongodb.net:27017,scheduler-shard-00-02-rw75k.mongodb.net:27017/test?ssl=true&replicaSet=scheduler-shard-0&authSource=admin&retryWrites=true&w=majority");
-
-      MongoClientSettings settings = MongoClientSettings.builder().applyConnectionString(connString)
-          .retryWrites(true).build();
-      MongoClient mongo = MongoClients.create(settings);
-      // created db in cluster in MongoDBAtlas including collections: users, events,
-      // conflicts
-      MongoDatabase database = mongo.getDatabase("test");
-      conflictCollection = database.getCollection("conflicts");
-    } else {
-      conflictCollection = Main.getDatabase().getCollection("conflicts");
-    }
-
-    if (Main.getDatabase() == null) {
-      ConnectionString connString = new ConnectionString(
-          "mongodb://sduraide:cs32scheduler@scheduler-shard-00-00-rw75k.mongodb.net:27017,scheduler-shard-00-01-rw75k.mongodb.net:27017,scheduler-shard-00-02-rw75k.mongodb.net:27017/test?ssl=true&replicaSet=scheduler-shard-0&authSource=admin&retryWrites=true&w=majority");
-
-      MongoClientSettings settings = MongoClientSettings.builder().applyConnectionString(connString)
-          .retryWrites(true).build();
-      MongoClient mongo = MongoClients.create(settings);
-      // created db in cluster in MongoDBAtlas including collections: users, events,
-      // conflicts
-      MongoDatabase database = mongo.getDatabase("test");
-      conventionCollection = database.getCollection("conventions");
-    } else {
-      conventionCollection = Main.getDatabase().getCollection("conventions");
-    }
-
-    if (Main.getDatabase() == null) {
-      ConnectionString connString = new ConnectionString(
-          "mongodb://sduraide:cs32scheduler@scheduler-shard-00-00-rw75k.mongodb.net:27017,scheduler-shard-00-01-rw75k.mongodb.net:27017,scheduler-shard-00-02-rw75k.mongodb.net:27017/test?ssl=true&replicaSet=scheduler-shard-0&authSource=admin&retryWrites=true&w=majority");
-
-      MongoClientSettings settings = MongoClientSettings.builder().applyConnectionString(connString)
-          .retryWrites(true).build();
-      MongoClient mongo = MongoClients.create(settings);
-      // created db in cluster in MongoDBAtlas including collections: users, events,
-      // conflicts
-      MongoDatabase database = mongo.getDatabase("test");
-      eventCollection = database.getCollection("events");
-    } else {
-      eventCollection = Main.getDatabase().getCollection("events");
-    }
+    userCollection = database.getCollection("users");
+    conflictCollection = database.getCollection("conflicts");
+    conventionCollection = database.getCollection("conventions");
   }
 
   /**
@@ -182,12 +144,11 @@ public class DatabaseUtility {
     // the key to this document is the convention id
     Document conventionExist = userCollection.find(all("conventions", convention.getID())).first();
     if (conventionExist != null && !conventionExist.isEmpty()) {
+      BasicDBObject query = new BasicDBObject().append("id", convention.getID());
       Document doc = new Document(obj.toMap());
+      UpdateOptions options = new UpdateOptions().upsert(true);
       // check if convention collection already has this convention
-      conventionCollection.insertOne(doc);
-      Document ce = new Document("conventionID", convention.getID()).append("events",
-          Arrays.asList());
-      eventCollection.insertOne(ce);
+      conventionCollection.updateOne(query, doc,options);
       return true;
     }
     return false;

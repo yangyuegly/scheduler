@@ -209,14 +209,7 @@ public class Convention {
     events.add(newEvent);
   }
 
-  /**
-   * Getter to get the id.
-   *
-   * @return -- id
-   */
-  public String getId() {
-    return id;
-  }
+ 
 
   /**
    * Getter to get the start date and time.

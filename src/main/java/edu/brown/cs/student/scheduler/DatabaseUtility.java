@@ -2,6 +2,8 @@ package edu.brown.cs.student.scheduler;
 
 import static com.mongodb.client.model.Filters.all;
 import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Filters.and;
+
 import static com.mongodb.client.model.Projections.excludeId;
 import static com.mongodb.client.model.Projections.fields;
 import static com.mongodb.client.model.Projections.include;
@@ -12,8 +14,10 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 import org.bson.Document;
 import org.bson.conversions.Bson;
@@ -22,6 +26,7 @@ import com.google.gson.Gson;
 import com.mongodb.BasicDBObject;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
@@ -43,7 +48,7 @@ public class DatabaseUtility {
   MongoCollection<Document> conventionCollection;
   MongoCollection<Document> eventCollection;
   MongoCollection<Document> conflictCollection;
-  MongoDatabase database = Main.getDatabase();
+  MongoDatabase database;
 
   public DatabaseUtility() {
     if (Main.getDatabase() == null) {
@@ -88,18 +93,6 @@ public class DatabaseUtility {
 
   }
 
-  // /**
-  // * -- adds Conflicts between all pairs of events in eventsToAttend (and stores
-  // this in the
-  // database with currConv)
-  // * @param userEmail
-  // * @param convention
-  // */
-  // public static addConflicts (Convention currConv, List<Event> eventsToAttend)
-  // {
-
-  // }
-
   /**
    * Get a list of events associated with a convention id from the database
    *
@@ -137,12 +130,22 @@ public class DatabaseUtility {
    */
   public Boolean addConventionData(Convention convention) {
     Gson gson = new Gson();
-    BasicDBObject obj = BasicDBObject.parse(gson.toJson(convention));
+
+    String eventString = gson.toJson(convention.getEvents());
+    Map<String, Object> conventionString = new HashMap<>();
+    conventionString.put("id", convention.getID());
+    conventionString.put("name", convention.getName());
+    conventionString.put("numDays", convention.getNumDays().toString());
+    conventionString.put("eventDuration", convention.getEventDuration().toString());
+    conventionString.put("endTime", convention.getEndTime().toString());
+    conventionString.put("events", eventString);
+
+
     // the key to this document is the convention id
     Document conventionExist = userCollection.find(all("conventions", convention.getID())).first();
     if (conventionExist != null && !conventionExist.isEmpty()) {
-      BasicDBObject query = new BasicDBObject().append("id", convention.getID());
-      Document doc = new Document(obj.toMap());
+      BasicDBObject query = new BasicDBObject("id", convention.getID());
+      Document doc = new Document(conventionString);
       UpdateOptions options = new UpdateOptions().upsert(true);
       // check if convention collection already has this convention
       conventionCollection.updateOne(query, doc,options);
@@ -220,10 +223,11 @@ public class DatabaseUtility {
    * @param userEmail
    * @param conventionID
    *
-   * @return a boolean if the given convention id exists
+   * @return true if the given convention id exists and event was not duplicate
+   * false otherwise
    */
   public Boolean addEvent(String conventionID, Event newEvent) {
-//    MongoCollection<Document> eventCollection = Main.getDatabase().getCollection("events");
+
     Gson gson = new Gson();
 
     BasicDBObject obj = BasicDBObject.parse(gson.toJson(newEvent));
@@ -234,12 +238,19 @@ public class DatabaseUtility {
       System.out.println("cannot find given convention");
       return false;
     }
-    Bson change = push("events", obj);
-    Bson filter = eq("conventionID", conventionID);
+    
+    FindIterable<Document> findIterable = eventCollection.find(eq("event.name",newEvent.getName()));
+    if (findIterable.first() == null) {
+      BasicDBObject update = new BasicDBObject();
+      BasicDBObject query = new BasicDBObject();
+      update.put("$push", new BasicDBObject("events",obj));
+      eventCollection.updateOne(query, update);
+      return true;
+    } else {
+      return false; 
+    }
 
     // check if event is already there
-    eventCollection.updateOne(filter, change);
-    return true;
   }
 
   /**

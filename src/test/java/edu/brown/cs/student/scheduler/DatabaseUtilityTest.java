@@ -7,6 +7,8 @@ import static org.junit.Assert.assertTrue;
 import java.util.HashSet;
 import java.util.List;
 
+import org.junit.Test;
+
 public class DatabaseUtilityTest {
   DatabaseUtility du = new DatabaseUtility();
 
@@ -49,7 +51,7 @@ public class DatabaseUtilityTest {
     assertTrue(conflicts.contains(conflict));
   }
 
-//  @Test
+//@Test
   public void addEventTest() {
     assertTrue(du.addEvent("c1", new Event(0, "justATest")));
 //    assertFalse(du.addEvent("nonExistingConvention", new Event(0, "justATest")));

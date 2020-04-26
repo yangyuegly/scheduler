@@ -39,7 +39,7 @@ public class WebScraperTest {
   }
 
   // test for getting courses and conflicts
-  @Test
+  //@Test
   public void testConflicts() {
     setUp();
 //    web.scrape();

@@ -45,12 +45,10 @@ public class Convention {
 
   private String id = null;
   private LocalDateTime startDateTime;
-  private int numDays = -1; // setting this to -1 so we know that it has not been set yet
-  private int eventDuration = -1;
+  private Integer numDays = -1; // setting this to -1 so we know that it has not been set yet
+  private Integer eventDuration = -1;
   private LocalTime endTime;
   private List<Event> events = null;
-  DatabaseUtility du = new DatabaseUtility(); // change to a local variable since it adds this to
-                                              // database while storing
   boolean loadedInDb = false;
 
   /**
@@ -61,7 +59,7 @@ public class Convention {
 
   public Convention(String convId) {
     id = convId;
-
+    DatabaseUtility du = new DatabaseUtility();
     // load in the rest of the fields from the database
     Convention conv = du.getConvention(convId);
 
@@ -89,8 +87,8 @@ public class Convention {
    *        minutes
    * @param endTime - a LocalTime, which represents the last time that events can end on a given day
    */
-  public Convention(String convId, String convName, LocalDateTime startDateTime, int numDays,
-      int eventDuration, LocalTime endTime) {
+  public Convention(String convId, String convName, LocalDateTime startDateTime, Integer numDays,
+  Integer eventDuration, LocalTime endTime) {
     this.id = convId;
     this.name = convName;
     this.numDays = numDays;
@@ -117,8 +115,8 @@ public class Convention {
    *
    * @throws NumberFormatException
    */
-  public Convention(String convId, String convName, String startDate, int numDays,
-      int eventDuration, String startTime, String endTime) throws NumberFormatException {
+  public Convention(String convId, String convName, String startDate, Integer numDays,
+  Integer eventDuration, String startTime, String endTime) throws NumberFormatException {
 
     this.id = convId;
     this.name = convName;
@@ -187,6 +185,7 @@ public class Convention {
    */
   public List<Event> getEvents() {
     if (events == null) {
+      DatabaseUtility du = new DatabaseUtility();
       return du.getEventsFromConventionID(id);
     }
 
@@ -223,7 +222,7 @@ public class Convention {
    *
    * @return -- number of days the convention lasts.
    */
-  public int getNumDays() {
+  public Integer getNumDays() {
     return numDays;
   }
 
@@ -232,7 +231,7 @@ public class Convention {
    *
    * @return -- duration of the events
    */
-  public int getEventDuration() {
+  public Integer getEventDuration() {
     return eventDuration;
   }
 
@@ -252,7 +251,7 @@ public class Convention {
    *
    * @return an int, which represents the max number of time slots on a given day
    */
-  public int getNumTimeSlotsPerDay() {
+  public Integer getNumTimeSlotsPerDay() {
     LocalDate startDateLocalDate = startDateTime.toLocalDate();
     LocalDateTime endTimeOnStartDay = LocalDateTime.of(startDateLocalDate, endTime);
 
@@ -263,6 +262,7 @@ public class Convention {
   }
 
   public HashSet<Conflict> getConflicts() {
+    DatabaseUtility du = new DatabaseUtility();
     return du.getConflictsFromConventionID(this.id);
   }
 }

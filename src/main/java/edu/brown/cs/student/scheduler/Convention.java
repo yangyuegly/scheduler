@@ -59,7 +59,6 @@ public class Convention {
 
   public Convention(String convId) {
     id = convId;
-    DatabaseUtility du = new DatabaseUtility();
     // load in the rest of the fields from the database
     DatabaseUtility du = new DatabaseUtility();
     Convention conv = du.getConvention(convId);

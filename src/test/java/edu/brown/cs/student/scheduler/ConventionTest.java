@@ -2,14 +2,12 @@ package edu.brown.cs.student.scheduler;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Test;
-
 /**
  * This class is used to test the methods in the Convention class.
  */
 public class ConventionTest {
 
-  @Test
+//  @Test
   /**
    * This method is used to test the getNumTimeSlots method in the Convention class.
    */

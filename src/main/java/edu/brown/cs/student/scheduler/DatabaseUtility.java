@@ -11,6 +11,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
@@ -181,6 +182,9 @@ public class DatabaseUtility {
       Document doc = new Document(obj.toMap());
       // check if convention collection already has this convention
       conventionCollection.insertOne(doc);
+      Document ce = new Document("conventionID", convention.getID()).append("events",
+          Arrays.asList());
+      eventCollection.insertOne(ce);
       return true;
     }
     return false;
@@ -269,7 +273,6 @@ public class DatabaseUtility {
       System.out.println("cannot find given convention");
       return false;
     }
-
     Bson change = push("events", obj);
     Bson filter = eq("conventionID", conventionID);
 

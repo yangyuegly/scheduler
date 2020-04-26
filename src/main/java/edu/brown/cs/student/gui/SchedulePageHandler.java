@@ -1,10 +1,12 @@
 package edu.brown.cs.student.gui;
 
+import java.time.LocalDate;
 import java.util.Map;
 
 import com.google.common.collect.ImmutableMap;
 
 import edu.brown.cs.student.scheduler.Convention;
+import edu.brown.cs.student.scheduler.DatabaseUtility;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
@@ -13,13 +15,16 @@ import spark.TemplateViewRoute;
 public class SchedulePageHandler implements TemplateViewRoute {
 
   @Override
-  public ModelAndView handle(Request req, Response res) {
+  public ModelAndView handle(Request request, Response response) {
+    String userEmail = request.cookie("user");
+    String conventionID = request.params(":id");
 
-    // get events in this convention from the database, display their names and
-    // give the user options to schedule, etc
+    DatabaseUtility db = new DatabaseUtility();
+    boolean permission = db.checkPermission(userEmail, conventionID);
 
-    String conventionID = req.params(":id");
-    String userEmail = req.cookie("user");
+    if (!permission) {
+      response.redirect("/unauthorized");
+    }
 
     if (userEmail == null) {
       // user is not logged in
@@ -28,16 +33,17 @@ public class SchedulePageHandler implements TemplateViewRoute {
       return new ModelAndView(variables, "home.ftl");
     }
 
-//    boolean authorized = DatabaseUtility.checkPermission(userEmail, conventionID);
-//    if (!authorized) {
-//      Map<String, Object> variables = ImmutableMap.of("title",
-//          "Scheduler");
-//      return new ModelAndView(variables, "unauthorized.ftl");
-//    }
+    Convention myConv = new Convention(conventionID);
 
-    Convention myConv = new Convention(conventionID); // DatabaseUtility.getConvention(conventionID);
-                                                      // // because we need all the fields
-                                                      // !!!!!!!!!!!!!!
+    if (!myConv.isLoaded()) {
+      LocalDate today = LocalDate.now();
+      Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "currDay", today, "id",
+          conventionID, "errorMessage",
+          "You must set up the convention before you can schedule it.");
+
+      return new ModelAndView(variables, "setup_conv.ftl");
+    }
+
     String name = myConv.getName();
 
     Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "name", name);

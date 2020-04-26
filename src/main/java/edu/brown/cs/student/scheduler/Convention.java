@@ -30,15 +30,28 @@ public class Convention {
    * endTime - a LocalTime, which represents the last time that events can end on a given day
    *
    * events - a List of Events, which represents the events in this conference
+   *
+   * loadedInDb - a boolean, true if the convention was loaded into the database prior to this
+   * convention being constructed, else false
    */
   private String name = null;
+
+  @Override
+  public String toString() {
+    return "Convention [name=" + name + ", id=" + id + ", startDateTime=" + startDateTime
+        + ", numDays=" + numDays + ", eventDuration=" + eventDuration + ", endTime=" + endTime
+        + "]";
+  }
+
   private String id = null;
   private LocalDateTime startDateTime;
   private int numDays = -1; // setting this to -1 so we know that it has not been set yet
   private int eventDuration = -1;
   private LocalTime endTime;
   private List<Event> events = null;
-  DatabaseUtility du = new DatabaseUtility();
+  DatabaseUtility du = new DatabaseUtility(); // change to a local variable since it adds this to
+                                              // database while storing
+  boolean loadedInDb = false;
 
   /**
    * This is a constructor for this class.
@@ -48,6 +61,42 @@ public class Convention {
 
   public Convention(String convId) {
     id = convId;
+
+    // load in the rest of the fields from the database
+    Convention conv = du.getConvention(convId);
+
+    if (conv != null) {
+      loadedInDb = true;
+      this.name = conv.name;
+      this.startDateTime = conv.startDateTime;
+      this.numDays = conv.numDays;
+      this.eventDuration = conv.eventDuration;
+      this.endTime = conv.endTime;
+      this.events = conv.events;
+    }
+
+  }
+
+  /**
+   * This is another constructor for this class.
+   *
+   * @param convName - a String, which represents the name of this convention
+   * @param convId - a String, which represents the id of this convention
+   * @param startDateTime - a LocalDateTime, which represents the start date of the convention at
+   *        time the convention starts
+   * @param numDays - an int, which represents the number of days the convention lasts
+   * @param eventDuration - an int, which represents how long each event at the convention lasts, in
+   *        minutes
+   * @param endTime - a LocalTime, which represents the last time that events can end on a given day
+   */
+  public Convention(String convId, String convName, LocalDateTime startDateTime, int numDays,
+      int eventDuration, LocalTime endTime) {
+    this.id = convId;
+    this.name = convName;
+    this.numDays = numDays;
+    this.eventDuration = eventDuration;
+    this.startDateTime = startDateTime;
+    this.endTime = endTime;
   }
 
   /**
@@ -95,17 +144,22 @@ public class Convention {
   }
 
   /**
+   * This method determines if the convention has been loaded into the database.
+   *
+   * @return true if the convention was loaded into the database prior to this convention being
+   *         constructed, else false
+   */
+  public boolean isLoaded() {
+    return loadedInDb;
+  }
+
+  /**
    * This method is a getter for the name field.
    *
    * @return a String, which represents the name of this convention
    */
   public String getName() {
-    if (name == null) {
-      // Database.getConventionNameFromID(this.getID());
-      return "name is null"; // delete, see above
-    } else {
-      return name;
-    }
+    return name;
   }
 
   /**
@@ -133,11 +187,11 @@ public class Convention {
    */
   public List<Event> getEvents() {
     if (events == null) {
-      return du.getEventsFromConventionID(this.id);
-      // what will this return if there are none?
-    } else {
-      return events;
+      return du.getEventsFromConventionID(id);
     }
+
+    // so we aren't returning a private mutable field
+    return new ArrayList<>(events);
   }
 
   /**

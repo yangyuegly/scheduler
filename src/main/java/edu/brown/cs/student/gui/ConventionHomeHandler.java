@@ -1,6 +1,7 @@
 package edu.brown.cs.student.gui;
 //integrated
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -21,10 +22,6 @@ public class ConventionHomeHandler implements TemplateViewRoute {
 
   @Override
   public ModelAndView handle(Request request, Response response) {
-
-    // get events in this convention from the database, display their names and
-    // give the user options to schedule, etc
-
     String conventionID = request.params(":id");
     String userEmail = request.cookie("user");
 
@@ -42,14 +39,30 @@ public class ConventionHomeHandler implements TemplateViewRoute {
       response.redirect("/unauthorized");
     }
 
-    // get convention object with all the events from database based on id
     Convention currConv = new Convention(conventionID);
+
+    if (!currConv.isLoaded()) {
+      // this convention was never set up with the name and time information
+
+      // gets the current date (we don't want the user to schedule an event in the past)
+      LocalDate today = LocalDate.now();
+
+      Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "currDay", today, "id",
+          conventionID, "errorMessage", "");
+
+      return new ModelAndView(variables, "setup_conv.ftl");
+    }
+
     String convName = currConv.getName();
     List<Event> events = currConv.getEvents();
     String existingEvents = "";
 
     for (Event event : events) {
       existingEvents += "<p>" + event.getName() + "</p>";
+    }
+
+    if (existingEvents.equals("")) {
+      existingEvents = "No events yet.";
     }
 
     Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "id", conventionID,

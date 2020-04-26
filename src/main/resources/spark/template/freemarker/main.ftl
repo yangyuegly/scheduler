@@ -11,9 +11,10 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   </head>
   <body>
-  
-  
+
+
 <div class="navbar">
+  <a href="/home"><img src="/images/logo.png" width="50" height="35"></a>
   <a href="/home">Home</a>
   <a href="/create_convention">Create a convention</a>
   <a href="/create_exam_conv">Schedule exams</a>
@@ -26,9 +27,9 @@
       <a href="/create_account" id="createAccount">Create account</a>
       <a href="/account" id="userEmailHeaderLink">email</a>
       <a href="/logout" id="logOut">Log Out</a>
-      
+
     </div>
-  </div> 
+  </div>
 </div>
 
 
@@ -36,7 +37,7 @@
 
 
 
-        </div> 
+        </div>
 
     <!-- </div> -->
 

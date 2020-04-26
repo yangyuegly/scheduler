@@ -1,11 +1,12 @@
 package edu.brown.cs.student.gui;
 
-// don't think we need it, all commented out
+import java.util.List;
 import java.util.Map;
 
 import com.google.common.collect.ImmutableMap;
 
 import edu.brown.cs.student.accounts.User;
+import edu.brown.cs.student.scheduler.Convention;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
@@ -30,26 +31,27 @@ public class AccountHomeHandler implements TemplateViewRoute {
     }
 
     User currUser = new User(userEmail);
-
-    // comment b/c getConventions not working
-//    List<Convention> currConvs = currUser.getConventions(); //don't have all events filled out
-//
-//
-//    String conventionLinks = "";
-//    if (!currConvs.isEmpty()) {
-//      conventionLinks = "<p>Here are your conventions.  Click one to add events or to"
-//          + " schedule it!</p>";
-//    }
-//
-//    for (Convention conv : currConvs) {
-//      String id = conv.getID();
-//      String link = "<a href=/convention/" + id + ">" + conv.getName() + "</a><br>";
-//      conventionLinks = conventionLinks + link;
-//    }
+    List<Convention> currConvs = currUser.getConventions();
 
     String conventionLinks = "";
+    if (!currConvs.isEmpty()) {
+      conventionLinks = "<p>Here are your conventions.  Click one to add events or to"
+          + " schedule it!</p>";
+    }
+
+    for (Convention conv : currConvs) {
+      if (conv.isLoaded()) {
+        // if the convention is not loaded in the database, the user never finished creating it,
+        // and it does not need to be displayed
+        String id = conv.getID();
+        String link = "<a href=/convention/" + id + ">" + conv.getName() + "</a><br>";
+        conventionLinks = conventionLinks + link;
+      }
+    }
+
     Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "conventionLinks",
-        conventionLinks, "error", "", "user", userEmail);
+        conventionLinks, "error", "");
+
     return new ModelAndView(variables, "account.ftl");
   }
 }

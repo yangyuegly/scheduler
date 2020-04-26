@@ -12,6 +12,9 @@
     <br>
     <input type="submit" value="Create account">
   </form>
+  <br>
+  <p class="errorMessage">${errorMessage}</p>
+  <br>
 </div>
 
 </#assign>

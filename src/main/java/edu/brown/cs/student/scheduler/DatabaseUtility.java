@@ -7,7 +7,11 @@ import static com.mongodb.client.model.Projections.fields;
 import static com.mongodb.client.model.Projections.include;
 import static com.mongodb.client.model.Updates.push;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
@@ -109,6 +113,11 @@ public class DatabaseUtility {
     query.put("conventionID", conventionID);
     Document doc = eventCollection.find(query).first();
 
+    if (doc == null) {
+      // there are currently no events with this ID
+      return new ArrayList<>();
+    }
+
     // iterate through the events found
     List<Document> eventList = (List<Document>) doc.get("events");
     for (Document event : eventList) {
@@ -136,7 +145,14 @@ public class DatabaseUtility {
       Document doc = new Document(obj.toMap());
       UpdateOptions options = new UpdateOptions().upsert(true);
       // check if convention collection already has this convention
+<<<<<<< HEAD
       conventionCollection.updateOne(query, doc,options);
+=======
+      conventionCollection.insertOne(doc);
+      Document ce = new Document("conventionID", convention.getID()).append("events",
+          Arrays.asList());
+      eventCollection.insertOne(ce);
+>>>>>>> 5ea84dfa1dbf48c9259cdf6b86d2da68bc581f5f
       return true;
     }
     return false;
@@ -186,6 +202,11 @@ public class DatabaseUtility {
         .projection(fields(include("conflicts"), excludeId()))
         .map(document -> document.get("conflicts")).first();
 
+    if (conflictList == null) {
+      // there are no conflicts
+      return new HashSet<>();
+    }
+
     for (int i = 0; i < conflictList.size(); i++) {
       Document conflictDoc = conflictList.get(i);
       Document event1Doc = (Document) conflictDoc.get("event1");
@@ -196,6 +217,7 @@ public class DatabaseUtility {
       Conflict c = new Conflict(e1, e2, weight);
       edges.add(c);
     }
+
     return edges;
   }
 
@@ -219,7 +241,6 @@ public class DatabaseUtility {
       System.out.println("cannot find given convention");
       return false;
     }
-
     Bson change = push("events", obj);
     Bson filter = eq("conventionID", conventionID);
 
@@ -233,19 +254,38 @@ public class DatabaseUtility {
    *
    * @param conventionID
    *
-   * @return string[0] = id, string[1] = name
+   * @return a Convention
    */
-  public String[] getConventionData(String conventionID) {
-    String[] result = new String[2];
+  public Convention getConvention(String conventionID) {
     BasicDBObject query = new BasicDBObject();
     query.put("id", conventionID);
     Document doc = conventionCollection.find(query).first();
     if (doc == null) {
       return null;
     }
-    result[0] = doc.getString("id");
-    result[1] = doc.getString("name");
-    return result;
+
+    String id = doc.getString("id");
+    String name = doc.getString("name");
+    Document sdt = (Document) doc.get("startDateTime");
+    Document date = (Document) sdt.get("date");
+    Document time = (Document) sdt.get("time");
+    LocalDate ld = LocalDate.of(date.getInteger("year"), date.getInteger("month"),
+        date.getInteger("day"));
+    LocalTime lt = LocalTime.of(time.getInteger("hour"), time.getInteger("minute"),
+        time.getInteger("second"), time.getInteger("nano"));
+    LocalDateTime startDateTime = LocalDateTime.of(ld, lt);
+    if (startDateTime == null) {
+      System.out.println("startdatetime is null");
+    } else {
+      System.out.println("startdatetime is not null");
+    }
+    int numDays = doc.getInteger("numDays");
+    int eventDuration = doc.getInteger("eventDuration");
+    Document et = (Document) doc.get("endTime");
+    LocalTime endTime = LocalTime.of(et.getInteger("hour"), et.getInteger("minute"),
+        et.getInteger("second"), et.getInteger("nano"));
+
+    return new Convention(id, name, startDateTime, numDays, eventDuration, endTime);
   }
 
   /**
@@ -265,7 +305,7 @@ public class DatabaseUtility {
     }
     // iterate through the events found
     List<String> conventionList = (List<String>) doc.get("conventions");
-    System.out.println("here");
+
     for (String convention : conventionList) {
       Convention c = new Convention(convention);
       result.add(c);

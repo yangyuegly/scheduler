@@ -9,8 +9,16 @@ document.addEventListener('DOMContentLoaded', function() {
   var id = splitURL[4];
 
   $.get("/calendar_events/" + id, response => {
+    console.log(response);
+
     responseObject = JSON.parse(response);
+
+    console.log(responseObject);
+
     myEvents = responseObject.eventsForSchedule;
+
+    console.log(myEvents);
+
     parsedEvents = JSON.parse(myEvents);
     startDate = responseObject.defaultDate;
 

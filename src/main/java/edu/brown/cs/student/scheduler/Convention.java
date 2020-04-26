@@ -49,8 +49,6 @@ public class Convention {
   private int eventDuration = -1;
   private LocalTime endTime;
   private List<Event> events = null;
-  DatabaseUtility du = new DatabaseUtility(); // change to a local variable since it adds this to
-                                              // database while storing
   boolean loadedInDb = false;
 
   /**
@@ -63,6 +61,7 @@ public class Convention {
     id = convId;
 
     // load in the rest of the fields from the database
+    DatabaseUtility du = new DatabaseUtility();
     Convention conv = du.getConvention(convId);
 
     if (conv != null) {
@@ -72,7 +71,6 @@ public class Convention {
       this.numDays = conv.numDays;
       this.eventDuration = conv.eventDuration;
       this.endTime = conv.endTime;
-      this.events = conv.events;
     }
 
   }
@@ -97,6 +95,7 @@ public class Convention {
     this.eventDuration = eventDuration;
     this.startDateTime = startDateTime;
     this.endTime = endTime;
+    loadedInDb = true;
   }
 
   /**
@@ -187,8 +186,11 @@ public class Convention {
    */
   public List<Event> getEvents() {
     if (events == null) {
-      return du.getEventsFromConventionID(id);
+      DatabaseUtility du = new DatabaseUtility();
+      events = du.getEventsFromConventionID(id);
     }
+
+    System.out.println("number of events is " + events.size()); // delete
 
     // so we aren't returning a private mutable field
     return new ArrayList<>(events);
@@ -270,6 +272,7 @@ public class Convention {
   }
 
   public HashSet<Conflict> getConflicts() {
+    DatabaseUtility du = new DatabaseUtility();
     return du.getConflictsFromConventionID(this.id);
   }
 }

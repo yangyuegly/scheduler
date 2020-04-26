@@ -29,6 +29,13 @@ public class AttendeeSignupHandler implements TemplateViewRoute {
 //    Event newEvent2 = new Event(2, "cheese", "have her sign books!"); // delete!!!!!!!!!!11!!!!1111!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 //    conv.addEvent(newEvent2); // delete
 
+    if (!conv.isLoaded()) {
+      // the convention manager(s) did not finish setting up the convention
+      Map<String, Object> variables = ImmutableMap.of("title", "Scheduler");
+
+      return new ModelAndView(variables, "attendee_signup_no_conv.ftl");
+    }
+
     String convName = conv.getName();
 
     // any attendee can only attend as many events as there are time slots

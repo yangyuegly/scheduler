@@ -48,6 +48,9 @@ public class CalendarHandler implements Route {
         numTimeSlotsPerDay); // change concurrency
                              // limit!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     String scheduleString = schedComm.execute();
+
+    System.out.println("schedString: " + scheduleString); // delete
+
     LocalDateTime convStartWithTime = myConv.getStartDateTime();
     LocalDate convStartDay = convStartWithTime.toLocalDate();
 

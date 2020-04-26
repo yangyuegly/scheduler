@@ -95,12 +95,25 @@ public class ScheduleCommand {
    */
   public String execute() {
     extractNodes();
+
+    System.out.println("about to extract edges"); // delete
+
     extractEdges();
+
+    System.out.println("about to make graph"); // delete
 
     this.graph = new UndirectedWeightedGraph<Event, Conflict>(this.nodes, this.CONCURENCY_LIMIT,
         this.MAX_SCHEDULE_DAYS, this.TS);
+
+    System.out.println("just made the graph"); // delete
+
     graph.addAllEdges(this.edges);
+
+    System.out.println("added edges"); // delete
+
     graph.graphColoring(this.TS, this.CONCURENCY_LIMIT);
+
+    System.out.println("graphColoring just happened"); // delete
 
     return makeScheduleString();
   }
@@ -119,6 +132,8 @@ public class ScheduleCommand {
    */
   private void extractNodes() {
     this.nodes = convention.getEvents();
+
+    System.out.println("number of nodes: " + nodes.size()); // delete
   }
 
   /**

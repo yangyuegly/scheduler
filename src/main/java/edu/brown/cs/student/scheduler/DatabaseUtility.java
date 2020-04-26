@@ -113,6 +113,9 @@ public class DatabaseUtility {
 
     // iterate through the events found
     List<Document> eventList = (List<Document>) doc.get("events");
+
+    System.out.println("eventList's length is " + eventList.size()); // delete
+
     for (Document event : eventList) {
       Event e = new Event(event.getInteger("id"), event.getString("name"));
       result.add(e);

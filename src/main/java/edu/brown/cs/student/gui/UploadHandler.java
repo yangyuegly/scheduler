@@ -41,8 +41,7 @@ public class UploadHandler implements TemplateViewRoute {
     boolean permission = db.checkPermission(userEmail, id);
 
     if (!permission) {
-      System.out.println("permission denied");
-      response.redirect("/account");
+      response.redirect("/unauthorized");
     }
 
     if (userEmail == null) {
@@ -86,6 +85,7 @@ public class UploadHandler implements TemplateViewRoute {
     Convention conv = new Convention(id);
     CSVParser parser = new CSVParser();
     LoadCommand load = new LoadCommand();
+
     load.execute(parser.parse(textBuilder), conv);
 
     // go to the schedule page

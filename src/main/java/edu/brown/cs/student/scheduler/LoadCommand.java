@@ -105,6 +105,7 @@ public class LoadCommand {
       BasicDBObject eventObject = BasicDBObject.parse(gson.toJson(e));
       eventArray.add(eventObject);
     }
+
     Document currEvent = new Document("conventionID", convention.getID()).append("events",
         eventArray);
     // for unit testing purposes
@@ -129,6 +130,7 @@ public class LoadCommand {
       BasicDBObject obj = BasicDBObject.parse(gson.toJson(entry.getKey()));
       conflictArray.add(obj);
     }
+
     Document doc = new Document("conventionID", convention.getID()).append("conflicts",
         conflictArray);
 

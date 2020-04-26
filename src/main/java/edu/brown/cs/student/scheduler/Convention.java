@@ -61,6 +61,7 @@ public class Convention {
     id = convId;
     DatabaseUtility du = new DatabaseUtility();
     // load in the rest of the fields from the database
+    DatabaseUtility du = new DatabaseUtility();
     Convention conv = du.getConvention(convId);
 
     if (conv != null) {
@@ -70,7 +71,6 @@ public class Convention {
       this.numDays = conv.numDays;
       this.eventDuration = conv.eventDuration;
       this.endTime = conv.endTime;
-      this.events = conv.events;
     }
 
   }
@@ -95,6 +95,7 @@ public class Convention {
     this.eventDuration = eventDuration;
     this.startDateTime = startDateTime;
     this.endTime = endTime;
+    loadedInDb = true;
   }
 
   /**
@@ -188,6 +189,8 @@ public class Convention {
       DatabaseUtility du = new DatabaseUtility();
       return du.getEventsFromConventionID(id);
     }
+
+    System.out.println("number of events is " + events.size()); // delete
 
     // so we aren't returning a private mutable field
     return new ArrayList<>(events);

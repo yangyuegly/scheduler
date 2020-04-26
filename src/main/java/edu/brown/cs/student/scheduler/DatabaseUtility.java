@@ -2,25 +2,20 @@ package edu.brown.cs.student.scheduler;
 
 import static com.mongodb.client.model.Filters.all;
 import static com.mongodb.client.model.Filters.eq;
-import static com.mongodb.client.model.Filters.and;
-
 import static com.mongodb.client.model.Projections.excludeId;
 import static com.mongodb.client.model.Projections.fields;
 import static com.mongodb.client.model.Projections.include;
-import static com.mongodb.client.model.Updates.push;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
 import org.bson.Document;
-import org.bson.conversions.Bson;
 
 import com.google.gson.Gson;
 import com.mongodb.BasicDBObject;
@@ -32,7 +27,6 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.ReplaceOptions;
-import com.mongodb.client.model.UpdateOptions;
 
 import edu.brown.cs.student.main.Main;
 
@@ -58,8 +52,8 @@ public class DatabaseUtility {
 
       MongoClientSettings settings = MongoClientSettings.builder().applyConnectionString(connString)
           .retryWrites(true).build();
-      try (MongoClient mongo = MongoClients.create(settings)){
-        MongoDatabase database = mongo.getDatabase("test");
+      try (MongoClient mongo = MongoClients.create(settings)) {
+        database = mongo.getDatabase("test");
       } catch (Exception e) {
         System.out.println(e.getClass().getName() + e.getMessage());
       }
@@ -69,6 +63,7 @@ public class DatabaseUtility {
       database = Main.getDatabase();
     }
     userCollection = database.getCollection("users");
+    eventCollection = database.getCollection("events");
     conflictCollection = database.getCollection("conflicts");
     conventionCollection = database.getCollection("conventions");
   }
@@ -145,11 +140,9 @@ public class DatabaseUtility {
     try {
       eventString = gson.toJson(convention.getEvents());
       conventionString.put("events", eventString);
-     } catch (NullPointerException e) {
-       System.out.println("currently no events associated with the convention");
+    } catch (NullPointerException e) {
+      System.out.println("currently no events associated with the convention");
     }
-
-
 
     // the key to this document is the convention id
     Document conventionExist = userCollection.find(all("conventions", convention.getID())).first();
@@ -158,7 +151,7 @@ public class DatabaseUtility {
       Document doc = new Document(conventionString);
       ReplaceOptions options = new ReplaceOptions().upsert(true);
       // check if convention collection already has this convention
-      conventionCollection.replaceOne(query, doc,options);
+      conventionCollection.replaceOne(query, doc, options);
       return true;
     }
     return false;
@@ -233,14 +226,14 @@ public class DatabaseUtility {
    * @param userEmail
    * @param conventionID
    *
-   * @return true if the given convention id exists and event was not duplicate
-   * false otherwise
+   * @return true if the given convention id exists and event was not duplicate false otherwise
    */
   public Boolean addEvent(String conventionID, Event newEvent) {
 
     Gson gson = new Gson();
 
     BasicDBObject obj = BasicDBObject.parse(gson.toJson(newEvent));
+    System.out.println("addEvent");
 
     // try to load existing document from MongoDB
     Document document = eventCollection.find(eq("conventionID", conventionID)).first();
@@ -248,16 +241,22 @@ public class DatabaseUtility {
       System.out.println("cannot find given convention");
       return false;
     }
-    
-    FindIterable<Document> findIterable = eventCollection.find(eq("event.name",newEvent.getName()));
+
+    System.out.println("in addEvent");
+
+    FindIterable<Document> findIterable = eventCollection
+        .find(eq("event.name", newEvent.getName()));
+    System.out.println("in addEvent1");
     if (findIterable.first() == null) {
       BasicDBObject update = new BasicDBObject();
       BasicDBObject query = new BasicDBObject();
-      update.put("$push", new BasicDBObject("events",obj));
+      update.put("$push", new BasicDBObject("events", obj));
       eventCollection.updateOne(query, update);
+      System.out.println("in addEvent2");
       return true;
     } else {
-      return false; 
+      System.out.println("in addEvent3");
+      return false;
     }
 
     // check if event is already there

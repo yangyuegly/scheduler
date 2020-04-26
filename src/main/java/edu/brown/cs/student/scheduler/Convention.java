@@ -75,6 +75,19 @@ public class Convention {
   }
 
   /**
+   * This is a constructor for this class.
+   *
+   * @param convId - a String, which represents the id of this convention
+   */
+
+  public Convention(String convId, String convName) {
+    id = convId;
+    // load in the rest of the fields from the database
+    this.name = convName;
+
+  }
+
+  /**
    * This is another constructor for this class.
    *
    * @param convName - a String, which represents the name of this convention
@@ -87,7 +100,7 @@ public class Convention {
    * @param endTime - a LocalTime, which represents the last time that events can end on a given day
    */
   public Convention(String convId, String convName, LocalDateTime startDateTime, Integer numDays,
-  Integer eventDuration, LocalTime endTime) {
+      Integer eventDuration, LocalTime endTime) {
     this.id = convId;
     this.name = convName;
     this.numDays = numDays;
@@ -116,7 +129,7 @@ public class Convention {
    * @throws NumberFormatException
    */
   public Convention(String convId, String convName, String startDate, Integer numDays,
-  Integer eventDuration, String startTime, String endTime) throws NumberFormatException {
+      Integer eventDuration, String startTime, String endTime) throws NumberFormatException {
 
     this.id = convId;
     this.name = convName;
@@ -207,8 +220,6 @@ public class Convention {
 
     events.add(newEvent);
   }
-
- 
 
   /**
    * Getter to get the start date and time.

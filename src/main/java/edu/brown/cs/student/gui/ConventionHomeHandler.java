@@ -61,6 +61,10 @@ public class ConventionHomeHandler implements TemplateViewRoute {
       existingEvents += "<p>" + event.getName() + "</p>";
     }
 
+    if (existingEvents.equals("")) {
+      existingEvents = "No events yet.";
+    }
+
     Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "id", conventionID,
         "convName", convName, "existingEvents", existingEvents);
 

@@ -187,7 +187,7 @@ public class Convention {
    */
   public List<Event> getEvents() {
     if (events == null) {
-      return null;
+      return du.getEventsFromConventionID(id);
     }
 
     // so we aren't returning a private mutable field

@@ -150,6 +150,11 @@ public class DatabaseUtility {
     query.put("conventionID", conventionID);
     Document doc = eventCollection.find(query).first();
 
+    if (doc == null) {
+      // there are currently no events with this ID
+      return new ArrayList<>();
+    }
+
     // iterate through the events found
     List<Document> eventList = (List<Document>) doc.get("events");
     for (Document event : eventList) {
@@ -282,6 +287,9 @@ public class DatabaseUtility {
       return null;
     }
 
+    // delete
+    System.out.println("id: " + conventionID);
+
     String id = doc.getString("id");
     String name = doc.getString("name");
     Document sdt = (Document) doc.get("startDateTime");
@@ -325,7 +333,7 @@ public class DatabaseUtility {
     List<String> conventionList = (List<String>) doc.get("conventions");
 
     for (String convention : conventionList) {
-      Convention c = getConvention(convention);
+      Convention c = new Convention(convention);
       result.add(c);
     }
 

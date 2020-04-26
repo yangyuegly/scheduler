@@ -28,7 +28,8 @@ public class DatabaseUtilityTest {
 
 //  @Test
   public void addConventionDataTest() {
-    Convention convention = new Convention("c1");
+    Convention convention = new Convention("c1", "my convention", "2020-04-10", 3, 90, "07:30",
+        "19:30");
     assertEquals(du.addConventionData(convention), true);
     assertEquals(du.addConventionData(convention), false);
   }

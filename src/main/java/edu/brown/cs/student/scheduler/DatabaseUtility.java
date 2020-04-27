@@ -181,7 +181,6 @@ public class DatabaseUtility {
         new BasicDBObject("$eq", BasicDBObject.parse(gson.toJson(newConflict.event1)))));
     criteria.add(new BasicDBObject("conflicts.event2",
         new BasicDBObject("$eq", BasicDBObject.parse(gson.toJson(newConflict.event2)))));
-
     FindIterable<Document> findIterable = conflictCollection
         .find(new BasicDBObject("$and", criteria));
     if (findIterable.first() == null || findIterable.first().isEmpty()) {
@@ -286,21 +285,15 @@ public class DatabaseUtility {
    * @return true if the given convention id exists and event was not duplicate false otherwise
    */
   public Boolean addEvent(String conventionID, Event newEvent) {
-
     Gson gson = new Gson();
-
     BasicDBObject obj = BasicDBObject.parse(gson.toJson(newEvent));
     System.out.println("addEvent");
-
     // try to load existing document from MongoDB
     Document document = eventCollection.find(eq("conventionID", conventionID)).first();
     if (document == null) {
       System.out.println("cannot find given convention");
       return false;
     }
-
-    System.out.println("AddEvent1");
-
     FindIterable<Document> findIterable = eventCollection
         .find(eq("event.name", newEvent.getName()));
     if (findIterable.first() == null || findIterable.first().isEmpty()) {
@@ -315,9 +308,40 @@ public class DatabaseUtility {
     } else {
       return false;
     }
-
     // check if event is already there
   }
+
+//  public Boolean addEvent(String conventionID, Event newEvent) {
+//
+//    Gson gson = new Gson();
+//
+//    BasicDBObject obj = BasicDBObject.parse(gson.toJson(newEvent));
+//    System.out.println("addEvent");
+//
+//    // try to load existing document from MongoDB
+//    Document document = eventCollection.find(eq("conventionID", conventionID)).first();
+//    if (document == null) {
+//      System.out.println("cannot find given convention");
+//      return false;
+//    }
+//
+//    FindIterable<Document> findIterable = eventCollection
+//        .find(eq("event.name", newEvent.getName()));
+//    System.out.println(findIterable.first().toJson());
+//    if (findIterable.first() == null || findIterable.first().isEmpty()) {
+//      System.out.println("no duplicate");
+//      BasicDBObject update = new BasicDBObject();
+//      BasicDBObject query = new BasicDBObject();
+//      update.put("$push", new BasicDBObject("events", obj));
+//      eventCollection.updateOne(query, update);
+//      System.out.println("in addEvent2");
+//      return true;
+//    } else {
+//      return false;
+//    }
+//
+//    // check if event is already there
+//  }
 
   /**
    * gets the convention data for a certain convention

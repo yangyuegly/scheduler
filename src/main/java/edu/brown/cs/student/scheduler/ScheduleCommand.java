@@ -58,52 +58,6 @@ public class ScheduleCommand {
   }
 
   /**
-   * This method turns the scheduled graph into a String that contains events with times and dates
-   * in the format needed for the FullCalendar API.
-   *
-   * @return a String, which represents the format describing events and their times for the
-   *         calendar
-   */
-  private String makeScheduleString() {
-    String scheduleString = "[";
-    boolean firstEvent = true;
-    int eventDuration = convention.getEventDuration();
-
-    for (Event currEvent : nodes) {
-      String eventName = currEvent.getName();
-      List<Integer> eventTimeSlot = currEvent.getColor();
-
-      System.out.println("day: " + eventTimeSlot.get(0) + ", slot: " + eventTimeSlot.get(1)); // delete
-
-      LocalDateTime eventStart = getTimeSlotStart(eventTimeSlot);
-      LocalDateTime eventEnd = eventStart.plusMinutes(eventDuration);
-
-      String eventString = "{\"title\": \"" + eventName + "\"";
-
-      System.out.println(eventString); // delete
-
-      eventString = eventString + ", \"start\": \"";
-
-      System.out.println(eventString); // delete
-
-      eventString = eventString + eventStart + "\", \"end\": \"" + eventEnd + "\"}";
-
-      // delete
-      System.out.println(eventString);
-
-      if (firstEvent) {
-        firstEvent = false;
-      } else {
-        scheduleString = scheduleString + ", ";
-      }
-
-      scheduleString = scheduleString + eventString;
-    }
-
-    return scheduleString + "]";
-  }
-
-  /**
    * Schedules the events
    */
   public List<CalendarEvent> execute() {
@@ -115,13 +69,10 @@ public class ScheduleCommand {
     graph.addAllEdges(this.edges);
     graph.graphColoring(this.TS, this.CONCURENCY_LIMIT);
 
-    System.out.println("graphColoring just happened"); // delete
-
     List<CalendarEvent> calEvents = new ArrayList<>();
     for (Event event : nodes) {
 
       LocalDateTime currStart = this.getTimeSlotStart(event.getColor());
-      System.out.println("currStart is " + currStart);
       Integer eventDur = convention.getEventDuration();
       String currEnd = currStart.plusMinutes(eventDur).toString();
 
@@ -130,9 +81,6 @@ public class ScheduleCommand {
 
     }
     return calEvents;
-
-    // return makeScheduleString();
-
   }
 
   /**

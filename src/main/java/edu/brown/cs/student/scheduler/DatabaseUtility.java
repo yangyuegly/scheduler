@@ -243,16 +243,8 @@ public class DatabaseUtility {
       return false;
     }
 
-<<<<<<< HEAD
-    System.out.println("in addEvent");
-
     FindIterable<Document> findIterable = eventCollection
         .find(eq("event.name", newEvent.getName()));
-    System.out.println("in addEvent1");
-=======
-    FindIterable<Document> findIterable = eventCollection
-        .find(eq("event.name", newEvent.getName()));
->>>>>>> 028d8e4268203f317b6fd58aef44142ffabd95f6
     if (findIterable.first() == null) {
       BasicDBObject update = new BasicDBObject();
       BasicDBObject query = new BasicDBObject();
@@ -261,10 +253,6 @@ public class DatabaseUtility {
       System.out.println("in addEvent2");
       return true;
     } else {
-<<<<<<< HEAD
-      System.out.println("in addEvent3");
-=======
->>>>>>> 028d8e4268203f317b6fd58aef44142ffabd95f6
       return false;
     }
 

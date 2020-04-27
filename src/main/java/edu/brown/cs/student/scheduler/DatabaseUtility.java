@@ -167,6 +167,38 @@ public class DatabaseUtility {
     return false;
   }
 
+  public Boolean addConflict(String conventionID, Conflict newConflict) {
+    Gson gson = new Gson();
+    BasicDBObject obj = BasicDBObject.parse(gson.toJson(newConflict));
+    System.out.println("addConflict");
+    // try to load existing document from MongoDB
+    Document document = conflictCollection.find(eq("conventionID", conventionID)).first();
+    if (document == null) {
+      System.out.println("cannot find given convention");
+      return false;
+    }
+    List<BasicDBObject> criteria = new ArrayList<BasicDBObject>();
+    criteria.add(new BasicDBObject("conventionID", new BasicDBObject("$eq", conventionID)));
+    criteria
+        .add(new BasicDBObject("conflicts.event1", new BasicDBObject("$eq", newConflict.event1)));
+    criteria
+        .add(new BasicDBObject("conflicts.event2", new BasicDBObject("$eq", newConflict.event2)));
+    FindIterable<Document> findIterable = conflictCollection
+        .find(new BasicDBObject("$and", criteria));
+    if (findIterable.first() == null || findIterable.first().isEmpty()) {
+      System.out.println("no duplicate");
+      BasicDBObject update = new BasicDBObject();
+      BasicDBObject query = new BasicDBObject();
+      update.put("$push", new BasicDBObject("conflicts", obj));
+      conflictCollection.updateOne(query, update);
+      System.out.println("in addEvent2");
+      return true;
+    } else {
+      return false;
+    }
+    // check if event is already there
+  }
+  
   /**
    * adds the convention data to the database first checks if there are any existing conventions
    * with conventionID; if there is a convention with that ID, return false; otherwise, add the

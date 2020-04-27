@@ -265,7 +265,9 @@ public class DatabaseUtility {
 
     FindIterable<Document> findIterable = eventCollection
         .find(eq("event.name", newEvent.getName()));
-    if (findIterable.first() == null) {
+    System.out.println(findIterable.first().toJson());
+    if (findIterable.first() == null || findIterable.first().isEmpty()) {
+      System.out.println("no duplicate");
       BasicDBObject update = new BasicDBObject();
       BasicDBObject query = new BasicDBObject();
       update.put("$push", new BasicDBObject("events", obj));

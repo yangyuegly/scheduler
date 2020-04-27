@@ -7,12 +7,10 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-import org.junit.Test;
-
 public class LoadCommandTest {
   DatabaseUtility db = new DatabaseUtility();
 
-  @Test
+//  @Test
   public void testLoadNoConflicts() {
     LoadCommand lc = new LoadCommand();
     Convention convention = new Convention("testConvention", "testName");

@@ -67,7 +67,11 @@ const doneAdding = () => {
 const saveConv = () => {
   // build javascript object that contains the data for the POST request.
   const myJson = JSON.stringify(existingEvents);
-  const postParameters = { existingEvents: myJson };
+  const url = window.location.href;
+  var splitURL = url.split("/");
+  var convID = splitURL[4];
+
+  const postParameters = { existingEvents: myJson, conventionID: convID };
 
   // post request to "/save_convention" with added events
   $.post("/save_convention", postParameters, (responseJSON) => {});

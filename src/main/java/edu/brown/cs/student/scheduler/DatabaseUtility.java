@@ -8,6 +8,7 @@ import static com.mongodb.client.model.Projections.include;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -198,7 +199,7 @@ public class DatabaseUtility {
     }
     // check if event is already there
   }
-  
+
   /**
    * adds the convention data to the database first checks if there are any existing conventions
    * with conventionID; if there is a convention with that ID, return false; otherwise, add the
@@ -324,11 +325,18 @@ public class DatabaseUtility {
     Date et = (Date) doc.get("endDateTime");
     System.out.println(sdtDateTime);
 
-    LocalDateTime ldt = sdtDateTime.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+//    LocalDateTime ldt = sdtDateTime.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+    ZoneOffset offset = ZoneOffset.ofHours(0);
+    LocalDateTime ldt = sdtDateTime.toInstant().atZone(ZoneId.ofOffset("GMT", offset))
+        .toLocalDateTime();
 
     int numDays = doc.getInteger("numDays");
     int eventDuration = doc.getInteger("eventDuration");
-    LocalDateTime endDateTime = et.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+    LocalDateTime endDateTime = et.toInstant().atZone(ZoneId.ofOffset("GMT", offset))
+        .toLocalDateTime();
+
+    System.out.println("start local: " + ldt);
+    System.out.println("end local: " + endDateTime);
 
     // Document et = (Document) doc.get("endTime");
     // LocalTime endTime = LocalTime.of(et.getInteger("hour"), et.getInteger("minute"),

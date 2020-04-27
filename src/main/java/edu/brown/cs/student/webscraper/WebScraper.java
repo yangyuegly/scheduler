@@ -296,15 +296,5 @@ public class WebScraper {
         conflictArray);
     collection.insertOne(doc);
 
-//    org.bson.Document currEvent = new org.bson.Document("conventionID", conventionID)
-//        .append("events", eventArray);
-//    ecollection.insertOne(currEvent);
-  }
-
-//  public static void main(String[] args) {
-////    getAllColleges();
-//    setCollege("clemson");
-//    scrape();
-//  }
 
 }

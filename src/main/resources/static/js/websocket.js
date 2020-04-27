@@ -16,7 +16,9 @@ let myId = -1;
 //property is an EventHandler that is called when a message is received from the server
 
 setup_live_event_updates = () => {
-  conn = new WebSocket("ws://" + window.location.href);
+  conn = new WebSocket(
+    "ws://" + window.location.host + window.location.pathname
+  );
 
   conn.onerror = (err) => {
     console.log("Connection error:", err);

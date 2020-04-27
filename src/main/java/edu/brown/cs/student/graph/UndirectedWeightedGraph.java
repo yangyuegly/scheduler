@@ -101,16 +101,13 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
 
       this.weightMatrix[e.getHead().getID()][e.getTail().getID()] = e.getWeight();
 
-      System.out.println("in loop, just did first weightMatrix set"); // delete
 
       this.weightMatrix[e.getTail().getID()][e.getHead().getID()] = e.getWeight();
 
-      System.out.println("in loop, just did second weightMatrix set"); // delete
 
       nodes.get(e.getHead().getID()).addToAdjList(e);
     }
 
-    System.out.println("just iterated through edges in addAllEdges in graph"); // delete
 
     setDegree();
   }
@@ -148,6 +145,7 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
           // color the current course
           List<Integer> indices = getSmallestAvailableColor(curr.getID());
           if (indices.size() == 2) {
+            System.out.println("indices:" + indices);
             curr.setColor(indices);
             result.add(curr);
             numColoredCourses++;
@@ -218,7 +216,7 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
    * @return
    */
   public List<Integer> getSmallestAvailableColor(int courseID) {
-
+    
     boolean valid = false;
     List<E> adj = nodes.get(courseID).getAdjList();
     for (int i = 0; i < this.MAX_SCHEDULE_DAYS; i++) {
@@ -248,8 +246,10 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
             }
           }
         }
-        if (valid)
+        if (valid) {
+          System.out.println("outside of loop: " + currColor);
           return currColor;
+        }
       }
     }
     return null;

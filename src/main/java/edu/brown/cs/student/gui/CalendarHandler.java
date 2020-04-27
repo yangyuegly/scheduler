@@ -26,22 +26,18 @@ public class CalendarHandler implements Route {
   public String handle(Request req, Response res) {
     String conventionID = req.params(":id");
 
-//    String userEmail = req.cookie("user"); // what do we do with this - this handler gives information, it doesn't display a page?????????????????????????????????
-//
-//    if (userEmail == null) {
-//      // user is not logged in
-//      Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "message",
-//          "Please log in");
-//      return new ModelAndView(variables, "home.ftl");
-//    }
+    String userEmail = req.cookie("user");
+
+    if (userEmail == null) {
+      res.redirect("/home");
+    }
 
     DatabaseUtility db = new DatabaseUtility();
-//    boolean authorized = db.checkPermission(userEmail, conventionID); // what do we do with this?????
-//
-//    if (!authorized) {
-//      Map<String, Object> variables = ImmutableMap.of("title", "Scheduler");
-//      return new ModelAndView(variables, "unauthorized.ftl");
-//    }
+    boolean authorized = db.checkPermission(userEmail, conventionID);
+
+    if (!authorized) {
+      res.redirect("/unauthorized");
+    }
 
     Convention myConv = db.getConvention(conventionID);
     int numTimeSlotsPerDay = myConv.getNumTimeSlotsPerDay();
@@ -50,16 +46,8 @@ public class CalendarHandler implements Route {
         numTimeSlotsPerDay); // change concurrency
                              // limit!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-    // String scheduleString = schedComm.execute();
     List<CalendarEvent> eventsSched = schedComm.execute();
 
-//    System.out.println("schedString: " + scheduleString); // delete
-//
-//    // delete
-//    for (int i = 0; i < 175; i++) {
-//      System.out.print(scheduleString.charAt(i)); // delete
-//    }
-//
     LocalDateTime convStartWithTime = myConv.getStartDateTime();
     LocalDate convStartDay = convStartWithTime.toLocalDate();
 

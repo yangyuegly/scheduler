@@ -9,17 +9,13 @@ document.addEventListener('DOMContentLoaded', function() {
   var id = splitURL[4];
 
   $.get("/calendar_events/" + id, response => {
-    console.log(response);
+    if (response == "") {
+      // the user is not authorized to view this convention
+      window.location.pathname = "/unauthorized";
+    }
 
     responseObject = JSON.parse(response);
-
-    console.log(responseObject);
-
     myEvents = responseObject.eventsForSchedule;
-
-    console.log(myEvents);
-
-  
     startDate = responseObject.defaultDate;
 
     makeCalendar(startDate, myEvents);
@@ -35,7 +31,7 @@ function makeCalendar(startDate, parsedEvents) {
 
   var calendar = new FullCalendar.Calendar(calendarEl, {
     plugins: [ 'interaction', 'dayGrid', 'timeGrid' ],
-    defaultView: 'timeGridWeek',
+    defaultView: 'dayGridMonth',
     defaultDate: startDate,
     header: {
       left: 'prev,next today',

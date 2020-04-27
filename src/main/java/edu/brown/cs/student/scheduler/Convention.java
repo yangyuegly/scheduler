@@ -221,8 +221,6 @@ public class Convention {
       return du.getEventsFromConventionID(id);
     }
 
-    System.out.println("number of events is " + events.size()); // delete
-
     // so we aren't returning a private mutable field
     return new ArrayList<>(events);
   }

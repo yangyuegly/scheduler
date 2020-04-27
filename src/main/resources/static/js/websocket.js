@@ -15,9 +15,9 @@ let myId = -1;
 //onmessage
 //property is an EventHandler that is called when a message is received from the server
 
-setup_live_event_updates = () => {
+let setup_live_event_updates = () => {
   conn = new WebSocket(
-    "ws://" + window.location.host + window.location.pathname
+    "ws://" + window.location.host + window.location.pathname + "/websocket"
   );
 
   conn.onerror = (err) => {

@@ -16,11 +16,11 @@ let eventNamesString = "";
 */
 
 $(document).ready(() => {
+  setup_live_event_updates();
   $("#addEvent").click(addEvent);
   $("#doneAddingEvents").click(doneAdding);
   $("#save").click(saveConv);
   $("#schedule").click(schedule);
-  setup_live_event_updates();
   // hide HTML elements that are used after all events are added
   $("#completedDiv").css("visibility", "hidden");
 });

@@ -285,7 +285,8 @@ public class Convention {
    */
   public Integer getNumTimeSlotsPerDay() {
     LocalDate startDateLocalDate = startDateTime.toLocalDate();
-    LocalDateTime endTimeOnStartDay = LocalDateTime.of(startDateLocalDate, endTime);
+    LocalTime endTimeOnStartDate = endTime.toLocalTime();
+    LocalDateTime endTimeOnStartDay = LocalDateTime.of(startDateLocalDate, endTimeOnStartDate);
 
     Duration durationInDay = Duration.between(startDateTime, endTimeOnStartDay);
     Long numMinutesInDay = durationInDay.toMinutes();

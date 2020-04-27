@@ -34,6 +34,7 @@ public class ScoringWebSocket {
 
   @OnWebSocketConnect
   public void connected(Session session) throws IOException {
+    System.out.println("Connect: " + session.getRemoteAddress().getAddress());
     sessions.add(session);
     JsonObject message = new JsonObject();
     message.addProperty("type", MESSAGE_TYPE.CONNECT.ordinal());

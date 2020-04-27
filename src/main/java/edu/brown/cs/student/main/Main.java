@@ -119,8 +119,7 @@ public final class Main {
     Spark.exception(Exception.class, new ExceptionPrinter());
 
     FreeMarkerEngine freeMarker = createEngine();
-
-    Spark.webSocket("/convention/:id", ScoringWebSocket.class);
+    Spark.webSocket("/convention/*", ScoringWebSocket.class);
 
     // Setup Spark Routes
     Spark.get("/home", new HomeHandler(), freeMarker);

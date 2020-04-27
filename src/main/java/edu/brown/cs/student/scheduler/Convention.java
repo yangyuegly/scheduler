@@ -7,6 +7,9 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -44,11 +47,14 @@ public class Convention {
 
   @JsonDeserialize(using = LocalDateTimeDeserializer.class)
   @JsonSerialize(using = LocalDateTimeSerializer.class)
+  @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
   private LocalDateTime startDateTime;
   private Integer numDays = -1; // setting this to -1 so we know that it has not been set yet
   private Integer eventDuration = -1;
+
   @JsonDeserialize(using = LocalTimeDeserializer.class)
   @JsonSerialize(using = LocalTimeSerializer.class)
+  @JsonFormat(pattern = "HH:mm")
   private LocalTime endTime;
   private List<Event> events = null;
   boolean loadedInDb = false;
@@ -235,6 +241,7 @@ public class Convention {
    *
    * @return -- a LocalDateTime object, which represents the start date and time of the convention
    */
+  @JsonGetter
   public LocalDateTime getStartDateTime() {
     return startDateTime;
   }
@@ -262,6 +269,7 @@ public class Convention {
    *
    * @return -- the end time
    */
+  @JsonGetter
   public LocalTime getEndTime() {
     return endTime;
   }

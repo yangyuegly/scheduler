@@ -28,7 +28,7 @@ public class ScoringWebSocket {
 
   private static enum MESSAGE_TYPE {
     CONNECT,
-    SCORE,
+    EVENT,
     UPDATE
   }
 
@@ -52,7 +52,7 @@ public class ScoringWebSocket {
   @OnWebSocketMessage
   public void message(Session session, String message) throws IOException {
     JsonObject received = GSON.fromJson(message, JsonObject.class);
-    assert received.get("type").getAsInt() == MESSAGE_TYPE.SCORE.ordinal();
+    assert received.get("type").getAsInt() == MESSAGE_TYPE.EVENT.ordinal();
 
     JsonObject payload = received.get("payload").getAsJsonObject();
 

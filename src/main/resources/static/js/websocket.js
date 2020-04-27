@@ -21,7 +21,7 @@ setup_live_event_updates = () => {
   conn.onerror = (err) => {
     console.log("Connection error:", err);
   };
-  con.onmessage = (msg) => {
+  conn.onmessage = (msg) => {
     const data = JSON.parse(msg.data);
     switch (data.type) {
       default:

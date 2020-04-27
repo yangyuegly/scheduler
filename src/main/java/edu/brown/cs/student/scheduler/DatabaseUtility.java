@@ -9,6 +9,7 @@ import static com.mongodb.client.model.Projections.include;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.util.StdDateFormat;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -139,19 +140,17 @@ public class DatabaseUtility {
    *         added; false if operation fails
    */
   public Boolean addConventionData(Convention convention) {
-    try {
-      String startDateTimeString = mapper.writeValueAsString(convention.getStartDateTime());
-      System.out.println("JSON = " + startDateTimeString);
-      String endTimeString = mapper.writeValueAsString(convention.getEndTime());
-
-  
+ 
     Map<String, Object> conventionString = new HashMap<>();
     conventionString.put("id", convention.getID());
     conventionString.put("name", convention.getName());
-    conventionString.put("startDateTime", startDateTimeString);
+    conventionString.put("startDateTime", convention.getStartDateTime());
+
+    System.out.println("getStartDateTime: " + convention.getStartDateTime());
+
     conventionString.put("numDays", convention.getNumDays());
     conventionString.put("eventDuration", convention.getEventDuration());
-    conventionString.put("endTime", endTimeString);
+    conventionString.put("endTime", convention.getEndTime());
 
     Gson gson = new Gson();
     String eventString;
@@ -172,9 +171,7 @@ public class DatabaseUtility {
       conventionCollection.replaceOne(query, doc, options);
       return true;
     }
-  } catch (JsonProcessingException e) {
-    e.printStackTrace();
-}
+  
     return false;
   }
 
@@ -300,7 +297,19 @@ public class DatabaseUtility {
 
     String id = doc.getString("id");
     String name = doc.getString("name");
-    Date sdtDateTime = (Date)doc.get("startDateTime");
+    Date sdtDateTime = (Date) doc.get("startDateTime");
+    System.out.println("stdDateTime" + sdtDateTime);
+    Date et = (Date) doc.get("endTime");
+    System.out.println(sdtDateTime);
+    // LocalDateTime ldt;
+    // LocalTime et;
+
+    // try {
+    //    ldt = mapper.readValue(sdtDateTime, LocalDateTime.class);
+    //    et = mapper.readValue(etString, LocalTime.class);
+    // } catch (Exception e) {
+    //   throw new NullPointerException("Unable to parse ldt" + e.getMessage() + e.getClass());
+    // }
     LocalDateTime ldt = sdtDateTime.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
 
     // Document date = (Document) sdt.get("date");
@@ -317,7 +326,6 @@ public class DatabaseUtility {
     // }
     int numDays = doc.getInteger("numDays");
     int eventDuration = doc.getInteger("eventDuration");
-    Date et = (Date)doc.get("endTime");
     LocalTime endTime = et.toInstant().atZone(ZoneId.systemDefault()).toLocalTime();
 
     // Document et = (Document) doc.get("endTime");

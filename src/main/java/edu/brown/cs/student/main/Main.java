@@ -120,7 +120,7 @@ public final class Main {
 
     FreeMarkerEngine freeMarker = createEngine();
 
-    Spark.webSocket("/scores", ScoringWebSocket.class);
+    Spark.webSocket("/convention/:id", ScoringWebSocket.class);
 
     // Setup Spark Routes
     Spark.get("/home", new HomeHandler(), freeMarker);

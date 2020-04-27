@@ -71,8 +71,7 @@ public class ScheduleCommand {
     for (Event currEvent : nodes) {
       String eventName = currEvent.getName();
       List<Integer> eventTimeSlot = currEvent.getColor();
-      LocalDateTime eventStart = getTimeSlotStart(eventTimeSlot); // cache
-                                                                  // this???????????????????????
+      LocalDateTime eventStart = getTimeSlotStart(eventTimeSlot);
       LocalDateTime eventEnd = eventStart.plusMinutes(convention.getEventDuration());
 
       String eventString = "{\"title\": \"" + eventName + "\", \"start\": \"" + eventStart

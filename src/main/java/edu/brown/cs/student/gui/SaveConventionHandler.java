@@ -1,6 +1,5 @@
 package edu.brown.cs.student.gui;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -43,17 +42,33 @@ public class SaveConventionHandler implements Route {
     }
 
     QueryParamsMap queryMap = req.queryMap();
-    String EventsToAddString = queryMap.value("existingEvents"); // deal with
+    String eventsToAddString = queryMap.value("existingEvents"); // deal with
                                                                  // this!!!!!!!!!!!!!!!!!!!!!!!!
-    System.out.println("events to add" + EventsToAddString);
+    Gson g = new Gson();
+    List<String[]> eventNameDescrList = g.fromJson(eventsToAddString, List.class);
 
-    List<Event> events = new ArrayList<>(); // get this from request though
+    System.out.println(eventsToAddString);
+    System.out.println("first elem:" + eventNameDescrList.get(0)[0]);
 
-    for (Event currEvent : events) {
+//    ObjectMapper mapper = new ObjectMapper();
+//    String[][] eventNameDescrArray = mapper.readValue(eventsToAddString,
+//        new TypeReference<String[][]>() {
+//        });
+
+    int id = 0;
+
+    for (String[] nameDescr : eventNameDescrList) {
+      String eventName = nameDescr[0];
+      String eventDescription = nameDescr[1];
+
+      Event currEvent = new Event(id, eventName, eventDescription);
+      id++;
+
       if (!db.addEvent(conventionID, currEvent)) {
         // the convention ID is not in the database
         // ?? IDK what to
         // do!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1!!!!
+        System.err.println("add event was unsuccessful");
       }
     }
 
@@ -62,7 +77,7 @@ public class SaveConventionHandler implements Route {
     db.addConvID(collaboratorEmail, conventionID);
 
     Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "conventionLinks",
-        "test@!!!!!!!!"); // ????????????????????????????????
+        "test@!!!!!!!!"); // ?????????????????????????????????????????????????????????????????????
 
     Gson gson = new Gson();
     return gson.toJson(variables);

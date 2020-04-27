@@ -32,8 +32,11 @@ $(document).ready(() => {
 const addEvent = () => {
   let newEvent = [$name.val(), $description.val()];
   existingEvents.push(newEvent);
+
   console.log("this is name" + $name.val());
   console.log(newEvent);
+
+  
   eventNamesString += "<p>" + $name.val() + "</p>";
 
   add_event(eventNamesString); //socket code

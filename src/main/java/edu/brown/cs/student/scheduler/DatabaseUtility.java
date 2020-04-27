@@ -6,14 +6,7 @@ import static com.mongodb.client.model.Projections.excludeId;
 import static com.mongodb.client.model.Projections.fields;
 import static com.mongodb.client.model.Projections.include;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.Module;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.util.StdDateFormat;
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
@@ -24,6 +17,8 @@ import java.util.Map;
 
 import org.bson.Document;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.gson.Gson;
 import com.mongodb.BasicDBObject;
 import com.mongodb.ConnectionString;
@@ -34,7 +29,6 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.ReplaceOptions;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import edu.brown.cs.student.main.Main;
 
@@ -140,7 +134,7 @@ public class DatabaseUtility {
    *         added; false if operation fails
    */
   public Boolean addConventionData(Convention convention) {
- 
+
     Map<String, Object> conventionString = new HashMap<>();
     conventionString.put("id", convention.getID());
     conventionString.put("name", convention.getName());
@@ -148,7 +142,7 @@ public class DatabaseUtility {
 
     conventionString.put("numDays", convention.getNumDays());
     conventionString.put("eventDuration", convention.getEventDuration());
-    conventionString.put("endTime", convention.getEndTime());
+    conventionString.put("endDateTime", convention.getEndDateTime());
 
     Gson gson = new Gson();
     String eventString;
@@ -169,7 +163,7 @@ public class DatabaseUtility {
       conventionCollection.replaceOne(query, doc, options);
       return true;
     }
-  
+
     return false;
   }
 
@@ -284,8 +278,6 @@ public class DatabaseUtility {
    * @return a Convention
    */
   public Convention getConvention(String conventionID) {
-    System.out.println("trying to getConvention for " + conventionID); // delete
-
     BasicDBObject query = new BasicDBObject();
     query.put("id", conventionID);
     Document doc = conventionCollection.find(query).first();
@@ -297,20 +289,20 @@ public class DatabaseUtility {
     String name = doc.getString("name");
     Date sdtDateTime = (Date) doc.get("startDateTime");
     System.out.println("stdDateTime" + sdtDateTime);
-    Date et = (Date) doc.get("endTime");
+    Date et = (Date) doc.get("endDateTime");
     System.out.println(sdtDateTime);
 
     LocalDateTime ldt = sdtDateTime.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
 
     int numDays = doc.getInteger("numDays");
     int eventDuration = doc.getInteger("eventDuration");
-    LocalDateTime endTime = et.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+    LocalDateTime endDateTime = et.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
 
     // Document et = (Document) doc.get("endTime");
     // LocalTime endTime = LocalTime.of(et.getInteger("hour"), et.getInteger("minute"),
-    //     et.getInteger("second"), et.getInteger("nano"));
+    // et.getInteger("second"), et.getInteger("nano"));
 
-    return new Convention(id, name, ldt, numDays, eventDuration, endTime);
+    return new Convention(id, name, ldt, numDays, eventDuration, endDateTime);
   }
 
   /**
@@ -338,6 +330,5 @@ public class DatabaseUtility {
 
     return result;
   }
-
 
 }

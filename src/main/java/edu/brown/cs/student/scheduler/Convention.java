@@ -32,7 +32,8 @@ public class Convention {
    *
    * eventDuration - how long each event at the convention lasts, in minutes
    *
-   * endTime - a LocalTime, which represents the last time that events can end on a given day
+   * endTime - a LocalDateTime, which represents the last time that events can end on the last given
+   * day (although all days in a convention have the same start and end times)
    *
    * events - a List of Events, which represents the events in this conference
    *
@@ -52,15 +53,15 @@ public class Convention {
   @JsonDeserialize(using = LocalDateTimeDeserializer.class)
   @JsonSerialize(using = LocalDateTimeSerializer.class)
   @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
-  private LocalDateTime endTime;
+  private LocalDateTime endDateTime;
   private List<Event> events = null;
   boolean loadedInDb = false;
 
   @Override
   public String toString() {
     return "Convention [name=" + name + ", id=" + id + ", startDateTime=" + startDateTime
-        + ", numDays=" + numDays + ", eventDuration=" + eventDuration + ", endTime=" + endTime
-        + "]";
+        + ", numDays=" + numDays + ", eventDuration=" + eventDuration + ", endDateTime="
+        + endDateTime + "]";
   }
 
   /**
@@ -81,7 +82,7 @@ public class Convention {
       this.startDateTime = conv.startDateTime;
       this.numDays = conv.numDays;
       this.eventDuration = conv.eventDuration;
-      this.endTime = conv.endTime;
+      this.endDateTime = conv.endDateTime;
     }
 
   }
@@ -109,16 +110,17 @@ public class Convention {
    * @param numDays - an int, which represents the number of days the convention lasts
    * @param eventDuration - an int, which represents how long each event at the convention lasts, in
    *        minutes
-   * @param endTime - a LocalTime, which represents the last time that events can end on a given day
+   * @param endDateTime - a LocalDateTime, which represents the last time that events can end on the
+   *        last given day (although all days in a convention have the same start and end times)
    */
   public Convention(String convId, String convName, LocalDateTime startDateTime, Integer numDays,
-      Integer eventDuration, LocalDateTime endTime) {
+      Integer eventDuration, LocalDateTime endDateTime) {
     this.id = convId;
     this.name = convName;
     this.numDays = numDays;
     this.eventDuration = eventDuration;
     this.startDateTime = startDateTime;
-    this.endTime = endTime;
+    this.endDateTime = endDateTime;
     loadedInDb = true;
   }
 
@@ -167,8 +169,8 @@ public class Convention {
     endDateLocalDate = endDateLocalDate.plusDays(numDays);
     LocalTime endTimeLocalTime = LocalTime.of(endHour, endMinute);
 
-    this.endTime = LocalDateTime.of(endDateLocalDate, endTimeLocalTime);
     this.startDateTime = LocalDateTime.of(startDateLocalDate, startTimeLocalTime);
+    this.endDateTime = LocalDateTime.of(endDateLocalDate, endTimeLocalTime);
   }
 
   /**
@@ -267,13 +269,13 @@ public class Convention {
   }
 
   /**
-   * Getter to get the end time of the convention on a given day.
+   * Getter to get the end time of the convention on last day.
    *
-   * @return -- the end time
+   * @return -- the end time on the end day
    */
   @JsonGetter
-  public LocalDateTime getEndTime() {
-    return endTime;
+  public LocalDateTime getEndDateTime() {
+    return endDateTime;
   }
 
   /**
@@ -285,6 +287,7 @@ public class Convention {
    */
   public Integer getNumTimeSlotsPerDay() {
     LocalDate startDateLocalDate = startDateTime.toLocalDate();
+    LocalTime endTime = endDateTime.toLocalTime();
     LocalDateTime endTimeOnStartDay = LocalDateTime.of(startDateLocalDate, endTime);
 
     Duration durationInDay = Duration.between(startDateTime, endTimeOnStartDay);

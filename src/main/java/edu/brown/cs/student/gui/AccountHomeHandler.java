@@ -34,20 +34,21 @@ public class AccountHomeHandler implements TemplateViewRoute {
     List<Convention> currConvs = currUser.getConventions();
 
     String conventionLinks = "";
-    if (!currConvs.isEmpty()) {
+    if (currConvs!= null && !currConvs.isEmpty()) {
       conventionLinks = "<p>Here are your conventions.  Click one to add events or to"
           + " schedule it!</p>";
+          for (Convention conv : currConvs) {
+            if (conv.isLoaded()) {
+              // if the convention is not loaded in the database, the user never finished creating it,
+              // and it does not need to be displayed
+              String id = conv.getID();
+              String link = "<a href=/convention/" + id + ">" + conv.getName() + "</a><br>";
+              conventionLinks = conventionLinks + link;
+            }
+          }
     }
 
-    for (Convention conv : currConvs) {
-      if (conv.isLoaded()) {
-        // if the convention is not loaded in the database, the user never finished creating it,
-        // and it does not need to be displayed
-        String id = conv.getID();
-        String link = "<a href=/convention/" + id + ">" + conv.getName() + "</a><br>";
-        conventionLinks = conventionLinks + link;
-      }
-    }
+
 
     Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "conventionLinks",
         conventionLinks, "error", "");

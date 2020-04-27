@@ -131,6 +131,7 @@ public class DatabaseUtility {
     Map<String, Object> conventionString = new HashMap<>();
     conventionString.put("id", convention.getID());
     conventionString.put("name", convention.getName());
+    conventionString.put("startDateTime", convention.getStartDateTime());
     conventionString.put("numDays", convention.getNumDays());
     conventionString.put("eventDuration", convention.getEventDuration());
     conventionString.put("endTime", convention.getEndTime());

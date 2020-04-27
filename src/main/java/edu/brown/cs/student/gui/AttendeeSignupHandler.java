@@ -39,7 +39,7 @@ public class AttendeeSignupHandler implements TemplateViewRoute {
     String convName = conv.getName();
 
     // any attendee can only attend as many events as there are time slots
-    int maxEventsToSelect = conv.getNumTimeSlotsPerDay();
+    int maxEventsToSelect = conv.getNumTimeSlotsPerDay() * conv.getNumDays();
 
     List<Event> eventsInConv = conv.getEvents(); // make sure getEvents actually accesses the
                                                  // database!!!!!!!!!

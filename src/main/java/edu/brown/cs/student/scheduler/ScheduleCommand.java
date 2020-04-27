@@ -58,55 +58,9 @@ public class ScheduleCommand {
   }
 
   /**
-   * This method turns the scheduled graph into a String that contains events with times and dates
-   * in the format needed for the FullCalendar API.
-   *
-   * @return a String, which represents the format describing events and their times for the
-   *         calendar
-   */
-  private String makeScheduleString() {
-    String scheduleString = "[";
-    boolean firstEvent = true;
-    int eventDuration = convention.getEventDuration();
-
-    for (Event currEvent : nodes) {
-      String eventName = currEvent.getName();
-      List<Integer> eventTimeSlot = currEvent.getColor();
-
-      System.out.println("day: " + eventTimeSlot.get(0) + ", slot: " + eventTimeSlot.get(1)); // delete
-
-      LocalDateTime eventStart = getTimeSlotStart(eventTimeSlot);
-      LocalDateTime eventEnd = eventStart.plusMinutes(eventDuration);
-
-      String eventString = "{\"title\": \"" + eventName + "\"";
-
-      System.out.println(eventString); // delete
-
-      eventString = eventString + ", \"start\": \"";
-
-      System.out.println(eventString); // delete
-
-      eventString = eventString + eventStart + "\", \"end\": \"" + eventEnd + "\"}";
-
-      // delete
-      System.out.println(eventString);
-
-      if (firstEvent) {
-        firstEvent = false;
-      } else {
-        scheduleString = scheduleString + ", ";
-      }
-
-      scheduleString = scheduleString + eventString;
-    }
-
-    return scheduleString + "]";
-  }
-
-  /**
    * Schedules the events
    */
-  public String execute() {
+  public List<CalendarEvent> execute() {
     extractNodes();
     extractEdges();
 
@@ -115,7 +69,18 @@ public class ScheduleCommand {
     graph.addAllEdges(this.edges);
     graph.graphColoring(this.TS, this.CONCURENCY_LIMIT);
 
-    return makeScheduleString();
+    List<CalendarEvent> calEvents = new ArrayList<>();
+    for (Event event : nodes) {
+
+      LocalDateTime currStart = this.getTimeSlotStart(event.getColor());
+      Integer eventDur = convention.getEventDuration();
+      String currEnd = currStart.plusMinutes(eventDur).toString();
+
+      CalendarEvent newEvent = new CalendarEvent(event.getName(), currStart.toString(), currEnd);
+      calEvents.add(newEvent);
+
+    }
+    return calEvents;
   }
 
   /**

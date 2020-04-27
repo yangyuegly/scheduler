@@ -7,14 +7,12 @@ import static org.junit.Assert.assertTrue;
 import java.util.HashSet;
 import java.util.List;
 
-import org.junit.Test;
-
 public class DatabaseUtilityTest {
   DatabaseUtility du = new DatabaseUtility();
 
 //  @Test
   public void checkPermissionTest() {
-    assertEquals(du.checkPermission("abby_goldberg@brown.edu", "792513"), true);
+    assertEquals(du.checkPermission("abby_goldberg@brown.edu", "797044"), true);
     assertEquals(du.checkPermission("abby_goldberg@brown.edu", "NonExistingID"), false);
   }
 

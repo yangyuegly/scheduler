@@ -35,14 +35,6 @@ public class Convention {
    * convention being constructed, else false
    */
   private String name = null;
-
-  @Override
-  public String toString() {
-    return "Convention [name=" + name + ", id=" + id + ", startDateTime=" + startDateTime
-        + ", numDays=" + numDays + ", eventDuration=" + eventDuration + ", endTime=" + endTime
-        + "]";
-  }
-
   private String id = null;
   private LocalDateTime startDateTime;
   private Integer numDays = -1; // setting this to -1 so we know that it has not been set yet
@@ -50,6 +42,13 @@ public class Convention {
   private LocalTime endTime;
   private List<Event> events = null;
   boolean loadedInDb = false;
+
+  @Override
+  public String toString() {
+    return "Convention [name=" + name + ", id=" + id + ", startDateTime=" + startDateTime
+        + ", numDays=" + numDays + ", eventDuration=" + eventDuration + ", endTime=" + endTime
+        + "]";
+  }
 
   /**
    * This is a constructor for this class.

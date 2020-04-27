@@ -267,6 +267,8 @@ public class DatabaseUtility {
    * @return a Convention
    */
   public Convention getConvention(String conventionID) {
+    System.out.println("trying to getConvention for " + conventionID); // delete
+
     BasicDBObject query = new BasicDBObject();
     query.put("id", conventionID);
     Document doc = conventionCollection.find(query).first();

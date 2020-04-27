@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import edu.brown.cs.student.scheduler.DatabaseUtility;
 import edu.brown.cs.student.scheduler.Event;
@@ -23,7 +24,12 @@ public class SaveConventionHandler implements Route {
   @Override
   public String handle(Request req, Response response) throws Exception {
     String userEmail = req.cookie("user");
-    String conventionID = req.params(":id");
+    // String conventionID = req.params(":id");
+
+    QueryParamsMap queryMap = req.queryMap();
+    String eventsToAddString = queryMap.value("existingEvents"); // deal with
+                                                                 // this!!!!!!!!!!!!!!!!!!!!!!!!
+    String conventionID = queryMap.value("conventionID");
 
     DatabaseUtility db = new DatabaseUtility();
     boolean permission = db.checkPermission(userEmail, conventionID);
@@ -41,14 +47,14 @@ public class SaveConventionHandler implements Route {
       // return new ModelAndView(variables, "home.ftl");
     }
 
-    QueryParamsMap queryMap = req.queryMap();
-    String eventsToAddString = queryMap.value("existingEvents"); // deal with
-                                                                 // this!!!!!!!!!!!!!!!!!!!!!!!!
     Gson g = new Gson();
-    List<String[]> eventNameDescrList = g.fromJson(eventsToAddString, List.class);
+    // List<String[]> eventNameDescrList = g.fromJson(eventsToAddString, List.class);
+    List<String[]> eventNameDescrList = g.fromJson(eventsToAddString,
+        new TypeToken<List<String[]>>() {
+        }.getType());
 
-    System.out.println(eventsToAddString);
-    System.out.println("first elem:" + eventNameDescrList.get(0)[0]);
+    System.out.println("just called g.fromJson");
+//    System.out.println("first elem:" + eventNameDescrList.get(0)[0]);
 
 //    ObjectMapper mapper = new ObjectMapper();
 //    String[][] eventNameDescrArray = mapper.readValue(eventsToAddString,
@@ -60,11 +66,13 @@ public class SaveConventionHandler implements Route {
     for (String[] nameDescr : eventNameDescrList) {
       String eventName = nameDescr[0];
       String eventDescription = nameDescr[1];
+      System.out.println("eventName " + eventName + " and eventDescript " + eventDescription);
 
       Event currEvent = new Event(id, eventName, eventDescription);
       id++;
 
       if (!db.addEvent(conventionID, currEvent)) {
+        System.out.println("convention id is " + conventionID + ".");
         // the convention ID is not in the database
         // ?? IDK what to
         // do!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1!!!!

@@ -50,6 +50,7 @@ public class CalendarHandler implements Route {
     String scheduleString = schedComm.execute();
 
     System.out.println("schedString: " + scheduleString); // delete
+    System.out.println("first 174: ");
 
     // delete
     for (int i = 0; i < 175; i++) {

@@ -67,20 +67,34 @@ public class ScheduleCommand {
   private String makeScheduleString() {
     String scheduleString = "[";
     boolean firstEvent = true;
+    int eventDuration = convention.getEventDuration();
 
     for (Event currEvent : nodes) {
       String eventName = currEvent.getName();
       List<Integer> eventTimeSlot = currEvent.getColor();
+
+      System.out.println("day: " + eventTimeSlot.get(0) + ", slot: " + eventTimeSlot.get(1)); // delete
+
       LocalDateTime eventStart = getTimeSlotStart(eventTimeSlot);
-      LocalDateTime eventEnd = eventStart.plusMinutes(convention.getEventDuration());
+      LocalDateTime eventEnd = eventStart.plusMinutes(eventDuration);
 
-      String eventString = "{\"title\": \"" + eventName + "\", \"start\": \"" + eventStart
-          + "\", \"end\": \"" + eventEnd + "\"}";
+      String eventString = "{\"title\": \"" + eventName + "\"";
 
-      if (!firstEvent) {
-        scheduleString = scheduleString + ", ";
-      } else {
+      System.out.println(eventString); // delete
+
+      eventString = eventString + ", \"start\": \"";
+
+      System.out.println(eventString); // delete
+
+      eventString = eventString + eventStart + "\", \"end\": \"" + eventEnd + "\"}";
+
+      // delete
+      System.out.println(eventString);
+
+      if (firstEvent) {
         firstEvent = false;
+      } else {
+        scheduleString = scheduleString + ", ";
       }
 
       scheduleString = scheduleString + eventString;
@@ -94,25 +108,12 @@ public class ScheduleCommand {
    */
   public String execute() {
     extractNodes();
-
-    System.out.println("about to extract edges"); // delete
-
     extractEdges();
-
-    System.out.println("about to make graph"); // delete
 
     this.graph = new UndirectedWeightedGraph<Event, Conflict>(this.nodes, this.CONCURENCY_LIMIT,
         this.MAX_SCHEDULE_DAYS, this.TS);
-
-    System.out.println("just made the graph"); // delete
-
     graph.addAllEdges(this.edges);
-
-    System.out.println("added edges"); // delete
-
     graph.graphColoring(this.TS, this.CONCURENCY_LIMIT);
-
-    System.out.println("graphColoring just happened"); // delete
 
     return makeScheduleString();
   }

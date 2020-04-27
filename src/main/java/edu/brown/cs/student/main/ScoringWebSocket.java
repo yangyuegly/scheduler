@@ -25,6 +25,7 @@ public class ScoringWebSocket {
   private static final Gson GSON = new Gson();
   private static final Queue<Session> sessions = new ConcurrentLinkedQueue<>();
   private static int nextId = 0;
+  private static String myList = "";
 
   private static enum MESSAGE_TYPE {
     CONNECT,
@@ -34,7 +35,6 @@ public class ScoringWebSocket {
 
   @OnWebSocketConnect
   public void connected(Session session) throws IOException {
-    System.out.println("Connect: " + session.getRemoteAddress().getAddress());
     sessions.add(session);
     JsonObject message = new JsonObject();
     message.addProperty("type", MESSAGE_TYPE.CONNECT.ordinal());
@@ -76,8 +76,8 @@ public class ScoringWebSocket {
     //   score = score + " " + eventObj.getString("name");
 
     // }
-
-    newPayload.addProperty("text", payload.get("text").getAsString());
+    myList += payload.get("text").getAsString();
+    newPayload.addProperty("text", myList);
 
     toSend.add("payload", newPayload);
 

@@ -36,7 +36,7 @@ const addEvent = () => {
   console.log(newEvent);
   eventNamesString += "<p>" + $name.val() + "</p>";
 
-  add_event(eventNamesString); //socket code
+  add_event("<p>" + $name.val() + "</p>"); //socket code
 
   // update the existing events on the page
   $eventNames.html(eventNamesString);

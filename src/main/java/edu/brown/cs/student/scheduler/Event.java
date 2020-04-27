@@ -12,8 +12,7 @@ import edu.brown.cs.student.graph.IVertex;
 public class Event implements IVertex<Event, Conflict> {
 
   /**
-   * Id of event, list of edges, degree of vertex, color of vertex
-   * name and description of vertex
+   * Id of event, list of edges, degree of vertex, color of vertex name and description of vertex
    */
   Integer id;
   List<Conflict> adjList;
@@ -30,6 +29,7 @@ public class Event implements IVertex<Event, Conflict> {
 
   /**
    * Constructor for Event
+   *
    * @param id - id of event
    * @param name - name of event
    */
@@ -44,6 +44,7 @@ public class Event implements IVertex<Event, Conflict> {
 
   /**
    * Constructor of Event
+   *
    * @param name - name of the event
    */
   public Event(String name) {
@@ -56,6 +57,7 @@ public class Event implements IVertex<Event, Conflict> {
 
   /**
    * Constructor of event
+   *
    * @param id - id of event
    * @param name - name of event
    * @param description - description of event
@@ -79,10 +81,10 @@ public class Event implements IVertex<Event, Conflict> {
   }
 
   /**
-    * Get the heaviest weight among v's adjacency list
-    * to aid sorting
-    * @return - heaviest weight
-    */
+   * Get the heaviest weight among v's adjacency list to aid sorting
+   *
+   * @return - heaviest weight
+   */
 
   @Override
   public Integer getHeaviestWeight() {
@@ -95,6 +97,7 @@ public class Event implements IVertex<Event, Conflict> {
 
   /**
    * Getter method for id of event
+   *
    * @return - id
    */
   public Integer getId() {
@@ -103,6 +106,7 @@ public class Event implements IVertex<Event, Conflict> {
 
   /**
    * Setter method for id
+   *
    * @param id - id of the event to set it to
    */
   public void setId(Integer id) {
@@ -111,6 +115,7 @@ public class Event implements IVertex<Event, Conflict> {
 
   /**
    * Setter for adjList
+   *
    * @param adjList - val to set it to
    */
   public void setAdjList(List<Conflict> adjList) {
@@ -119,6 +124,7 @@ public class Event implements IVertex<Event, Conflict> {
 
   /**
    * Setter for degree
+   *
    * @param degree - degree of the vertex to set it to
    */
   public void setDegree(Integer degree) {
@@ -127,6 +133,7 @@ public class Event implements IVertex<Event, Conflict> {
 
   /**
    * Getter for name
+   *
    * @return - name of event
    */
   public String getName() {
@@ -143,7 +150,6 @@ public class Event implements IVertex<Event, Conflict> {
     return adjList;
   }
 
-
   /**
    * return size of adjacent list.
    */
@@ -152,50 +158,41 @@ public class Event implements IVertex<Event, Conflict> {
     return adjList.size();
   }
 
-
-
   @Override
   public void addToAdjList(Conflict adj) {
     adjList.add(adj);
   }
-
-
 
   @Override
   public void setColor(List<Integer> c) {
     this.color = c;
   }
 
-
-
   @Override
   public List<Integer> getColor() {
     return this.color;
   }
+
   @Override
   public boolean equals(Object o) {
-      if (o == this)
-          return true;
-      if (!(o instanceof Event)) {
-          return false;
-      }
-      Event event = (Event) o;
-      return Objects.equals(id, event.id) && Objects.equals(name, event.name);
-}
+    if (o == this)
+      return true;
+    if (!(o instanceof Event)) {
+      return false;
+    }
+    Event event = (Event) o;
+    return Objects.equals(id, event.id) && Objects.equals(name, event.name);
+  }
 
-@Override
-public int hashCode() {
-  return Objects.hash(id, name);
-}
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, name);
+  }
 
-@Override
-public String toString() {
-  return "{" +
-    " id='" + getId() + "'" +
-    ", degree='" + getDegree() + "'" +
-    ", color='" + getColor() + "'" +
-    "}";
-}
+  @Override
+  public String toString() {
+    return "{" + " id='" + getId() + "'" + ", degree='" + getDegree() + "'" + ", color='"
+        + getColor() + "'" + "}";
+  }
 
 }
-

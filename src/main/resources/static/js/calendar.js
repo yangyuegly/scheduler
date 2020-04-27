@@ -19,10 +19,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     console.log(myEvents);
 
-    parsedEvents = JSON.parse(myEvents);
+  
     startDate = responseObject.defaultDate;
 
-    makeCalendar(startDate, parsedEvents);
+    makeCalendar(startDate, myEvents);
   });
 });
 

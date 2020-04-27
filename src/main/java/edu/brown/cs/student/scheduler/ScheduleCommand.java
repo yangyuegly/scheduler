@@ -92,7 +92,7 @@ public class ScheduleCommand {
   /**
    * Schedules the events
    */
-  public String execute() {
+  public List<CalendarEvent> execute() {
     extractNodes();
 
     System.out.println("about to extract edges"); // delete
@@ -114,7 +114,21 @@ public class ScheduleCommand {
 
     System.out.println("graphColoring just happened"); // delete
 
-    return makeScheduleString();
+    List<CalendarEvent> calEvents = new ArrayList<>();
+    for (Event event : nodes) {
+
+      LocalDateTime currStart = this.getTimeSlotStart(event.getColor());
+      System.out.println("currStart is " + currStart);
+      Integer eventDur = convention.getEventDuration();
+      String currEnd = currStart.plusMinutes(eventDur).toString();
+
+      CalendarEvent newEvent = new CalendarEvent(event.getName(), currStart.toString(), currEnd);
+      calEvents.add(newEvent);
+
+    }
+    return calEvents;
+
+    // return makeScheduleString();
   }
 
   /**

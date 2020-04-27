@@ -35,14 +35,6 @@ public class Convention {
    * convention being constructed, else false
    */
   private String name = null;
-
-  @Override
-  public String toString() {
-    return "Convention [name=" + name + ", id=" + id + ", startDateTime=" + startDateTime
-        + ", numDays=" + numDays + ", eventDuration=" + eventDuration + ", endTime=" + endTime
-        + "]";
-  }
-
   private String id = null;
   private LocalDateTime startDateTime;
   private Integer numDays = -1; // setting this to -1 so we know that it has not been set yet
@@ -50,6 +42,13 @@ public class Convention {
   private LocalTime endTime;
   private List<Event> events = null;
   boolean loadedInDb = false;
+
+  @Override
+  public String toString() {
+    return "Convention [name=" + name + ", id=" + id + ", startDateTime=" + startDateTime
+        + ", numDays=" + numDays + ", eventDuration=" + eventDuration + ", endTime=" + endTime
+        + "]";
+  }
 
   /**
    * This is a constructor for this class.
@@ -87,7 +86,7 @@ public class Convention {
    * @param endTime - a LocalTime, which represents the last time that events can end on a given day
    */
   public Convention(String convId, String convName, LocalDateTime startDateTime, Integer numDays,
-  Integer eventDuration, LocalTime endTime) {
+      Integer eventDuration, LocalTime endTime) {
     this.id = convId;
     this.name = convName;
     this.numDays = numDays;
@@ -116,7 +115,7 @@ public class Convention {
    * @throws NumberFormatException
    */
   public Convention(String convId, String convName, String startDate, Integer numDays,
-  Integer eventDuration, String startTime, String endTime) throws NumberFormatException {
+      Integer eventDuration, String startTime, String endTime) throws NumberFormatException {
 
     this.id = convId;
     this.name = convName;
@@ -207,8 +206,6 @@ public class Convention {
 
     events.add(newEvent);
   }
-
- 
 
   /**
    * Getter to get the start date and time.

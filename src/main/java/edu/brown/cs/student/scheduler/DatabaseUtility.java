@@ -58,11 +58,8 @@ public class DatabaseUtility {
 
       MongoClientSettings settings = MongoClientSettings.builder().applyConnectionString(connString)
           .retryWrites(true).build();
-      try (MongoClient mongo = MongoClients.create(settings)) {
-        database = mongo.getDatabase("test");
-      } catch (Exception e) {
-        System.out.println(e.getClass().getName() + e.getMessage());
-      }
+      MongoClient mongo = MongoClients.create(settings);
+      database = mongo.getDatabase("test");
       // created db in cluster in MongoDBAtlas including collections: users, events,
       // conflicts
     } else {
@@ -180,21 +177,38 @@ public class DatabaseUtility {
     }
     List<BasicDBObject> criteria = new ArrayList<BasicDBObject>();
     criteria.add(new BasicDBObject("conventionID", new BasicDBObject("$eq", conventionID)));
-    criteria
-        .add(new BasicDBObject("conflicts.event1", new BasicDBObject("$eq", newConflict.event1)));
-    criteria
-        .add(new BasicDBObject("conflicts.event2", new BasicDBObject("$eq", newConflict.event2)));
+    criteria.add(new BasicDBObject("conflicts.event1",
+        new BasicDBObject("$eq", BasicDBObject.parse(gson.toJson(newConflict.event1)))));
+    criteria.add(new BasicDBObject("conflicts.event2",
+        new BasicDBObject("$eq", BasicDBObject.parse(gson.toJson(newConflict.event2)))));
+
     FindIterable<Document> findIterable = conflictCollection
         .find(new BasicDBObject("$and", criteria));
     if (findIterable.first() == null || findIterable.first().isEmpty()) {
       System.out.println("no duplicate");
       BasicDBObject update = new BasicDBObject();
-      BasicDBObject query = new BasicDBObject();
+      BasicDBObject query = new BasicDBObject("conventionID",
+          new BasicDBObject("$eq", conventionID));
       update.put("$push", new BasicDBObject("conflicts", obj));
       conflictCollection.updateOne(query, update);
-      System.out.println("in addEvent2");
       return true;
     } else {
+//      Document doc = findIterable.first();
+//      System.out.println("here1");
+//      if (findIterable.first() == null) {
+//        System.out.println("null");
+//      }
+//      System.out.println(doc.toJson());
+//      int weight = doc.getInteger("weight");
+//      System.out.println("here2");
+//      BasicDBObject update = new BasicDBObject();
+//      System.out.println("here3");
+//      BasicDBObject query = new BasicDBObject("$and", criteria);
+//      System.out.println("here4");
+//      update.put("$set", new BasicDBObject("conflicts.weight", weight + 1));
+//      System.out.println("here5");
+//      conflictCollection.updateOne(query, update);
+//      System.out.println("here6");
       return false;
     }
     // check if event is already there
@@ -285,16 +299,18 @@ public class DatabaseUtility {
       return false;
     }
 
+    System.out.println("AddEvent1");
+
     FindIterable<Document> findIterable = eventCollection
         .find(eq("event.name", newEvent.getName()));
-    System.out.println(findIterable.first().toJson());
     if (findIterable.first() == null || findIterable.first().isEmpty()) {
       System.out.println("no duplicate");
       BasicDBObject update = new BasicDBObject();
-      BasicDBObject query = new BasicDBObject();
+      BasicDBObject query = new BasicDBObject("conventionID",
+          new BasicDBObject("$eq", conventionID));
       update.put("$push", new BasicDBObject("events", obj));
       eventCollection.updateOne(query, update);
-      System.out.println("in addEvent2");
+      System.out.println("in addEvent4");
       return true;
     } else {
       return false;

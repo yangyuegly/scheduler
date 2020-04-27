@@ -57,6 +57,16 @@ public class DatabaseUtilityTest {
 //    assertFalse(du.addEvent("nonExistingConvention", new Event(0, "justATest")));
   }
 
+  @Test
+  public void addConflictTest() {
+    Event e1 = new Event(1, "x");
+    Event e2 = new Event(2, "y");
+    Conflict c = new Conflict(e1, e2, 100);
+//    du.addEvent("testConvention", e1);
+    du.addConflict("940576", c);
+//    assertFalse(du.addEvent("nonExistingConvention", new Event(0, "justATest")));
+  }
+
 //  @Test
 //  public void getConventionDataTest() {
 //    String[] res1 = du.getConventionData("986329");

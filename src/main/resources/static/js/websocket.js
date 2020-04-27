@@ -15,7 +15,6 @@ let myId = -1;
 //onmessage
 //property is an EventHandler that is called when a message is received from the server
 
-ws.onclose = () => alert("WebSocket connection closed");
 setup_live_event_updates = () => {
   conn = new WebSocket("ws://" + window.location.href);
 

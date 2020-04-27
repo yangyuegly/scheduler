@@ -7,6 +7,11 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import java.time.LocalDate;
+import java.util.Objects;
 
 /**
  * This class is used to represents a convention. A convention is a group of smaller events.
@@ -36,9 +41,14 @@ public class Convention {
    */
   private String name = null;
   private String id = null;
+
+  @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+  @JsonSerialize(using = LocalDateTimeSerializer.class)
   private LocalDateTime startDateTime;
   private Integer numDays = -1; // setting this to -1 so we know that it has not been set yet
   private Integer eventDuration = -1;
+  @JsonDeserialize(using = LocalTimeDeserializer.class)
+  @JsonSerialize(using = LocalTimeSerializer.class)
   private LocalTime endTime;
   private List<Event> events = null;
   boolean loadedInDb = false;

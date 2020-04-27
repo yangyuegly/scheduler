@@ -6,10 +6,16 @@ import static com.mongodb.client.model.Projections.excludeId;
 import static com.mongodb.client.model.Projections.fields;
 import static com.mongodb.client.model.Projections.include;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.Module;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -27,6 +33,7 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.ReplaceOptions;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import edu.brown.cs.student.main.Main;
 
@@ -44,8 +51,11 @@ public class DatabaseUtility {
   MongoCollection<Document> eventCollection;
   MongoCollection<Document> conflictCollection;
   MongoDatabase database;
+  ObjectMapper mapper = new ObjectMapper();
 
   public DatabaseUtility() {
+    mapper.registerModule(new JavaTimeModule());
+
     if (Main.getDatabase() == null) {
       ConnectionString connString = new ConnectionString(
           "mongodb://sduraide:cs32scheduler@scheduler-shard-00-00-rw75k.mongodb.net:27017,scheduler-shard-00-01-rw75k.mongodb.net:27017,scheduler-shard-00-02-rw75k.mongodb.net:27017/test?ssl=true&replicaSet=scheduler-shard-0&authSource=admin&retryWrites=true&w=majority");
@@ -128,13 +138,19 @@ public class DatabaseUtility {
    *         added; false if operation fails
    */
   public Boolean addConventionData(Convention convention) {
+    try {
+      String startDateTimeString = mapper.writeValueAsString(convention.getStartDateTime());
+      System.out.println("JSON = " + startDateTimeString);
+      String endTimeString = mapper.writeValueAsString(convention.getEndTime());
+
+  
     Map<String, Object> conventionString = new HashMap<>();
     conventionString.put("id", convention.getID());
     conventionString.put("name", convention.getName());
-    conventionString.put("startDateTime", convention.getStartDateTime());
+    conventionString.put("startDateTime", startDateTimeString);
     conventionString.put("numDays", convention.getNumDays());
     conventionString.put("eventDuration", convention.getEventDuration());
-    conventionString.put("endTime", convention.getEndTime());
+    conventionString.put("endTime", endTimeString);
 
     Gson gson = new Gson();
     String eventString;
@@ -155,6 +171,9 @@ public class DatabaseUtility {
       conventionCollection.replaceOne(query, doc, options);
       return true;
     }
+  } catch (JsonProcessingException e) {
+    e.printStackTrace();
+}
     return false;
   }
 
@@ -276,26 +295,31 @@ public class DatabaseUtility {
 
     String id = doc.getString("id");
     String name = doc.getString("name");
-    Document sdt = (Document) doc.get("startDateTime");
-    Document date = (Document) sdt.get("date");
-    Document time = (Document) sdt.get("time");
-    LocalDate ld = LocalDate.of(date.getInteger("year"), date.getInteger("month"),
-        date.getInteger("day"));
-    LocalTime lt = LocalTime.of(time.getInteger("hour"), time.getInteger("minute"),
-        time.getInteger("second"), time.getInteger("nano"));
-    LocalDateTime startDateTime = LocalDateTime.of(ld, lt);
-    if (startDateTime == null) {
-      System.out.println("startdatetime is null");
-    } else {
-      System.out.println("startdatetime is not null");
-    }
+    Date sdtDateTime = (Date)doc.get("startDateTime");
+    LocalDateTime ldt = sdtDateTime.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+
+    // Document date = (Document) sdt.get("date");
+    // Document time = (Document) sdt.get("time");
+    // LocalDate ld = LocalDate.of(date.getInteger("year"), date.getInteger("month"),
+    //     date.getInteger("day"));
+    // LocalTime lt = LocalTime.of(time.getInteger("hour"), time.getInteger("minute"),
+    //     time.getInteger("second"), time.getInteger("nano"));
+    // LocalDateTime startDateTime = LocalDateTime.of(ld, lt);
+    // if (startDateTime == null) {
+    //   System.out.println("startdatetime is null");
+    // } else {
+    //   System.out.println("startdatetime is not null");
+    // }
     int numDays = doc.getInteger("numDays");
     int eventDuration = doc.getInteger("eventDuration");
-    Document et = (Document) doc.get("endTime");
-    LocalTime endTime = LocalTime.of(et.getInteger("hour"), et.getInteger("minute"),
-        et.getInteger("second"), et.getInteger("nano"));
+    Date et = (Date)doc.get("endTime");
+    LocalTime endTime = et.toInstant().atZone(ZoneId.systemDefault()).toLocalTime();
 
-    return new Convention(id, name, startDateTime, numDays, eventDuration, endTime);
+    // Document et = (Document) doc.get("endTime");
+    // LocalTime endTime = LocalTime.of(et.getInteger("hour"), et.getInteger("minute"),
+    //     et.getInteger("second"), et.getInteger("nano"));
+
+    return new Convention(id, name, ldt, numDays, eventDuration, endTime);
   }
 
   /**
@@ -323,5 +347,6 @@ public class DatabaseUtility {
 
     return result;
   }
+
 
 }

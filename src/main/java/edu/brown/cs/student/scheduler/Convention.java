@@ -13,9 +13,6 @@ import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import java.time.LocalDate;
-import java.util.Objects;
-
 /**
  * This class is used to represents a convention. A convention is a group of smaller events.
  */

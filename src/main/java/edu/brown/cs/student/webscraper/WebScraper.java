@@ -19,6 +19,7 @@ import com.google.gson.Gson;
 import com.mongodb.BasicDBObject;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
@@ -38,13 +39,14 @@ public class WebScraper {
 //  public static final String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.157 Safari/537.36";
 //  public static final String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36";
 //  public static final String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36";
-  public static final String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.87 Safari/537.36";
+  public static String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36";
   private String collegeName = "";
   public Map<String, List<String>> deptToCourses = new HashMap<>();
   private Map<String, String> conflict = new HashMap<>();
   private Map<String, String> coursesToIDs = new HashMap<>();
   private String conventionID;
   DatabaseUtility du = new DatabaseUtility();
+  MongoDatabase database;
 
   /**
    * Constructor for webscraper
@@ -90,33 +92,26 @@ public class WebScraper {
    * Method to get all colleges from coursicle website
    */
   public void getAllColleges() {
-    try {
-      String website = "https://www.coursicle.com/";
-      URLConnection connection = (new URL(website)).openConnection();
+    if (Main.getDatabase() == null) {
+      ConnectionString connString = new ConnectionString(
+          "mongodb://sduraide:cs32scheduler@scheduler-shard-00-00-rw75k.mongodb.net:27017,scheduler-shard-00-01-rw75k.mongodb.net:27017,scheduler-shard-00-02-rw75k.mongodb.net:27017/test?ssl=true&replicaSet=scheduler-shard-0&authSource=admin&retryWrites=true&w=majority");
 
-      try {
-        Thread.sleep(2000);
-      } catch (InterruptedException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      } // Delay to comply with rate limiting
-      connection.setRequestProperty("User-Agent", USER_AGENT);
+      MongoClientSettings settings = MongoClientSettings.builder().applyConnectionString(connString)
+          .retryWrites(true).build();
+      MongoClient mongo = MongoClients.create(settings);
+      // created db in cluster in MongoDBAtlas including collections: users, events, conflicts
+      database = mongo.getDatabase("test");
+    } else {
+      database = Main.getDatabase();
+    }
 
-      // Here we create a document object and use JSoup to fetch the website
-      Document doc = Jsoup.connect(website).userAgent(USER_AGENT).timeout(0).get();
+    MongoCollection<org.bson.Document> collegesCollection = database.getCollection("colleges");
+    FindIterable<org.bson.Document> docs = collegesCollection.find();
 
-      Elements colleges = doc.getElementsByClass("tileElement");
-
-      for (Element c : colleges) {
-        String id = c.getElementsByTag("a").attr("href");
-        if (id.equals("")) {
-          break;
-        }
-        String fullname = c.getElementsByTag("a").attr("fullname");
-        coursesToIDs.put(fullname, id.replaceAll("/", ""));
-      }
-    } catch (IOException e) {
-      e.printStackTrace();
+    for (org.bson.Document d : docs) {
+      String fullname = d.getString("fullname");
+      String id = d.getString("id");
+      coursesToIDs.put(fullname, id.replaceAll("/", ""));
     }
 
   }
@@ -142,7 +137,8 @@ public class WebScraper {
 
       Elements departments = doc.getElementsByClass("tileElement");
 
-      for (Element dep : departments) {
+      for (int i = 0; i < 4; i++) {
+        Element dep = departments.get(i);
         String departmentTitle = dep.getElementsByClass("tileElementText subjectName").text();
         if (departmentTitle.equals("")) {
           break;
@@ -233,7 +229,7 @@ public class WebScraper {
           // org.bson.Document doc = new org.bson.Document("id", count).append("class",
           // courses.get(0))
           // .append("conflict", courses.get(i));
-          conflict.put(first, second);
+//          conflict.put(first, second);
           System.out.println("here2");
 //          if (conflict.containsKey(first)) {
 //            if (!conflict.get(first).equals(second)) {
@@ -243,8 +239,8 @@ public class WebScraper {
           eventID++;
           Event event2 = new Event(eventID, second);
           eventID++;
-          du.addEvent(conventionID, event1);
-          du.addEvent(conventionID, event2);
+//          du.addEvent(conventionID, event1);
+//          du.addEvent(conventionID, event2);
           BasicDBObject eventObject = BasicDBObject.parse(gson.toJson(event1));
           eventArray.add(eventObject);
           BasicDBObject eventObject1 = BasicDBObject.parse(gson.toJson(event2));
@@ -296,15 +292,15 @@ public class WebScraper {
         conflictArray);
     collection.insertOne(doc);
 
-//    org.bson.Document currEvent = new org.bson.Document("conventionID", conventionID)
-//        .append("events", eventArray);
-//    ecollection.insertOne(currEvent);
+    org.bson.Document currEvent = new org.bson.Document("conventionID", conventionID)
+        .append("events", eventArray);
+    ecollection.insertOne(currEvent);
   }
 
 //  public static void main(String[] args) {
-////    getAllColleges();
-//    setCollege("clemson");
-//    scrape();
+//    getAllColleges();
+////    setCollege("clemson");
+////    scrape();
 //  }
 
 }

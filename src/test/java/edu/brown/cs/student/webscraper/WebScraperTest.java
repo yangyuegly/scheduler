@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.junit.Before;
-import org.junit.Test;
 
 public class WebScraperTest {
   WebScraper web = new WebScraper("test");
@@ -39,7 +38,7 @@ public class WebScraperTest {
   }
 
   // test for getting courses and conflicts
-  //@Test
+//  @Test
   public void testConflicts() {
     setUp();
 //    web.scrape();

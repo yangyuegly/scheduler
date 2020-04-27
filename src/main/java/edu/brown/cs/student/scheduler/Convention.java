@@ -52,10 +52,10 @@ public class Convention {
   private Integer numDays = -1; // setting this to -1 so we know that it has not been set yet
   private Integer eventDuration = -1;
 
-  @JsonDeserialize(using = LocalTimeDeserializer.class)
-  @JsonSerialize(using = LocalTimeSerializer.class)
-  @JsonFormat(pattern = "HH:mm")
-  private LocalTime endTime;
+  @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+  @JsonSerialize(using = LocalDateTimeSerializer.class)
+  @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+  private LocalDateTime endTime;
   private List<Event> events = null;
   boolean loadedInDb = false;
 
@@ -115,7 +115,7 @@ public class Convention {
    * @param endTime - a LocalTime, which represents the last time that events can end on a given day
    */
   public Convention(String convId, String convName, LocalDateTime startDateTime, Integer numDays,
-      Integer eventDuration, LocalTime endTime) {
+      Integer eventDuration, LocalDateTime endTime) {
     this.id = convId;
     this.name = convName;
     this.numDays = numDays;
@@ -165,7 +165,12 @@ public class Convention {
 
     LocalDate startDateLocalDate = LocalDate.of(year, month, dayOfMonth);
     LocalTime startTimeLocalTime = LocalTime.of(startHour, startMinute);
-    this.endTime = LocalTime.of(endHour, endMinute);
+
+    LocalDate endDateLocalDate = LocalDate.of(year, month, dayOfMonth);
+    endDateLocalDate = endDateLocalDate.plusDays(numDays);
+    LocalTime endTimeLocalTime = LocalTime.of(endHour, endMinute);
+
+    this.endTime = LocalDateTime.of(endDateLocalDate, endTimeLocalTime);
     this.startDateTime = LocalDateTime.of(startDateLocalDate, startTimeLocalTime);
   }
 
@@ -270,7 +275,7 @@ public class Convention {
    * @return -- the end time
    */
   @JsonGetter
-  public LocalTime getEndTime() {
+  public LocalDateTime getEndTime() {
     return endTime;
   }
 

@@ -146,8 +146,6 @@ public class DatabaseUtility {
     conventionString.put("name", convention.getName());
     conventionString.put("startDateTime", convention.getStartDateTime());
 
-    System.out.println("getStartDateTime: " + convention.getStartDateTime());
-
     conventionString.put("numDays", convention.getNumDays());
     conventionString.put("eventDuration", convention.getEventDuration());
     conventionString.put("endTime", convention.getEndTime());
@@ -301,32 +299,12 @@ public class DatabaseUtility {
     System.out.println("stdDateTime" + sdtDateTime);
     Date et = (Date) doc.get("endTime");
     System.out.println(sdtDateTime);
-    // LocalDateTime ldt;
-    // LocalTime et;
 
-    // try {
-    //    ldt = mapper.readValue(sdtDateTime, LocalDateTime.class);
-    //    et = mapper.readValue(etString, LocalTime.class);
-    // } catch (Exception e) {
-    //   throw new NullPointerException("Unable to parse ldt" + e.getMessage() + e.getClass());
-    // }
     LocalDateTime ldt = sdtDateTime.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
 
-    // Document date = (Document) sdt.get("date");
-    // Document time = (Document) sdt.get("time");
-    // LocalDate ld = LocalDate.of(date.getInteger("year"), date.getInteger("month"),
-    //     date.getInteger("day"));
-    // LocalTime lt = LocalTime.of(time.getInteger("hour"), time.getInteger("minute"),
-    //     time.getInteger("second"), time.getInteger("nano"));
-    // LocalDateTime startDateTime = LocalDateTime.of(ld, lt);
-    // if (startDateTime == null) {
-    //   System.out.println("startdatetime is null");
-    // } else {
-    //   System.out.println("startdatetime is not null");
-    // }
     int numDays = doc.getInteger("numDays");
     int eventDuration = doc.getInteger("eventDuration");
-    LocalTime endTime = et.toInstant().atZone(ZoneId.systemDefault()).toLocalTime();
+    LocalDateTime endTime = et.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
 
     // Document et = (Document) doc.get("endTime");
     // LocalTime endTime = LocalTime.of(et.getInteger("hour"), et.getInteger("minute"),

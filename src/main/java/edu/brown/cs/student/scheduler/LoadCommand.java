@@ -45,11 +45,13 @@ import edu.brown.cs.student.main.Main;
 // (attendees, event1, event2, event3)
 // store the csv title and user id into the user collection
 public class LoadCommand {
+  private List<Conflict> conflict;
 
   /**
    * Constructor for LoadCommand
    */
   public LoadCommand() {
+    conflict = new ArrayList<>();
   }
 
   /**
@@ -59,6 +61,7 @@ public class LoadCommand {
    * @param convention - the convention containing all the events in the file
    */
   public void execute(List<String[]> input, Convention convention) {
+//    DatabaseUtility du = new DatabaseUtility();
     int count = 0;
     // map conflict to number of conflicts
     Map<Conflict, Integer> frequencyMap = new HashMap<>();
@@ -83,6 +86,7 @@ public class LoadCommand {
           }
           Conflict conflict = new Conflict(new Event(nameToId.get(first), first),
               new Event(nameToId.get(second), second), null);
+          this.conflict.add(conflict);
           // add to the weight if the conflict doesn't exist or add the conflict itself
           frequencyMap.put(conflict, frequencyMap.getOrDefault(conflict, 0) + 1);
         }
@@ -102,6 +106,7 @@ public class LoadCommand {
     // insert into the event table
     for (Map.Entry<String, Integer> entry : nameToId.entrySet()) {
       Event e = new Event(entry.getValue(), entry.getKey());
+//      du.addEvent(convention.getID(), e);
       BasicDBObject eventObject = BasicDBObject.parse(gson.toJson(e));
       eventArray.add(eventObject);
     }

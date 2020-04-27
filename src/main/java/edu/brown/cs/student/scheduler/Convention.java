@@ -84,6 +84,19 @@ public class Convention {
   }
 
   /**
+   * This is a constructor for this class.
+   *
+   * @param convId - a String, which represents the id of this convention
+   */
+
+  public Convention(String convId, String convName) {
+    id = convId;
+    // load in the rest of the fields from the database
+    this.name = convName;
+
+  }
+
+  /**
    * This is another constructor for this class.
    *
    * @param convName - a String, which represents the name of this convention

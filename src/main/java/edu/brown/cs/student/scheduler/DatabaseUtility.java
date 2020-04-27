@@ -63,7 +63,7 @@ public class DatabaseUtility {
       MongoClientSettings settings = MongoClientSettings.builder().applyConnectionString(connString)
           .retryWrites(true).build();
       try (MongoClient mongo = MongoClients.create(settings)) {
-        MongoDatabase database = mongo.getDatabase("test");
+        database = mongo.getDatabase("test");
       } catch (Exception e) {
         System.out.println(e.getClass().getName() + e.getMessage());
       }
@@ -73,6 +73,7 @@ public class DatabaseUtility {
       database = Main.getDatabase();
     }
     userCollection = database.getCollection("users");
+    eventCollection = database.getCollection("events");
     conflictCollection = database.getCollection("conflicts");
     conventionCollection = database.getCollection("conventions");
     eventCollection = database.getCollection("events");
@@ -253,6 +254,7 @@ public class DatabaseUtility {
     Gson gson = new Gson();
 
     BasicDBObject obj = BasicDBObject.parse(gson.toJson(newEvent));
+    System.out.println("addEvent");
 
     // try to load existing document from MongoDB
     Document document = eventCollection.find(eq("conventionID", conventionID)).first();
@@ -268,6 +270,7 @@ public class DatabaseUtility {
       BasicDBObject query = new BasicDBObject();
       update.put("$push", new BasicDBObject("events", obj));
       eventCollection.updateOne(query, update);
+      System.out.println("in addEvent2");
       return true;
     } else {
       return false;

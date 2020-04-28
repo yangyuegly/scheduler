@@ -37,12 +37,11 @@ public class CreateConventionHandler implements TemplateViewRoute {
     boolean avail = false;
     Integer id = null;
 
-    // we want to try to make IDs until we find one that is not already in use
     while (!avail) {
       id = rand.nextInt((999999 - 100000) + 1) + 100000;
       DatabaseUtility db = new DatabaseUtility();
 
-      // if avail is true, this ID is not yet used
+      // if avail is true, this ID has not yet been used
       avail = db.addConvID(userEmail, id.toString());
     }
 

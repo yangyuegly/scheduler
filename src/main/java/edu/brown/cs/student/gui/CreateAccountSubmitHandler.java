@@ -12,10 +12,9 @@ import spark.Request;
 import spark.Response;
 import spark.TemplateViewRoute;
 
-//integrated but register command needs to return a boolean
 /**
  * This class is used to add a newly created account to the database and send the new user to their
- * account's home page.
+ * account's home page. It implements TemplateViewRoute.
  */
 public class CreateAccountSubmitHandler implements TemplateViewRoute {
 
@@ -37,8 +36,7 @@ public class CreateAccountSubmitHandler implements TemplateViewRoute {
       return new ModelAndView(variables, "create_account.ftl");
     }
 
-    // sets the cookie so it expires after two hours
-    response.cookie("user", email, 120 * 60 * 1000);
+    response.cookie("user", email);
     response.redirect("/account");
 
     return null; // this line will not be reached

@@ -47,11 +47,11 @@ const addEvent = () => {
 
   // post request to "/add_event/id with added events
   $.post("/add_event/" + convID, postParameters, (responseJSON) => {
-    if (responseJSON != "") {
-      // an error occurred
-      responseObject = JSON.parse(responseJSON);
+    responseObject = JSON.parse(responseJSON);
+    errorMessage = responseObject.errorMessage;
 
-      errorMessage = responseObject.errorMessage;
+    if (errorMessage != "") {
+      // an error occurred
       $("#addEventError").text(errorMessage);
     } else {
       // update the existing events on the page
@@ -76,11 +76,11 @@ const addCollaborator = () => {
 
   // post request to "/add_event/id with added events
   $.post("/add_collaborator/" + convID, postParameters, (responseJSON) => {
-    if (responseJSON != "") {
-      // an error occurred
-      responseObject = JSON.parse(responseJSON);
+    responseObject = JSON.parse(responseJSON);
+    errorMessage = responseObject.errorMessage;
 
-      errorMessage = responseObject.errorMessage;
+    if (errorMessage != "") {
+      // an error occurred
       $("#addCollaboratorError").text(errorMessage);
     } else {
       // clear the email input box

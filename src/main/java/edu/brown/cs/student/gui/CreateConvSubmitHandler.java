@@ -13,7 +13,6 @@ import spark.Request;
 import spark.Response;
 import spark.TemplateViewRoute;
 
-//integrated
 public class CreateConvSubmitHandler implements TemplateViewRoute {
 
   @Override
@@ -59,7 +58,7 @@ public class CreateConvSubmitHandler implements TemplateViewRoute {
       LocalDate today = LocalDate.now();
       Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "currDay", today, "id",
           id.toString(), "errorMessage",
-          "An error occurred while saving your convention." + " Please try again.");
+          "An error occurred while saving your convention. Please try again.");
 
       return new ModelAndView(variables, "setup_conv.ftl");
     }

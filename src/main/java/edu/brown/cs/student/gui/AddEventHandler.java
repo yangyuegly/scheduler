@@ -22,7 +22,6 @@ public class AddEventHandler implements Route {
   @Override
   public String handle(Request req, Response response) throws Exception {
     String userEmail = req.cookie("user");
-    // String conventionID = req.params(":id");
 
     QueryParamsMap queryMap = req.queryMap();
     String eventString = queryMap.value("event");
@@ -33,14 +32,6 @@ public class AddEventHandler implements Route {
 
     if (!permission) {
       response.redirect("/unauthorized");
-    }
-
-    if (userEmail == null) {
-      // user is not logged in
-      // Map<String, Object> variables = ImmutableMap.of("title", -----------------
-
-      // "Scheduler", "message", "Please log in");
-      // return new ModelAndView(variables, "home.ftl");
     }
 
     List<Event> priorEvents = db.getEventsFromConventionID(conventionID);

@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import edu.brown.cs.student.graph.UndirectedWeightedGraph;
 
@@ -12,7 +13,7 @@ import edu.brown.cs.student.graph.UndirectedWeightedGraph;
  */
 public class ScheduleCommand {
   List<Event> nodes;
-  HashSet<Conflict> edges;
+  Set<Conflict> edges;
   Convention convention;
   Integer TS;
   Integer CONCURENCY_LIMIT, MAX_SCHEDULE_DAYS;

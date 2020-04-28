@@ -54,7 +54,9 @@
 
 
 
+
 </div>
+  <div id='error'></div>
   <div id='calendar'></div>
 </body>
 

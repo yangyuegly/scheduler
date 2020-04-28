@@ -54,7 +54,10 @@ public class ScheduleCommand {
 
     System.out.println("got start date time"); // delete
 
+    System.out.println("size of timeSlot list " + timeSlot.size());
+
     int dayOfSlot = timeSlot.get(0);
+    System.out.println("got time slot");
     LocalDateTime slotDayAtStartTime = convStart.plusDays(dayOfSlot);
 
     System.out.println("got made slot start"); // delete
@@ -87,6 +90,13 @@ public class ScheduleCommand {
 
     for (Event event : nodes) {
       System.out.println("in sched loop event " + event.getName()); // delete
+
+      System.out.println("get color size " + event.getColor().size());
+
+      // IF NO CALENDAR COULD BE MADE
+      if (event.getColor().size() < 2) {
+        return null;
+      }
 
       LocalDateTime currStart = this.getTimeSlotStart(event.getColor());
 

@@ -57,7 +57,7 @@ public class DatabaseUtilityTest {
 //    assertFalse(du.addEvent("nonExistingConvention", new Event(0, "justATest")));
   }
 
-  @Test
+  //@Test
   public void addConflictTest() {
     Event e1 = new Event(1, "x");
     Event e2 = new Event(2, "y");

@@ -73,7 +73,7 @@ a {
 <<<<<<< HEAD
   font-size: 16px;
 =======
-  font-size: 18px;  
+  font-size: 18px;
 >>>>>>> f7c33d97115597e81e0262f3d8291b3885da297a
   border: none;
   outline: none;
@@ -169,12 +169,6 @@ a {
   margin-top: 6px;
   padding: 5px 0;
 }
-
-/* .col-75-extra-padding {
-  float: left;
-  width: 85%;
-  padding: 15px 0;
-} */
 
 /* Responsive layout - when the screen is less than 600px wide, make the two
 columns stack on top of each other instead of next to each other */

@@ -118,7 +118,8 @@ public class DatabaseUtility {
     System.out.println("eventList's length is " + eventList.size()); // delete
 
     for (Document event : eventList) {
-      Event e = new Event(event.getInteger("id"), event.getString("name"));
+      Event e = new Event(event.getInteger("id"), event.getString("name"),
+          event.getString("description"));
       result.add(e);
     }
     return result;
@@ -165,16 +166,43 @@ public class DatabaseUtility {
     return false;
   }
 
+  /**
+   * Add conflicts both ways for the convenience of the graph
+   *
+   * @param conventionID
+   * @param newConflict
+   *
+   * @return
+   */
   public Boolean addConflict(String conventionID, Conflict newConflict) {
+    Conflict reverse = new Conflict(newConflict.getTail(), newConflict.getHead(),
+        newConflict.getWeight());
+    Boolean err = addConflictHelper(conventionID, newConflict);
+    Boolean err2 = addConflictHelper(conventionID, reverse);
+    return err && err2;
+
+  }
+
+  public Boolean addConflictHelper(String conventionID, Conflict newConflict) {
     Gson gson = new Gson();
     BasicDBObject obj = BasicDBObject.parse(gson.toJson(newConflict));
-    System.out.println("addConflict");
-    // try to load existing document from MongoDB
-    Document document = conflictCollection.find(eq("conventionID", conventionID)).first();
+    //=====checking if convention collection contains current conventionID
+    BasicDBObject cQuery = new BasicDBObject("id", conventionID);
+    Document document = conventionCollection.find(cQuery).first();
     if (document == null) {
-      System.out.println("cannot find given convention");
       return false;
     }
+
+    //=====checking if conflict collection contains current conventionID
+    BasicDBObject checkExistInConflict = new BasicDBObject("conventionID", conventionID);
+    Document findConvInConflict = conflictCollection.find(checkExistInConflict).first();
+    Map<String, Object> newConventionString = new HashMap<>();
+    if (findConvInConflict == null || findConvInConflict.isEmpty()) {
+      newConventionString.put("conventionID", conventionID);
+      conflictCollection.insertOne(new Document(newConventionString));
+    }
+    
+
     List<BasicDBObject> criteria = new ArrayList<BasicDBObject>();
     criteria.add(new BasicDBObject("conventionID", new BasicDBObject("$eq", conventionID)));
     criteria.add(new BasicDBObject("conflicts.event1",
@@ -204,9 +232,11 @@ public class DatabaseUtility {
       for (Document d : conflicts) {
 
         Document e1 = (Document) d.get("event1");
-        Event event1 = new Event(e1.getInteger("id"), e1.getString("name"));
+        Event event1 = new Event(e1.getInteger("id"), e1.getString("name"),
+            e1.getString("description"));
         Document e2 = (Document) d.get("event2");
-        Event event2 = new Event(e2.getInteger("id"), e2.getString("name"));
+        Event event2 = new Event(e2.getInteger("id"), e2.getString("name"),
+            e1.getString("description"));
         Conflict conflict = new Conflict(event1, event2, d.getInteger("weight"));
         if (conflict.equals(newConflict)) {
           System.out.println(conflict.weight);
@@ -280,9 +310,12 @@ public class DatabaseUtility {
       Document event1Doc = (Document) conflictDoc.get("event1");
       Document event2Doc = (Document) conflictDoc.get("event2");
       Integer weight = conflictDoc.getInteger("weight");
-      Event e1 = new Event(event1Doc.getInteger("id"), event1Doc.getString("name"));
-      Event e2 = new Event(event2Doc.getInteger("id"), event2Doc.getString("name"));
+      Event e1 = new Event(event1Doc.getInteger("id"), event1Doc.getString("name"),
+          event1Doc.getString("description"));
+      Event e2 = new Event(event2Doc.getInteger("id"), event2Doc.getString("name"),
+          event2Doc.getString("description"));
       Conflict c = new Conflict(e1, e2, weight);
+      System.out.println("extracting edge: " + c);
       edges.add(c);
     }
 
@@ -308,11 +341,11 @@ public class DatabaseUtility {
     }
     BasicDBObject equery = new BasicDBObject("conventionID", conventionID);
     Document findConvInEvent = eventCollection.find(equery).first();
-    Document findIterable = eventCollection
-        .find(eq("event.name", newEvent.getName())).first();
-    
+    Document findIterable = eventCollection.find(eq("event.name", newEvent.getName())).first();
+
     Map<String, Object> newConventionString = new HashMap<>();
-    if ((findConvInEvent == null || findConvInEvent.isEmpty())&& (findIterable==null||findIterable.isEmpty())) {
+    if ((findConvInEvent == null || findConvInEvent.isEmpty())
+        && (findIterable == null || findIterable.isEmpty())) {
       List<BasicDBObject> eventArray = new ArrayList<>();
       eventArray.add(obj);
       newConventionString.put("conventionID", conventionID);

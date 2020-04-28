@@ -64,7 +64,7 @@ public class LoadCommandTest {
 
     HashSet<Conflict> conflicts = db.getConflictsFromConventionID("testConvention");
 
-    Conflict c = new Conflict(new Event("event2"), new Event("event3"), 0);
+    Conflict c = new Conflict(new Event(2, "event2", ""), new Event(2, "event3", ""), 0);
     assertTrue(conflicts.contains(c));
     assertEquals(conflicts.size(), 1);
   }

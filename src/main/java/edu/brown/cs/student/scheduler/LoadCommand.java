@@ -84,8 +84,8 @@ public class LoadCommand {
             nameToId.put(second, count);
             count++;
           }
-          Conflict conflict = new Conflict(new Event(nameToId.get(first), first),
-              new Event(nameToId.get(second), second), null);
+          Conflict conflict = new Conflict(new Event(nameToId.get(first), first, ""),
+              new Event(nameToId.get(second), second, ""), null);
           this.conflict.add(conflict);
           // add to the weight if the conflict doesn't exist or add the conflict itself
           frequencyMap.put(conflict, frequencyMap.getOrDefault(conflict, 0) + 1);
@@ -105,7 +105,7 @@ public class LoadCommand {
 
     // insert into the event table
     for (Map.Entry<String, Integer> entry : nameToId.entrySet()) {
-      Event e = new Event(entry.getValue(), entry.getKey());
+      Event e = new Event(entry.getValue(), entry.getKey(), "");
 //      du.addEvent(convention.getID(), e);
       BasicDBObject eventObject = BasicDBObject.parse(gson.toJson(e));
       eventArray.add(eventObject);

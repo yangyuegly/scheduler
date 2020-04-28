@@ -139,16 +139,17 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
         if (numColoredCourses == 0) {
           List<Integer> indices = getFirstNodeColor();
           curr.setColor(indices);
+          System.out.println("first node: " + curr);
           result.add(curr);
           numColoredCourses++;
         } else {
           // color the current course
           List<Integer> indices = getSmallestAvailableColor(curr.getID());
           if (indices.size() == 2) {
-            System.out.println("indices:" + indices);
             curr.setColor(indices);
+            System.out.println("curr: " + curr);
             result.add(curr);
-            numColoredCourses++;
+            numColoredCourses++; 
             // decrement the concurrency limit for a color
             colors.get(indices.get(0))[indices.get(1)]--;
           }

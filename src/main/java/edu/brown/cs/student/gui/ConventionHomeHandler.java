@@ -1,5 +1,4 @@
 package edu.brown.cs.student.gui;
-//integrated
 
 import java.time.LocalDate;
 import java.util.List;
@@ -57,6 +56,7 @@ public class ConventionHomeHandler implements TemplateViewRoute {
     List<Event> events = currConv.getEvents();
     String existingEvents = "";
 
+    // this creates a string that tells the user what events are already in this convention
     for (Event event : events) {
       existingEvents += "<p>" + event.getName() + "</p>";
     }

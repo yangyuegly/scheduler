@@ -31,12 +31,10 @@ public class LoginHandler implements TemplateViewRoute {
       String message = e.getMessage();
 
       Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "message", message);
-      return new ModelAndView(variables, "home.ftl"); // how would we redirect with
-                                                      // message????????????????????????
+      return new ModelAndView(variables, "home.ftl");
     }
 
-    // sets the cookie so it expires after two hours
-    response.cookie("user", email, 72000000);
+    response.cookie("user", email);
 
     // go to the user's account page
     response.redirect("/account");

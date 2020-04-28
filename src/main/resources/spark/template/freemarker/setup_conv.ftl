@@ -5,7 +5,11 @@
 
 
   <form id="myForm" onsubmit="return validate()" form method="POST" action="/create_convention/${id}">
-    <label for="convName">Convention name: </label><br>
+    <!-- <div class="row">
+    </div> -->
+
+
+    <label for="convName">Convention name: </label>
     <input name="convName" id="convName" size="30" required><br><br>
     <label for="startDate">Start date:</label>
     <input type="date" id="startDate" name="startDate" min="${currDay}" max="2100-01-01" required>
@@ -29,6 +33,7 @@
     <input type="time" id="startTime" name="startTime">
     <label for="endTime"> End time:</label>
     <input type="time" id="endTime" name="endTime">
+
     <br><br><br>
     <button type="submit" name="submitType" value="Add events by hand">
       <svg class="bi bi-pencil-square" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -47,6 +52,9 @@
       Upload a file with all events
     </button>
     <br>
+
+
+    </div>
   </form>
   <p class="errorMessage">${errorMessage}</p>
 </div>

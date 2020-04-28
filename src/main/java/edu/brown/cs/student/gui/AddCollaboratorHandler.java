@@ -36,7 +36,7 @@ public class AddCollaboratorHandler implements Route {
     // adding a collaborator
     String collaboratorEmail = queryMap.value("colEmail");
 
-    if (!db.addConvID(collaboratorEmail, conventionID)) {
+    if (!db.addCollaborator(collaboratorEmail, conventionID)) {
       // an error occurred
       Map<String, Object> variables = ImmutableMap.of("errorMessage", "That "); // fix this so
                                                                                 // add_collaborator

@@ -7,6 +7,8 @@ import static org.junit.Assert.assertTrue;
 import java.util.HashSet;
 import java.util.List;
 
+import org.junit.Test;
+
 public class DatabaseUtilityTest {
   DatabaseUtility du = new DatabaseUtility();
 
@@ -60,8 +62,10 @@ public class DatabaseUtilityTest {
     Event e1 = new Event(1, "x");
     Event e2 = new Event(2, "y");
     Conflict c = new Conflict(e1, e2, 100);
-//    du.addEvent("testConvention", e1);
-    du.addConflict("940576", c);
+    du.addEvent("testConvention", e2);
+    Conflict c1 = new Conflict(e2, e1, 100);
+    du.addConflict("940576", c1);
+//    du.addConflict("940576", c);
 //    assertFalse(du.addEvent("nonExistingConvention", new Event(0, "justATest")));
   }
 

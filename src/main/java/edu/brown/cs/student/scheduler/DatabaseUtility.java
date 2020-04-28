@@ -192,22 +192,35 @@ public class DatabaseUtility {
       conflictCollection.updateOne(query, update);
       return true;
     } else {
-//      Document doc = findIterable.first();
-//      System.out.println("here1");
-//      if (findIterable.first() == null) {
-//        System.out.println("null");
-//      }
-//      System.out.println(doc.toJson());
-//      int weight = doc.getInteger("weight");
-//      System.out.println("here2");
-//      BasicDBObject update = new BasicDBObject();
-//      System.out.println("here3");
-//      BasicDBObject query = new BasicDBObject("$and", criteria);
-//      System.out.println("here4");
-//      update.put("$set", new BasicDBObject("conflicts.weight", weight + 1));
-//      System.out.println("here5");
-//      conflictCollection.updateOne(query, update);
-//      System.out.println("here6");
+      List<BasicDBObject> conflictArray = new ArrayList<>();
+      Document doc = findIterable.first();
+      System.out.println("here1");
+      if (findIterable.first() == null) {
+        System.out.println("null");
+      }
+      System.out.println(doc.toJson());
+//      String weight = doc.getString("conventionID");
+      List<Document> conflicts = (List<Document>) doc.get("conflicts");
+      for (Document d : conflicts) {
+
+        Document e1 = (Document) d.get("event1");
+        Event event1 = new Event(e1.getInteger("id"), e1.getString("name"));
+        Document e2 = (Document) d.get("event2");
+        Event event2 = new Event(e2.getInteger("id"), e2.getString("name"));
+        Conflict conflict = new Conflict(event1, event2, d.getInteger("weight"));
+        if (conflict.equals(newConflict)) {
+          System.out.println(conflict.weight);
+          conflict.weight++;
+        }
+        BasicDBObject obj1 = BasicDBObject.parse(gson.toJson(conflict));
+        conflictArray.add(obj1);
+      }
+      BasicDBObject update = new BasicDBObject();
+      BasicDBObject query = new BasicDBObject("$and", criteria);
+      update.put("$set", new BasicDBObject("conflicts", conflictArray));
+      conflictCollection.updateOne(query, update);
+//
+////      conflictCollection.deleteOne(query);
       return false;
     }
     // check if event is already there

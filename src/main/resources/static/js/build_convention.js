@@ -17,6 +17,20 @@ let eventNamesString = $eventNames.val();
 */
 
 $(document).ready(() => {
+var coll = document.getElementsByClassName("collapsible");
+var i;
+
+for (i = 0; i < coll.length; i++) {
+  coll[i].addEventListener("click", function() {
+    this.classList.toggle("active");
+    var content = this.nextElementSibling;
+    if (content.style.display === "block") {
+      content.style.display = "none";
+    } else {
+      content.style.display = "block";
+    }
+  });
+}
   setup_live_event_updates();
   $("#addEvent").click(addEvent);
   $("#doneAddingEvents").click(doneAdding);
@@ -36,6 +50,8 @@ const addEvent = () => {
   let newEvent = [$name.val(), $description.val()];
   existingEvents.push(newEvent);
   eventNamesString += "<p>" + $name.val() + "</p>";
+  eventNamesString += "<button type=\"button\" class=\"collapsible\">See Description</button>\r\n"
+          + "<div class=\"content\">\r\n" + "<p>" + $description.val() + "</p>\r\n" + "</div>";
 
   add_event("<p>" + $name.val() + "</p>"); //socket code
 
@@ -57,6 +73,21 @@ const addEvent = () => {
       // update the existing events on the page
       $eventNames.html(eventNamesString);
       $("#addEventError").text("");
+      
+      var coll = document.getElementsByClassName("collapsible");
+var i;
+
+for (i = 0; i < coll.length; i++) {
+  coll[i].addEventListener("click", function() {
+    this.classList.toggle("active");
+    var content = this.nextElementSibling;
+    if (content.style.display === "block") {
+      content.style.display = "none";
+    } else {
+      content.style.display = "block";
+    }
+  });
+}
 
       // clear the input boxes
       $name.val("");

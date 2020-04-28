@@ -1,16 +1,11 @@
 package edu.brown.cs.student.main;
 
 import java.io.IOException;
-import java.net.URI;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
-import org.bson.Document;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
@@ -19,9 +14,6 @@ import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.mongodb.BasicDBList;
-import com.mongodb.BasicDBObject;
-import com.mongodb.client.MongoCollection;
 
 /**
  * Class to manage collaboration
@@ -34,9 +26,7 @@ public class ScoringWebSocket {
   static Map<String, String> map = new ConcurrentHashMap<>();
 
   private static enum MESSAGE_TYPE {
-    CONNECT,
-    EVENT,
-    UPDATE
+    CONNECT, EVENT, UPDATE
   }
 
   @OnWebSocketConnect
@@ -50,7 +40,7 @@ public class ScoringWebSocket {
     }
     List<Session> currConvention = sessions.getOrDefault(currURI, new ArrayList<Session>());
     currConvention.add(session);
-    sessions.put(currURI,currConvention);
+    sessions.put(currURI, currConvention);
     JsonObject message = new JsonObject();
     message.addProperty("type", MESSAGE_TYPE.CONNECT.ordinal());
     JsonObject payload = new JsonObject();
@@ -73,7 +63,7 @@ public class ScoringWebSocket {
     assert received.get("type").getAsInt() == MESSAGE_TYPE.EVENT.ordinal();
 
     JsonObject payload = received.get("payload").getAsJsonObject();
-    
+
     JsonObject toSend = new JsonObject();
     toSend.addProperty("type", MESSAGE_TYPE.UPDATE.ordinal());
     JsonObject newPayload = new JsonObject();
@@ -85,12 +75,12 @@ public class ScoringWebSocket {
     // query.put("conventionID", payload.get("conventionID").getAsString());
     // Document doc = eventCollection.find(query).first();
 
-    //iterate through the events found
+    // iterate through the events found
     // String score = "";
     // BasicDBList eventList = (BasicDBList)doc.get("events");
     // for (int i = 0; i < eventList.size(); i++) {
-    //   BasicDBObject eventObj = (BasicDBObject) eventList.get(i);
-    //   score = score + " " + eventObj.getString("name");
+    // BasicDBObject eventObj = (BasicDBObject) eventList.get(i);
+    // score = score + " " + eventObj.getString("name");
 
     // }
     String currString = map.get(currURI);

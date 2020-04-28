@@ -42,7 +42,6 @@
   </div>
 
   <br>
-  <br>
 
   <div id="addCollaboratorDiv">
     <h3 id="addCollaboratorLabel">Add a collaborator for this convention:</h3>

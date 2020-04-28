@@ -235,9 +235,9 @@ public class WebScraper {
 //            if (!conflict.get(first).equals(second)) {
 //              System.out.println("here3");
 //              // collection.insertOne(doc);
-          Event event1 = new Event(eventID, first);
+          Event event1 = new Event(eventID, first, "");
           eventID++;
-          Event event2 = new Event(eventID, second);
+          Event event2 = new Event(eventID, second, "");
           eventID++;
 //          du.addEvent(conventionID, event1);
 //          du.addEvent(conventionID, event2);

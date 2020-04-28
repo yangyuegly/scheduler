@@ -12,7 +12,7 @@ import edu.brown.cs.student.graph.IVertex;
 public class Event implements IVertex<Event, Conflict> {
 
   /**
-   * Id of event, list of edges, degree of vertex, color of vertex name and description of vertex
+   * Id of event, list of edges, degree of vertex, color of vertex name and description of vertex.
    */
   Integer id;
   List<Conflict> adjList;
@@ -22,41 +22,7 @@ public class Event implements IVertex<Event, Conflict> {
   String description;
 
   /**
-   * Constructor for Event
-   */
-  public Event() {
-  }
-
-  /**
-   * Constructor for Event
-   *
-   * @param id - id of event
-   * @param name - name of event
-   */
-  public Event(Integer id, String name) {
-    this.id = id;
-    this.adjList = new ArrayList<>();
-    this.degree = 0;
-    this.color = new ArrayList<>();
-    this.name = name;
-    this.description = "";
-  }
-
-  /**
-   * Constructor of Event
-   *
-   * @param name - name of the event
-   */
-  public Event(String name) {
-    this.adjList = new ArrayList<>();
-    this.degree = 0;
-    this.color = new ArrayList<>();
-    this.name = name;
-    this.description = "";
-  }
-
-  /**
-   * Constructor of event
+   * Constructor of an event.
    *
    * @param id - id of event
    * @param name - name of event

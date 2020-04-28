@@ -1,4 +1,5 @@
 package edu.brown.cs.student.graph;
+
 import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ import edu.brown.cs.student.scheduler.Event;
 public class graphTest {
   List<Event> events;
   UndirectedWeightedGraph<Event, Conflict> graph;
+
   /**
    * Sets up the graph (with both large and small database)
    */
@@ -25,7 +27,7 @@ public class graphTest {
     events = new ArrayList<Event>();
 
     for (Integer i = 0; i < 10; i++) {
-      events.add(new Event(i, i.toString()));
+      events.add(new Event(i, i.toString(), ""));
     }
     Set<Conflict> conflicts = new HashSet<Conflict>();
     conflicts.add(new Conflict(events.get(0), events.get(1), 3));
@@ -45,7 +47,6 @@ public class graphTest {
     graph = new UndirectedWeightedGraph<>(events, CL, md, TS);
     graph.addAllEdges(conflicts);
   }
-
 
   /**
    * Resets the graph
@@ -70,7 +71,6 @@ public class graphTest {
     tearDown();
   }
 
-
   @Test
   public void getFirstNodeColorTest() {
     setUp();
@@ -78,6 +78,7 @@ public class graphTest {
     assertEquals(2, colors.size());
     tearDown();
   }
+
   @Test
   public void getSmallestAvailableColorTest() {
     setUp();
@@ -85,6 +86,7 @@ public class graphTest {
     assertEquals(2, colors.size());
     tearDown();
   }
+
   @Test
   public void graphColoringTest() {
     setUp();
@@ -103,6 +105,4 @@ public class graphTest {
     tearDown();
   }
 
-
 }
-

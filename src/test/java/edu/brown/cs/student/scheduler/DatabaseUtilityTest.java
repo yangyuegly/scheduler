@@ -22,8 +22,8 @@ public class DatabaseUtilityTest {
   @Test
   public void getEventsFromConventionIDTest() {
     List<Event> events = du.getEventsFromConventionID("442715");
-    Event e1 = new Event(0, "Javascript/CSS");
-    Event e2 = new Event(1, "C++");
+    Event e1 = new Event(0, "Javascript/CSS", "");
+    Event e2 = new Event(1, "C++", "");
 
     assertTrue(events.contains(e1));
     assertTrue(events.contains(e2));
@@ -46,22 +46,22 @@ public class DatabaseUtilityTest {
 ///  @Test
   public void getConflictsTest() {// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     HashSet<Conflict> conflicts = du.getConflictsFromConventionID("c1");
-    Event e1 = new Event(0, "e1");
-    Event e2 = new Event(1, "e2");
+    Event e1 = new Event(0, "e1", "");
+    Event e2 = new Event(1, "e2", "");
     Conflict conflict = new Conflict(e1, e2, 1);
     assertTrue(conflicts.contains(conflict));
   }
 
   @Test
   public void addEventTest() {
-    assertTrue(du.addEvent("c1", new Event(0, "justATest")));
-    assertFalse(du.addEvent("nonExistingConvention", new Event(0, "justATest")));
+    assertTrue(du.addEvent("c1", new Event(0, "justATest", "")));
+    assertFalse(du.addEvent("nonExistingConvention", new Event(0, "justATest", "")));
   }
 
   // @Test
   public void addConflictTest() { // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    Event e1 = new Event(1, "x");
-    Event e2 = new Event(2, "y");
+    Event e1 = new Event(1, "x", "");
+    Event e2 = new Event(2, "y", "");
     Conflict c = new Conflict(e1, e2, 100);
     du.addEvent("testConvention", e2);
     Conflict c1 = new Conflict(e2, e1, 100);

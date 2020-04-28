@@ -18,21 +18,9 @@
     <button id="addEvent">Add event</button>
 
     <button id="doneAddingEvents">Done adding events</button>
+    <p id="addEventError" class="errorMessage"></p>
   </div>
 
-  <br>
-  <br>
-
-  <div id="addCollaborator">
-  <h3 id="addCollaboratorLabel">Add a collaborator for this convention:</h3>
-   <label for="colEmail" id="colEmailLabel">User email: </label><br>
-    <input name="colEmail" id="colEmail" size="30" required><br><br>
-    <button id="addEvent">Add Collaborator</button>
-
-    <button id="doneAddingEvents">Done adding collaborators</button>
-  </div>
-
-  <br>
   <br>
 
   <div id="completedDiv">
@@ -40,7 +28,7 @@
     <p id="saveExpl">To let people register as attendees on our website, send them this link:
       <a href=/convention_signup/${id} class="errorMessage" id="attendeeSignupLink">localhost:45677/convention_signup/${id}</a>.
       If you do this, their preferences will be included in the
-      schedule.</p>
+      schedule.  </p>
     <button id="save">Save and schedule later</button>
     <label> or <label>
     <button id="schedule">
@@ -53,11 +41,21 @@
     </button>
   </div>
 
+  <br>
+  <br>
+
+  <div id="addCollaboratorDiv">
+    <h3 id="addCollaboratorLabel">Add a collaborator for this convention:</h3>
+    <label for="colEmail" id="colEmailLabel">User email: </label><br>
+    <input name="colEmail" id="colEmail" size="30" required><br><br>
+    <button id="addCollaborator">Add Collaborator</button>
+    <p id="addCollaboratorError" class="errorMessage"></p>
+  </div>
+
 </div>
 
 <script src="/js/websocket.js"></script>
 <script src="/js/build_convention.js"></script>
-<!-- <script src="/js/websocket.js"></script> -->
 
 </#assign>
 <#include "main.ftl">

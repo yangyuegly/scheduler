@@ -42,7 +42,6 @@ public class DatabaseUtility {
   /**
    * Collections stored in MongoDB database
    */
-
   MongoCollection<Document> userCollection;
   MongoCollection<Document> conventionCollection;
   MongoCollection<Document> eventCollection;
@@ -186,14 +185,14 @@ public class DatabaseUtility {
   public Boolean addConflictHelper(String conventionID, Conflict newConflict) {
     Gson gson = new Gson();
     BasicDBObject obj = BasicDBObject.parse(gson.toJson(newConflict));
-    //=====checking if convention collection contains current conventionID
+    // =====checking if convention collection contains current conventionID
     BasicDBObject cQuery = new BasicDBObject("id", conventionID);
     Document document = conventionCollection.find(cQuery).first();
     if (document == null) {
       return false;
     }
 
-    //=====checking if conflict collection contains current conventionID
+    // =====checking if conflict collection contains current conventionID
     BasicDBObject checkExistInConflict = new BasicDBObject("conventionID", conventionID);
     Document findConvInConflict = conflictCollection.find(checkExistInConflict).first();
     Map<String, Object> newConventionString = new HashMap<>();
@@ -201,7 +200,6 @@ public class DatabaseUtility {
       newConventionString.put("conventionID", conventionID);
       conflictCollection.insertOne(new Document(newConventionString));
     }
-    
 
     List<BasicDBObject> criteria = new ArrayList<BasicDBObject>();
     criteria.add(new BasicDBObject("conventionID", new BasicDBObject("$eq", conventionID)));

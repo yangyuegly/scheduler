@@ -63,6 +63,8 @@ public class ScheduleCommand {
 
     System.out.println("got num minutes before slot"); // delete
 
+    System.out.println("time slot " + dayOfSlot + " " + numMinutesBeforeSlot); // delete
+
     return slotDayAtStartTime.plusMinutes(numMinutesBeforeSlot);
   }
 

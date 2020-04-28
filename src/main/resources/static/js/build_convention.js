@@ -7,9 +7,10 @@ let existingEvents = [];
 const $name = $("#name");
 const $description = $("#description");
 const $eventNames = $("#eventNames");
+const $emailInput = $("#colEmail");
 
 // this string stores the names of the added events in HTML form
-let eventNamesString = "";
+let eventNamesString = $eventNames.val();
 
 /*
   When the document is ready, this runs.
@@ -21,32 +22,71 @@ $(document).ready(() => {
   $("#doneAddingEvents").click(doneAdding);
   $("#save").click(saveConvAndGoToAccount);
   $("#schedule").click(schedule);
+  $("#addCollaborator").click(addCollaborator);
   // hide HTML elements that are used after all events are added
   $("#completedDiv").css("visibility", "hidden");
 });
 
 /*
   Function that gets called when the add event button is clicked.
-  This handles adding the new event.
+  This handles adding the new event and making a post request so the event
+  is stored in the database.
 */
 const addEvent = () => {
   let newEvent = [$name.val(), $description.val()];
   existingEvents.push(newEvent);
-
-  console.log("this is name" + $name.val());
-  console.log(newEvent);
-
-
   eventNamesString += "<p>" + $name.val() + "</p>";
 
   add_event("<p>" + $name.val() + "</p>"); //socket code
 
-  // update the existing events on the page
-  $eventNames.html(eventNamesString);
+  const eventJson = JSON.stringify(newEvent);
+  const url = window.location.href;
+  var splitURL = url.split("/");
+  var convID = splitURL[4];
+  const postParameters = { event: eventJson, conventionID: convID };
 
-  // clear the input boxes
-  $name.val("");
-  $description.val("");
+  // post request to "/add_event/id with added events
+  $.post("/add_event/" + convID, postParameters, (responseJSON) => {
+    if (responseJSON != "") {
+      // an error occurred
+      responseObject = JSON.parse(responseJSON);
+
+      errorMessage = responseObject.errorMessage;
+      $("#addEventError").text(errorMessage);
+    } else {
+      // update the existing events on the page
+      $eventNames.html(eventNamesString);
+      $("#addEventError").text("");
+
+      // clear the input boxes
+      $name.val("");
+      $description.val("");
+    }
+  });
+};
+
+/*
+  Function that gets called when the add collaborator button is clicked.
+  This uses a POST request to add the collaborator.
+*/
+const addCollaborator = () => {
+  const colEmail = $emailInput.val();
+
+  const postParameters = { colEmail: colEmail };
+
+  // post request to "/add_event/id with added events
+  $.post("/add_collaborator/" + convID, postParameters, (responseJSON) => {
+    if (responseJSON != "") {
+      // an error occurred
+      responseObject = JSON.parse(responseJSON);
+
+      errorMessage = responseObject.errorMessage;
+      $("#addCollaboratorError").text(errorMessage);
+    } else {
+      // clear the email input box
+      $emailInput.val("");
+    }
+  });
 };
 
 /*
@@ -60,41 +100,19 @@ const doneAdding = () => {
 };
 
 /*
-  This uses a post request to send the new events to the program,
-*/
-const save = () => {
-  // build javascript object that contains the data for the POST request.
-  const myJson = JSON.stringify(existingEvents);
-  const url = window.location.href;
-  var splitURL = url.split("/");
-  var convID = splitURL[4];
-
-  const postParameters = { existingEvents: myJson, conventionID: convID };
-
-  // post request to "/save_convention" with added events
-  $.post("/save_convention", postParameters, (responseJSON) => {});
-}
-
-/*
-  Function that gets called when the save button is clicked.  This uses a post
-  request to send the new events to the program, and then causes the page
-  to change to the account page.
+  Function that gets called when the save button is clicked.  This brings the
+  user to their account home page.
 */
 const saveConvAndGoToAccount = () => {
-  save();
-
   // go to the account page
   window.location.pathname = "/account";
 };
 
 /*
-  Function that gets called when the schedule button is clicked.  This uses a
-  post request to send the new events to the program so they can be saved.
-  Then, it changes the page to the calendar page.
+  Function that gets called when the schedule button is clicked.  This schedules
+  the convention and changes the page to the calendar page.
 */
 const schedule = () => {
-  save();
-
   const url = window.location.href;
   var splitURL = url.split("/");
   var id = splitURL[4];

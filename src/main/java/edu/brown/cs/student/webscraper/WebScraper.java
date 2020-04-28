@@ -247,7 +247,10 @@ public class WebScraper {
           eventArray.add(eventObject1);
           Conflict conflict = new Conflict(event1, event2, 100);
           BasicDBObject obj = BasicDBObject.parse(gson.toJson(conflict));
-          conflictArray.add(obj);
+          if (!event1.equals(event2)) {
+            conflictArray.add(obj);
+          }
+
 //            }
 //          } else if (conflict.containsKey(second)) {
 //            if (!conflict.get(second).equals(first)) {

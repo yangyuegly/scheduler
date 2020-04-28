@@ -1,7 +1,7 @@
 package edu.brown.cs.student.scheduler;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.time.LocalDateTime;
@@ -15,36 +15,36 @@ public class DatabaseUtilityTest {
 
   @Test
   public void checkPermissionTest() {
-    assertEquals(du.checkPermission("abby_goldberg@brown.edu", "797044"), true);
+    assertEquals(du.checkPermission("abby_goldberg@brown.edu", "211716"), true);
     assertEquals(du.checkPermission("abby_goldberg@brown.edu", "NonExistingID"), false);
   }
 
-//  @Test
+  @Test
   public void getEventsFromConventionIDTest() {
-    List<Event> events = du.getEventsFromConventionID("c1");
-    Event e1 = new Event(0, "e1");
-    Event e2 = new Event(1, "e2");
+    List<Event> events = du.getEventsFromConventionID("442715");
+    Event e1 = new Event(0, "Javascript/CSS");
+    Event e2 = new Event(1, "C++");
+
     assertTrue(events.contains(e1));
     assertTrue(events.contains(e2));
   }
 
-//  @Test
+  @Test
   public void addConventionDataTest() {
     Convention convention = new Convention("c1", "my convention", "2020-04-10", 3, 90, "07:30",
         "19:30");
     assertEquals(du.addConventionData(convention), true);
-//    assertEquals(du.addConventionData(convention), false);
   }
 
-//  @Test
+  @Test
   public void addConvIDTest() {
-    // check duplicates in code
-    assertEquals(du.addConvID("abby_goldberg@brown.edu", "testConvID1"), true);
-    assertNotEquals(du.addConvID("abby_goldberg@brown.edu", "testConvID1"), false);
+    // if you want to run line 40, change to a new ID.
+    // assertEquals(du.addConvID("abby_goldberg@brown.edu", "testConvention2"), true);
+    assertEquals(du.addConvID("abby_goldberg@brown.edu", "testConvention1"), false);
   }
 
-//  @Test
-  public void getConflictsTest() {
+///  @Test
+  public void getConflictsTest() {// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     HashSet<Conflict> conflicts = du.getConflictsFromConventionID("c1");
     Event e1 = new Event(0, "e1");
     Event e2 = new Event(1, "e2");
@@ -52,14 +52,14 @@ public class DatabaseUtilityTest {
     assertTrue(conflicts.contains(conflict));
   }
 
-//@Test
+  @Test
   public void addEventTest() {
     assertTrue(du.addEvent("c1", new Event(0, "justATest")));
-//    assertFalse(du.addEvent("nonExistingConvention", new Event(0, "justATest")));
+    assertFalse(du.addEvent("nonExistingConvention", new Event(0, "justATest")));
   }
 
   // @Test
-  public void addConflictTest() {
+  public void addConflictTest() { // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     Event e1 = new Event(1, "x");
     Event e2 = new Event(2, "y");
     Conflict c = new Conflict(e1, e2, 100);

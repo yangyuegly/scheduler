@@ -2,7 +2,9 @@ package edu.brown.cs.student.main;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
@@ -27,7 +29,7 @@ import com.mongodb.client.MongoCollection;
 @WebSocket
 public class ScoringWebSocket {
   private static final Gson GSON = new Gson();
-  private static final Queue<Session> sessions = new ConcurrentLinkedQueue<>();
+  private static Map<String, List<Session>> sessions = new ConcurrentHashMap<>();
   private static int nextId = 0;
   static Map<String, String> map = new ConcurrentHashMap<>();
 
@@ -46,7 +48,9 @@ public class ScoringWebSocket {
     } else {
       payloadText = map.get(currURI);
     }
-    sessions.add(session);  
+    List<Session> currConvention = sessions.getOrDefault(currURI, new ArrayList<Session>());
+    currConvention.add(session);
+    sessions.put(currURI,currConvention);
     JsonObject message = new JsonObject();
     message.addProperty("type", MESSAGE_TYPE.CONNECT.ordinal());
     JsonObject payload = new JsonObject();
@@ -100,7 +104,7 @@ public class ScoringWebSocket {
       System.out.println(m.getKey() + " " + m.getValue());
     }
     String toSendStr = GSON.toJson(toSend);
-    for (Session s : sessions) {
+    for (Session s : sessions.get(currURI)) {
       s.getRemote().sendString(toSendStr);
     }
   }

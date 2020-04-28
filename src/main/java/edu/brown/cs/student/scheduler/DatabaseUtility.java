@@ -183,13 +183,23 @@ public class DatabaseUtility {
   public Boolean addConflictHelper(String conventionID, Conflict newConflict) {
     Gson gson = new Gson();
     BasicDBObject obj = BasicDBObject.parse(gson.toJson(newConflict));
-    System.out.println("addConflict");
-    // try to load existing document from MongoDB
-    Document document = conflictCollection.find(eq("conventionID", conventionID)).first();
+    //=====checking if convention collection contains current conventionID
+    BasicDBObject cQuery = new BasicDBObject("id", conventionID);
+    Document document = conventionCollection.find(cQuery).first();
     if (document == null) {
-      System.out.println("cannot find given convention");
       return false;
     }
+
+    //=====checking if conflict collection contains current conventionID
+    BasicDBObject checkExistInConflict = new BasicDBObject("conventionID", conventionID);
+    Document findConvInConflict = conflictCollection.find(checkExistInConflict).first();
+    Map<String, Object> newConventionString = new HashMap<>();
+    if (findConvInConflict == null || findConvInConflict.isEmpty()) {
+      newConventionString.put("conventionID", conventionID);
+      conflictCollection.insertOne(new Document(newConventionString));
+    }
+    
+
     List<BasicDBObject> criteria = new ArrayList<BasicDBObject>();
     criteria.add(new BasicDBObject("conventionID", new BasicDBObject("$eq", conventionID)));
     criteria.add(new BasicDBObject("conflicts.event1",

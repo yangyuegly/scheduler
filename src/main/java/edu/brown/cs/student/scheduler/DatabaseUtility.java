@@ -162,11 +162,25 @@ public class DatabaseUtility {
       conventionCollection.replaceOne(query, doc, options);
       return true;
     }
-
     return false;
   }
 
+
+  /**
+   * Add conflicts both ways for the convenience of the graph
+   * @param conventionID
+   * @param newConflict
+   * @return
+   */
   public Boolean addConflict(String conventionID, Conflict newConflict) {
+    Conflict reverse = new Conflict(newConflict.getTail(), newConflict.getHead(),
+        newConflict.getWeight());
+        Boolean err = addConflictHelper(conventionID, newConflict);
+        Boolean err2 = addConflictHelper(conventionID, reverse);
+        return err && err2;
+
+  }
+  public Boolean addConflictHelper(String conventionID, Conflict newConflict) {
     Gson gson = new Gson();
     BasicDBObject obj = BasicDBObject.parse(gson.toJson(newConflict));
     System.out.println("addConflict");

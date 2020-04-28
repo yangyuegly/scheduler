@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 
@@ -69,26 +70,49 @@ public class DatabaseUtilityTest {
 //    assertFalse(du.addEvent("nonExistingConvention", new Event(0, "justATest")));
   }
 
-//  @Test
-//  public void getConventionDataTest() {
-//    String[] res1 = du.getConventionData("986329");
-//    assertEquals("986329", res1[0]);
-//    assertEquals("Hack at Brown 2050", res1[1]);
-//
-//    String[] res2 = du.getConventionData("nonExisting");
-//    assertTrue(res2 == null);
-//  }
-
-//  @Test
+  @Test
   public void getConvention() {
-    Convention c = du.getConvention("388982");
+    Convention c1 = du.getConvention("496457");
+    assertEquals(c1.getName(), "Test Upload 2");
+
+    Integer numDays1 = 3;
+    Integer eventDur1 = 30;
+    assertEquals(c1.getNumDays(), numDays1);
+    assertEquals(c1.getEventDuration(), eventDur1);
+
+    LocalDateTime startTime1 = LocalDateTime.of(2020, 12, 13, 22, 52);
+    LocalDateTime endTime1 = LocalDateTime.of(2020, 12, 16, 23, 50);
+    assertEquals(c1.getStartDateTime(), startTime1);
+    assertEquals(c1.getEndDateTime(), endTime1);
+
+    Convention c2 = du.getConvention("410322");
+    assertEquals(c2.getName(), "Abilene Christian University Final Exams");
+
+    Integer numDays2 = 30;
+    Integer eventDur2 = 60;
+    assertEquals(c2.getNumDays(), numDays2);
+    assertEquals(c2.getEventDuration(), eventDur2);
+
+    LocalDateTime startTime2 = LocalDateTime.of(2022, 1, 1, 3, 5);
+    LocalDateTime endTime2 = LocalDateTime.of(2022, 1, 31, 10, 10);
+    assertEquals(c2.getStartDateTime(), startTime2);
+    assertEquals(c2.getEndDateTime(), endTime2);
   }
 
-//  @Test
+  @Test
   public void getUserConventionsTest() {
     List<Convention> conventions = du.getUserConventions("abbyjg730@gmail.com");
-    assertTrue(conventions.get(0).getID().equals("899966"));
-    assertTrue(conventions.get(1).getID().equals("701564"));
+    assertTrue(conventions.get(0).getID().equals("388982"));
+    assertTrue(conventions.get(1).getID().equals("727744"));
+    assertTrue(conventions.get(2).getID().equals("509857"));
+    assertTrue(conventions.get(3).getID().equals("748488"));
+
+    List<Convention> conventions2 = du.getUserConventions("user_with_one_conv@gmail.com");
+    assertTrue(conventions2.get(0).getID().equals("230478"));
+    assertEquals(conventions2.size(), 1);
+
+    List<Convention> conventions3 = du.getUserConventions("user_with_no_conventions@gmail.com");
+    assertTrue(conventions3.isEmpty());
 
     List<Convention> c1 = du.getUserConventions("invalidUser");
     assertTrue(c1 == null);

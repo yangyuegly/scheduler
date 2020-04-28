@@ -7,18 +7,26 @@ document.addEventListener('DOMContentLoaded', function() {
   const url = window.location.href;
   var splitURL = url.split("/");
   var id = splitURL[4];
+  
+  
 
   $.get("/calendar_events/" + id, response => {
     if (response == "") {
       // the user is not authorized to view this convention
       window.location.pathname = "/unauthorized";
-    }
+    } 
 
     responseObject = JSON.parse(response);
-    myEvents = responseObject.eventsForSchedule;
-    startDate = responseObject.defaultDate;
-
-    makeCalendar(startDate, myEvents);
+    
+    if (responseObject.error == ""){
+     myEvents = responseObject.eventsForSchedule;
+     startDate = responseObject.defaultDate;
+     makeCalendar(startDate, myEvents);
+    } else {     
+    var error = document.getElementById('error');
+    error = responseObject.error;
+     console.log(responseObject.error);
+    }
   });
 });
 

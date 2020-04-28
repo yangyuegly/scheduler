@@ -280,6 +280,30 @@ public class DatabaseUtility {
     return true;
   }
 
+  public Boolean addCollaborator(String userEmail, String conventionID) {
+    // try to load existing document from MongoDB
+    Document document = userCollection
+        .find(new BasicDBObject("email", new BasicDBObject("$eq", userEmail))).first();
+    if (document == null) {
+      return false;// user doesn't exist
+    }
+
+    List<BasicDBObject> criteria = new ArrayList<BasicDBObject>();
+    criteria.add(new BasicDBObject("email", new BasicDBObject("$eq", userEmail)));
+    criteria.add(new BasicDBObject("conventions", new BasicDBObject("$eq", conventionID)));
+
+    FindIterable<Document> findIterable = userCollection.find(new BasicDBObject("$and", criteria));
+    if (findIterable.first() == null || findIterable.first().isEmpty()) {
+      System.out.println("no duplicate");
+      BasicDBObject update = new BasicDBObject();
+      BasicDBObject query = new BasicDBObject("$and", criteria);
+      update.put("$push", new BasicDBObject("convention", conventionID));
+      userCollection.updateOne(query, update);
+      return true;
+    }
+    return false;
+  }
+
   /**
    * Method to get conflicts based on a convention id.
    *

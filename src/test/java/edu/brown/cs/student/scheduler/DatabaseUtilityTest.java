@@ -12,7 +12,7 @@ import org.junit.Test;
 public class DatabaseUtilityTest {
   DatabaseUtility du = new DatabaseUtility();
 
-//  @Test
+  @Test
   public void checkPermissionTest() {
     assertEquals(du.checkPermission("abby_goldberg@brown.edu", "797044"), true);
     assertEquals(du.checkPermission("abby_goldberg@brown.edu", "NonExistingID"), false);
@@ -57,7 +57,7 @@ public class DatabaseUtilityTest {
 //    assertFalse(du.addEvent("nonExistingConvention", new Event(0, "justATest")));
   }
 
-  //@Test
+  // @Test
   public void addConflictTest() {
     Event e1 = new Event(1, "x");
     Event e2 = new Event(2, "y");

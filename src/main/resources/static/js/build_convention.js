@@ -19,7 +19,7 @@ $(document).ready(() => {
   setup_live_event_updates();
   $("#addEvent").click(addEvent);
   $("#doneAddingEvents").click(doneAdding);
-  $("#save").click(saveConv);
+  $("#save").click(saveConvAndGoToAccount);
   $("#schedule").click(schedule);
   // hide HTML elements that are used after all events are added
   $("#completedDiv").css("visibility", "hidden");
@@ -36,7 +36,7 @@ const addEvent = () => {
   console.log("this is name" + $name.val());
   console.log(newEvent);
 
-  
+
   eventNamesString += "<p>" + $name.val() + "</p>";
 
   add_event("<p>" + $name.val() + "</p>"); //socket code
@@ -60,11 +60,9 @@ const doneAdding = () => {
 };
 
 /*
-  Function that gets called when the save button is clicked.  This uses a post
-  request to send the new events to the program, and then causes the page
-  to change to the account page.
+  This uses a post request to send the new events to the program,
 */
-const saveConv = () => {
+const save = () => {
   // build javascript object that contains the data for the POST request.
   const myJson = JSON.stringify(existingEvents);
   const url = window.location.href;
@@ -75,6 +73,15 @@ const saveConv = () => {
 
   // post request to "/save_convention" with added events
   $.post("/save_convention", postParameters, (responseJSON) => {});
+}
+
+/*
+  Function that gets called when the save button is clicked.  This uses a post
+  request to send the new events to the program, and then causes the page
+  to change to the account page.
+*/
+const saveConvAndGoToAccount = () => {
+  save();
 
   // go to the account page
   window.location.pathname = "/account";
@@ -86,12 +93,7 @@ const saveConv = () => {
   Then, it changes the page to the calendar page.
 */
 const schedule = () => {
-  // build javascript object that contains the data for the POST request.
-  const myJson = JSON.stringify(existingEvents);
-  const postParameters = { existingEvents: myJson };
-
-  // post request to "/save_convention" with added events
-  $.post("/save_convention", postParameters, (responseJSON) => {});
+  save();
 
   const url = window.location.href;
   var splitURL = url.split("/");

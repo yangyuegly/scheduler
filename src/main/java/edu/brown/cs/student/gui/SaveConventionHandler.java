@@ -27,15 +27,13 @@ public class SaveConventionHandler implements Route {
     // String conventionID = req.params(":id");
 
     QueryParamsMap queryMap = req.queryMap();
-    String eventsToAddString = queryMap.value("existingEvents"); // deal with
-                                                                 // this!!!!!!!!!!!!!!!!!!!!!!!!
+    String eventsToAddString = queryMap.value("existingEvents");
     String conventionID = queryMap.value("conventionID");
 
     DatabaseUtility db = new DatabaseUtility();
     boolean permission = db.checkPermission(userEmail, conventionID);
 
     if (!permission) {
-      System.out.println("permission denied");
       response.redirect("/account");
     }
 
@@ -48,18 +46,9 @@ public class SaveConventionHandler implements Route {
     }
 
     Gson g = new Gson();
-    // List<String[]> eventNameDescrList = g.fromJson(eventsToAddString, List.class);
     List<String[]> eventNameDescrList = g.fromJson(eventsToAddString,
         new TypeToken<List<String[]>>() {
         }.getType());
-
-    System.out.println("just called g.fromJson");
-//    System.out.println("first elem:" + eventNameDescrList.get(0)[0]);
-
-//    ObjectMapper mapper = new ObjectMapper();
-//    String[][] eventNameDescrArray = mapper.readValue(eventsToAddString,
-//        new TypeReference<String[][]>() {
-//        });
 
     int id = 0;
 

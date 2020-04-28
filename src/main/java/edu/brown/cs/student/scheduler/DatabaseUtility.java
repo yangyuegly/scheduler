@@ -30,6 +30,7 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.ReplaceOptions;
+import com.mongodb.client.model.Updates;
 
 import edu.brown.cs.student.main.Main;
 
@@ -287,22 +288,29 @@ public class DatabaseUtility {
   public Boolean addEvent(String conventionID, Event newEvent) {
     Gson gson = new Gson();
     BasicDBObject obj = BasicDBObject.parse(gson.toJson(newEvent));
-    System.out.println("addEvent");
+    BasicDBObject cQuery = new BasicDBObject("id", conventionID);
     // try to load existing document from MongoDB
-    Document document = eventCollection.find(eq("conventionID", conventionID)).first();
+    Document document = conventionCollection.find(cQuery).first();
     if (document == null) {
-      System.out.println("cannot find given convention");
       return false;
     }
-    FindIterable<Document> findIterable = eventCollection
-        .find(eq("event.name", newEvent.getName()));
-    if (findIterable.first() == null || findIterable.first().isEmpty()) {
-      System.out.println("no duplicate");
-      BasicDBObject update = new BasicDBObject();
-      BasicDBObject query = new BasicDBObject("conventionID",
-          new BasicDBObject("$eq", conventionID));
-      update.put("$push", new BasicDBObject("events", obj));
-      eventCollection.updateOne(query, update);
+    BasicDBObject equery = new BasicDBObject("conventionID", conventionID);
+    Document findConvInEvent = eventCollection.find(equery).first();
+    Document findIterable = eventCollection
+        .find(eq("event.name", newEvent.getName())).first();
+    
+    Map<String, Object> newConventionString = new HashMap<>();
+    if ((findConvInEvent == null || findConvInEvent.isEmpty())&& (findIterable==null||findIterable.isEmpty())) {
+      List<BasicDBObject> eventArray = new ArrayList<>();
+      eventArray.add(obj);
+      newConventionString.put("conventionID", conventionID);
+      newConventionString.put("events", eventArray);
+      eventCollection.insertOne(new Document(newConventionString));
+      return true;
+    } else if (findIterable == null || findIterable.isEmpty()) {
+      System.out.println("obj:" + obj);
+      System.out.println("conventionIDLL: " + conventionID);
+      eventCollection.updateOne(eq("conventionID", conventionID), Updates.addToSet("events", obj));
       System.out.println("in addEvent4");
       return true;
     } else {

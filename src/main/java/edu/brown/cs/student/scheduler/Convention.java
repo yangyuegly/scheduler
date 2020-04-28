@@ -7,6 +7,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonGetter;
@@ -294,7 +295,7 @@ public class Convention {
     return Math.floorDiv(numMinutesInDay.intValue(), eventDuration);
   }
 
-  public HashSet<Conflict> getConflicts() {
+  public Set<Conflict> getConflicts() {
     DatabaseUtility du = new DatabaseUtility();
     return du.getConflictsFromConventionID(this.id);
   }

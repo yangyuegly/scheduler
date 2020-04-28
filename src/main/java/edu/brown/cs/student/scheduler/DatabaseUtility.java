@@ -162,7 +162,6 @@ public class DatabaseUtility {
       conventionCollection.replaceOne(query, doc, options);
       return true;
     }
-
     return false;
   }
 

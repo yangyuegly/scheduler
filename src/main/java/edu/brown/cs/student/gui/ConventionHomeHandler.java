@@ -58,7 +58,10 @@ public class ConventionHomeHandler implements TemplateViewRoute {
 
     // this creates a string that tells the user what events are already in this convention
     for (Event event : events) {
+      System.out.println(event.getDescription() + "description");
       existingEvents += "<p>" + event.getName() + "</p>";
+      existingEvents += "<button type=\"button\" class=\"collapsible\">See Description</button>\r\n"
+          + "<div class=\"content\">\r\n" + "<p>" + event.getDescription() + "</p>\r\n" + "</div>";
     }
 
     if (existingEvents.equals("")) {

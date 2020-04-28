@@ -79,6 +79,14 @@ public final class Main {
     return Main.database;
   }
 
+  static int getHerokuAssignedPort() {
+    ProcessBuilder processBuilder = new ProcessBuilder();
+    if (processBuilder.environment().get("PORT") != null) {
+      return Integer.parseInt(processBuilder.environment().get("PORT"));
+    }
+    return 4567; // return default port if heroku-port isn't set (i.e. on localhost)
+  }
+
   private void run() {
     // Parse command line arguments
     OptionParser parser = new OptionParser();
@@ -94,10 +102,7 @@ public final class Main {
     mongo = MongoClients.create(settings);
     // created db in cluster in MongoDBAtlas including collections: users, events, conflicts
     database = mongo.getDatabase("test");
-
-    if (options.has("gui")) {
-      runSparkServer((int) options.valueOf("port"));
-    }
+    runSparkServer();
   }
 
   private static FreeMarkerEngine createEngine() {
@@ -112,9 +117,8 @@ public final class Main {
     return new FreeMarkerEngine(config);
   }
 
-  private void runSparkServer(int port) {
-    System.out.println("port");
-    Spark.port(port);
+  private static void runSparkServer() {
+    Spark.port(getHerokuAssignedPort());
     Spark.externalStaticFileLocation("src/main/resources/static");
     Spark.exception(Exception.class, new ExceptionPrinter());
 

@@ -308,6 +308,7 @@ public class DatabaseUtility {
       Event e1 = new Event(event1Doc.getInteger("id"), event1Doc.getString("name"));
       Event e2 = new Event(event2Doc.getInteger("id"), event2Doc.getString("name"));
       Conflict c = new Conflict(e1, e2, weight);
+      System.out.println("extracting edge: " + c);
       edges.add(c);
     }
 

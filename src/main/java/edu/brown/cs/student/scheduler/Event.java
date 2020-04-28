@@ -95,14 +95,7 @@ public class Event implements IVertex<Event, Conflict> {
     return max;
   }
 
-  /**
-   * Getter method for id of event
-   *
-   * @return - id
-   */
-  public Integer getId() {
-    return this.id;
-  }
+  
 
   /**
    * Setter method for id
@@ -191,7 +184,7 @@ public class Event implements IVertex<Event, Conflict> {
 
   @Override
   public String toString() {
-    return "{" + " id='" + getId() + "'" + ", degree='" + getDegree() + "'" + ", color='"
+    return "{" + " id='" + getID() + "'" + ", degree='" + getDegree() + "'" + ", color='"
         + getColor() + "'" + "}";
   }
 

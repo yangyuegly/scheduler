@@ -67,6 +67,7 @@ public class ScheduleCommand {
     this.graph = new UndirectedWeightedGraph<Event, Conflict>(this.nodes, this.CONCURENCY_LIMIT,
         this.MAX_SCHEDULE_DAYS, this.TS);
     graph.addAllEdges(this.edges);
+    System.out.println(this.edges);
     graph.graphColoring(this.TS, this.CONCURENCY_LIMIT);
 
     List<CalendarEvent> calEvents = new ArrayList<>();

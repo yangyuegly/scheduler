@@ -51,9 +51,17 @@ public class ScheduleCommand {
    */
   private LocalDateTime getTimeSlotStart(List<Integer> timeSlot) {
     LocalDateTime convStart = convention.getStartDateTime();
+
+    System.out.println("got start date time"); // delete
+
     int dayOfSlot = timeSlot.get(0);
     LocalDateTime slotDayAtStartTime = convStart.plusDays(dayOfSlot);
+
+    System.out.println("got made slot start"); // delete
+
     int numMinutesBeforeSlot = timeSlot.get(1) * convention.getEventDuration();
+
+    System.out.println("got num minutes before slot"); // delete
 
     return slotDayAtStartTime.plusMinutes(numMinutesBeforeSlot);
   }
@@ -68,20 +76,34 @@ public class ScheduleCommand {
     this.graph = new UndirectedWeightedGraph<Event, Conflict>(this.nodes, this.CONCURENCY_LIMIT,
         this.MAX_SCHEDULE_DAYS, this.TS);
     graph.addAllEdges(this.edges);
+
     System.out.println(this.edges);
+
     graph.graphColoring(this.TS, this.CONCURENCY_LIMIT);
 
     List<CalendarEvent> calEvents = new ArrayList<>();
+
     for (Event event : nodes) {
+      System.out.println("in sched loop event " + event.getName()); // delete
 
       LocalDateTime currStart = this.getTimeSlotStart(event.getColor());
+
+      System.out.println("got start"); // delete
+
       Integer eventDur = convention.getEventDuration();
+
+      System.out.println("got duration"); // delete
+
       String currEnd = currStart.plusMinutes(eventDur).toString();
+
+      System.out.println("got end"); // delete
 
       CalendarEvent newEvent = new CalendarEvent(event.getName(), currStart.toString(), currEnd);
       calEvents.add(newEvent);
 
+      System.out.println("made calendar event"); // delete
     }
+
     return calEvents;
   }
 

@@ -48,6 +48,8 @@ public class CalendarHandler implements Route {
 
     List<CalendarEvent> eventsSched = schedComm.execute();
 
+    System.out.println("just executed schedule command"); // delete
+
     LocalDateTime convStartWithTime = myConv.getStartDateTime();
     LocalDate convStartDay = convStartWithTime.toLocalDate();
 

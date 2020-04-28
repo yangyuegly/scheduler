@@ -113,7 +113,7 @@ public class Event implements IVertex<Event, Conflict> {
 
   @Override
   public List<Conflict> getAdjList() {
-    return adjList;
+    return new ArrayList<>(adjList);
   }
 
   /**
@@ -136,7 +136,7 @@ public class Event implements IVertex<Event, Conflict> {
 
   @Override
   public List<Integer> getColor() {
-    return this.color;
+    return new ArrayList<>(this.color);
   }
 
   @Override

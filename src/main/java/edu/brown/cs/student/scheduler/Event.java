@@ -30,7 +30,7 @@ public class Event implements IVertex<Event, Conflict> {
    */
   public Event(Integer id, String name, String description) {
     this.id = id;
-    this.adjList = new ArrayList<>();
+    this.adjList = new ArrayList<Conflict>();
     this.degree = 0;
     this.color = new ArrayList<>();
     this.name = name;
@@ -119,7 +119,7 @@ public class Event implements IVertex<Event, Conflict> {
 
   @Override
   public void addToAdjList(Conflict adj) {
-    adjList.add(adj);
+    this.adjList.add(adj);
   }
 
   @Override

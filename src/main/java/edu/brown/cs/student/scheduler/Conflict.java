@@ -56,20 +56,7 @@ public class Conflict implements IEdge<Event, Conflict> {
     this.weight = weight;
   }
 
-  public Conflict event1(Event event1) {
-    this.event1 = event1;
-    return this;
-  }
 
-  public Conflict event2(Event event2) {
-    this.event2 = event2;
-    return this;
-  }
-
-  public Conflict weight(Integer weight) {
-    this.weight = weight;
-    return this;
-  }
 
   @Override
     public boolean equals(Object o) {

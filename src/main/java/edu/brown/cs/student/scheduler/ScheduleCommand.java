@@ -121,7 +121,6 @@ public class ScheduleCommand {
    */
   private void extractNodes() {
     this.nodes = convention.getEvents();
-
     System.out.println("number of nodes: " + nodes.size()); // delete
   }
 

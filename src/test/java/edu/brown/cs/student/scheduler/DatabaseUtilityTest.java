@@ -19,7 +19,7 @@ public class DatabaseUtilityTest {
     assertEquals(du.checkPermission("abby_goldberg@brown.edu", "NonExistingID"), false);
   }
 
-  @Test
+ // @Test
   public void getEventsFromConventionIDTest() {
     List<Event> events = du.getEventsFromConventionID("442715");
     Event e1 = new Event(0, "Javascript/CSS", "");

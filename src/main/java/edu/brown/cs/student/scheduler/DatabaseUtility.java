@@ -315,7 +315,6 @@ public class DatabaseUtility {
       Event e2 = new Event(event2Doc.getInteger("id"), event2Doc.getString("name"),
           event2Doc.getString("description"));
       Conflict c = new Conflict(e1, e2, weight);
-      System.out.println("extracting edge: " + c);
       edges.add(c);
     }
 

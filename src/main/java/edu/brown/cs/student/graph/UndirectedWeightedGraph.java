@@ -91,24 +91,13 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
    * @param edges
    */
   public void addAllEdges(Set<E> edges) {
-    System.out.println("numVertices: " + numVertices); // delete
 
     for (E e : edges) {
-      System.out.println("in loop, edge is " + e.getHead().getID() + " to " + e.getTail().getID()); // delete
-      System.out.println("weight: " + e.getWeight());
-      this.weightMatrix[0][1] = 100;
-      System.out.println("changed matrix value");
-
       this.weightMatrix[e.getHead().getID()][e.getTail().getID()] = e.getWeight();
 
-
       this.weightMatrix[e.getTail().getID()][e.getHead().getID()] = e.getWeight();
-
-
       nodes.get(e.getHead().getID()).addToAdjList(e);
     }
-
-
     setDegree();
   }
 
@@ -133,13 +122,14 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
     Iterator<Map.Entry<Integer, V>> iter = degree.iterator();
     while (iter.hasNext()) {
       V curr = iter.next().getValue();
+      System.out.println("curr " + curr);
       // if the current node is not colored
       if (!result.contains(curr)) {
         // for the first course
         if (numColoredCourses == 0) {
           List<Integer> indices = getFirstNodeColor();
           curr.setColor(indices);
-          System.out.println("first node: " + curr);
+          System.out.println(curr);
           result.add(curr);
           numColoredCourses++;
         } else {
@@ -147,27 +137,24 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
           List<Integer> indices = getSmallestAvailableColor(curr.getID());
           if (indices.size() == 2) {
             curr.setColor(indices);
-            System.out.println("curr: " + curr);
             result.add(curr);
-            numColoredCourses++; 
+            numColoredCourses++;
             // decrement the concurrency limit for a color
             colors.get(indices.get(0))[indices.get(1)]--;
           }
-          for (E e : curr.getAdjList()) {
-            V i = e.getTail();
-            // check if an adjacent node is colored
-            if (!result.contains(i)) {
-              List<Integer> adjColors = getSmallestAvailableColor(i.getID());
-              if (adjColors.size() == 2) {
-                i.setColor(adjColors);
-                System.out.println("adjacent:" + i);
-                result.add(i);
-                numColoredCourses++;
-                colors.get(adjColors.get(0))[adjColors.get(1)]--;
-              }
+        }
+        for (E e : curr.getAdjList()) {
+          V i = e.getTail();
+          // check if an adjacent node is colored
+          if (!result.contains(i)) {
+            List<Integer> adjColors = getSmallestAvailableColor(i.getID());
+            if (adjColors.size() == 2) {
+              i.setColor(adjColors);
+              result.add(i);
+              numColoredCourses++;
+              colors.get(adjColors.get(0))[adjColors.get(1)]--;
             }
           }
-
         }
       }
     }
@@ -211,13 +198,12 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
 
   /**
    * Get the smallest available color
-   *
    * @param courseID
-   *
    * @return
    */
   public List<Integer> getSmallestAvailableColor(int courseID) {
     
+    System.out.println("the current course id " + courseID); 
     boolean valid = false;
     List<E> adj = nodes.get(courseID).getAdjList();
     for (int i = 0; i < this.MAX_SCHEDULE_DAYS; i++) {
@@ -225,8 +211,9 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
         List<Integer> currColor = new ArrayList<>(List.of(i, j));
         valid = true;
         for (int r = 0; r < adj.size(); r++) {
+          System.out.println(nodes.get((adj.get(r).getTail().getID())));
           // get the color of the adjacent node
-          List<Integer> color = (adj.get(r).getTail().getColor());
+          List<Integer> color = nodes.get((adj.get(r).getTail().getID())).getColor();
           if (color != null && !color.isEmpty()) {
             System.out.println("colors:" + color);
             // check if that color is the same as the current
@@ -316,6 +303,8 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
   public void setDegree() {
 
     degree = entriesSortedByValues(nodes);
+    
+    
   }
 
   public int getK() {
@@ -379,12 +368,20 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
           @Override
           public int compare(Map.Entry<K, T> e1, Map.Entry<K, T> e2) {
             // compare by degree of nodes
-            Integer res = e1.getValue().getDegree().compareTo(e2.getValue().getDegree());
+                Integer res = e1.getValue().getDegree().compareTo(e2.getValue().getDegree());
+                res *= -1;
             // compare by heaviest weight if has the same degree
-            if (res == 0) {
-              res = e1.getValue().getHeaviestWeight() < e2.getValue().getHeaviestWeight() ? -1 : 1;
-            }
-            return res != 0 ? res : 1;
+                if (res == 0) {
+                  res = e1.getValue().getHeaviestWeight() < e2.getValue().getHeaviestWeight() ? 1
+                          : -1;
+                      if (res == 0) {
+                            res = e1.getValue().getID() < e2.getValue().getID() ? 1 : -1;
+                  }
+                  return res; 
+                }
+                else {
+                    return res;
+                }
           }
         });
     sortedEntries.addAll(map.entrySet());

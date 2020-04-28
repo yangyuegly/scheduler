@@ -91,10 +91,13 @@ public class graphTest {
   public void graphColoringTest() {
     setUp();
     graph.graphColoring(5, 5);
+    assertEquals(0, (int) events.get(3).getColor().get(0));
+    assertEquals(0, (int) events.get(3).getColor().get(1));
+
     assertEquals(0, (int) events.get(0).getColor().get(0));
-    assertEquals(0, (int) events.get(0).getColor().get(1));
+    assertEquals(1, (int) events.get(0).getColor().get(1));
     assertEquals(0, (int) events.get(1).getColor().get(0));
-    assertEquals(1, (int) events.get(1).getColor().get(1));
+    assertEquals(2, (int) events.get(1).getColor().get(1));
     tearDown();
   }
 

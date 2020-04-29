@@ -66,7 +66,7 @@ public class CalendarHandler implements Route {
     LocalDate convStartDay = convStartWithTime.toLocalDate();
 
     Map<String, Object> variables = ImmutableMap.of("eventsForSchedule", eventsSched, "defaultDate",
-        convStartDay.toString(), "error", error);
+        convStartDay.toString(), "error", "");
     Gson gson = new Gson();
 
     return gson.toJson(variables);

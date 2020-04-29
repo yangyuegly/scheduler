@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class LoadCommandTest {
   DatabaseUtility db = new DatabaseUtility();
@@ -62,7 +63,7 @@ public class LoadCommandTest {
     assertTrue(eventNames.contains("event1") && eventNames.contains("event2")
         && eventNames.contains("event3"));
 
-    HashSet<Conflict> conflicts = db.getConflictsFromConventionID("testConvention");
+    Set<Conflict> conflicts = db.getConflictsFromConventionID("testConvention");
 
     Conflict c = new Conflict(new Event(2, "event2", ""), new Event(2, "event3", ""), 0);
     assertTrue(conflicts.contains(c));

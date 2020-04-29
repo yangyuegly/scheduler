@@ -7,6 +7,7 @@ import static org.junit.Assert.assertTrue;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.Test;
 
@@ -45,7 +46,7 @@ public class DatabaseUtilityTest {
 
 ///  @Test
   public void getConflictsTest() {// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    HashSet<Conflict> conflicts = du.getConflictsFromConventionID("c1");
+    Set<Conflict> conflicts = du.getConflictsFromConventionID("c1");
     Event e1 = new Event(0, "e1", "");
     Event e2 = new Event(1, "e2", "");
     Conflict conflict = new Conflict(e1, e2, 1);

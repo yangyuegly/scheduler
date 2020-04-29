@@ -46,7 +46,11 @@ public class AttendeeSignupSubmitHandler implements TemplateViewRoute {
 
       for (int j = i + 1; j < numEventsToAttend; j++) {
         Conflict newConflict = new Conflict(currEvent, eventsToAttend.get(j), 1);
-        database.addConflict(conventionID, newConflict);
+
+        if (!database.addConflict(conventionID, newConflict)) {
+          System.err.println("error adding the conflict between " + currEvent.getName() + " and "
+              + eventsToAttend.get(j).getName());
+        }
       }
     }
 

@@ -4,7 +4,12 @@ body {
     font-size: 18px;
     padding: 0;
     margin: 0;
-    background-image: url("interlaced.png");
+    background-image: url("/images/interlaced.png");
+    /* background-image: url("/images/december_calendar.jpeg");
+    background-repeat: no-repeat;
+    background-attachment: fixed; 
+    background-size: cover;
+    background-position: center center; */
 }
 
 
@@ -70,11 +75,7 @@ a {
 }
 
 .dropdown .dropbtn {
-<<<<<<< HEAD
-  font-size: 16px;
-=======
   font-size: 18px;
->>>>>>> f7c33d97115597e81e0262f3d8291b3885da297a
   border: none;
   outline: none;
   color: white;

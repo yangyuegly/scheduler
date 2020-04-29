@@ -38,7 +38,7 @@ for (i = 0; i < coll.length; i++) {
   $("#schedule").click(schedule);
   $("#addCollaborator").click(addCollaborator);
   // hide HTML elements that are used after all events are added
-  $("#completedDiv").css("visibility", "hidden");
+  $("#completedDiv").css("display", "none");
 });
 
 /*
@@ -146,7 +146,7 @@ const addCollaborator = () => {
 */
 const doneAdding = () => {
   $("#addEventsDiv").css("display", "none");
-  $("#completedDiv").css("visibility", "visible");
+  $("#completedDiv").css("display", "block");
 };
 
 /*

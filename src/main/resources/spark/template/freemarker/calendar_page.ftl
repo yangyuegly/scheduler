@@ -1,66 +1,50 @@
 <#assign content>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset='utf-8' />
 
-  <style>
+<div class="main-content">
 
-    html, body {
-      margin: 0;
-      padding: 0;
-      font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
-      font-size: 14px;
-    }
+  <html>
+    <head>
+      <meta charset='utf-8' />
 
-    #calendar {
-      max-width: 900px;
-      margin: 40px auto;
-    }
+        <style>
 
-  </style>
+          html, body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
+            font-size: 14px;
+          }
 
+          #calendar {
+            max-width: 900px;
+            margin: 40px auto;
+          }
 
-<link href='https://unpkg.com/@fullcalendar/core@4.4.0/main.min.css' rel='stylesheet' />
+        </style>
 
+        <link href='https://unpkg.com/@fullcalendar/core@4.4.0/main.min.css' rel='stylesheet' />
+        <link href='https://unpkg.com/@fullcalendar/daygrid@4.4.0/main.min.css' rel='stylesheet' />
+        <link href='https://unpkg.com/@fullcalendar/timegrid@4.4.0/main.min.css' rel='stylesheet' />
 
+        <script src='/js/demo-to-codepen.js'></script>
+        <script src='https://unpkg.com/@fullcalendar/core@4.4.0/main.min.js'></script>
+        <script src='https://unpkg.com/@fullcalendar/interaction@4.4.0/main.min.js'></script>
+        <script src='https://unpkg.com/@fullcalendar/daygrid@4.4.0/main.min.js'></script>
+        <script src='https://unpkg.com/@fullcalendar/timegrid@4.4.0/main.min.js'></script>
+        <script src="/js/calendar.js"></script>
 
+    </head>
 
-  <link href='https://unpkg.com/@fullcalendar/daygrid@4.4.0/main.min.css' rel='stylesheet' />
+    <body>
+      <h2>${name}</h2>
+      <p id="calendarError"></p>
+      <div class='demo-topbar'>
+      </div>
+      <div id='error'></div>
+      <div id='calendar'></div>
+    </body>
 
-  <link href='https://unpkg.com/@fullcalendar/timegrid@4.4.0/main.min.css' rel='stylesheet' />
-
-
-<script src='/js/demo-to-codepen.js'></script>
-
-<script src='https://unpkg.com/@fullcalendar/core@4.4.0/main.min.js'></script>
-
-
-
-
-  <script src='https://unpkg.com/@fullcalendar/interaction@4.4.0/main.min.js'></script>
-
-  <script src='https://unpkg.com/@fullcalendar/daygrid@4.4.0/main.min.js'></script>
-
-  <script src='https://unpkg.com/@fullcalendar/timegrid@4.4.0/main.min.js'></script>
-
-
-<script src="/js/calendar.js"></script>
-
-</head>
-<body>
-  <h2>${name}</h2>
-  <p id="calendarError" class="errorMessage"></p>
-  <div class='demo-topbar'>
-
-
-
-
+  </html>
 </div>
-  <div id='error'></div>
-  <div id='calendar'></div>
-</body>
-
-</html>
 </#assign>
 <#include "main.ftl">

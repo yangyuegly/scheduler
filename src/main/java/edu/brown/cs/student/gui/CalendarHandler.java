@@ -50,7 +50,7 @@ public class CalendarHandler implements Route {
 
     List<CalendarEvent> eventsSched = schedComm.execute();
 
-    String error = "error";
+    String error = "";
     if (eventsSched == null) { // eventually this should become a try/catch instead
       error = "We're sorry, we couldn't make a schedule for you. There was no way to avoid conflicts between your events.";
       eventsSched = new ArrayList<>();

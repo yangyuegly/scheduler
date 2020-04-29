@@ -52,7 +52,6 @@ public class ScheduleCommand {
   private LocalDateTime getTimeSlotStart(List<Integer> timeSlot) {
     LocalDateTime convStart = convention.getStartDateTime();
 
-    System.out.println("got start date time"); // delete
 
     System.out.println("size of timeSlot list " + timeSlot.size());
 
@@ -60,11 +59,9 @@ public class ScheduleCommand {
     System.out.println("got time slot");
     LocalDateTime slotDayAtStartTime = convStart.plusDays(dayOfSlot);
 
-    System.out.println("got made slot start"); // delete
 
     int numMinutesBeforeSlot = timeSlot.get(1) * convention.getEventDuration();
 
-    System.out.println("got num minutes before slot"); // delete
 
     System.out.println("time slot " + dayOfSlot + " " + numMinutesBeforeSlot); // delete
 
@@ -82,38 +79,23 @@ public class ScheduleCommand {
         this.MAX_SCHEDULE_DAYS, this.TS);
     graph.addAllEdges(this.edges);
 
-    System.out.println(this.edges);
 
-    graph.graphColoring(this.TS, this.CONCURENCY_LIMIT);
+    Set<Event> colored = graph.graphColoring(this.TS, this.CONCURENCY_LIMIT);
 
     List<CalendarEvent> calEvents = new ArrayList<>();
 
-    for (Event event : nodes) {
-      System.out.println("in sched loop event " + event.getName()); // delete
-
-      System.out.println("get color size " + event.getColor().size());
-
-      // IF NO CALENDAR COULD BE MADE
-      if (event.getColor().size() < 2) {
-        return null;
-      }
-
+    for (Event event : colored) {
       LocalDateTime currStart = this.getTimeSlotStart(event.getColor());
 
-      System.out.println("got start"); // delete
 
       Integer eventDur = convention.getEventDuration();
 
-      System.out.println("got duration"); // delete
-
       String currEnd = currStart.plusMinutes(eventDur).toString();
 
-      System.out.println("got end"); // delete
 
       CalendarEvent newEvent = new CalendarEvent(event.getName(), currStart.toString(), currEnd);
       calEvents.add(newEvent);
 
-      System.out.println("made calendar event"); // delete
     }
 
     return calEvents;
@@ -133,7 +115,6 @@ public class ScheduleCommand {
    */
   private void extractNodes() {
     this.nodes = convention.getEvents();
-    System.out.println("number of nodes: " + nodes.size()); // delete
   }
 
   /**

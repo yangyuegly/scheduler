@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.bson.Document;
 
@@ -311,14 +312,13 @@ public class DatabaseUtility {
    *
    * @return -- a hashset of all the conflicts in this convention
    */
-  public HashSet<Conflict> getConflictsFromConventionID(String conventionID) {
-    HashSet<Conflict> edges = new HashSet<>();
-//    MongoCollection<Document> conflicCollection = Main.getDatabase().getCollection("conflicts");
+  public Set<Conflict> getConflictsFromConventionID(String conventionIDParam) {
+    Set<Conflict> edges = new HashSet<>();
     BasicDBObject query = new BasicDBObject();
-    query.put("conventionID", conventionID);
-
-    // iterate through the events found
-    List<Document> conflictList = (List<Document>) conflictCollection.find()
+    query.put("conventionID", conventionIDParam);
+    System.out.println(conventionIDParam);
+    // iterate through the events found 
+    List<Document> conflictList = (List<Document>) conflictCollection.find(query)
         .projection(fields(include("conflicts"), excludeId()))
         .map(document -> document.get("conflicts")).first();
 

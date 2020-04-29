@@ -87,8 +87,12 @@ public class LoadCommand {
           Conflict conflict = new Conflict(new Event(nameToId.get(first), first, ""),
               new Event(nameToId.get(second), second, ""), null);
           this.conflict.add(conflict);
+          Conflict reverse = new Conflict(new Event(nameToId.get(second), second, ""), new Event(nameToId.get(first), first, ""),
+               null);
           // add to the weight if the conflict doesn't exist or add the conflict itself
           frequencyMap.put(conflict, frequencyMap.getOrDefault(conflict, 0) + 1);
+          frequencyMap.put(reverse, frequencyMap.getOrDefault(reverse, 0) + 1);
+
         }
       }
 

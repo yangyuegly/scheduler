@@ -114,22 +114,23 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
 
   /**
    *
+   * @return colored nodes
    * @param ts
    * @param cl
    */
-  public void graphColoring(int ts, int cl) {
+  public Set<V> graphColoring(int ts, int cl) {
+    Set<V> coloredSet = new HashSet<V>();
     int numColoredCourses = 0;
     Iterator<Map.Entry<Integer, V>> iter = degree.iterator();
     while (iter.hasNext()) {
       V curr = iter.next().getValue();
-      System.out.println("curr " + curr);
       // if the current node is not colored
       if (!result.contains(curr)) {
         // for the first course
         if (numColoredCourses == 0) {
           List<Integer> indices = getFirstNodeColor();
           curr.setColor(indices);
-          System.out.println(curr);
+          coloredSet.add(curr);
           result.add(curr);
           numColoredCourses++;
         } else {
@@ -138,9 +139,13 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
           if (indices.size() == 2) {
             curr.setColor(indices);
             result.add(curr);
+            coloredSet.add(curr);
             numColoredCourses++;
             // decrement the concurrency limit for a color
             colors.get(indices.get(0))[indices.get(1)]--;
+          } else {
+            throw new NullPointerException(
+                "Unable to find a conflict-free schedule for the convention");
           }
         }
         for (E e : curr.getAdjList()) {
@@ -151,6 +156,7 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
             if (adjColors.size() == 2) {
               i.setColor(adjColors);
               result.add(i);
+              coloredSet.add(i);
               numColoredCourses++;
               colors.get(adjColors.get(0))[adjColors.get(1)]--;
             }
@@ -158,6 +164,10 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
         }
       }
     }
+    for (V c : coloredSet) {
+      System.out.println(c);
+    }
+    return coloredSet;
   }
 
   /**
@@ -179,8 +189,7 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
         }
       }
     }
-    throw new NullPointerException("Unable to find first color");
-
+    return null;
   }
 
   /**
@@ -203,7 +212,7 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
    */
   public List<Integer> getSmallestAvailableColor(int courseID) {
     
-    System.out.println("the current course id " + courseID); 
+    // System.out.println("the current course id " + courseID); 
     boolean valid = false;
     List<E> adj = nodes.get(courseID).getAdjList();
     for (int i = 0; i < this.MAX_SCHEDULE_DAYS; i++) {
@@ -211,14 +220,14 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
         List<Integer> currColor = new ArrayList<>(List.of(i, j));
         valid = true;
         for (int r = 0; r < adj.size(); r++) {
-          System.out.println(nodes.get((adj.get(r).getTail().getID())));
+          // System.out.println(nodes.get((adj.get(r).getTail().getID())));
           // get the color of the adjacent node
           List<Integer> color = nodes.get((adj.get(r).getTail().getID())).getColor();
           if (color != null && !color.isEmpty()) {
-            System.out.println("colors:" + color);
+            // System.out.println("colors:" + color);
             // check if that color is the same as the current
             if (color.get(0) != i || color.get(1) != j) {
-              System.out.println("i:" + i + " j " + j);
+              // System.out.println("i:" + i + " j " + j);
               if (calculateExternalDistance(color, currColor) == 0) {
                 // if we don't want back-to-back exams
                 if (calculateInternalDistance(color, currColor) <= this.examBreak) {
@@ -235,12 +244,13 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
           }
         }
         if (valid) {
-          System.out.println("outside of loop: " + currColor);
+          // System.out.println("outside of loop: " + currColor);
           return currColor;
         }
       }
     }
     return null;
+    // throw new NullPointerException("Unable to find a schedue for the current convention");
   }
 
   /**

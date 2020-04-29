@@ -24,7 +24,6 @@ for (i = 0; i < coll.length; i++) {
   coll[i].addEventListener("click", function() {
     this.classList.toggle("active");
     var content = this.nextElementSibling;
-    console.log(content);
     if (content.style.display === "block") {
       content.style.display = "none";
     } else {
@@ -71,8 +70,6 @@ const addEvent = () => {
   let newEvent = [$name.val(), $description.val()];
   existingEvents.push(newEvent);
 
-  add_event("<p>" + $name.val() + "</p>"); //socket code
-
   const eventJson = JSON.stringify(newEvent);
   const url = window.location.href;
   var splitURL = url.split("/");
@@ -90,6 +87,9 @@ const addEvent = () => {
     } else {
       // update the existing events on the page
       updateEventNamesString();
+
+      //add_event("<p>" + $name.val() + "</p>"); //socket code
+      add_event(eventNamesString); //socket code
 
       $eventNames.html(eventNamesString);
       $("#addEventError").text("");
@@ -124,6 +124,9 @@ const addCollaborator = () => {
   const colEmail = $emailInput.val();
 
   const postParameters = { colEmail: colEmail };
+  const url = window.location.href;
+  var splitURL = url.split("/");
+  var convID = splitURL[4];
 
   // post request to "/add_event/id with added events
   $.post("/add_collaborator/" + convID, postParameters, (responseJSON) => {

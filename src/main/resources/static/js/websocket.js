@@ -24,6 +24,10 @@ let setup_live_event_updates = () => {
     console.log("Connection error:", err);
   };
   conn.onmessage = (msg) => {
+    console.log("in onmessage"); // delete
+
+
+
     const data = JSON.parse(msg.data);
     switch (data.type) {
       default:
@@ -41,6 +45,8 @@ let setup_live_event_updates = () => {
 };
 
 const add_event = (eventNamesString) => {
+  console.log("in add_event"); // delete
+
   conn.send(
     JSON.stringify({
       type: MESSAGE_TYPE.EVENT,

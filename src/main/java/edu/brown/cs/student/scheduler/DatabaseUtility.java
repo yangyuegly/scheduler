@@ -207,23 +207,27 @@ public class DatabaseUtility {
       conflictCollection.insertOne(new Document(newConventionString));
     }
 
-    AggregateIterable<Document> findIterable = conflictCollection.aggregate(Arrays.asList(Aggregates.match(Filters.eq("conventionID", conventionID)),
+    AggregateIterable<Document> findIterable = conflictCollection
+        .aggregate(Arrays.asList(Aggregates.match(Filters.eq("conventionID", conventionID)),
             Aggregates.match(Filters.eq("conflicts.event1", gson.toJson(newConflict.event1))),
             Aggregates.match(Filters.eq("conflicts.event2", gson.toJson(newConflict.event2)))));
     // criteria.add(new BasicDBObject("conventionID", new BasicDBObject("$eq", conventionID)));
     BasicDBObject andDuplicate = new BasicDBObject("conventionID", conventionID);
     List<BasicDBObject> findDuplicate = new ArrayList<BasicDBObject>();
-    findDuplicate.add(new BasicDBObject("conflicts.event1", BasicDBObject.parse(gson.toJson(newConflict.event1))));
-    findDuplicate.add(new BasicDBObject("conflicts.event2", BasicDBObject.parse(gson.toJson(newConflict.event2))));
+    findDuplicate.add(new BasicDBObject("conflicts.event1",
+        BasicDBObject.parse(gson.toJson(newConflict.event1))));
+    findDuplicate.add(new BasicDBObject("conflicts.event2",
+        BasicDBObject.parse(gson.toJson(newConflict.event2))));
     andDuplicate.put("$and", findDuplicate);
-    // BasicDBObject criteria = new BasicDBObject("conflicts.event1",BasicDBObject.parse(gson.toJson(newConflict.event1))); 
+    // BasicDBObject criteria = new
+    // BasicDBObject("conflicts.event1",BasicDBObject.parse(gson.toJson(newConflict.event1)));
     // criteria
     // (new BasicDBObject("conflicts.event1",
-    //     new BasicDBObject("$eq", BasicDBObject.parse(gson.toJson(newConflict.event1)))));
+    // new BasicDBObject("$eq", BasicDBObject.parse(gson.toJson(newConflict.event1)))));
     // criteria.add(new BasicDBObject("conflicts.event2",
-    //     new BasicDBObject("$eq", BasicDBObject.parse(gson.toJson(newConflict.event2)))));
+    // new BasicDBObject("$eq", BasicDBObject.parse(gson.toJson(newConflict.event2)))));
     // FindIterable<Document> findIterable = conflictCollection
-    //     .find(new BasicDBObject("$and", criteria));
+    // .find(new BasicDBObject("$and", criteria));
     if (findIterable.first() == null || findIterable.first().isEmpty()) {
       System.out.println("no duplicate");
       BasicDBObject update = new BasicDBObject();
@@ -263,8 +267,8 @@ public class DatabaseUtility {
       // BasicDBObject query = new BasicDBObject("$and", criteria);
       update.put("$set", new BasicDBObject("conflicts", conflictArray));
       conflictCollection.updateOne(andDuplicate, update);
-//   
-      ////      conflictCollection.deleteOne(query);
+//
+      //// conflictCollection.deleteOne(query);
       return true;
     }
     // check if event is already there
@@ -320,6 +324,24 @@ public class DatabaseUtility {
     return false;
   }
 
+  // another attempt at addCollaborator
+  public Boolean addConvIDCollaborator(String userEmail, String conventionID) {
+    Document document = userCollection
+        .find(new BasicDBObject("email", new BasicDBObject("$eq", userEmail))).first();
+    if (document == null) {
+      return false;// user doesn't exist
+    }
+
+    // the key to this document is the convention id
+    BasicDBObject query = new BasicDBObject();
+    Document conventionExist = userCollection.find(all("conventions", conventionID)).first();
+
+    userCollection.updateOne(new Document("email", userEmail),
+        new Document("$push", new Document("conventions", conventionID)));
+
+    return true;
+  }
+
   /**
    * Method to get conflicts based on a convention id.
    *
@@ -332,7 +354,7 @@ public class DatabaseUtility {
     BasicDBObject query = new BasicDBObject();
     query.put("conventionID", conventionIDParam);
     System.out.println(conventionIDParam);
-    // iterate through the events found 
+    // iterate through the events found
     List<Document> conflictList = (List<Document>) conflictCollection.find(query)
         .projection(fields(include("conflicts"), excludeId()))
         .map(document -> document.get("conflicts")).first();

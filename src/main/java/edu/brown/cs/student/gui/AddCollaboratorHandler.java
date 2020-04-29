@@ -20,11 +20,10 @@ public class AddCollaboratorHandler implements Route {
   @Override
   public String handle(Request req, Response response) throws Exception {
     String userEmail = req.cookie("user");
-    // String conventionID = req.params(":id");
+    String conventionID = req.params(":id");
 
     QueryParamsMap queryMap = req.queryMap();
     String eventString = queryMap.value("event");
-    String conventionID = queryMap.value("conventionID");
 
     DatabaseUtility db = new DatabaseUtility();
     boolean permission = db.checkPermission(userEmail, conventionID);
@@ -36,10 +35,13 @@ public class AddCollaboratorHandler implements Route {
     // adding a collaborator
     String collaboratorEmail = queryMap.value("colEmail");
 
-    if (!db.addCollaborator(collaboratorEmail, conventionID)) {
+    if (!db.addConvIDCollaborator(collaboratorEmail, conventionID)) {
       // an error occurred
-      Map<String, Object> variables = ImmutableMap.of("errorMessage", "That "); // fix this so
-                                                                                // add_collaborator
+      System.err.println("add collaborator had an error"); // delete
+      Map<String, Object> variables = ImmutableMap.of("errorMessage",
+          "An error occurred.  Please try again.");
+      Gson gson = new Gson();
+      return gson.toJson(variables);
     }
 
     Map<String, Object> variables = ImmutableMap.of("errorMessage", "");

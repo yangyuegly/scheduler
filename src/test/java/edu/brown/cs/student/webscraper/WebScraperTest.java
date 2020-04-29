@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.junit.Before;
-import org.junit.Test;
 
 import edu.brown.cs.student.scheduler.DatabaseUtility;
 
@@ -41,7 +40,7 @@ public class WebScraperTest {
   }
 
   // test for getting courses and conflicts
-  @Test
+//  @Test
   public void testConflicts() {
     setUp();
     DatabaseUtility du = new DatabaseUtility();

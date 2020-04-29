@@ -41,6 +41,7 @@ public class WebScraper {
   private String conventionID;
   DatabaseUtility du = new DatabaseUtility();
   MongoDatabase database;
+  MongoCollection<org.bson.Document> nameToIDs;
 
   /**
    * Constructor for webscraper
@@ -53,6 +54,7 @@ public class WebScraper {
     conflict = new HashMap<>();
     getAllColleges();
     this.conventionID = conventionID;
+    nameToIDs = database.getCollection("nameToIDs");
   }
 
   /**
@@ -116,6 +118,9 @@ public class WebScraper {
   public void scrape() {
     try {
       // check if website exists
+      org.bson.Document nc = new org.bson.Document("name", collegeName).append("conventionID",
+          conventionID);
+      nameToIDs.insertOne(nc);
       String website = "https://www.coursicle.com/" + collegeName + "/courses/";
       URLConnection connection = (new URL(website)).openConnection();
       try {
@@ -149,10 +154,12 @@ public class WebScraper {
           // String courseNum = course.getElementsByClass("tileElementText
           // tileElementTextWithSubtext").text();
           String courseTitle = course.getElementsByClass("tileElementHiddenText").text();
-          if (courseTitle != "" || courseTitle != "\n") {
-            allCoursesinDept.add(courseTitle);
+          if (courseTitle != "" || courseTitle != "\n" || courseTitle.isBlank()
+              || courseTitle.isEmpty()) {
             List<String> coursesList = deptToCourses.get(departmentTitle);
-            coursesList.add(courseTitle);
+            if (!coursesList.contains(courseTitle)) {
+              coursesList.add(courseTitle);
+            }
             deptToCourses.put(departmentTitle, coursesList);
           }
         }
@@ -176,21 +183,21 @@ public class WebScraper {
     MongoCollection<org.bson.Document> ecollection;
     System.out.println("here");
     // for unit testing purposes
-    if (Main.getDatabase() == null) {
-      ConnectionString connString = new ConnectionString(
-          "mongodb://sduraide:cs32scheduler@scheduler-shard-00-00-rw75k.mongodb.net:27017,scheduler-shard-00-01-rw75k.mongodb.net:27017,scheduler-shard-00-02-rw75k.mongodb.net:27017/test?ssl=true&replicaSet=scheduler-shard-0&authSource=admin&retryWrites=true&w=majority");
-
-      MongoClientSettings settings = MongoClientSettings.builder().applyConnectionString(connString)
-          .retryWrites(true).build();
-      MongoClient mongo = MongoClients.create(settings);
-      // created db in cluster in MongoDBAtlas including collections: users, events, conflicts
-      MongoDatabase database = mongo.getDatabase("test");
-      collection = database.getCollection("conflicts");
-      ecollection = database.getCollection("events");
-    } else {
-      collection = Main.getDatabase().getCollection("conflicts");
-      ecollection = Main.getDatabase().getCollection("events");
-    }
+//    if (Main.getDatabase() == null) {
+//      ConnectionString connString = new ConnectionString(
+//          "mongodb://sduraide:cs32scheduler@scheduler-shard-00-00-rw75k.mongodb.net:27017,scheduler-shard-00-01-rw75k.mongodb.net:27017,scheduler-shard-00-02-rw75k.mongodb.net:27017/test?ssl=true&replicaSet=scheduler-shard-0&authSource=admin&retryWrites=true&w=majority");
+//
+//      MongoClientSettings settings = MongoClientSettings.builder().applyConnectionString(connString)
+//          .retryWrites(true).build();
+//      MongoClient mongo = MongoClients.create(settings);
+//      // created db in cluster in MongoDBAtlas including collections: users, events, conflicts
+//      MongoDatabase database = mongo.getDatabase("test");
+//      collection = database.getCollection("conflicts");
+//      ecollection = database.getCollection("events");
+//    } else {
+//      collection = Main.getDatabase().getCollection("conflicts");
+//      ecollection = Main.getDatabase().getCollection("events");
+//    }
 
     Gson gson = new Gson();
     List<BasicDBObject> conflictArray = new ArrayList<>();
@@ -210,8 +217,8 @@ public class WebScraper {
           eventID++;
           Event event2 = new Event(eventID, second, "");
           eventID++;
-//          du.addEvent(conventionID, event1);
-//          du.addEvent(conventionID, event2);
+          du.addEvent(conventionID, event1);
+          du.addEvent(conventionID, event2);
 
           BasicDBObject eventObject = BasicDBObject.parse(gson.toJson(event1));
           eventArray.add(eventObject);
@@ -221,7 +228,7 @@ public class WebScraper {
 
           BasicDBObject obj = BasicDBObject.parse(gson.toJson(conflict));
           if (!event1.equals(event2)) {
-//            du.addConflict(conventionID, conflict);
+            du.addConflict(conventionID, conflict);
             conflictArray.add(obj);
           }
 
@@ -229,14 +236,16 @@ public class WebScraper {
       }
     }
     System.out.println("here4");
-
-    org.bson.Document doc = new org.bson.Document("conventionID", conventionID).append("conflicts",
-        conflictArray);
-    collection.insertOne(doc);
-
-    org.bson.Document currEvent = new org.bson.Document("conventionID", conventionID)
-        .append("events", eventArray);
-    ecollection.insertOne(currEvent);
+    deptToCourses = new HashMap<>();
+    conflict = new HashMap<>();
+//
+//    org.bson.Document doc = new org.bson.Document("conventionID", conventionID).append("conflicts",
+//        conflictArray);
+//    collection.insertOne(doc);
+//
+//    org.bson.Document currEvent = new org.bson.Document("conventionID", conventionID)
+//        .append("events", eventArray);
+//    ecollection.insertOne(currEvent);
   }
 
 }

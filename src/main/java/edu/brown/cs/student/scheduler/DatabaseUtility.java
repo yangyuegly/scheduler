@@ -239,8 +239,8 @@ public class DatabaseUtility {
     } else {
       List<BasicDBObject> conflictArray = new ArrayList<>();
       Document doc = findIterable.first();
-      System.out.println("adding conflict " + newConflict);
-      System.out.println("found an existing conflict " + doc);
+//      System.out.println("adding conflict " + newConflict);
+//      System.out.println("found an existing conflict " + doc);
       if (findIterable.first() == null) {
         System.out.println("null");
       }
@@ -257,7 +257,7 @@ public class DatabaseUtility {
             e1.getString("description"));
         Conflict conflict = new Conflict(event1, event2, d.getInteger("weight"));
         if (conflict.equals(newConflict)) {
-          System.out.println(conflict.weight);
+//          System.out.println(conflict.weight);
           conflict.weight++;
         }
         BasicDBObject obj1 = BasicDBObject.parse(gson.toJson(conflict));
@@ -412,8 +412,8 @@ public class DatabaseUtility {
       eventCollection.insertOne(new Document(newConventionString));
       return true;
     } else if (findIterable == null || findIterable.isEmpty()) {
-      System.out.println("obj:" + obj);
-      System.out.println("conventionIDLL: " + conventionID);
+//      System.out.println("obj:" + obj);
+//      System.out.println("conventionIDLL: " + conventionID);
       eventCollection.updateOne(eq("conventionID", conventionID), Updates.addToSet("events", obj));
       System.out.println("in addEvent4");
       return true;

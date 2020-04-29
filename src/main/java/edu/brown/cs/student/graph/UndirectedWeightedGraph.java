@@ -118,10 +118,13 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
   /**
    *
    * @return colored nodes
+   *
    * @param ts
    * @param cl
+   *
+   * @throws NullPointer Exception if a schedule is not possible
    */
-  public Set<V> graphColoring(int ts, int cl) {
+  public Set<V> graphColoring(int ts, int cl) throws NullPointerException {
     Set<V> coloredSet = new HashSet<V>();
     int numColoredCourses = 0;
     Iterator<Map.Entry<Integer, V>> iter = degree.iterator();
@@ -150,7 +153,7 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
             colors.get(indices.get(0))[indices.get(1)]--;
           } else {
             throw new NullPointerException(
-                "Unable to find a conflict-free schedule for the convention");
+                "Unable to find a conflict-free schedule for this convention.");
           }
         }
         for (E e : curr.getAdjList()) {
@@ -170,7 +173,7 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
         }
       }
     }
-    for (Map.Entry<Integer, V> c: coloredMap.entrySet()) {
+    for (Map.Entry<Integer, V> c : coloredMap.entrySet()) {
       System.out.println(c.getValue());
       coloredSet.add(c.getValue());
     }
@@ -214,12 +217,14 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
 
   /**
    * Get the smallest available color
+   *
    * @param courseID
+   *
    * @return
    */
   public List<Integer> getSmallestAvailableColor(int courseID) {
-    
-    // System.out.println("the current course id " + courseID); 
+
+    // System.out.println("the current course id " + courseID);
     boolean valid = false;
     List<E> adj = nodes.get(courseID).getAdjList();
     for (int i = 0; i < this.MAX_SCHEDULE_DAYS; i++) {
@@ -321,8 +326,7 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
   public void setDegree() {
 
     degree = entriesSortedByValues(nodes);
-    
-    
+
   }
 
   public int getK() {
@@ -386,20 +390,18 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
           @Override
           public int compare(Map.Entry<K, T> e1, Map.Entry<K, T> e2) {
             // compare by degree of nodes
-                Integer res = e1.getValue().getDegree().compareTo(e2.getValue().getDegree());
-                res *= -1;
+            Integer res = e1.getValue().getDegree().compareTo(e2.getValue().getDegree());
+            res *= -1;
             // compare by heaviest weight if has the same degree
-                if (res == 0) {
-                  res = e1.getValue().getHeaviestWeight() < e2.getValue().getHeaviestWeight() ? 1
-                          : -1;
-                      if (res == 0) {
-                            res = e1.getValue().getID() < e2.getValue().getID() ? 1 : -1;
-                  }
-                  return res; 
-                }
-                else {
-                    return res;
-                }
+            if (res == 0) {
+              res = e1.getValue().getHeaviestWeight() < e2.getValue().getHeaviestWeight() ? 1 : -1;
+              if (res == 0) {
+                res = e1.getValue().getID() < e2.getValue().getID() ? 1 : -1;
+              }
+              return res;
+            } else {
+              return res;
+            }
           }
         });
     sortedEntries.addAll(map.entrySet());

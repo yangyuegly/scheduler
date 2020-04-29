@@ -9,11 +9,6 @@ document.addEventListener('DOMContentLoaded', function() {
   var id = splitURL[4];
 
   $.get("/calendar_events/" + id, response => {
-    if (response == "") {
-      // the user is not authorized to view this convention
-      window.location.pathname = "/unauthorized";
-    }
-
     responseObject = JSON.parse(response);
 
     if (responseObject.error == ""){
@@ -21,9 +16,9 @@ document.addEventListener('DOMContentLoaded', function() {
      startDate = responseObject.defaultDate;
      makeCalendar(startDate, myEvents);
     } else {
-    var error = document.getElementById('error');
-    error = responseObject.error;
-     console.log(responseObject.error);
+      var error = document.getElementById('error');
+      error = responseObject.error;
+      $("#calendarError").text(error);
     }
   });
 });

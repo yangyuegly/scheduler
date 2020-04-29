@@ -50,6 +50,7 @@
 </head>
 <body>
   <h2>${name}</h2>
+  <p id="calendarError" class="errorMessage"></p>
   <div class='demo-topbar'>
 
 

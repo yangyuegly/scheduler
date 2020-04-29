@@ -26,7 +26,7 @@
   <div id="completedDiv">
     <h3>Attendees</h3>
     <p id="saveExpl">To let people register as attendees on our website, send them this link:
-      <a href=/convention_signup/${id} class="errorMessage" id="attendeeSignupLink">localhost:45677/convention_signup/${id}</a>.
+      <a href=/convention_signup/${id} id="attendeeSignupLink">localhost:45677/convention_signup/${id}</a>.
       If you do this, their preferences will be included in the
       schedule.  </p>
     <button id="save">Save and schedule later</button>

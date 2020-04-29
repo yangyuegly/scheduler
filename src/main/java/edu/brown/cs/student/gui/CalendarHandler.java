@@ -45,10 +45,20 @@ public class CalendarHandler implements Route {
     int numTimeSlotsPerDay = myConv.getNumTimeSlotsPerDay();
 
     ScheduleCommand schedComm = new ScheduleCommand(myConv, 100, myConv.getNumDays(),
-        numTimeSlotsPerDay); // change concurrency
-                             // limit!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        numTimeSlotsPerDay);
+    List<CalendarEvent> eventsSched;
 
-    List<CalendarEvent> eventsSched = schedComm.execute();
+    try {
+      eventsSched = schedComm.execute();
+
+    } catch (NullPointerException err) {
+      // there was an error with the scheduling
+      Map<String, Object> variables = ImmutableMap.of("eventsForSchedule", "", "defaultDate", "",
+          "error", err.getMessage());
+      Gson gson = new Gson();
+
+      return gson.toJson(variables);
+    }
 
     String error = "";
     if (eventsSched == null) { // eventually this should become a try/catch instead

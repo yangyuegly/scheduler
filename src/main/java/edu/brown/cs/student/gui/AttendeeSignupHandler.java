@@ -31,12 +31,13 @@ public class AttendeeSignupHandler implements TemplateViewRoute {
     }
 
     String convName = conv.getName();
-
-    // any attendee can only attend as many events as there are time slots
-    int maxEventsToSelect = conv.getNumTimeSlotsPerDay() * conv.getNumDays();
-
     List<Event> eventsInConv = conv.getEvents();
     String eventCheckboxes = "";
+
+    // any attendee can only attend as many events as there are time slots or the total number
+    // of events, if there are more time slots than events
+    int numTimeSlots = conv.getNumTimeSlotsPerDay() * conv.getNumDays();
+    int maxEventsToSelect = Math.min(numTimeSlots, eventsInConv.size());
 
     // create a checkbox for each event to display on the page
     for (Event event : eventsInConv) {

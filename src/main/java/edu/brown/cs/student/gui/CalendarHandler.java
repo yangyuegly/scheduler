@@ -2,6 +2,7 @@ package edu.brown.cs.student.gui;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -16,6 +17,7 @@ import spark.Request;
 import spark.Response;
 import spark.Route;
 
+//Need to fix actually displaying the error on the ftl page .................................................................
 /**
  * This class is used to get the events and their times in a format that is compatible with the
  * FullCalendar API's javascript. It implements TemplateViewRoute.
@@ -48,13 +50,20 @@ public class CalendarHandler implements Route {
 
     List<CalendarEvent> eventsSched = schedComm.execute();
 
+    String error = "";
+    if (eventsSched == null) { // eventually this should become a try/catch instead
+      error = "We're sorry, we couldn't make a schedule for you. There was no way to avoid"
+          + " conflicts between your events.";
+      eventsSched = new ArrayList<>();
+    }
+
     System.out.println("just executed schedule command"); // delete
 
     LocalDateTime convStartWithTime = myConv.getStartDateTime();
     LocalDate convStartDay = convStartWithTime.toLocalDate();
 
     Map<String, Object> variables = ImmutableMap.of("eventsForSchedule", eventsSched, "defaultDate",
-        convStartDay.toString());
+        convStartDay.toString(), "error", error);
     Gson gson = new Gson();
 
     return gson.toJson(variables);

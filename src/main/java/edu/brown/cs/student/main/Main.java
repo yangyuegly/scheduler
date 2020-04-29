@@ -12,6 +12,8 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 
 import edu.brown.cs.student.gui.AccountHomeHandler;
+import edu.brown.cs.student.gui.AddCollaboratorHandler;
+import edu.brown.cs.student.gui.AddEventHandler;
 import edu.brown.cs.student.gui.AttendeeSignupHandler;
 import edu.brown.cs.student.gui.AttendeeSignupSubmitHandler;
 import edu.brown.cs.student.gui.CalendarHandler;
@@ -24,7 +26,6 @@ import edu.brown.cs.student.gui.CreateExamConvHandler;
 import edu.brown.cs.student.gui.HomeHandler;
 import edu.brown.cs.student.gui.LoginHandler;
 import edu.brown.cs.student.gui.LogoutHandler;
-import edu.brown.cs.student.gui.SaveConventionHandler;
 import edu.brown.cs.student.gui.SchedExamSubmitHandler;
 import edu.brown.cs.student.gui.SchedulePageHandler;
 import edu.brown.cs.student.gui.UnauthorizedHandler;
@@ -135,7 +136,8 @@ public final class Main {
     Spark.post("/account", new LoginHandler(), freeMarker);
     Spark.get("/create_convention", new CreateConventionHandler(), freeMarker);
     Spark.post("/create_convention/:id", new CreateConvSubmitHandler(), freeMarker);
-    Spark.post("/save_convention", new SaveConventionHandler());
+    Spark.post("/add_event/:id", new AddEventHandler());
+    Spark.post("/add_collaborator/:id", new AddCollaboratorHandler());
     Spark.get("/create_exam_conv", new CreateExamConvHandler(), freeMarker);
     Spark.get("/schedule/:id", new SchedulePageHandler(), freeMarker);
     Spark.get("/calendar_events/:id", new CalendarHandler());

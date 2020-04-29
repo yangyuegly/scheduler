@@ -14,13 +14,13 @@ import org.junit.Test;
 public class DatabaseUtilityTest {
   DatabaseUtility du = new DatabaseUtility();
 
-  @Test
+//  @Test
   public void checkPermissionTest() {
     assertEquals(du.checkPermission("abby_goldberg@brown.edu", "211716"), true);
     assertEquals(du.checkPermission("abby_goldberg@brown.edu", "NonExistingID"), false);
   }
 
- // @Test
+  // @Test
   public void getEventsFromConventionIDTest() {
     List<Event> events = du.getEventsFromConventionID("442715");
     Event e1 = new Event(0, "Javascript/CSS", "");
@@ -30,14 +30,14 @@ public class DatabaseUtilityTest {
     assertTrue(events.contains(e2));
   }
 
-  @Test
+//  @Test
   public void addConventionDataTest() {
     Convention convention = new Convention("c1", "my convention", "2020-04-10", 3, 90, "07:30",
         "19:30");
     assertEquals(du.addConventionData(convention), true);
   }
 
-  @Test
+//  @Test
   public void addConvIDTest() {
     // if you want to run line 40, change to a new ID.
     // assertEquals(du.addConvID("abby_goldberg@brown.edu", "testConvention2"), true);
@@ -53,7 +53,7 @@ public class DatabaseUtilityTest {
     assertTrue(conflicts.contains(conflict));
   }
 
-  @Test
+//  @Test
   public void addEventTest() {
     assertTrue(du.addEvent("c1", new Event(0, "justATest", "")));
     assertFalse(du.addEvent("nonExistingConvention", new Event(0, "justATest", "")));
@@ -71,7 +71,7 @@ public class DatabaseUtilityTest {
 //    assertFalse(du.addEvent("nonExistingConvention", new Event(0, "justATest")));
   }
 
-  @Test
+//  @Test
   public void getConvention() {
     Convention c1 = du.getConvention("496457");
     assertEquals(c1.getName(), "Test Upload 2");
@@ -100,7 +100,7 @@ public class DatabaseUtilityTest {
     assertEquals(c2.getEndDateTime(), endTime2);
   }
 
-  @Test
+//  @Test
   public void getUserConventionsTest() {
     List<Convention> conventions = du.getUserConventions("abbyjg730@gmail.com");
     assertTrue(conventions.get(0).getID().equals("388982"));
@@ -118,4 +118,11 @@ public class DatabaseUtilityTest {
     List<Convention> c1 = du.getUserConventions("invalidUser");
     assertTrue(c1 == null);
   }
+
+  @Test
+  public void addCollabTest() {
+    assertTrue(du.addCollaborator("shenadurai@gmail.com", "000001"));
+    assertFalse(du.addCollaborator("shenadurai1@gmail.com", "000001"));
+  }
+
 }

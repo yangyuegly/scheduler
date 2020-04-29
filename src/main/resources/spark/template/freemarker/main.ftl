@@ -14,8 +14,9 @@
 
 
 <div class="navbar">
-  <a href="/home"><img src="/images/logo.png" width="50" height="35"></a>
-  <a href="/home">Home</a>
+  <a href="/home"><img src="/images/sked_logo1.png" width="40" height="35"></a>
+
+  <a href="/account">My conventions</a>
   <a href="/create_convention">Create a convention</a>
   <a href="/create_exam_conv">Schedule exams</a>
   <div class="dropdown">

@@ -1,7 +1,12 @@
 <#assign content>
 
 <div class="main-content">
+
   <h2 for="file">Upload a file:</h2>
+  <a href="/images/example.csv"" download="example.csv">
+Click here to download an example of the file type we require.
+</a>
+  
   <form method="POST" action="/upload_convention/${id}" enctype='multipart/form-data'>
      <input type="file" id="file" name="file" accept=".csv">
      <br><br>
@@ -15,6 +20,11 @@
        Schedule now
      </button>
   </form>
+  
+
+  
+  
+  
 </div>
 
 </#assign>

@@ -15,10 +15,16 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     responseObject = JSON.parse(response);
-    myEvents = responseObject.eventsForSchedule;
-    startDate = responseObject.defaultDate;
 
-    makeCalendar(startDate, myEvents);
+    if (responseObject.error == ""){
+     myEvents = responseObject.eventsForSchedule;
+     startDate = responseObject.defaultDate;
+     makeCalendar(startDate, myEvents);
+    } else {
+    var error = document.getElementById('error');
+    error = responseObject.error;
+     console.log(responseObject.error);
+    }
   });
 });
 

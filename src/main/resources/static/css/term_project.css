@@ -52,14 +52,15 @@ a {
 .navbar {
   overflow: hidden;
   background-color: #333;
+  line-height: "50";
 }
 
 .navbar a {
   float: left;
-  font-size: 16px;
+  font-size: 18px;
   color: white;
   text-align: center;
-  padding: 14px 16px;
+  padding: 14px 12px;
   text-decoration: none;
 }
 
@@ -69,7 +70,11 @@ a {
 }
 
 .dropdown .dropbtn {
-  font-size: 16px;  
+<<<<<<< HEAD
+  font-size: 16px;
+=======
+  font-size: 18px;
+>>>>>>> f7c33d97115597e81e0262f3d8291b3885da297a
   border: none;
   outline: none;
   color: white;
@@ -101,6 +106,8 @@ a {
   text-align: left;
 }
 
+
+
 .dropdown-content a:hover {
   background-color: #ddd;
 }
@@ -109,5 +116,65 @@ a {
   display: block;
 }
 
+/* Style the button that is used to open and close the collapsible content */
+.collapsible {
+  background-color: #8bcbe0;
+  color: #000000;
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 15px;
+}
+
+/* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+.active, .collapsible:hover {
+  background-color: #d5eaf1ff;
+}
+
+/* Style the collapsible content. Note: hidden by default */
+.content {
+  padding: 0 18px;
+  display: none;
+  overflow: hidden;
+  background-color: #d5eaf1ff;
+}
 
 
+/* --------- These are for the set-up convention page ------ */
+
+
+.colInput {
+  width: 40%;
+}
+
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.col-25 {
+  float: left;
+  width: 15%;
+  margin-top: 6px;
+  padding: 10px 0;
+}
+
+.col-75 {
+  float: left;
+  width: 85%;
+  margin-top: 6px;
+  padding: 5px 0;
+}
+
+/* Responsive layout - when the screen is less than 600px wide, make the two
+columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 600px) {
+  .col-25, .col-75, input[type=submit] {
+    width: 100%;
+    margin-top: 0;
+  }
+}

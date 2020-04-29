@@ -43,7 +43,6 @@ public class DatabaseUtility {
   /**
    * Collections stored in MongoDB database
    */
-
   MongoCollection<Document> userCollection;
   MongoCollection<Document> conventionCollection;
   MongoCollection<Document> eventCollection;
@@ -187,14 +186,14 @@ public class DatabaseUtility {
   public Boolean addConflictHelper(String conventionID, Conflict newConflict) {
     Gson gson = new Gson();
     BasicDBObject obj = BasicDBObject.parse(gson.toJson(newConflict));
-    //=====checking if convention collection contains current conventionID
+    // =====checking if convention collection contains current conventionID
     BasicDBObject cQuery = new BasicDBObject("id", conventionID);
     Document document = conventionCollection.find(cQuery).first();
     if (document == null) {
       return false;
     }
 
-    //=====checking if conflict collection contains current conventionID
+    // =====checking if conflict collection contains current conventionID
     BasicDBObject checkExistInConflict = new BasicDBObject("conventionID", conventionID);
     Document findConvInConflict = conflictCollection.find(checkExistInConflict).first();
     Map<String, Object> newConventionString = new HashMap<>();
@@ -202,7 +201,6 @@ public class DatabaseUtility {
       newConventionString.put("conventionID", conventionID);
       conflictCollection.insertOne(new Document(newConventionString));
     }
-    
 
     List<BasicDBObject> criteria = new ArrayList<BasicDBObject>();
     criteria.add(new BasicDBObject("conventionID", new BasicDBObject("$eq", conventionID)));
@@ -281,6 +279,30 @@ public class DatabaseUtility {
         new Document("$push", new Document("conventions", conventionID)));
 
     return true;
+  }
+
+  public Boolean addCollaborator(String userEmail, String conventionID) {
+    // try to load existing document from MongoDB
+    Document document = userCollection
+        .find(new BasicDBObject("email", new BasicDBObject("$eq", userEmail))).first();
+    if (document == null) {
+      return false;// user doesn't exist
+    }
+
+    List<BasicDBObject> criteria = new ArrayList<BasicDBObject>();
+    criteria.add(new BasicDBObject("email", new BasicDBObject("$eq", userEmail)));
+    criteria.add(new BasicDBObject("conventions", new BasicDBObject("$eq", conventionID)));
+
+    FindIterable<Document> findIterable = userCollection.find(new BasicDBObject("$and", criteria));
+    if (findIterable.first() == null || findIterable.first().isEmpty()) {
+      System.out.println("no duplicate");
+      BasicDBObject update = new BasicDBObject();
+      BasicDBObject query = new BasicDBObject("$and", criteria);
+      update.put("$push", new BasicDBObject("convention", conventionID));
+      userCollection.updateOne(query, update);
+      return true;
+    }
+    return false;
   }
 
   /**

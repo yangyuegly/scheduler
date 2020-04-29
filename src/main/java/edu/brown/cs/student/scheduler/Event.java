@@ -61,8 +61,6 @@ public class Event implements IVertex<Event, Conflict> {
     return max;
   }
 
-  
-
   /**
    * Setter method for id
    *

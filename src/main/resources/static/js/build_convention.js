@@ -7,46 +7,136 @@ let existingEvents = [];
 const $name = $("#name");
 const $description = $("#description");
 const $eventNames = $("#eventNames");
+const $emailInput = $("#colEmail");
 
 // this string stores the names of the added events in HTML form
-let eventNamesString = "";
+let eventNamesString = $eventNames.val();
 
 /*
   When the document is ready, this runs.
 */
 
 $(document).ready(() => {
+var coll = document.getElementsByClassName("collapsible");
+var i;
+
+for (i = 0; i < coll.length; i++) {
+  coll[i].addEventListener("click", function() {
+    this.classList.toggle("active");
+    var content = this.nextElementSibling;
+    if (content.style.display === "block") {
+      content.style.display = "none";
+    } else {
+      content.style.display = "block";
+    }
+  });
+}
   setup_live_event_updates();
   $("#addEvent").click(addEvent);
   $("#doneAddingEvents").click(doneAdding);
   $("#save").click(saveConvAndGoToAccount);
   $("#schedule").click(schedule);
+  $("#addCollaborator").click(addCollaborator);
   // hide HTML elements that are used after all events are added
   $("#completedDiv").css("visibility", "hidden");
 });
 
 /*
+  This method updates the eventNamesString, so the new event is added to it.
+*/
+const updateEventNamesString = () => {
+  if (eventNamesString != "") {
+    eventNamesString += "<p></p>";
+  }
+
+  eventNamesString += "<button type=\"button\" class=\"collapsible\">" + $name.val() + "</button>\r\n"
+          + "<div class=\"content\">\r\n" + "<p>";
+
+  if ($description.val() == "") {
+    eventNamesString += "No description."
+  } else {
+    eventNamesString += $description.val();
+  }
+
+  eventNamesString += "</p>\r\n" + "</div>";
+}
+
+/*
   Function that gets called when the add event button is clicked.
-  This handles adding the new event.
+  This handles adding the new event and making a post request so the event
+  is stored in the database.
 */
 const addEvent = () => {
   let newEvent = [$name.val(), $description.val()];
   existingEvents.push(newEvent);
 
-  console.log("this is name" + $name.val());
-  console.log(newEvent);
-
-
-  eventNamesString += "<p>" + $name.val() + "</p>";
-
   add_event("<p>" + $name.val() + "</p>"); //socket code
 
-  // update the existing events on the page
-  $eventNames.html(eventNamesString);
+  const eventJson = JSON.stringify(newEvent);
+  const url = window.location.href;
+  var splitURL = url.split("/");
+  var convID = splitURL[4];
+  const postParameters = { event: eventJson, conventionID: convID };
 
-  // clear the input boxes
-  $name.val("");
-  $description.val("");
+  // post request to "/add_event/id with added events
+  $.post("/add_event/" + convID, postParameters, (responseJSON) => {
+    responseObject = JSON.parse(responseJSON);
+    errorMessage = responseObject.errorMessage;
+
+    if (errorMessage != "") {
+      // an error occurred
+      $("#addEventError").text(errorMessage);
+    } else {
+      // update the existing events on the page
+      updateEventNamesString();
+
+      $eventNames.html(eventNamesString);
+      $("#addEventError").text("");
+
+      var coll = document.getElementsByClassName("collapsible");
+      var i;
+
+      for (i = 0; i < coll.length; i++) {
+        coll[i].addEventListener("click", function() {
+          this.classList.toggle("active");
+          var content = this.nextElementSibling;
+          if (content.style.display === "block") {
+            content.style.display = "none";
+          } else {
+            content.style.display = "block";
+          }
+        });
+
+        // clear the input boxes
+        $name.val("");
+        $description.val("");
+      }
+    }
+  });
+};
+
+/*
+  Function that gets called when the add collaborator button is clicked.
+  This uses a POST request to add the collaborator.
+*/
+const addCollaborator = () => {
+  const colEmail = $emailInput.val();
+
+  const postParameters = { colEmail: colEmail };
+
+  // post request to "/add_event/id with added events
+  $.post("/add_collaborator/" + convID, postParameters, (responseJSON) => {
+    responseObject = JSON.parse(responseJSON);
+    errorMessage = responseObject.errorMessage;
+
+    if (errorMessage != "") {
+      // an error occurred
+      $("#addCollaboratorError").text(errorMessage);
+    } else {
+      // clear the email input box
+      $emailInput.val("");
+    }
+  });
 };
 
 /*
@@ -60,41 +150,19 @@ const doneAdding = () => {
 };
 
 /*
-  This uses a post request to send the new events to the program,
-*/
-const save = () => {
-  // build javascript object that contains the data for the POST request.
-  const myJson = JSON.stringify(existingEvents);
-  const url = window.location.href;
-  var splitURL = url.split("/");
-  var convID = splitURL[4];
-
-  const postParameters = { existingEvents: myJson, conventionID: convID };
-
-  // post request to "/save_convention" with added events
-  $.post("/save_convention", postParameters, (responseJSON) => {});
-}
-
-/*
-  Function that gets called when the save button is clicked.  This uses a post
-  request to send the new events to the program, and then causes the page
-  to change to the account page.
+  Function that gets called when the save button is clicked.  This brings the
+  user to their account home page.
 */
 const saveConvAndGoToAccount = () => {
-  save();
-
   // go to the account page
   window.location.pathname = "/account";
 };
 
 /*
-  Function that gets called when the schedule button is clicked.  This uses a
-  post request to send the new events to the program so they can be saved.
-  Then, it changes the page to the calendar page.
+  Function that gets called when the schedule button is clicked.  This schedules
+  the convention and changes the page to the calendar page.
 */
 const schedule = () => {
-  save();
-
   const url = window.location.href;
   var splitURL = url.split("/");
   var id = splitURL[4];

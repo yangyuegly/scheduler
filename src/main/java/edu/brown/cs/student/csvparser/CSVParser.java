@@ -12,17 +12,27 @@ public class CSVParser {
 
   /**
    * Method to parse the CSV file
+   *
    * @param textBuilder - filename
-   * @return - list of rows, where each row is a string [] (row split by spaces)
+   *
+   * @return - list of rows, where each row is a List of string (row split by commas)
    */
-  public List<String[]> parse(StringBuilder textBuilder){
+  public List<List<String>> parse(StringBuilder textBuilder) {
     String text = textBuilder.toString();
     List<String> textList = Arrays.asList(text.split("\n"));
-    List<String[]> inputList = new ArrayList<>();
+    List<List<String>> inputList = new ArrayList<>();
     for (String row : textList) {
       String[] splitRow = row.split(",");
-      System.out.println("row");
-      inputList.add(splitRow);
+      List<String> splitRowMinusBlanks = new ArrayList<>();
+
+      for (String elem : splitRow) {
+        if (!elem.trim().equals("")) {
+          // don't include blanks or spaces
+          splitRowMinusBlanks.add(elem);
+        }
+      }
+
+      inputList.add(splitRowMinusBlanks);
     }
     return inputList;
   }

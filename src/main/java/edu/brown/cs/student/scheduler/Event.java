@@ -148,7 +148,7 @@ public class Event implements IVertex<Event, Conflict> {
 
   @Override
   public String toString() {
-    return "{" + " id='" + getID() + "name=" + getName() + "'" + ", degree='" + getDegree() + "'" + ", color='"
+    return "{" + " id='" + getID() + " name=" + getName() + "'" + ", degree='" + getDegree() + "'" + ", color='"
         + getColor() + "'" + "}";
   }
 

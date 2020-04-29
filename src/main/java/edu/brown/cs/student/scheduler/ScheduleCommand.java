@@ -53,17 +53,17 @@ public class ScheduleCommand {
     LocalDateTime convStart = convention.getStartDateTime();
 
 
-    System.out.println("size of timeSlot list " + timeSlot.size());
+    // System.out.println("size of timeSlot list " + timeSlot.size());
 
     int dayOfSlot = timeSlot.get(0);
-    System.out.println("got time slot");
+    // System.out.println("got time slot");
     LocalDateTime slotDayAtStartTime = convStart.plusDays(dayOfSlot);
 
 
     int numMinutesBeforeSlot = timeSlot.get(1) * convention.getEventDuration();
 
 
-    System.out.println("time slot " + dayOfSlot + " " + numMinutesBeforeSlot); // delete
+    // System.out.println("time slot " + dayOfSlot + " " + numMinutesBeforeSlot); // delete
 
     return slotDayAtStartTime.plusMinutes(numMinutesBeforeSlot);
   }
@@ -86,7 +86,6 @@ public class ScheduleCommand {
 
     for (Event event : colored) {
       LocalDateTime currStart = this.getTimeSlotStart(event.getColor());
-
 
       Integer eventDur = convention.getEventDuration();
 

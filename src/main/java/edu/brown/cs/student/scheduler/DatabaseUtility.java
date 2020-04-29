@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -25,11 +26,14 @@ import com.google.gson.Gson;
 import com.mongodb.BasicDBObject;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
+import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Aggregates;
+import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.ReplaceOptions;
 import com.mongodb.client.model.Updates;
 
@@ -190,6 +194,7 @@ public class DatabaseUtility {
     BasicDBObject cQuery = new BasicDBObject("id", conventionID);
     Document document = conventionCollection.find(cQuery).first();
     if (document == null) {
+      System.out.println(newConflict + "could not be added due to convention not found.");
       return false;
     }
 
@@ -202,14 +207,23 @@ public class DatabaseUtility {
       conflictCollection.insertOne(new Document(newConventionString));
     }
 
-    List<BasicDBObject> criteria = new ArrayList<BasicDBObject>();
-    criteria.add(new BasicDBObject("conventionID", new BasicDBObject("$eq", conventionID)));
-    criteria.add(new BasicDBObject("conflicts.event1",
-        new BasicDBObject("$eq", BasicDBObject.parse(gson.toJson(newConflict.event1)))));
-    criteria.add(new BasicDBObject("conflicts.event2",
-        new BasicDBObject("$eq", BasicDBObject.parse(gson.toJson(newConflict.event2)))));
-    FindIterable<Document> findIterable = conflictCollection
-        .find(new BasicDBObject("$and", criteria));
+    AggregateIterable<Document> findIterable = conflictCollection.aggregate(Arrays.asList(Aggregates.match(Filters.eq("conventionID", conventionID)),
+            Aggregates.match(Filters.eq("conflicts.event1", gson.toJson(newConflict.event1))),
+            Aggregates.match(Filters.eq("conflicts.event2", gson.toJson(newConflict.event2)))));
+    // criteria.add(new BasicDBObject("conventionID", new BasicDBObject("$eq", conventionID)));
+    BasicDBObject andDuplicate = new BasicDBObject("conventionID", conventionID);
+    List<BasicDBObject> findDuplicate = new ArrayList<BasicDBObject>();
+    findDuplicate.add(new BasicDBObject("conflicts.event1", BasicDBObject.parse(gson.toJson(newConflict.event1))));
+    findDuplicate.add(new BasicDBObject("conflicts.event2", BasicDBObject.parse(gson.toJson(newConflict.event2))));
+    andDuplicate.put("$and", findDuplicate);
+    // BasicDBObject criteria = new BasicDBObject("conflicts.event1",BasicDBObject.parse(gson.toJson(newConflict.event1))); 
+    // criteria
+    // (new BasicDBObject("conflicts.event1",
+    //     new BasicDBObject("$eq", BasicDBObject.parse(gson.toJson(newConflict.event1)))));
+    // criteria.add(new BasicDBObject("conflicts.event2",
+    //     new BasicDBObject("$eq", BasicDBObject.parse(gson.toJson(newConflict.event2)))));
+    // FindIterable<Document> findIterable = conflictCollection
+    //     .find(new BasicDBObject("$and", criteria));
     if (findIterable.first() == null || findIterable.first().isEmpty()) {
       System.out.println("no duplicate");
       BasicDBObject update = new BasicDBObject();
@@ -221,11 +235,12 @@ public class DatabaseUtility {
     } else {
       List<BasicDBObject> conflictArray = new ArrayList<>();
       Document doc = findIterable.first();
-      System.out.println("here1");
+      System.out.println("adding conflict " + newConflict);
+      System.out.println("found an existing conflict " + doc);
       if (findIterable.first() == null) {
         System.out.println("null");
       }
-      System.out.println(doc.toJson());
+      // System.out.println(doc.toJson());
 //      String weight = doc.getString("conventionID");
       List<Document> conflicts = (List<Document>) doc.get("conflicts");
       for (Document d : conflicts) {
@@ -245,12 +260,12 @@ public class DatabaseUtility {
         conflictArray.add(obj1);
       }
       BasicDBObject update = new BasicDBObject();
-      BasicDBObject query = new BasicDBObject("$and", criteria);
+      // BasicDBObject query = new BasicDBObject("$and", criteria);
       update.put("$set", new BasicDBObject("conflicts", conflictArray));
-      conflictCollection.updateOne(query, update);
-//
-////      conflictCollection.deleteOne(query);
-      return false;
+      conflictCollection.updateOne(andDuplicate, update);
+//   
+      ////      conflictCollection.deleteOne(query);
+      return true;
     }
     // check if event is already there
   }

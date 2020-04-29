@@ -87,8 +87,6 @@ const addEvent = () => {
     } else {
       // update the existing events on the page
       updateEventNamesString();
-
-      //add_event("<p>" + $name.val() + "</p>"); //socket code
       add_event(eventNamesString); //socket code
 
       $eventNames.html(eventNamesString);

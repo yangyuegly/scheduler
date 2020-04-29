@@ -84,7 +84,6 @@ public class ConventionHomeHandler implements TemplateViewRoute {
    */
   private String makeEventBox(Event currEvent, String existingEvents) {
     String description = currEvent.getDescription();
-    // System.out.println("description is " + description + ".");
     String eventString = "<p></p>";
 
     if (!existingEvents.equals("")) {
@@ -97,10 +96,8 @@ public class ConventionHomeHandler implements TemplateViewRoute {
 
     if (description.equals("")) {
       eventString += "No description.";
-      System.out.println("no description");
     } else {
       eventString += currEvent.getDescription();
-      System.out.println("added event string " + currEvent.getDescription());
     }
 
     return eventString + "</p>\r\n" + "</div>";

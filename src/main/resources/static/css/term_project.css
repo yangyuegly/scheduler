@@ -60,7 +60,7 @@ a {
   font-size: 18px;
   color: white;
   text-align: center;
-  padding: 14px 16px;
+  padding: 14px 12px;
   text-decoration: none;
 }
 
@@ -70,7 +70,11 @@ a {
 }
 
 .dropdown .dropbtn {
-  font-size: 18px;  
+<<<<<<< HEAD
+  font-size: 16px;
+=======
+  font-size: 18px;
+>>>>>>> f7c33d97115597e81e0262f3d8291b3885da297a
   border: none;
   outline: none;
   color: white;
@@ -138,3 +142,39 @@ a {
   background-color: #d5eaf1ff;
 }
 
+
+/* --------- These are for the set-up convention page ------ */
+
+
+.colInput {
+  width: 40%;
+}
+
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.col-25 {
+  float: left;
+  width: 15%;
+  margin-top: 6px;
+  padding: 10px 0;
+}
+
+.col-75 {
+  float: left;
+  width: 85%;
+  margin-top: 6px;
+  padding: 5px 0;
+}
+
+/* Responsive layout - when the screen is less than 600px wide, make the two
+columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 600px) {
+  .col-25, .col-75, input[type=submit] {
+    width: 100%;
+    margin-top: 0;
+  }
+}

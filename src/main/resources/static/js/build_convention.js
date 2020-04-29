@@ -42,6 +42,26 @@ for (i = 0; i < coll.length; i++) {
 });
 
 /*
+  This method updates the eventNamesString, so the new event is added to it.
+*/
+const updateEventNamesString = () => {
+  if (eventNamesString != "") {
+    eventNamesString += "<p></p>";
+  }
+
+  eventNamesString += "<button type=\"button\" class=\"collapsible\">" + $name.val() + "</button>\r\n"
+          + "<div class=\"content\">\r\n" + "<p>";
+
+  if ($description.val() == "") {
+    eventNamesString += "No description."
+  } else {
+    eventNamesString += $description.val();
+  }
+
+  eventNamesString += "</p>\r\n" + "</div>";
+}
+
+/*
   Function that gets called when the add event button is clicked.
   This handles adding the new event and making a post request so the event
   is stored in the database.
@@ -49,9 +69,6 @@ for (i = 0; i < coll.length; i++) {
 const addEvent = () => {
   let newEvent = [$name.val(), $description.val()];
   existingEvents.push(newEvent);
-  eventNamesString += "<p>" + $name.val() + "</p>";
-  eventNamesString += "<button type=\"button\" class=\"collapsible\">See Description</button>\r\n"
-          + "<div class=\"content\">\r\n" + "<p>" + $description.val() + "</p>\r\n" + "</div>";
 
   add_event("<p>" + $name.val() + "</p>"); //socket code
 
@@ -71,27 +88,29 @@ const addEvent = () => {
       $("#addEventError").text(errorMessage);
     } else {
       // update the existing events on the page
+      updateEventNamesString();
+
       $eventNames.html(eventNamesString);
       $("#addEventError").text("");
-      
+
       var coll = document.getElementsByClassName("collapsible");
-var i;
+      var i;
 
-for (i = 0; i < coll.length; i++) {
-  coll[i].addEventListener("click", function() {
-    this.classList.toggle("active");
-    var content = this.nextElementSibling;
-    if (content.style.display === "block") {
-      content.style.display = "none";
-    } else {
-      content.style.display = "block";
-    }
-  });
-}
+      for (i = 0; i < coll.length; i++) {
+        coll[i].addEventListener("click", function() {
+          this.classList.toggle("active");
+          var content = this.nextElementSibling;
+          if (content.style.display === "block") {
+            content.style.display = "none";
+          } else {
+            content.style.display = "block";
+          }
+        });
 
-      // clear the input boxes
-      $name.val("");
-      $description.val("");
+        // clear the input boxes
+        $name.val("");
+        $description.val("");
+      }
     }
   });
 };

@@ -65,6 +65,8 @@ public class ConventionHomeHandler implements TemplateViewRoute {
       existingEvents = "No events yet.";
     }
 
+    System.out.println("existing events " + existingEvents);
+
     Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "id", conventionID,
         "convName", convName, "existingEvents", existingEvents);
 
@@ -82,7 +84,8 @@ public class ConventionHomeHandler implements TemplateViewRoute {
    */
   private String makeEventBox(Event currEvent, String existingEvents) {
     String description = currEvent.getDescription();
-    String eventString = "";
+    // System.out.println("description is " + description + ".");
+    String eventString = "<p></p>";
 
     if (!existingEvents.equals("")) {
       // add a break in between events
@@ -94,8 +97,10 @@ public class ConventionHomeHandler implements TemplateViewRoute {
 
     if (description.equals("")) {
       eventString += "No description.";
+      System.out.println("no description");
     } else {
       eventString += currEvent.getDescription();
+      System.out.println("added event string " + currEvent.getDescription());
     }
 
     return eventString + "</p>\r\n" + "</div>";

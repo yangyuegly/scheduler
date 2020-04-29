@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>${title}</title>
+    <title>Sked</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/css/term_project.css">
     <link href='https://fonts.googleapis.com/css?family=Cabin' rel='stylesheet' type='text/css'>
@@ -14,7 +14,7 @@
 
 
 <div class="navbar">
-  <a href="/home"><img src="/images/sked_logo1.png" width="40" height="35"></a>
+  <a href="/home"><img src="/images/sked_logo2.png" width="40" height="35"></a>
 
   <a href="/account">My conventions</a>
   <a href="/create_convention">Create a convention</a>

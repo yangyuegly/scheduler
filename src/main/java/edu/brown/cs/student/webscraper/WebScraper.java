@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,13 +32,8 @@ import edu.brown.cs.student.scheduler.Event;
 public class WebScraper {
 
   // might have to change this
-  // public static final String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64;
-  // x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169
-  // Safari/537.36";
-//  public static final String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.157 Safari/537.36";
-//  public static final String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36";
-//  public static final String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36";
-  public static String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36";
+
+  public static String USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1985.125 Safari/537.36";
   private String collegeName = "";
   public Map<String, List<String>> deptToCourses = new HashMap<>();
   private Map<String, String> conflict = new HashMap<>();
@@ -160,8 +154,6 @@ public class WebScraper {
             List<String> coursesList = deptToCourses.get(departmentTitle);
             coursesList.add(courseTitle);
             deptToCourses.put(departmentTitle, coursesList);
-//            System.out.println("Dept: " + departmentTitle);
-//            System.out.println("Course: " + courseTitle);
           }
         }
 //        System.out.println(deptToCourses.get(departmentTitle));
@@ -180,8 +172,6 @@ public class WebScraper {
   public void addConflicts() {
     Set<String> keys = deptToCourses.keySet();
     int eventID = 0;
-    org.bson.Document nestDoc = new org.bson.Document("conventionID", conventionID)
-        .append("conflicts", Arrays.asList());
     MongoCollection<org.bson.Document> collection;
     MongoCollection<org.bson.Document> ecollection;
     System.out.println("here");
@@ -201,90 +191,39 @@ public class WebScraper {
       collection = Main.getDatabase().getCollection("conflicts");
       ecollection = Main.getDatabase().getCollection("events");
     }
-//    System.out.println("here1");
-    collection.insertOne(nestDoc);
+
     Gson gson = new Gson();
     List<BasicDBObject> conflictArray = new ArrayList<>();
     List<BasicDBObject> eventArray = new ArrayList<>();
-
-//    System.out.println("here2");
 
     BasicDBObject query = new BasicDBObject();
 
     for (String k : keys) {
       List<String> courses = deptToCourses.get(k);
-//      System.out.println(k);
-//      System.out.println(courses.get(0));
-//      System.out.println(courses.get(1));
-//      System.out.println(courses.get(2));
-
-      // MongoCollection<org.bson.Document> collection =
-      // Main.getDatabase().getCollection("conflicts");
 
       for (int i = 0; i < courses.size(); i++) {
         String first = courses.get(i);
         for (int j = i + 1; j < courses.size(); j++) {
           String second = courses.get(j);
-          // make a new edge from courses.get(0) and courses.get(i)
-          // org.bson.Document doc = new org.bson.Document("id", count).append("class",
-          // courses.get(0))
-          // .append("conflict", courses.get(i));
-//          conflict.put(first, second);
           System.out.println("here2");
-//          if (conflict.containsKey(first)) {
-//            if (!conflict.get(first).equals(second)) {
-//              System.out.println("here3");
-//              // collection.insertOne(doc);
           Event event1 = new Event(eventID, first, "");
           eventID++;
           Event event2 = new Event(eventID, second, "");
           eventID++;
 //          du.addEvent(conventionID, event1);
 //          du.addEvent(conventionID, event2);
+
           BasicDBObject eventObject = BasicDBObject.parse(gson.toJson(event1));
           eventArray.add(eventObject);
           BasicDBObject eventObject1 = BasicDBObject.parse(gson.toJson(event2));
           eventArray.add(eventObject1);
           Conflict conflict = new Conflict(event1, event2, 100);
+
           BasicDBObject obj = BasicDBObject.parse(gson.toJson(conflict));
           if (!event1.equals(event2)) {
+//            du.addConflict(conventionID, conflict);
             conflictArray.add(obj);
           }
-
-//            }
-//          } else if (conflict.containsKey(second)) {
-//            if (!conflict.get(second).equals(first)) {
-//              System.out.println("here3");
-//              Event event1 = new Event(eventID, first);
-//              eventID++;
-//              Event event2 = new Event(eventID, second);
-//              eventID++;
-//              du.addEvent(conventionID, event1);
-//              du.addEvent(conventionID, event2);
-//              BasicDBObject eventObject = BasicDBObject.parse(gson.toJson(event1));
-//              eventArray.add(eventObject);
-//              BasicDBObject eventObject1 = BasicDBObject.parse(gson.toJson(event2));
-//              eventArray.add(eventObject1);
-//              Conflict conflict = new Conflict(event1, event2, 100);
-//              BasicDBObject obj = BasicDBObject.parse(gson.toJson(conflict));
-//              conflictArray.add(obj);
-//            }
-//          } else {
-//            System.out.println("here3");
-//            Event event1 = new Event(eventID, first);
-//            eventID++;
-//            Event event2 = new Event(eventID, second);
-//            eventID++;
-//            du.addEvent(conventionID, event1);
-//            du.addEvent(conventionID, event2);
-//            BasicDBObject eventObject = BasicDBObject.parse(gson.toJson(event1));
-//            eventArray.add(eventObject);
-//            BasicDBObject eventObject1 = BasicDBObject.parse(gson.toJson(event2));
-//            eventArray.add(eventObject1);
-//            Conflict conflict = new Conflict(event1, event2, 100);
-//            BasicDBObject obj = BasicDBObject.parse(gson.toJson(conflict));
-//            conflictArray.add(obj);
-//          }
 
         }
       }
@@ -299,11 +238,5 @@ public class WebScraper {
         .append("events", eventArray);
     ecollection.insertOne(currEvent);
   }
-
-//  public static void main(String[] args) {
-//    getAllColleges();
-////    setCollege("clemson");
-////    scrape();
-//  }
 
 }

@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.MultipartConfigElement;
@@ -85,8 +86,8 @@ public class UploadHandler implements TemplateViewRoute {
     Convention conv = new Convention(id);
     CSVParser parser = new CSVParser();
     LoadCommand load = new LoadCommand();
-
-    load.execute(parser.parse(textBuilder), conv);
+    List<List<String>> parsedFile = parser.parse(textBuilder);
+    load.execute(parsedFile, conv);
 
     // go to the schedule page
     response.redirect("/schedule/" + id);

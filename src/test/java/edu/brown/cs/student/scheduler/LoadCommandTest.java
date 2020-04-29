@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -15,13 +14,16 @@ public class LoadCommandTest {
   public void testLoadNoConflicts() {
     LoadCommand lc = new LoadCommand();
     Convention convention = new Convention("testConvention", "testName");
-    List<String[]> input = new ArrayList<String[]>();
-    String[] a = new String[] {
-        "attendee1", "event1"
-    };
-    String[] b = new String[] {
-        "attendee2", "event2", "event3"
-    };
+    List<List<String>> input = new ArrayList<List<String>>();
+    List<String> a = new ArrayList<>();
+    a.add("attendee1");
+    a.add("event1");
+
+    List<String> b = new ArrayList<>();
+    b.add("attendee2");
+    b.add("event2");
+    b.add("event3");
+
     input.add(a);
     input.add(b);
     lc.execute(input, convention);
@@ -42,15 +44,16 @@ public class LoadCommandTest {
   public void testLoadConflicts() {
     LoadCommand lc = new LoadCommand();
     Convention convention = new Convention("testConvention");
-    List<String[]> input = new ArrayList<String[]>();
-    String[] a = new String[] {
-        "attendee1", "event1"
-    };
-    String[] b = new String[] {
-        "attendee2", "event2", "event3"
-    };
-    input.add(a);
-    input.add(b);
+    List<List<String>> input = new ArrayList<List<String>>();
+    List<String> a = new ArrayList<>();
+    a.add("attendee1");
+    a.add("event1");
+
+    List<String> b = new ArrayList<>();
+    b.add("attendee2");
+    b.add("event2");
+    b.add("event3");
+
     lc.execute(input, convention);
 
     List<Event> events = db.getEventsFromConventionID("testConvention");
@@ -75,7 +78,7 @@ public class LoadCommandTest {
   public void testEmptyFile() {
     LoadCommand lc = new LoadCommand();
     Convention convention = new Convention("testConvention");
-    List<String[]> input = new ArrayList<String[]>();
+    List<List<String>> input = new ArrayList<List<String>>();
     lc.execute(input, convention);
 
     List<Event> events = db.getEventsFromConventionID("testConvention");

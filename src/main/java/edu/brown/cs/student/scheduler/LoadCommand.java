@@ -1,7 +1,6 @@
 package edu.brown.cs.student.scheduler;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,18 +56,18 @@ public class LoadCommand {
   /**
    * Method to insert data in NoSQL
    *
-   * @param input - data from csv file
+   * @param input - data from csv file in the form of a List of Lists of Strings, where each inner
+   *        list is a row from the file
    * @param convention - the convention containing all the events in the file
    */
-  public void execute(List<String[]> input, Convention convention) {
+  public void execute(List<List<String>> input, Convention convention) {
 //    DatabaseUtility du = new DatabaseUtility();
     int count = 0;
     // map conflict to number of conflicts
     Map<Conflict, Integer> frequencyMap = new HashMap<>();
     Map<String, Integer> nameToId = new HashMap<>();
     // loop through rows in csv
-    for (String[] r : input) {
-      List<String> row = Arrays.asList(r);
+    for (List<String> row : input) {
       // i = 0 corresponds to attendee
       for (int i = 1; i < row.size(); i++) {
         String first = row.get(i);
@@ -87,8 +86,8 @@ public class LoadCommand {
           Conflict conflict = new Conflict(new Event(nameToId.get(first), first, ""),
               new Event(nameToId.get(second), second, ""), null);
           this.conflict.add(conflict);
-          Conflict reverse = new Conflict(new Event(nameToId.get(second), second, ""), new Event(nameToId.get(first), first, ""),
-               null);
+          Conflict reverse = new Conflict(new Event(nameToId.get(second), second, ""),
+              new Event(nameToId.get(first), first, ""), null);
           // add to the weight if the conflict doesn't exist or add the conflict itself
           frequencyMap.put(conflict, frequencyMap.getOrDefault(conflict, 0) + 1);
           frequencyMap.put(reverse, frequencyMap.getOrDefault(reverse, 0) + 1);

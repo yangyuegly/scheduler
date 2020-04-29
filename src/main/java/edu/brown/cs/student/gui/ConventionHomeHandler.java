@@ -58,10 +58,7 @@ public class ConventionHomeHandler implements TemplateViewRoute {
 
     // this creates a string that tells the user what events are already in this convention
     for (Event event : events) {
-      System.out.println(event.getDescription() + "description");
-      existingEvents += "<p>" + event.getName() + "</p>";
-      existingEvents += "<button type=\"button\" class=\"collapsible\">See Description</button>\r\n"
-          + "<div class=\"content\">\r\n" + "<p>" + event.getDescription() + "</p>\r\n" + "</div>";
+      existingEvents += makeEventBox(event, existingEvents);
     }
 
     if (existingEvents.equals("")) {
@@ -72,5 +69,35 @@ public class ConventionHomeHandler implements TemplateViewRoute {
         "convName", convName, "existingEvents", existingEvents);
 
     return new ModelAndView(variables, "convention_home.ftl");
+  }
+
+  /**
+   * This method is used to make the HTML object that displays the given event.
+   *
+   * @param currEvent - an Event, which represents an event to be displayed
+   * @param existingEvents - a String, which represents the String of events that have already been
+   *        converted into HTML form
+   *
+   * @return a String, which represents the HTML object that displays the given event.
+   */
+  private String makeEventBox(Event currEvent, String existingEvents) {
+    String description = currEvent.getDescription();
+    String eventString = "";
+
+    if (!existingEvents.equals("")) {
+      // add a break in between events
+      eventString += "<p></p>";
+    }
+
+    eventString += "<button type=\"button\" class=\"collapsible\">" + currEvent.getName()
+        + "</button>\r\n" + "<div class=\"content\">\r\n" + "<p>";
+
+    if (description.equals("")) {
+      eventString += "No description.";
+    } else {
+      eventString += currEvent.getDescription();
+    }
+
+    return eventString + "</p>\r\n" + "</div>";
   }
 }

@@ -2,7 +2,6 @@ package edu.brown.cs.student.gui;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -54,17 +53,11 @@ public class CalendarHandler implements Route {
     } catch (NullPointerException err) {
       // there was an error with the scheduling
       Map<String, Object> variables = ImmutableMap.of("eventsForSchedule", "", "defaultDate", "",
-          "error", err.getMessage());
+          "error", "We're sorry, we couldn't make a schedule for you. There was no way to avoid"
+              + " conflicts between your events.");
       Gson gson = new Gson();
 
       return gson.toJson(variables);
-    }
-
-    String error = "";
-    if (eventsSched == null) { // eventually this should become a try/catch instead
-      error = "We're sorry, we couldn't make a schedule for you. There was no way to avoid"
-          + " conflicts between your events.";
-      eventsSched = new ArrayList<>();
     }
 
     System.out.println("just executed schedule command"); // delete

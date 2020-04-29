@@ -41,7 +41,6 @@ public class WebScraper {
   private String conventionID;
   DatabaseUtility du = new DatabaseUtility();
   MongoDatabase database;
-  MongoCollection<org.bson.Document> nameToIDs;
 
   /**
    * Constructor for webscraper
@@ -54,7 +53,6 @@ public class WebScraper {
     conflict = new HashMap<>();
     getAllColleges();
     this.conventionID = conventionID;
-    nameToIDs = database.getCollection("nameToIDs");
   }
 
   /**
@@ -118,9 +116,6 @@ public class WebScraper {
   public void scrape() {
     try {
       // check if website exists
-      org.bson.Document nc = new org.bson.Document("name", collegeName).append("conventionID",
-          conventionID);
-      nameToIDs.insertOne(nc);
       String website = "https://www.coursicle.com/" + collegeName + "/courses/";
       URLConnection connection = (new URL(website)).openConnection();
       try {

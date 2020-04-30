@@ -21,6 +21,8 @@ public class ConventionHomeHandler implements TemplateViewRoute {
 
   @Override
   public ModelAndView handle(Request request, Response response) {
+    System.out.println("in convnetion home handler"); // delete!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
     String conventionID = request.params(":id");
     String userEmail = request.cookie("user");
 

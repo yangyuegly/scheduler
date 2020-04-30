@@ -234,14 +234,6 @@ public class WebScraper {
     System.out.println("here4");
     deptToCourses = new HashMap<>();
     conflict = new HashMap<>();
-//
-//    org.bson.Document doc = new org.bson.Document("conventionID", conventionID).append("conflicts",
-//        conflictArray);
-//    collection.insertOne(doc);
-//
-//    org.bson.Document currEvent = new org.bson.Document("conventionID", conventionID)
-//        .append("events", eventArray);
-//    ecollection.insertOne(currEvent);
   }
 
 }

@@ -64,10 +64,9 @@ public class CreateConvSubmitHandler implements TemplateViewRoute {
     }
 
     if (submitType.equals("Add events by hand")) {
-      Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "convName", name,
-          "existingEvents", "No events yet.", "id", id);
-      return new ModelAndView(variables, "convention_home.ftl");
-
+      // go to the convention home page
+      response.redirect("/convention/" + id.toString());
+      return null; // it will never reach this line
     } else {
       Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "convName", name, "id",
           id.toString(), "message", "");

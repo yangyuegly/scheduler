@@ -124,7 +124,7 @@ public class DatabaseUtility {
     // iterate through the events found
     List<Document> eventList = (List<Document>) doc.get("events");
 
-    System.out.println("eventList's length is " + eventList.size()); // delete
+    // System.out.println("eventList's length is " + eventList.size()); // delete
 
     for (Document event : eventList) {
       Event e = new Event(event.getInteger("id"), event.getString("name"),
@@ -159,7 +159,7 @@ public class DatabaseUtility {
       eventString = gson.toJson(convention.getEvents());
       conventionString.put("events", eventString);
     } catch (NullPointerException e) {
-      System.out.println("currently no events associated with the convention");
+       System.out.println("currently no events associated with the convention");
     }
 
     // the key to this document is the convention id
@@ -218,7 +218,7 @@ public class DatabaseUtility {
     //     "{name: \"%s\"}", newConflict.event2.getName());
 
         // findIterable = collection.find(eq("instock", Document.parse("{ qty: 5, warehouse: 'A' }")));
-    System.out.println(str1);
+    // System.out.println(str1);
 
     FindIterable<Document> existingConflict = conflictCollection
         .find(elemMatch("conflicts", 
@@ -254,7 +254,7 @@ public class DatabaseUtility {
     // FindIterable<Document> findIterable = conflictCollection
     //  .find(andDuplicate);
     if (existingConflict.first() == null || existingConflict.first().isEmpty()) {
-      System.out.println("no duplicate");
+      // System.out.println("no duplicate");
       BasicDBObject update = new BasicDBObject();
       BasicDBObject query = new BasicDBObject("conventionID",
           new BasicDBObject("$eq", conventionID));
@@ -262,7 +262,7 @@ public class DatabaseUtility {
       conflictCollection.updateOne(query, update);
       return true;
     } else {
-      System.out.println("found document");
+      // System.out.println("found document");
       List<BasicDBObject> conflictArray = new ArrayList<>();
       Document doc = existingConflict.first();
 //      System.out.println("adding conflict " + newConflict);
@@ -283,7 +283,7 @@ public class DatabaseUtility {
             e1.getString("description"));
         Conflict conflict = new Conflict(event1, event2, d.getInteger("weight"));
         if (conflict.equals(newConflict)) {
-         System.out.println(conflict.weight);
+        //  System.out.println(conflict.weight);
           conflict.weight++;
         }
         BasicDBObject obj1 = BasicDBObject.parse(gson.toJson(conflict));
@@ -338,7 +338,7 @@ public class DatabaseUtility {
 
     FindIterable<Document> findIterable = userCollection.find(new BasicDBObject("$and", criteria));
     if (findIterable.first() == null || findIterable.first().isEmpty()) {
-      System.out.println("no duplicate");
+      // System.out.println("no duplicate");
       BasicDBObject update = new BasicDBObject();
       BasicDBObject query = new BasicDBObject("$and", criteria);
       update.put("$push", new BasicDBObject("convention", conventionID));
@@ -377,7 +377,7 @@ public class DatabaseUtility {
     Set<Conflict> edges = new HashSet<>();
     BasicDBObject query = new BasicDBObject();
     query.put("conventionID", conventionIDParam);
-    System.out.println(conventionIDParam);
+    // System.out.println(conventionIDParam);
     // iterate through the events found
     List<Document> conflictList = (List<Document>) conflictCollection.find(query)
         .projection(fields(include("conflicts"), excludeId()))
@@ -439,7 +439,7 @@ public class DatabaseUtility {
 //      System.out.println("obj:" + obj);
 //      System.out.println("conventionIDLL: " + conventionID);
       eventCollection.updateOne(eq("conventionID", conventionID), Updates.addToSet("events", obj));
-      System.out.println("in addEvent4");
+      // System.out.println("in addEvent4");
       return true;
     } else {
       return false;
@@ -497,9 +497,9 @@ public class DatabaseUtility {
     String id = doc.getString("id");
     String name = doc.getString("name");
     Date sdtDateTime = (Date) doc.get("startDateTime");
-    System.out.println("stdDateTime" + sdtDateTime);
+    // System.out.println("stdDateTime" + sdtDateTime);
     Date et = (Date) doc.get("endDateTime");
-    System.out.println(sdtDateTime);
+    // System.out.println(sdtDateTime);
 
 //    LocalDateTime ldt = sdtDateTime.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
     ZoneOffset offset = ZoneOffset.ofHours(0);
@@ -511,8 +511,8 @@ public class DatabaseUtility {
     LocalDateTime endDateTime = et.toInstant().atZone(ZoneId.ofOffset("GMT", offset))
         .toLocalDateTime();
 
-    System.out.println("start local: " + ldt);
-    System.out.println("end local: " + endDateTime);
+    // System.out.println("start local: " + ldt);
+    // System.out.println("end local: " + endDateTime);
 
     // Document et = (Document) doc.get("endTime");
     // LocalTime endTime = LocalTime.of(et.getInteger("hour"), et.getInteger("minute"),

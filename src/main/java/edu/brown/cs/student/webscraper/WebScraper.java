@@ -176,7 +176,7 @@ public class WebScraper {
     int eventID = 0;
     MongoCollection<org.bson.Document> collection;
     MongoCollection<org.bson.Document> ecollection;
-    System.out.println("here");
+    // System.out.println("here");
     // for unit testing purposes
 //    if (Main.getDatabase() == null) {
 //      ConnectionString connString = new ConnectionString(
@@ -210,7 +210,7 @@ public class WebScraper {
         du.addEvent(conventionID, event1);
         for (int j = i + 1; j < courses.size(); j++) {
           String second = courses.get(j);
-          System.out.println("here2");
+          // System.out.println("here2");
           Event event2 = new Event(eventID, second, "");
           eventID++;
 
@@ -231,7 +231,7 @@ public class WebScraper {
         }
       }
     }
-    System.out.println("here4");
+    // System.out.println("here4");
     deptToCourses = new HashMap<>();
     conflict = new HashMap<>();
   }

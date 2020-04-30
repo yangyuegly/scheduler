@@ -26,8 +26,6 @@ let setup_live_event_updates = () => {
   conn.onmessage = (msg) => {
     console.log("in onmessage"); // delete
 
-
-
     const data = JSON.parse(msg.data);
     switch (data.type) {
       default:

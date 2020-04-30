@@ -5,7 +5,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -53,10 +52,11 @@ public class DatabaseUtilityTest {
     assertTrue(conflicts.contains(conflict));
   }
 
-//  @Test
+  @Test
   public void addEventTest() {
     assertTrue(du.addEvent("c1", new Event(0, "justATest", "")));
-    assertFalse(du.addEvent("nonExistingConvention", new Event(0, "justATest", "")));
+    assertTrue(du.addEvent("c1", new Event(0, "justATest", "")));
+//    assertFalse(du.addEvent("nonExistingConvention", new Event(0, "justATest", "")));
   }
 
   // @Test

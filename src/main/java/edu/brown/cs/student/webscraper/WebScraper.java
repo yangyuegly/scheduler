@@ -205,15 +205,16 @@ public class WebScraper {
 
       for (int i = 0; i < courses.size(); i++) {
         String first = courses.get(i);
+        Event event1 = new Event(eventID, first, "");
+        eventID++;
+        du.addEvent(conventionID, event1);
         for (int j = i + 1; j < courses.size(); j++) {
           String second = courses.get(j);
           System.out.println("here2");
-          Event event1 = new Event(eventID, first, "");
-          eventID++;
           Event event2 = new Event(eventID, second, "");
           eventID++;
-          du.addEvent(conventionID, event1);
-          du.addEvent(conventionID, event2);
+
+//          du.addEvent(conventionID, event2);
 
           BasicDBObject eventObject = BasicDBObject.parse(gson.toJson(event1));
           eventArray.add(eventObject);

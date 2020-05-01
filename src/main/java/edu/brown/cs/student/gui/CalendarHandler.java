@@ -75,11 +75,8 @@ public class CalendarHandler implements Route {
       return gson.toJson(variables);
     }
 
-<<<<<<< HEAD
      System.out.println("just executed schedule command"); // delete
 
-=======
->>>>>>> 59d4cd4ae24ead33f162708a244778705bb88ae9
     LocalDateTime convStartWithTime = myConv.getStartDateTime();
     LocalDate convStartDay = convStartWithTime.toLocalDate();
 

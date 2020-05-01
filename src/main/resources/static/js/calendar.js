@@ -1,9 +1,3 @@
-/*
-  When the document is ready, this runs.
-*/
-$(document).ready(() => {
-//  $("#emailAtt").click(emailAttendees);
-});
 
 /*
   The backbone of this eventListener comes from the FullCalendar API,
@@ -18,15 +12,13 @@ document.addEventListener('DOMContentLoaded', function() {
   $.get("/calendar_events/" + id, response => {
     responseObject = JSON.parse(response);
 
-    if (responseObject.error == ""){
+    if (responseObject.error == "") {
      myEvents = responseObject.eventsForSchedule;
      startDate = responseObject.defaultDate;
      makeCalendar(startDate, myEvents);
-    $("#emailAtt").click(emailAttendees(responseObject.eventsForSchedule));
 
-
-     // $("#emailAtt").addEventListener("click", event => emailAttendees(responseObject.eventsForSchedule));
-
+     document.getElementById("emailAtt").addEventListener(
+       "click", event => emailAttendees(responseObject.eventsForSchedule));
 
     } else {
       var error = document.getElementById('error');

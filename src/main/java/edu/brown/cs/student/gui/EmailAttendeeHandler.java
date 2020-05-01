@@ -1,4 +1,4 @@
-package edu.brown.cs.student.scheduler;
+package edu.brown.cs.student.gui;
 
 import java.util.List;
 import java.util.Map;
@@ -16,6 +16,8 @@ import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import edu.brown.cs.student.scheduler.CalendarEvent;
+import edu.brown.cs.student.scheduler.DatabaseUtility;
 import spark.QueryParamsMap;
 import spark.Request;
 import spark.Response;
@@ -99,8 +101,8 @@ public class EmailAttendeeHandler implements Route {
 
     try {
       MimeMessage message = new MimeMessage(session);
-      InternetAddress address = new InternetAddress(sender);
-      message.setFrom(new InternetAddress(sender));
+      InternetAddress address = new InternetAddress("Sked Project<" + sender + ">");
+      message.setFrom(address);
 
       for (String attendeeEmail : emails) {
         message.addRecipient(Message.RecipientType.TO, new InternetAddress(attendeeEmail));

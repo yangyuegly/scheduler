@@ -17,6 +17,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import edu.brown.cs.student.scheduler.CalendarEvent;
+import edu.brown.cs.student.scheduler.Convention;
 import edu.brown.cs.student.scheduler.DatabaseUtility;
 import spark.QueryParamsMap;
 import spark.Request;
@@ -53,11 +54,25 @@ public class EmailAttendeeHandler implements Route {
     List<CalendarEvent> events = g.fromJson(eventString, new TypeToken<List<CalendarEvent>>() {
     }.getType());
 
+    System.out.println("num events is" + events.size());
+
+    String emailContent = "";
+    for (CalendarEvent event : events) {
+      emailContent = emailContent + "<p>" + event.getTitle() + ": "
+          + friendlyDate(event.getStart().toString()) + " to "
+          + friendlyDate(event.getEnd().toString()) + "</p>";
+    }
+
+    Convention myConv = db.getConvention(conventionID);
+
     List<String> attendeeEmails = db.getAttendeeEmailsFromConventionID(conventionID); // add
                                                                                       // this!!!!!!!!!!!!!!!
-    attendeeEmails.add("abby_goldberg@brown.edu"); // delete
+    attendeeEmails.add("rachel_fuller@brown.edu"); // delete
+    // attendeeEmails.add("abby_goldberg@brown.edu");
     String message;
-    if (this.sendEmails(events, attendeeEmails)) {
+    if (attendeeEmails.isEmpty()) {
+      message = "No email sent because no attendees have signed up.";
+    } else if (this.sendEmails(events, attendeeEmails, myConv.getName(), emailContent)) {
       message = "Schedule sent!";
     } else {
       message = "Email could not be sent.";
@@ -77,7 +92,8 @@ public class EmailAttendeeHandler implements Route {
    *
    * @return -- true if sent, false if could not be sent.
    */
-  private boolean sendEmails(List<CalendarEvent> events, List<String> emails) {
+  private boolean sendEmails(List<CalendarEvent> events, List<String> emails, String convName,
+      String emailContent) {
     // use the
     // events!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
     String sender = "sked.organizer@gmail.com";
@@ -108,8 +124,11 @@ public class EmailAttendeeHandler implements Route {
         message.addRecipient(Message.RecipientType.TO, new InternetAddress(attendeeEmail));
       }
 
-      message.setSubject("This is Subject");
-      message.setContent("<h1>This is a HTML text</h1>", "text/html");
+      message.setSubject("Schedule for " + convName);
+
+      String header = "<body> <h1>Here's the schedule for " + convName + " </h1>";
+      String end = "<p>This schedule made with Sked and sent by the convention organizer.</p></body>";
+      message.setContent(header + emailContent + end, "text/html");
       Transport.send(message);
       System.out.println("Mail successfully sent"); // delete!!!!!!!!!!!!!!!!!!!!
     } catch (MessagingException mex) {
@@ -121,6 +140,14 @@ public class EmailAttendeeHandler implements Route {
 
     return true;
 
+  }
+
+  String friendlyDate(String dateString) {
+    // 2020-12-21T09:00
+    String res = "";
+    String[] dateTime = dateString.split("T");
+    res = res + dateTime[0] + " " + dateTime[1];
+    return res;
   }
 
 }

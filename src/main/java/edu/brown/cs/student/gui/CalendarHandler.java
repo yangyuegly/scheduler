@@ -44,10 +44,10 @@ public class CalendarHandler implements Route {
 
     ScheduleCommand schedComm = new ScheduleCommand(myConv, 100, myConv.getNumDays(),
         numTimeSlotsPerDay);
-    List<CalendarEvent> eventsSched;
+    List<CalendarEvent> schedule;
 
     try {
-      eventsSched = schedComm.execute();
+      schedule = schedComm.execute();
     } catch (NullPointerException err) {
       // there was an error with the scheduling
       Map<String, Object> variables = ImmutableMap.of("eventsForSchedule", "", "defaultDate", "",
@@ -58,12 +58,12 @@ public class CalendarHandler implements Route {
       return gson.toJson(variables);
     }
 
-     System.out.println("just executed schedule command"); // delete
+    System.out.println("just executed schedule command"); // delete
 
     LocalDateTime convStartWithTime = myConv.getStartDateTime();
     LocalDate convStartDay = convStartWithTime.toLocalDate();
 
-    Map<String, Object> variables = ImmutableMap.of("eventsForSchedule", eventsSched, "defaultDate",
+    Map<String, Object> variables = ImmutableMap.of("eventsForSchedule", schedule, "defaultDate",
         convStartDay.toString(), "error", "");
     Gson gson = new Gson();
 

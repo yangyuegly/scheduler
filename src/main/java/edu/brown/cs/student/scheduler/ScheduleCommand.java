@@ -57,7 +57,6 @@ public class ScheduleCommand {
     Set<Event> colored = graph.graphColoring(this.TS, this.CONCURENCY_LIMIT);
 
     List<CalendarEvent> calEvents = new ArrayList<>();
-
     for (Event event : colored) {
       LocalDateTime currStart = this.getTimeSlotStart(event.getColor());
 

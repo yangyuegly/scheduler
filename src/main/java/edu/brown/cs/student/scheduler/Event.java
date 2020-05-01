@@ -1,5 +1,6 @@
 package edu.brown.cs.student.scheduler;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -20,6 +21,8 @@ public class Event implements IVertex<Event, Conflict> {
   List<Integer> color;
   String name;
   String description;
+  LocalDateTime start;
+  LocalDateTime end;
 
   /**
    * Constructor of an event.
@@ -130,6 +133,42 @@ public class Event implements IVertex<Event, Conflict> {
     return new ArrayList<>(this.color);
   }
 
+  /**
+   * Method to set the start time of an event after it has been found by the graph.
+   *
+   * @return -- the start time of the event.
+   */
+  public LocalDateTime getStart() {
+    return this.start;
+  }
+
+  /**
+   * Method to set the start time of an event after it has been found by the graph.
+   *
+   * @param start -- the start time of the event.
+   */
+  public void setStart(LocalDateTime start) {
+    this.start = start;
+  }
+
+  /**
+   * Method to set the end time of an event after it has been found by the graph.
+   *
+   * @return -- the end time of the event.
+   */
+  public LocalDateTime getEnd() {
+    return this.end;
+  }
+
+  /**
+   * Method to set the end time of an event after it has been found by the graph.
+   *
+   * @param start -- the start time of the event.
+   */
+  public void setEnd(LocalDateTime end) {
+    this.end = end;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (o == this)
@@ -148,8 +187,8 @@ public class Event implements IVertex<Event, Conflict> {
 
   @Override
   public String toString() {
-    return "{" + " id='" + getID() + " name=" + getName() + "'" + ", degree='" + getDegree() + "'" + ", color='"
-        + getColor() + "'" + "}";
+    return "{" + " id='" + getID() + " name=" + getName() + "'" + ", degree='" + getDegree() + "'"
+        + ", color='" + getColor() + "'" + "}";
   }
 
 }

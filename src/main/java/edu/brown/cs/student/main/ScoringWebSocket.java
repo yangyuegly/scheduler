@@ -11,6 +11,7 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+import org.eclipse.jetty.websocket.api.annotations.OnWebSocketError;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -29,10 +30,13 @@ public class ScoringWebSocket {
     CONNECT, EVENT, UPDATE
   }
 
+
+
   @OnWebSocketConnect
   public void connected(Session session) throws IOException {
     String currURI = session.getUpgradeRequest().getRequestURI().toString();
     String payloadText = "";
+    System.out.println("connected");
     if (!map.containsKey(currURI)) {
       map.put(currURI, "");
     } else {
@@ -49,6 +53,11 @@ public class ScoringWebSocket {
     message.add("payload", payload);
     session.getRemote().sendString(GSON.toJson(message));
     nextId++;
+  }
+
+  @OnWebSocketError
+  public void onWebSocketError(Throwable e) {
+    System.out.println(e);
   }
 
   @OnWebSocketClose

@@ -121,8 +121,8 @@
       <artifactId>sqlite-jdbc</artifactId>
       <version>3.30.1</version>
     </dependency>
-    
-    <dependency>    
+
+    <dependency>
       <groupId>org.mongodb</groupId>
       <artifactId>mongodb-driver-sync</artifactId>
       <version>4.0.2</version>
@@ -132,8 +132,27 @@
           <groupId>org.jsoup</groupId>
           <artifactId>jsoup</artifactId>
           <version>1.11.3</version>
-      </dependency>
+    </dependency>
+
+
+
+    <!-- this is so we can send emails -->
+    <dependency>
+          <groupId>javax.mail</groupId>
+          <artifactId>mail</artifactId>
+          <version>1.4.5</version>
+    </dependency>
+
+    <dependency>
+          <groupId>javax.activation</groupId>
+          <artifactId>activation</artifactId>
+          <version>1.1.1</version>
+    </dependency>
+
   </dependencies>
+
+
+
 
   <!-- Build section -->
   <build>
@@ -178,7 +197,7 @@
           <showDeprecation>true</showDeprecation>
         </configuration>
       </plugin>
-      
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
@@ -191,7 +210,7 @@
           </execution>
         </executions>
       </plugin>
-      
+
       <plugin>
         <groupId>com.heroku.sdk</groupId>
         <artifactId>heroku-maven-plugin</artifactId>
@@ -244,7 +263,7 @@
           </execution>
         </executions>
       </plugin>
-      
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
@@ -271,7 +290,7 @@
           </execution>
         </executions>
       </plugin>
-      
+
       <!-- <plugin>
               <groupId>org.apache.maven.plugins</groupId>
               <artifactId>maven-shade-plugin</artifactId>
@@ -388,7 +407,7 @@
           jacoco creates a "coverage" report, so you can see what
           lines of codes and bracnhes your tests exercise.
       -->
-      
+
       <!-- <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-report-plugin</artifactId>
@@ -406,9 +425,10 @@
           </reportSet>
         </reportSets>
       </plugin> -->
-      
+
+
 
     </plugins>
-    
+
   </reporting>
 </project>

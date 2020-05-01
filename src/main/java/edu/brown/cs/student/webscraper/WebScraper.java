@@ -3,11 +3,22 @@ package edu.brown.cs.student.webscraper;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -53,6 +64,18 @@ public class WebScraper {
     conflict = new HashMap<>();
     getAllColleges();
     this.conventionID = conventionID;
+    if (Main.getDatabase() == null) {
+      ConnectionString connString = new ConnectionString(
+          "mongodb://sduraide:cs32scheduler@scheduler-shard-00-00-rw75k.mongodb.net:27017,scheduler-shard-00-01-rw75k.mongodb.net:27017,scheduler-shard-00-02-rw75k.mongodb.net:27017/test?ssl=true&replicaSet=scheduler-shard-0&authSource=admin&retryWrites=true&w=majority");
+
+      MongoClientSettings settings = MongoClientSettings.builder().applyConnectionString(connString)
+          .retryWrites(true).build();
+      MongoClient mongo = MongoClients.create(settings);
+      // created db in cluster in MongoDBAtlas including collections: users, events, conflicts
+      database = mongo.getDatabase("test");
+    } else {
+      database = Main.getDatabase();
+    }
   }
 
   /**
@@ -82,6 +105,43 @@ public class WebScraper {
     return this.conflict;
   }
 
+  private void disableSSLCertCheck() throws NoSuchAlgorithmException, KeyManagementException {
+    // Create a trust manager that does not validate certificate chains
+    TrustManager[] trustAllCerts = new TrustManager[] {
+        new X509TrustManager() {
+          @Override
+          public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+            return null;
+          }
+
+          @Override
+          public void checkClientTrusted(X509Certificate[] certs, String authType) {
+          }
+
+          @Override
+          public void checkServerTrusted(X509Certificate[] certs, String authType) {
+          }
+        }
+    };
+
+    // Install the all-trusting trust manager
+    SSLContext sc = SSLContext.getInstance("SSL");
+    sc.init(null, trustAllCerts, new java.security.SecureRandom());
+    HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+
+    // Create all-trusting host name verifier
+    HostnameVerifier allHostsValid = new HostnameVerifier() {
+
+      @Override
+      public boolean verify(String hostname, SSLSession session) {
+        return true;
+      }
+
+    };
+//Install the all-trusting host verifier
+    HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
+  }
+
   /**
    * Method to get all colleges from coursicle website
    */
@@ -98,7 +158,6 @@ public class WebScraper {
     } else {
       database = Main.getDatabase();
     }
-
     MongoCollection<org.bson.Document> collegesCollection = database.getCollection("colleges");
     FindIterable<org.bson.Document> docs = collegesCollection.find();
 
@@ -114,8 +173,27 @@ public class WebScraper {
    * Scrapes all courses from a given college and adds conflict
    */
   public void scrape() {
+    if (Main.getDatabase() == null) {
+      ConnectionString connString = new ConnectionString(
+          "mongodb://sduraide:cs32scheduler@scheduler-shard-00-00-rw75k.mongodb.net:27017,scheduler-shard-00-01-rw75k.mongodb.net:27017,scheduler-shard-00-02-rw75k.mongodb.net:27017/test?ssl=true&replicaSet=scheduler-shard-0&authSource=admin&retryWrites=true&w=majority");
+
+      MongoClientSettings settings = MongoClientSettings.builder().applyConnectionString(connString)
+          .retryWrites(true).build();
+      MongoClient mongo = MongoClients.create(settings);
+      // created db in cluster in MongoDBAtlas including collections: users, events, conflicts
+      database = mongo.getDatabase("test");
+    } else {
+      database = Main.getDatabase();
+    }
+    MongoCollection<org.bson.Document> namesCollection = database.getCollection("nameToIDs");
+    org.bson.Document add = new org.bson.Document("name", collegeName).append("conventionID",
+        conventionID);
+    namesCollection.insertOne(add);
     try {
+      disableSSLCertCheck();
       // check if website exists
+      String authString = "cb0f04599f8243dcaa1e84a0e68f2950:";
+      String encodedAuthString = Base64.getEncoder().encodeToString(authString.getBytes());
       String website = "https://www.coursicle.com/" + collegeName + "/courses/";
       URLConnection connection = (new URL(website)).openConnection();
       try {
@@ -127,11 +205,14 @@ public class WebScraper {
       connection.setRequestProperty("User-Agent", USER_AGENT);
 
       // Here we create a document object and use JSoup to fetch the website
-      Document doc = Jsoup.connect(website).userAgent(USER_AGENT).timeout(0).get();
+      Document doc = Jsoup.connect(website)
+          .header("Proxy-Authorization", "Basic " + encodedAuthString).followRedirects(true)
+          .ignoreHttpErrors(true).ignoreContentType(true).timeout(180000)
+          .proxy("proxy.crawlera.com", 8010).get();
 
       Elements departments = doc.getElementsByClass("tileElement");
 
-      for (int i = 0; i < 4; i++) {
+      for (int i = 0; i < 4; i = i + 2) {
         Element dep = departments.get(i);
         String departmentTitle = dep.getElementsByClass("tileElementText subjectName").text();
         if (departmentTitle.equals("")) {
@@ -140,7 +221,11 @@ public class WebScraper {
         String src = website + departmentTitle + "/";
         URLConnection connection1 = (new URL(src)).openConnection();
         connection1.setRequestProperty("User-Agent", USER_AGENT);
-        Document doc1 = Jsoup.connect(src).userAgent(USER_AGENT).timeout(0).get();
+        Document doc1 = Jsoup.connect(src)
+            .header("Proxy-Authorization", "Basic " + encodedAuthString).followRedirects(true)
+            .ignoreHttpErrors(true).ignoreContentType(true).timeout(180000)
+            .proxy("proxy.crawlera.com", 8010).get();
+        ;
         Elements courses = doc1.getElementsByClass("tileElement");
 
         List<String> allCoursesinDept = new ArrayList<>();
@@ -164,6 +249,10 @@ public class WebScraper {
       addConflicts();
       // In case of any IO errors, we want the messages written to the console
     } catch (IOException e) {
+      e.printStackTrace();
+    } catch (KeyManagementException e) {
+      e.printStackTrace();
+    } catch (NoSuchAlgorithmException e) {
       e.printStackTrace();
     }
   }
@@ -207,13 +296,22 @@ public class WebScraper {
         String first = courses.get(i);
         Event event1 = new Event(eventID, first, "");
         eventID++;
-        du.addEvent(conventionID, event1);
-        for (int j = i + 1; j < courses.size(); j++) {
+        if (!event1.getName().equals("")) {
+          du.addEvent(conventionID, event1);
+        } else {
+          continue;
+        }
+
+        for (int j = i + 1; j < courses.size(); j = j + 5) {
           String second = courses.get(j);
-          System.out.println("here2");
+//          System.out.println("here2");
           Event event2 = new Event(eventID, second, "");
           eventID++;
-
+          if (!(event2.getName().equals(""))) {
+//            du.addEvent(conventionID, event1);
+          } else {
+            continue;
+          }
 //          du.addEvent(conventionID, event2);
 
           BasicDBObject eventObject = BasicDBObject.parse(gson.toJson(event1));
@@ -221,7 +319,7 @@ public class WebScraper {
           BasicDBObject eventObject1 = BasicDBObject.parse(gson.toJson(event2));
           eventArray.add(eventObject1);
           Conflict conflict = new Conflict(event1, event2, 100);
-
+//          System.out.println(conflict.toString());
           BasicDBObject obj = BasicDBObject.parse(gson.toJson(conflict));
           if (!event1.equals(event2)) {
             du.addConflict(conventionID, conflict);

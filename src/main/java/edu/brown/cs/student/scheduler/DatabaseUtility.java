@@ -119,7 +119,7 @@ public class DatabaseUtility {
     // iterate through the events found
     List<Document> eventList = (List<Document>) doc.get("events");
 
-    System.out.println("eventList's length is " + eventList.size()); // delete
+//    System.out.println("eventList's length is " + eventList.size()); // delete
 
     for (Document event : eventList) {
       Event e = new Event(event.getInteger("id"), event.getString("name"),
@@ -229,7 +229,7 @@ public class DatabaseUtility {
     // FindIterable<Document> findIterable = conflictCollection
     // .find(new BasicDBObject("$and", criteria));
     if (findIterable.first() == null || findIterable.first().isEmpty()) {
-      System.out.println("no duplicate");
+//      System.out.println("no duplicate");
       BasicDBObject update = new BasicDBObject();
       BasicDBObject query = new BasicDBObject("conventionID",
           new BasicDBObject("$eq", conventionID));
@@ -314,7 +314,7 @@ public class DatabaseUtility {
 
     FindIterable<Document> findIterable = userCollection.find(new BasicDBObject("$and", criteria));
     if (findIterable.first() == null || findIterable.first().isEmpty()) {
-      System.out.println("no duplicate");
+//      System.out.println("no duplicate");
       BasicDBObject update = new BasicDBObject();
       BasicDBObject query = new BasicDBObject("$and", criteria);
       update.put("$push", new BasicDBObject("convention", conventionID));
@@ -415,7 +415,7 @@ public class DatabaseUtility {
 //      System.out.println("obj:" + obj);
 //      System.out.println("conventionIDLL: " + conventionID);
       eventCollection.updateOne(eq("conventionID", conventionID), Updates.addToSet("events", obj));
-      System.out.println("in addEvent4");
+//      System.out.println("in addEvent4");
       return true;
     } else {
       return false;

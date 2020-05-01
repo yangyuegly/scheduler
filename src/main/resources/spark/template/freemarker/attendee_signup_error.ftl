@@ -1,7 +1,7 @@
 <#assign content>
 
 <div class="main-content">
-  <h3>Sorry, this convention was never set up.<h3>
+  <h3>${message}<h3>
 </div>
 
 

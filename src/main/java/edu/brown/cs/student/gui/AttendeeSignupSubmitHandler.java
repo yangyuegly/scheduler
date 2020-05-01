@@ -25,6 +25,21 @@ public class AttendeeSignupSubmitHandler implements TemplateViewRoute {
   public ModelAndView handle(Request request, Response response) {
     QueryParamsMap queryMap = request.queryMap();
     String conventionID = request.params(":id");
+    String attendeeEmail = queryMap.value("attendeeEmail");
+    DatabaseUtility database = new DatabaseUtility();
+
+    if (!attendeeEmail.contentEquals("")) {
+      // the attendee wants to be notified with the final schedule
+      boolean addEmailSuccess = database.addAttendeeEmail(conventionID, attendeeEmail);
+
+      if (!addEmailSuccess) {
+        // the attendee's email was unable to be added to the database
+        Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "message",
+            "Sorry, an error occurred, and we were unable to sign you up.");
+
+        return new ModelAndView(variables, "attendee_signup_error.ftl");
+      }
+    }
 
     Convention conv = new Convention(conventionID);
     List<Event> eventsInConv = conv.getEvents();
@@ -38,7 +53,6 @@ public class AttendeeSignupSubmitHandler implements TemplateViewRoute {
     }
 
     int numEventsToAttend = eventsToAttend.size();
-    DatabaseUtility database = new DatabaseUtility();
 
     // add all the pairs of events to the list of conflicts
     for (int i = 0; i < numEventsToAttend; i++) {

@@ -67,8 +67,8 @@ public class Proxy {
           .proxy(ProxySelector.of(new InetSocketAddress(proxyHost, proxyPort)))
           .authenticator(authenticator).sslContext(sc).build();
 
-      HttpRequest request = HttpRequest.newBuilder().GET()
-          .uri(URI.create("https://cs.brown.edu/courses/cs0320/projects/index.html")).build();
+      HttpRequest request = HttpRequest.newBuilder().GET().uri(URI.create("https://httpbin.org/ip"))
+          .build();
 
       HttpResponse<String> response = httpClient.send(request,
           HttpResponse.BodyHandlers.ofString());
@@ -77,10 +77,10 @@ public class Proxy {
       headers.map().forEach((k, v) -> System.out.println(k + ":" + v));
 
       // print status code
-      System.out.println(response.statusCode());
+      // System.out.println(response.statusCode());
 
-      // print response body
-      System.out.println(response.body());
+      // // print response body
+      // System.out.println(response.body());
     } catch (Exception e) {
       e.printStackTrace();
     }

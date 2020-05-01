@@ -48,6 +48,7 @@ public class DatabaseUtility {
   MongoCollection<Document> conventionCollection;
   MongoCollection<Document> eventCollection;
   MongoCollection<Document> conflictCollection;
+  MongoCollection<Document> attendeeCollection;
   MongoDatabase database;
   ObjectMapper mapper = new ObjectMapper();
 
@@ -72,6 +73,7 @@ public class DatabaseUtility {
     conflictCollection = database.getCollection("conflicts");
     conventionCollection = database.getCollection("conventions");
     eventCollection = database.getCollection("events");
+    attendeeCollection = database.getCollection("attendees");
   }
 
   /**
@@ -116,8 +118,6 @@ public class DatabaseUtility {
     // iterate through the events found
     List<Document> eventList = (List<Document>) doc.get("events");
 
-    // System.out.println("eventList's length is " + eventList.size()); // delete
-
     for (Document event : eventList) {
       Event e = new Event(event.getInteger("id"), event.getString("name"),
           event.getString("description"));
@@ -151,7 +151,7 @@ public class DatabaseUtility {
       eventString = gson.toJson(convention.getEvents());
       conventionString.put("events", eventString);
     } catch (NullPointerException e) {
-       System.out.println("currently no events associated with the convention");
+      System.out.println("currently no events associated with the convention");
     }
 
     // the key to this document is the convention id
@@ -209,13 +209,11 @@ public class DatabaseUtility {
     // String str2 = String.format(
     // "{name: \"%s\"}", newConflict.event2.getName());
 
-<<<<<<< HEAD
-        // findIterable = collection.find(eq("instock", Document.parse("{ qty: 5, warehouse: 'A' }")));
+    // findIterable = collection.find(eq("instock", Document.parse("{ qty: 5, warehouse: 'A' }")));
     // System.out.println(str1);
-=======
+
     // findIterable = collection.find(eq("instock", Document.parse("{ qty: 5, warehouse: 'A' }")));
     System.out.println(str1);
->>>>>>> 502590b507b8f16ccc11bb918074a8bd502a1085
 
     FindIterable<Document> existingConflict = conflictCollection
         .find(elemMatch("conflicts", Document.parse(str1)));
@@ -250,10 +248,6 @@ public class DatabaseUtility {
     // FindIterable<Document> findIterable = conflictCollection
     // .find(andDuplicate);
     if (existingConflict.first() == null || existingConflict.first().isEmpty()) {
-<<<<<<< HEAD
-      // System.out.println("no duplicate");
-=======
->>>>>>> 502590b507b8f16ccc11bb918074a8bd502a1085
       BasicDBObject update = new BasicDBObject();
       BasicDBObject query = new BasicDBObject("conventionID",
           new BasicDBObject("$eq", conventionID));
@@ -282,11 +276,7 @@ public class DatabaseUtility {
             e1.getString("description"));
         Conflict conflict = new Conflict(event1, event2, d.getInteger("weight"));
         if (conflict.equals(newConflict)) {
-<<<<<<< HEAD
-        //  System.out.println(conflict.weight);
-=======
           System.out.println(conflict.weight);
->>>>>>> 502590b507b8f16ccc11bb918074a8bd502a1085
           conflict.weight++;
         }
         BasicDBObject obj1 = BasicDBObject.parse(gson.toJson(conflict));
@@ -341,11 +331,6 @@ public class DatabaseUtility {
 
     FindIterable<Document> findIterable = userCollection.find(new BasicDBObject("$and", criteria));
     if (findIterable.first() == null || findIterable.first().isEmpty()) {
-<<<<<<< HEAD
-      // System.out.println("no duplicate");
-=======
-//      System.out.println("no duplicate");
->>>>>>> 502590b507b8f16ccc11bb918074a8bd502a1085
       BasicDBObject update = new BasicDBObject();
       BasicDBObject query = new BasicDBObject("$and", criteria);
       update.put("$push", new BasicDBObject("convention", conventionID));
@@ -446,11 +431,6 @@ public class DatabaseUtility {
 //      System.out.println("obj:" + obj);
 //      System.out.println("conventionIDLL: " + conventionID);
       eventCollection.updateOne(eq("conventionID", conventionID), Updates.addToSet("events", obj));
-<<<<<<< HEAD
-      // System.out.println("in addEvent4");
-=======
-//      System.out.println("in addEvent4");
->>>>>>> 502590b507b8f16ccc11bb918074a8bd502a1085
       return true;
     } else {
       return false;
@@ -556,6 +536,74 @@ public class DatabaseUtility {
     }
 
     return result;
+  }
+
+  /**
+   * adds an attendee email to a pre-existing convention with conventionID
+   *
+   * @param conventionID
+   * @param attendeeEmail
+   *
+   * @return true if the given convention id exists and email was not duplicate false otherwise
+   */
+  public Boolean addAttendeeEmail(String conventionID, String attendeeEmail) {
+    Gson gson = new Gson();
+    // the key to this document is the convention id
+    BasicDBObject query = new BasicDBObject();
+    Document conventionExist = userCollection.find(all("conventions", conventionID)).first();
+
+    if (conventionExist == null && conventionExist.isEmpty()) {
+      return false;// there are no conventions with the given id
+    }
+
+    BasicDBObject equery = new BasicDBObject("conventionID", conventionID);
+    Document findConvInAttendee = attendeeCollection.find(equery).first();
+    Document findIterable = attendeeCollection.find(eq("attendeeEmail", attendeeEmail)).first();
+    Map<String, Object> newConventionString = new HashMap<>();
+
+    if ((findConvInAttendee == null || findConvInAttendee.isEmpty())
+        && (findIterable == null || findIterable.isEmpty())) {
+      List<String> emailArray = new ArrayList<>();
+      emailArray.add(attendeeEmail);
+      newConventionString.put("conventionID", conventionID);
+      newConventionString.put("attendees", emailArray);
+      attendeeCollection.insertOne(new Document(newConventionString));
+      return true;
+    } else if (findIterable == null || findIterable.isEmpty()) {
+      attendeeCollection.updateOne(eq("conventionID", conventionID),
+          Updates.addToSet("attendees", attendeeEmail));
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  /**
+   * Get a list of attendee emails associated with a convention id from the database
+   *
+   * @param conventionID
+   *
+   * @return list of Strings, which represent the emails of attendees who wish to be notified about
+   *         the schedule for the given convention
+   */
+  public List<String> getAttendeeEmailsFromConventionID(String conventionID) {
+    List<String> emails = new ArrayList<String>();
+    BasicDBObject query = new BasicDBObject();
+    query.put("conventionID", conventionID);
+    Document doc = attendeeCollection.find(query).first();
+
+    if (doc == null) {
+      // there are currently no emails with this ID
+      return new ArrayList<>();
+    }
+
+    // iterate through the events found
+    List<String> emailList = (List<String>) doc.get("attendees");
+
+    for (String email : emailList) {
+      emails.add(email);
+    }
+    return emails;
   }
 
 }

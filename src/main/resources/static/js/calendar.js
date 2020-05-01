@@ -1,4 +1,11 @@
 /*
+  When the document is ready, this runs.
+*/
+$(document).ready(() => {
+//  $("#emailAtt").click(emailAttendees);
+});
+
+/*
   The backbone of this eventListener comes from the FullCalendar API,
   and we added the get request.  This is used to display the calendar with
   the final schedule.
@@ -15,6 +22,12 @@ document.addEventListener('DOMContentLoaded', function() {
      myEvents = responseObject.eventsForSchedule;
      startDate = responseObject.defaultDate;
      makeCalendar(startDate, myEvents);
+    $("#emailAtt").click(emailAttendees(responseObject.eventsForSchedule));
+
+
+     // $("#emailAtt").addEventListener("click", event => emailAttendees(responseObject.eventsForSchedule));
+
+
     } else {
       var error = document.getElementById('error');
       error = responseObject.error;
@@ -43,4 +56,24 @@ function makeCalendar(startDate, parsedEvents) {
   });
 
   calendar.render();
+};
+
+/*
+  Function that gets called when the email attendees button is clicked.
+  This uses a POST request to email the attendees. Takes in the events so we
+  can tell attendees when the events are.
+*/
+const emailAttendees = (events) => {
+  const postParameters = { events: events };
+  const url = window.location.href;
+  var splitURL = url.split("/");
+  var convID = splitURL[4];
+
+  // post request to "/add_event/id with added events
+  $.post("/email_attendees/" + convID, postParameters, (responseJSON) => {
+    responseObject = JSON.parse(responseJSON);
+    message = responseObject.message;
+    $("#emailMessage").text(message);
+
+  });
 };

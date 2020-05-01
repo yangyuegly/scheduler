@@ -30,6 +30,7 @@ import edu.brown.cs.student.gui.SchedExamSubmitHandler;
 import edu.brown.cs.student.gui.SchedulePageHandler;
 import edu.brown.cs.student.gui.UnauthorizedHandler;
 import edu.brown.cs.student.gui.UploadHandler;
+import edu.brown.cs.student.scheduler.EmailAttendeeHandler;
 import freemarker.template.Configuration;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
@@ -141,6 +142,7 @@ public final class Main {
     Spark.get("/create_exam_conv", new CreateExamConvHandler(), freeMarker);
     Spark.get("/schedule/:id", new SchedulePageHandler(), freeMarker);
     Spark.get("/calendar_events/:id", new CalendarHandler());
+    Spark.post("/email_attendees/:id", new EmailAttendeeHandler());
     Spark.post("/exam_schedule/:id", new SchedExamSubmitHandler(), freeMarker);
     Spark.post("/upload_convention/:id", new UploadHandler(), freeMarker);
     Spark.get("/convention/:id", new ConventionHomeHandler(), freeMarker);

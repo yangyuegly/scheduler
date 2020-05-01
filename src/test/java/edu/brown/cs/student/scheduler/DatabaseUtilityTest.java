@@ -125,4 +125,17 @@ public class DatabaseUtilityTest {
     assertFalse(du.addCollaborator("shenadurai1@gmail.com", "000001"));
   }
 
+  @Test
+  public void testAddAttendeeEmail() {
+    assertTrue(du.addAttendeeEmail("493210", "abby_goldberg@brown.edu"));
+  }
+
+  @Test
+  public void testGetAttendeeEmailsFromConventionID() {
+    List<String> emails = du.getAttendeeEmailsFromConventionID("493210");
+    assertEquals(emails.size(), 2);
+    assertEquals(emails.get(0), "rachel_fuller@brown.edu");
+    assertEquals(emails.get(1), "abby_goldberg@brown.edu");
+  }
+
 }

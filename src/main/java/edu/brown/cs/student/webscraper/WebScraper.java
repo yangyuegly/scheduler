@@ -304,12 +304,7 @@ public class WebScraper {
 
         for (int j = i + 1; j < courses.size(); j = j + 5) {
           String second = courses.get(j);
-<<<<<<< HEAD
           // System.out.println("here2");
-=======
-
-//          System.out.println("here2");
->>>>>>> 21db6cb4448e943535cb952174027e1ff0444029
           Event event2 = new Event(eventID, second, "");
           eventID++;
           if (!(event2.getName().equals(""))) {

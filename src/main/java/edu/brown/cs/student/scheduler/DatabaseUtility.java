@@ -1,10 +1,8 @@
 package edu.brown.cs.student.scheduler;
 
 import static com.mongodb.client.model.Filters.all;
-import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Filters.elemMatch;
-import static com.mongodb.client.model.Filters.and;
-
+import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Projections.excludeId;
 import static com.mongodb.client.model.Projections.fields;
 import static com.mongodb.client.model.Projections.include;
@@ -13,15 +11,12 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import javax.management.Query;
 
 import org.bson.Document;
 
@@ -31,14 +26,11 @@ import com.google.gson.Gson;
 import com.mongodb.BasicDBObject;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
-import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.model.Aggregates;
-import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.ReplaceOptions;
 import com.mongodb.client.model.Updates;
 
@@ -215,25 +207,29 @@ public class DatabaseUtility {
     String str1 = String.format("{event1: %s, event2: %s, weight: {$gt: 0}}",
         gson.toJson(newConflict.event1), gson.toJson(newConflict.event2));
     // String str2 = String.format(
-    //     "{name: \"%s\"}", newConflict.event2.getName());
+    // "{name: \"%s\"}", newConflict.event2.getName());
 
+<<<<<<< HEAD
         // findIterable = collection.find(eq("instock", Document.parse("{ qty: 5, warehouse: 'A' }")));
     // System.out.println(str1);
+=======
+    // findIterable = collection.find(eq("instock", Document.parse("{ qty: 5, warehouse: 'A' }")));
+    System.out.println(str1);
+>>>>>>> 502590b507b8f16ccc11bb918074a8bd502a1085
 
     FindIterable<Document> existingConflict = conflictCollection
-        .find(elemMatch("conflicts", 
-    Document.parse(str1)));
+        .find(elemMatch("conflicts", Document.parse(str1)));
     // FindIterable<Document> existingConflict = conflictCollection
-    //     .find(and(eq("conventionID", conventionID),
-    //         elemMatch("conflicts.event1.id",newConflict.event1.getID()),
-    //         eq("conflicts.event2.id",newConflict.event2.getID())
-    //         ));
-            // elemMatch("conflicts.event2", BasicDBObject.parse(gson.toJson(newConflict.event2)))));
+    // .find(and(eq("conventionID", conventionID),
+    // elemMatch("conflicts.event1.id",newConflict.event1.getID()),
+    // eq("conflicts.event2.id",newConflict.event2.getID())
+    // ));
+    // elemMatch("conflicts.event2", BasicDBObject.parse(gson.toJson(newConflict.event2)))));
 
     // AggregateIterable<Document> existingConflict = conflictCollection.
-    //     (Arrays.asList(Aggregates.match(Filters.eq("conventionID", conventionID)),
-    //         Aggregates.match(Filters.eq("conflicts.event1", gson.toJson(newConflict.event1))),
-    //         Aggregates.match(Filters.eq("conflicts.event2", gson.toJson(newConflict.event2)))));
+    // (Arrays.asList(Aggregates.match(Filters.eq("conventionID", conventionID)),
+    // Aggregates.match(Filters.eq("conflicts.event1", gson.toJson(newConflict.event1))),
+    // Aggregates.match(Filters.eq("conflicts.event2", gson.toJson(newConflict.event2)))));
     // criteria.add(new BasicDBObject("conventionID", new BasicDBObject("$eq", conventionID)));
     List<BasicDBObject> findDuplicate = new ArrayList<BasicDBObject>();
     findDuplicate.add(new BasicDBObject("conflicts.event1",
@@ -244,7 +240,7 @@ public class DatabaseUtility {
     andDuplicate.append("conventionID", conventionID);
     andDuplicate.append("$and", findDuplicate);
 
-        // BasicDBObject criteria = new
+    // BasicDBObject criteria = new
     // BasicDBObject("conflicts.event1",BasicDBObject.parse(gson.toJson(newConflict.event1)));
     // criteria
     // (new BasicDBObject("conflicts.event1",
@@ -252,9 +248,12 @@ public class DatabaseUtility {
     // criteria.add(new BasicDBObject("conflicts.event2",
     // new BasicDBObject("$eq", BasicDBObject.parse(gson.toJson(newConflict.event2)))));
     // FindIterable<Document> findIterable = conflictCollection
-    //  .find(andDuplicate);
+    // .find(andDuplicate);
     if (existingConflict.first() == null || existingConflict.first().isEmpty()) {
+<<<<<<< HEAD
       // System.out.println("no duplicate");
+=======
+>>>>>>> 502590b507b8f16ccc11bb918074a8bd502a1085
       BasicDBObject update = new BasicDBObject();
       BasicDBObject query = new BasicDBObject("conventionID",
           new BasicDBObject("$eq", conventionID));
@@ -283,7 +282,11 @@ public class DatabaseUtility {
             e1.getString("description"));
         Conflict conflict = new Conflict(event1, event2, d.getInteger("weight"));
         if (conflict.equals(newConflict)) {
+<<<<<<< HEAD
         //  System.out.println(conflict.weight);
+=======
+          System.out.println(conflict.weight);
+>>>>>>> 502590b507b8f16ccc11bb918074a8bd502a1085
           conflict.weight++;
         }
         BasicDBObject obj1 = BasicDBObject.parse(gson.toJson(conflict));
@@ -338,7 +341,11 @@ public class DatabaseUtility {
 
     FindIterable<Document> findIterable = userCollection.find(new BasicDBObject("$and", criteria));
     if (findIterable.first() == null || findIterable.first().isEmpty()) {
+<<<<<<< HEAD
       // System.out.println("no duplicate");
+=======
+//      System.out.println("no duplicate");
+>>>>>>> 502590b507b8f16ccc11bb918074a8bd502a1085
       BasicDBObject update = new BasicDBObject();
       BasicDBObject query = new BasicDBObject("$and", criteria);
       update.put("$push", new BasicDBObject("convention", conventionID));
@@ -439,7 +446,11 @@ public class DatabaseUtility {
 //      System.out.println("obj:" + obj);
 //      System.out.println("conventionIDLL: " + conventionID);
       eventCollection.updateOne(eq("conventionID", conventionID), Updates.addToSet("events", obj));
+<<<<<<< HEAD
       // System.out.println("in addEvent4");
+=======
+//      System.out.println("in addEvent4");
+>>>>>>> 502590b507b8f16ccc11bb918074a8bd502a1085
       return true;
     } else {
       return false;

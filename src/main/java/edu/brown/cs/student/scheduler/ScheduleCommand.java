@@ -2,6 +2,7 @@ package edu.brown.cs.student.scheduler;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -57,14 +58,32 @@ public class ScheduleCommand {
     Set<Event> colored = graph.graphColoring(this.TS, this.CONCURENCY_LIMIT);
 
     List<CalendarEvent> calEvents = new ArrayList<>();
+    List<Event> eventsToSort = new ArrayList<>();
+
     for (Event event : colored) {
+      eventsToSort.add(event);
       LocalDateTime currStart = this.getTimeSlotStart(event.getColor());
+      event.setStart(currStart);
 
       Integer eventDur = convention.getEventDuration();
 
-      String currEnd = currStart.plusMinutes(eventDur).toString();
+      LocalDateTime currEnd = currStart.plusMinutes(eventDur);
+      event.setEnd(currEnd);
+    }
+    System.out.println("is null?? " + (eventsToSort == null));
 
-      CalendarEvent newEvent = new CalendarEvent(event.getName(), currStart.toString(), currEnd);
+    System.out.println("sorted list length is " + eventsToSort.size());
+    Collections.sort(eventsToSort, new CompareStartTime());
+
+    for (Event event : eventsToSort) {
+      System.out.println("start time" + event.getStart());
+//      LocalDateTime currStart = this.getTimeSlotStart(event.getColor());
+//
+//      Integer eventDur = convention.getEventDuration();
+//
+//      String currEnd = currStart.plusMinutes(eventDur).toString();
+      CalendarEvent newEvent = new CalendarEvent(event.getName(), event.getStart().toString(),
+          event.getEnd().toString());
       calEvents.add(newEvent);
 
     }

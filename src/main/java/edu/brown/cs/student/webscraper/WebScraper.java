@@ -326,7 +326,7 @@ public class WebScraper {
             return;
           }
           String second = courses.get(j);
-//          System.out.println("here2");
+          // System.out.println("here2");
           Event event2 = new Event(eventID, second, "");
           eventID++;
           if (!(event2.getName().equals(""))) {
@@ -352,7 +352,7 @@ public class WebScraper {
         }
       }
     }
-    System.out.println("here4");
+    // System.out.println("here4");
     deptToCourses = new HashMap<>();
     conflict = new HashMap<>();
   }

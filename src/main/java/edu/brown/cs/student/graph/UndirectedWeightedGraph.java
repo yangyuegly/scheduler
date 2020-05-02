@@ -98,9 +98,9 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
       this.weightMatrix[e.getTail().getID()][e.getHead().getID()] = e.getWeight();
       nodes.get(e.getHead().getID()).addToAdjList(e);
     }
-    for (Map.Entry<Integer, V> n : nodes.entrySet()) {
-      System.out.println(n.getValue().getID() + " " + n.getValue().getAdjList());
-    }
+    // for (Map.Entry<Integer, V> n : nodes.entrySet()) {
+    //   System.out.println(n.getValue().getID() + " " + n.getValue().getAdjList());
+    // }
     setDegree();
   }
 
@@ -174,7 +174,7 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
       }
     }
     for (Map.Entry<Integer, V> c : coloredMap.entrySet()) {
-      System.out.println(c.getValue());
+      // System.out.println(c.getValue());
       coloredSet.add(c.getValue());
     }
     return coloredSet;

@@ -30,7 +30,7 @@ public class ConventionTest {
  // @Test
   public void testStartDate() {
     Convention conv = new Convention("1", "conv", "2020-04-10", 3, 90, "07:30", "19:30");
-    System.out.println(conv.getStartDateTime());
+    // System.out.println(conv.getStartDateTime());
     assertEquals("2020-04-10", conv.getStartDateTime());
   }
 

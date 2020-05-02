@@ -10,27 +10,26 @@ const $eventNames = $("#eventNames");
 const $emailInput = $("#colEmail");
 
 // this string stores the names of the added events in HTML form
-let eventNamesString = $eventNames.val();
+let eventNamesString = $eventNames.html();
 
 /*
   When the document is ready, this runs.
 */
-
 $(document).ready(() => {
-var coll = document.getElementsByClassName("collapsible");
-var i;
+  var coll = document.getElementsByClassName("collapsible");
+  var i;
 
-for (i = 0; i < coll.length; i++) {
-  coll[i].addEventListener("click", function() {
-    this.classList.toggle("active");
-    var content = this.nextElementSibling;
-    if (content.style.display === "block") {
-      content.style.display = "none";
-    } else {
-      content.style.display = "block";
-    }
-  });
-}
+  for (i = 0; i < coll.length; i++) {
+    coll[i].addEventListener("click", function() {
+      this.classList.toggle("active");
+      var content = this.nextElementSibling;
+      if (content.style.display === "block") {
+        content.style.display = "none";
+      } else {
+        content.style.display = "block";
+      }
+    });
+  }
   setup_live_event_updates();
   $("#addEvent").click(addEvent);
   $("#doneAddingEvents").click(doneAdding);
@@ -45,12 +44,16 @@ for (i = 0; i < coll.length; i++) {
   This method updates the eventNamesString, so the new event is added to it.
 */
 const updateEventNamesString = () => {
-  if (eventNamesString != "") {
-    eventNamesString += "<p></p>";
+  // eventNamesString = $eventNames.html();
+
+  console.log(eventNamesString); // delete
+
+  if (eventNamesString == "No events yet.") {
+    eventNamesString = "";
   }
 
-  eventNamesString += "<button type=\"button\" class=\"collapsible\">" + $name.val() + "</button>\r\n"
-          + "<div class=\"content\">\r\n" + "<p>";
+  eventNamesString += "<p></p><button type=\"button\" class=\"collapsible\">"
+    + $name.val() + "</button>\r\n" + "<div class=\"content\">\r\n" + "<p>";
 
   if ($description.val() == "") {
     eventNamesString += "No description."
@@ -67,51 +70,60 @@ const updateEventNamesString = () => {
   is stored in the database.
 */
 const addEvent = () => {
-  let newEvent = [$name.val(), $description.val()];
-  existingEvents.push(newEvent);
+  if ($name.val() != "") {
+    let newEvent = [$name.val(), $description.val()];
+    existingEvents.push(newEvent);
 
-  const eventJson = JSON.stringify(newEvent);
-  const url = window.location.href;
-  var splitURL = url.split("/");
-  var convID = splitURL[4];
-  const postParameters = { event: eventJson, conventionID: convID };
+    const eventJson = JSON.stringify(newEvent);
+    const url = window.location.href;
+    var splitURL = url.split("/");
+    var convID = splitURL[4];
+    const postParameters = { event: eventJson, conventionID: convID };
 
-  // post request to "/add_event/id with added events
-  $.post("/add_event/" + convID, postParameters, (responseJSON) => {
-    responseObject = JSON.parse(responseJSON);
-    errorMessage = responseObject.errorMessage;
+    // post request to "/add_event/id with added events
+    $.post("/add_event/" + convID, postParameters, (responseJSON) => {
+      responseObject = JSON.parse(responseJSON);
+      errorMessage = responseObject.errorMessage;
 
-    if (errorMessage != "") {
-      // an error occurred
-      $("#addEventError").text(errorMessage);
-    } else {
-      // update the existing events on the page
-      updateEventNamesString();
-      add_event(eventNamesString); //socket code
+      if (errorMessage != "") {
+        // an error occurred
+        $("#addEventError").text(errorMessage);
+      } else {
+        // update the existing events on the page
+        updateEventNamesString();
 
-      $eventNames.html(eventNamesString);
-      $("#addEventError").text("");
+        console.log(eventNamesString); // delete
 
-      var coll = document.getElementsByClassName("collapsible");
-      var i;
 
-      for (i = 0; i < coll.length; i++) {
-        coll[i].addEventListener("click", function() {
-          this.classList.toggle("active");
-          var content = this.nextElementSibling;
-          if (content.style.display === "block") {
-            content.style.display = "none";
-          } else {
-            content.style.display = "block";
-          }
-        });
+        add_event(eventNamesString); //socket code
 
-        // clear the input boxes
-        $name.val("");
-        $description.val("");
+        // $eventNames.html(eventNamesString);
+        $eventNames.replaceWith(eventNamesString);
+
+
+        $("#addEventError").text("");
+
+        var coll = document.getElementsByClassName("collapsible");
+        var i;
+
+        for (i = 0; i < coll.length; i++) {
+          coll[i].addEventListener("click", function() {
+            this.classList.toggle("active");
+            var content = this.nextElementSibling;
+            if (content.style.display === "block") {
+              content.style.display = "none";
+            } else {
+              content.style.display = "block";
+            }
+          });
+
+          // clear the input boxes
+          $name.val("");
+          $description.val("");
+        }
       }
-    }
-  });
+    });
+  }
 };
 
 /*

@@ -25,9 +25,10 @@ public class AttendeeSignupHandler implements TemplateViewRoute {
 
     if (!conv.isLoaded()) {
       // the convention manager(s) did not finish setting up the convention
-      Map<String, Object> variables = ImmutableMap.of("title", "Scheduler");
+      Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "message",
+          "Sorry, this convention was never set up.");
 
-      return new ModelAndView(variables, "attendee_signup_no_conv.ftl");
+      return new ModelAndView(variables, "attendee_signup_error.ftl");
     }
 
     String convName = conv.getName();

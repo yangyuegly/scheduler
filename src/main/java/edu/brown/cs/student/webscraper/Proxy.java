@@ -77,10 +77,10 @@ public class Proxy {
       headers.map().forEach((k, v) -> System.out.println(k + ":" + v));
 
       // print status code
-      System.out.println(response.statusCode());
+      // System.out.println(response.statusCode());
 
-      // print response body
-      System.out.println(response.body());
+      // // print response body
+      // System.out.println(response.body());
     } catch (Exception e) {
       e.printStackTrace();
     }

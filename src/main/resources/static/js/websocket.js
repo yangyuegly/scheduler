@@ -36,7 +36,8 @@ let setup_live_event_updates = () => {
         break;
       case MESSAGE_TYPE.UPDATE:
         // parse events
-        $("#eventNames").html(data.payload.text);
+        // $("#eventNames").html(data.payload.text);
+        $("#eventNames").replaceWith(data.payload.text);
         break;
     }
   };

@@ -37,12 +37,20 @@
 
     <body>
       <h2>${name}</h2>
+      <button id="emailAtt">Email your attendees this schedule</button>
+      <p id='emailMessage'></p>
+
+
       <p id="calendarError"></p>
+
       <div class='demo-topbar'>
       </div>
       <div id='error'></div>
       <div id='calendar'></div>
+
+
     </body>
+
 
   </html>
 </div>

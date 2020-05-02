@@ -1,35 +1,42 @@
 body {
-    background-color: white;
-    font-family: Cabin;
-    font-size: 18px;
-    padding: 0;
-    margin: 0;
-    background-image: url("/images/interlaced.png");
-    /* background-image: url("/images/december_calendar.jpeg");
+  background-color: white;
+  font-family: Cabin;
+  font-size: 18px;
+  padding: 0;
+  margin: 0;
+  background-image: url("/images/interlaced.png");
+  /* background-image: url("/images/december_calendar.jpeg");
     background-repeat: no-repeat;
     background-attachment: fixed; 
     background-size: cover;
     background-position: center center; */
 }
 
-
 .errorMessage {
   color: red;
 }
 
 .main-content {
+  width: 100%;
+  height: 100%;
   padding: 10px 18px 10px 18px;
   z-index: 30;
+  background-image: url("/images/interlaced.png");
 }
 
-textarea, input {
+textarea,
+input {
   font-family: sans-serif;
   font-size: 18px;
   padding: 8px 10px;
 }
 
-button, input[type=submit] {
-  background-color: #12ABDC;
+.column {
+  max-width: 450px;
+}
+button,
+input[type="submit"] {
+  background-color: #12abdc;
   border: none;
   color: white;
   padding: 10px 20px;
@@ -38,21 +45,23 @@ button, input[type=submit] {
   display: inline-block;
   font-size: 16px;
   cursor: pointer;
+  border-radius: 5px;
 }
-
-
+.ui.link.items {
+  font-size: 18px;
+  padding-bottom: 8rem;
+  margin-bottom: 8rem;
+}
 
 /* Make it so links don't change color when visited */
 a {
-  color: #12ABDC;
+  color: #12abdc;
 }
 
 /* This is for items that are only present for screen readers. */
 .sr-only {
   display: none;
 }
-
-
 
 .navbar {
   overflow: hidden;
@@ -85,8 +94,9 @@ a {
   margin: 0;
 }
 
-.navbar a:hover, .dropdown:hover .dropbtn {
-  background-color: #12ABDC;
+.navbar a:hover,
+.dropdown:hover .dropbtn {
+  background-color: #12abdc;
 }
 
 .dropdown-content {
@@ -94,7 +104,7 @@ a {
   position: absolute;
   background-color: #f9f9f9;
   min-width: 160px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   z-index: 1;
 }
 
@@ -106,8 +116,6 @@ a {
   display: block;
   text-align: left;
 }
-
-
 
 .dropdown-content a:hover {
   background-color: #ddd;
@@ -131,7 +139,8 @@ a {
 }
 
 /* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
-.active, .collapsible:hover {
+.active,
+.collapsible:hover {
   background-color: #d5eaf1ff;
 }
 
@@ -144,8 +153,8 @@ a {
 }
 
 
-/* --------- These are for the set-up convention page ------ */
 
+/* --------- These are for the set-up convention page ------ */
 
 .colInput {
   width: 40%;
@@ -174,7 +183,9 @@ a {
 /* Responsive layout - when the screen is less than 600px wide, make the two
 columns stack on top of each other instead of next to each other */
 @media screen and (max-width: 600px) {
-  .col-25, .col-75, input[type=submit] {
+  .col-25,
+  .col-75,
+  input[type="submit"] {
     width: 100%;
     margin-top: 0;
   }

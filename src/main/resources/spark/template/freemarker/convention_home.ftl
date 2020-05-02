@@ -4,7 +4,8 @@
   <h2>${convName}</h2>
   <br>
   <h3>Existing Events:</h3>
-  <p id="eventNames">${existingEvents}</p>
+  <div id="eventNames">${existingEvents}</div>
+  <p id="eventsError" class="errorMessage"></p>
 
   <br>
   <div id="addEventsDiv">

@@ -23,6 +23,7 @@ import edu.brown.cs.student.gui.CreateAccountSubmitHandler;
 import edu.brown.cs.student.gui.CreateConvSubmitHandler;
 import edu.brown.cs.student.gui.CreateConventionHandler;
 import edu.brown.cs.student.gui.CreateExamConvHandler;
+import edu.brown.cs.student.gui.EmailAttendeeHandler;
 import edu.brown.cs.student.gui.HomeHandler;
 import edu.brown.cs.student.gui.LoginHandler;
 import edu.brown.cs.student.gui.LogoutHandler;
@@ -141,6 +142,7 @@ public final class Main {
     Spark.get("/create_exam_conv", new CreateExamConvHandler(), freeMarker);
     Spark.get("/schedule/:id", new SchedulePageHandler(), freeMarker);
     Spark.get("/calendar_events/:id", new CalendarHandler());
+    Spark.post("/email_attendees/:id", new EmailAttendeeHandler());
     Spark.post("/exam_schedule/:id", new SchedExamSubmitHandler(), freeMarker);
     Spark.post("/upload_convention/:id", new UploadHandler(), freeMarker);
     Spark.get("/convention/:id", new ConventionHomeHandler(), freeMarker);

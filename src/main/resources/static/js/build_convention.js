@@ -16,11 +16,6 @@ let eventNamesString = $eventNames.html();
   When the document is ready, this runs.
 */
 $(document).ready(() => {
-  // eventNamesString = $eventNames.html();
-  console.log(eventNamesString); // delete
-
-
-
   var coll = document.getElementsByClassName("collapsible");
   var i;
 
@@ -49,14 +44,16 @@ $(document).ready(() => {
   This method updates the eventNamesString, so the new event is added to it.
 */
 const updateEventNamesString = () => {
-  eventNamesString = $eventNames.html();
+  // eventNamesString = $eventNames.html();
+
+  console.log(eventNamesString); // delete
 
   if (eventNamesString == "No events yet.") {
     eventNamesString = "";
   }
 
-  eventNamesString += "<p></p><button type=\"button\" class=\"collapsible\">" + $name.val() + "</button>\r\n"
-          + "<div class=\"content\">\r\n" + "<p>";
+  eventNamesString += "<p></p><button type=\"button\" class=\"collapsible\">"
+    + $name.val() + "</button>\r\n" + "<div class=\"content\">\r\n" + "<p>";
 
   if ($description.val() == "") {
     eventNamesString += "No description."
@@ -94,12 +91,14 @@ const addEvent = () => {
       } else {
         // update the existing events on the page
         updateEventNamesString();
+
+        console.log(eventNamesString); // delete
+
+
         add_event(eventNamesString); //socket code
 
         // $eventNames.html(eventNamesString);
         $eventNames.replaceWith(eventNamesString);
-
-        console.log(eventNamesString); // delete
 
 
         $("#addEventError").text("");

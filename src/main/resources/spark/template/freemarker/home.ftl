@@ -31,7 +31,7 @@
         </div>
 
      <br><br>
-     <input type="submit" value="Sign in" size="30" class="ui teal button" >
+     <input type="submit" value="Sign in" size="30">
   </form>
   <br>
   <p class="errorMessage">${message}</p>

@@ -2,6 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
+    <link rel='shortcut icon' href='/images/sked_logo2.png' type="image/png" />
     <title>Sked</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/css/term_project.css">

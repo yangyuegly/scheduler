@@ -92,13 +92,16 @@ const addEvent = () => {
         // update the existing events on the page
         updateEventNamesString();
 
-        console.log(eventNamesString); // delete
+        console.log("event name string " + eventNamesString); // delete
 
 
         add_event(eventNamesString); //socket code
 
-        // $eventNames.html(eventNamesString);
-        $eventNames.replaceWith(eventNamesString);
+
+      //  $eventNames.html(eventNamesString);
+        
+        
+        console.log("just replaced");
 
 
         $("#addEventError").text("");
@@ -117,10 +120,11 @@ const addEvent = () => {
             }
           });
 
+        
+        }
           // clear the input boxes
           $name.val("");
           $description.val("");
-        }
       }
     });
   }

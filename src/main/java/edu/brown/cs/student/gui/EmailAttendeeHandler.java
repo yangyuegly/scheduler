@@ -130,11 +130,9 @@ public class EmailAttendeeHandler implements Route {
       String end = "<p>This schedule made with Sked and sent by the convention organizer.</p></body>";
       message.setContent(header + emailContent + end, "text/html");
       Transport.send(message);
-      System.out.println("Mail successfully sent"); // delete!!!!!!!!!!!!!!!!!!!!
     } catch (MessagingException mex) {
-      mex.printStackTrace(); // do better than
-                             // this!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-      System.out.println("send failed"); // delete
+      System.err.println("send failed"); // delete // do
+                                         // better!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       return false;
     }
 

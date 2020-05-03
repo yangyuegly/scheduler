@@ -38,6 +38,10 @@ $(document).ready(() => {
   $("#addCollaborator").click(addCollaborator);
   // hide HTML elements that are used after all events are added
   $("#completedDiv").css("display", "none");
+
+
+  setTimeout(() => {  add_event(eventNamesString, true); }, 500);
+
 });
 
 /*
@@ -48,12 +52,16 @@ const updateEventNamesString = () => {
 
   console.log(eventNamesString); // delete
 
-  if (eventNamesString == "No events yet.") {
-    eventNamesString = "";
-  }
+  // if (eventNamesString == "No events yet.") {
+  //   eventNamesString = "";
+  // }
 
-  eventNamesString += "<p></p><button type=\"button\" class=\"collapsible\">"
+  // eventNamesString += "<p></p><button type=\"button\" class=\"collapsible\">"
+  //   + $name.val() + "</button>\r\n" + "<div class=\"content\">\r\n" + "<p>";
+
+  eventNamesString = "<p></p><button type=\"button\" class=\"collapsible\">"
     + $name.val() + "</button>\r\n" + "<div class=\"content\">\r\n" + "<p>";
+
 
   if ($description.val() == "") {
     eventNamesString += "No description."
@@ -95,12 +103,12 @@ const addEvent = () => {
         console.log("event name string " + eventNamesString); // delete
 
 
-        add_event(eventNamesString); //socket code
+        add_event(eventNamesString, false); //socket code
 
 
       //  $eventNames.html(eventNamesString);
-        
-        
+
+
         console.log("just replaced");
 
 
@@ -120,7 +128,7 @@ const addEvent = () => {
             }
           });
 
-        
+
         }
           // clear the input boxes
           $name.val("");

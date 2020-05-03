@@ -23,7 +23,7 @@ let setup_live_event_updates = () => {
   conn.onerror = (err) => {
     console.log("Connection error:", err);
   };
-  
+
 
   conn.onmessage = (msg) => {
     console.log("in onmessage"); // delete
@@ -42,7 +42,8 @@ let setup_live_event_updates = () => {
         // parse events
         console.log("update message received");
         console.log("this is the payload"  + data.payload.text); //is duplica
-        
+
+        $("#eventNames").html("");
         $("#eventNames").html(data.payload.text);
        // $("#eventNames").replaceWith("<div id=\"eventName\">" + data.payload.text + "</div>");
         break;
@@ -50,15 +51,16 @@ let setup_live_event_updates = () => {
   };
 };
 
-const add_event = (eventNamesString) => {
+const add_event = (eventNamesString, isFirstCall) => {
   console.log("in add_event"); // delete
   console.log("eventNamesString in websocket is " + eventNamesString); //not dupli
-  
+
     const JSONevents =  JSON.stringify({
       type: MESSAGE_TYPE.EVENT,
       payload: {
         id: myId,
         text: eventNamesString,
+        isFirst: isFirstCall
       },
     });
   console.log("json is " + JSONevents);

@@ -9,9 +9,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
+import org.eclipse.jetty.websocket.api.annotations.OnWebSocketError;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
-import org.eclipse.jetty.websocket.api.annotations.OnWebSocketError;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -29,8 +29,6 @@ public class ScoringWebSocket {
   private static enum MESSAGE_TYPE {
     CONNECT, EVENT, UPDATE
   }
-
-
 
   @OnWebSocketConnect
   public void connected(Session session) throws IOException {
@@ -77,6 +75,7 @@ public class ScoringWebSocket {
     toSend.addProperty("type", MESSAGE_TYPE.UPDATE.ordinal());
     JsonObject newPayload = new JsonObject();
     newPayload.add("id", payload.get("id"));
+    boolean isFirstCall = payload.get("isFirst").getAsBoolean();
 
     // //get events from conventionID
     // MongoCollection<Document> eventCollection = Main.getDatabase().getCollection("events");
@@ -93,6 +92,16 @@ public class ScoringWebSocket {
 
     // }
     String currString = map.get(currURI);
+
+    if (isFirstCall) {
+      // clear the stored html
+      map.put(currURI, "");
+    }
+
+    if (currString.equals("No events yet.")) {
+      currString = "";
+    }
+
     currString += payload.get("text").getAsString();
     map.put(currURI, currString);
     newPayload.addProperty("text", currString);

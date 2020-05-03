@@ -13,6 +13,11 @@ import edu.brown.cs.student.graph.UndirectedWeightedGraph;
  * This class is used to schedule the user's convention. It implements the ICommand interface.
  */
 public class ScheduleCommand {
+
+  /**
+   * Fields denoting the set of nodes, edges, the convention to schedule, time slot, concurrency
+   * limit and the graph
+   */
   List<Event> nodes;
   Set<Conflict> edges;
   Convention convention;
@@ -77,11 +82,6 @@ public class ScheduleCommand {
 
     for (Event event : eventsToSort) {
       System.out.println("start time" + event.getStart());
-//      LocalDateTime currStart = this.getTimeSlotStart(event.getColor());
-//
-//      Integer eventDur = convention.getEventDuration();
-//
-//      String currEnd = currStart.plusMinutes(eventDur).toString();
       CalendarEvent newEvent = new CalendarEvent(event.getName(), event.getStart().toString(),
           event.getEnd().toString());
       calEvents.add(newEvent);
@@ -128,16 +128,10 @@ public class ScheduleCommand {
   private LocalDateTime getTimeSlotStart(List<Integer> timeSlot) {
     LocalDateTime convStart = convention.getStartDateTime();
 
-//    System.out.println("size of timeSlot list " + timeSlot.size());
-
     int dayOfSlot = timeSlot.get(0);
-//    System.out.println("got time slot");
     LocalDateTime slotDayAtStartTime = convStart.plusDays(dayOfSlot);
 
     int numMinutesBeforeSlot = timeSlot.get(1) * convention.getEventDuration();
-
-    // System.out.println("time slot " + dayOfSlot + " " + numMinutesBeforeSlot); // delete
-
     return slotDayAtStartTime.plusMinutes(numMinutesBeforeSlot);
   }
 

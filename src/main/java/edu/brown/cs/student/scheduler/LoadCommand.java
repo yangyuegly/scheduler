@@ -41,8 +41,6 @@ import edu.brown.cs.student.main.Main;
  * This class is used to load in a file.
  */
 
-// (attendees, event1, event2, event3)
-// store the csv title and user id into the user collection
 public class LoadCommand {
   private List<Conflict> conflict;
 
@@ -61,7 +59,6 @@ public class LoadCommand {
    * @param convention - the convention containing all the events in the file
    */
   public void execute(List<List<String>> input, Convention convention) {
-//    DatabaseUtility du = new DatabaseUtility();
     int count = 0;
     // map conflict to number of conflicts
     Map<Conflict, Integer> frequencyMap = new HashMap<>();
@@ -97,11 +94,6 @@ public class LoadCommand {
 
     }
 
-    // fill the vertices
-    // for (Map.Entry<String, Integer> entry : nameToId.entrySet()) {
-    // nodes.add(new Event(entry.getValue(), entry.getKey()));
-    // }
-
     Gson gson = new Gson();
     List<BasicDBObject> conflictArray = new ArrayList<>();
     List<BasicDBObject> eventArray = new ArrayList<>();
@@ -109,7 +101,6 @@ public class LoadCommand {
     // insert into the event table
     for (Map.Entry<String, Integer> entry : nameToId.entrySet()) {
       Event e = new Event(entry.getValue(), entry.getKey(), "");
-//      du.addEvent(convention.getID(), e);
       BasicDBObject eventObject = BasicDBObject.parse(gson.toJson(e));
       eventArray.add(eventObject);
     }
@@ -134,7 +125,6 @@ public class LoadCommand {
     for (Map.Entry<Conflict, Integer> entry : frequencyMap.entrySet()) {
       // set weight for each conflict
       entry.getKey().setWeight(entry.getValue());
-      // edges.add(entry.getKey());
       BasicDBObject obj = BasicDBObject.parse(gson.toJson(entry.getKey()));
       conflictArray.add(obj);
     }
@@ -156,7 +146,6 @@ public class LoadCommand {
     } else {
       Main.getDatabase().getCollection("conflicts").insertOne(doc);
     }
-//    Main.getDatabase().getCollection("conflicts").insertOne(doc);
 
   }
 

@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -295,6 +294,11 @@ public class Convention {
     return Math.floorDiv(numMinutesInDay.intValue(), eventDuration);
   }
 
+  /**
+   * Getter for conflicts
+   * 
+   * @return - set of conflicts
+   */
   public Set<Conflict> getConflicts() {
     DatabaseUtility du = new DatabaseUtility();
     return du.getConflictsFromConventionID(this.id);

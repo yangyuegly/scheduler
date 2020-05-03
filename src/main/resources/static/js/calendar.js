@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   $.get("/calendar_events/" + id, response => {
     responseObject = JSON.parse(response);
+    
 
     if (responseObject.error == "") {
      myEvents = responseObject.eventsForSchedule;
@@ -56,14 +57,18 @@ function makeCalendar(startDate, parsedEvents) {
   can tell attendees when the events are.
 */
 const emailAttendees = (events) => {
-  const postParameters = { events: events };
+  const eventsJSON = JSON.stringify(events);
+  const postParameters = { events: eventsJSON };
   const url = window.location.href;
   var splitURL = url.split("/");
   var convID = splitURL[4];
+  
+
 
   // post request to "/add_event/id with added events
   $.post("/email_attendees/" + convID, postParameters, (responseJSON) => {
     responseObject = JSON.parse(responseJSON);
+    console.log(responseObject);
     message = responseObject.message;
     $("#emailMessage").text(message);
 

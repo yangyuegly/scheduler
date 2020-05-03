@@ -36,4 +36,16 @@ public class CalendarEvent {
     this.start = start;
     this.end = end;
   }
+
+  public String getTitle() {
+    return this.title;
+  }
+
+  public String getStart() {
+    return this.start;
+  }
+
+  public String getEnd() {
+    return this.end;
+  }
 }

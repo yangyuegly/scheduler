@@ -24,10 +24,11 @@
             <i class="lock icon"></i>
                  <label for="password" class="sr-only">Password</label>
 
-           <input name="password" id="password" type="password" size="30" placeholder="Password" required>
+                <input name="password" id="password" type="password" size="30" placeholder="Password" required>
           </div>
         </div>
-     <input type="submit" value="Create account" size="30" class="ui teal button" >
+     <br>
+     <input type="submit" value="Create account" size="30">
   </form>
   <br>
   <p class="errorMessage">${errorMessage}</p>

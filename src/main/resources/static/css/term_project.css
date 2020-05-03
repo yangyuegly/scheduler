@@ -45,6 +45,7 @@ input[type="submit"] {
   display: inline-block;
   font-size: 16px;
   cursor: pointer;
+  border-radius: 5px;
 }
 .ui.link.items {
   font-size: 18px;
@@ -150,6 +151,8 @@ a {
   overflow: hidden;
   background-color: #d5eaf1ff;
 }
+
+
 
 /* --------- These are for the set-up convention page ------ */
 

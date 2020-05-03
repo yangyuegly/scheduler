@@ -26,9 +26,11 @@ public class CSVParser {
       List<String> splitRowMinusBlanks = new ArrayList<>();
 
       for (String elem : splitRow) {
-        if (!elem.trim().equals("")) {
+        String trimmedElem = elem.trim();
+
+        if (!trimmedElem.equals("")) {
           // don't include blanks or spaces
-          splitRowMinusBlanks.add(elem);
+          splitRowMinusBlanks.add(trimmedElem);
         }
       }
 

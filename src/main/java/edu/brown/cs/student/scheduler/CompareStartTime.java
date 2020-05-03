@@ -2,6 +2,9 @@ package edu.brown.cs.student.scheduler;
 
 import java.util.Comparator;
 
+/**
+ * Comparator to compare start time
+ */
 public class CompareStartTime implements Comparator<Event> {
 
   @Override

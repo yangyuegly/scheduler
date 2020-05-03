@@ -44,17 +44,22 @@ public class DatabaseUtility {
   /**
    * Collections stored in MongoDB database
    */
-  MongoCollection<Document> userCollection;
-  MongoCollection<Document> conventionCollection;
-  MongoCollection<Document> eventCollection;
-  MongoCollection<Document> conflictCollection;
-  MongoCollection<Document> attendeeCollection;
-  MongoDatabase database;
-  ObjectMapper mapper = new ObjectMapper();
+  private MongoCollection<Document> userCollection;
+  private MongoCollection<Document> conventionCollection;
+  private MongoCollection<Document> eventCollection;
+  private MongoCollection<Document> conflictCollection;
+  private MongoCollection<Document> attendeeCollection;
+  // database to access MongoDB database
+  private MongoDatabase database;
+  private ObjectMapper mapper = new ObjectMapper();
 
+  /**
+   * Constructor for DatabaseUtility
+   */
   public DatabaseUtility() {
     mapper.registerModule(new JavaTimeModule());
 
+    // for unit testing purposes
     if (Main.getDatabase() == null) {
       ConnectionString connString = new ConnectionString(
           "mongodb://sduraide:cs32scheduler@scheduler-shard-00-00-rw75k.mongodb.net:27017,scheduler-shard-00-01-rw75k.mongodb.net:27017,scheduler-shard-00-02-rw75k.mongodb.net:27017/test?ssl=true&replicaSet=scheduler-shard-0&authSource=admin&retryWrites=true&w=majority");
@@ -68,11 +73,12 @@ public class DatabaseUtility {
     } else {
       database = Main.getDatabase();
     }
+
+    // initialize all collections
     userCollection = database.getCollection("users");
     eventCollection = database.getCollection("events");
     conflictCollection = database.getCollection("conflicts");
     conventionCollection = database.getCollection("conventions");
-    eventCollection = database.getCollection("events");
     attendeeCollection = database.getCollection("attendees");
   }
 
@@ -137,6 +143,7 @@ public class DatabaseUtility {
   public Boolean addConventionData(Convention convention) {
 
     Map<String, Object> conventionString = new HashMap<>();
+    // fields to add
     conventionString.put("id", convention.getID());
     conventionString.put("name", convention.getName());
     conventionString.put("startDateTime", convention.getStartDateTime());
@@ -184,7 +191,15 @@ public class DatabaseUtility {
 
   }
 
-  public Boolean addConflictHelper(String conventionID, Conflict newConflict) {
+  /**
+   * Helper for add conflict
+   *
+   * @param conventionID - conventionID to add conflict to
+   * @param newConflict - conflict to add
+   *
+   * @return - true if added, false otherwise
+   */
+  private Boolean addConflictHelper(String conventionID, Conflict newConflict) {
     Gson gson = new Gson();
     BasicDBObject obj = BasicDBObject.parse(gson.toJson(newConflict));
     // =====checking if convention collection contains current conventionID
@@ -199,6 +214,7 @@ public class DatabaseUtility {
     BasicDBObject checkExistInConflict = new BasicDBObject("conventionID", conventionID);
     Document findConvInConflict = conflictCollection.find(checkExistInConflict).first();
     Map<String, Object> newConventionString = new HashMap<>();
+
     if (findConvInConflict == null || findConvInConflict.isEmpty()) {
       newConventionString.put("conventionID", conventionID);
       conflictCollection.insertOne(new Document(newConventionString));
@@ -206,29 +222,11 @@ public class DatabaseUtility {
 
     String str1 = String.format("{event1: %s, event2: %s, weight: {$gt: 0}}",
         gson.toJson(newConflict.event1), gson.toJson(newConflict.event2));
-    // String str2 = String.format(
-    // "{name: \"%s\"}", newConflict.event2.getName());
-
-    // findIterable = collection.find(eq("instock", Document.parse("{ qty: 5, warehouse: 'A' }")));
-    // System.out.println(str1);
-
-    // findIterable = collection.find(eq("instock", Document.parse("{ qty: 5, warehouse: 'A' }")));
-    System.out.println(str1);
 
     FindIterable<Document> existingConflict = conflictCollection
         .find(elemMatch("conflicts", Document.parse(str1)));
-    // FindIterable<Document> existingConflict = conflictCollection
-    // .find(and(eq("conventionID", conventionID),
-    // elemMatch("conflicts.event1.id",newConflict.event1.getID()),
-    // eq("conflicts.event2.id",newConflict.event2.getID())
-    // ));
-    // elemMatch("conflicts.event2", BasicDBObject.parse(gson.toJson(newConflict.event2)))));
 
-    // AggregateIterable<Document> existingConflict = conflictCollection.
-    // (Arrays.asList(Aggregates.match(Filters.eq("conventionID", conventionID)),
-    // Aggregates.match(Filters.eq("conflicts.event1", gson.toJson(newConflict.event1))),
-    // Aggregates.match(Filters.eq("conflicts.event2", gson.toJson(newConflict.event2)))));
-    // criteria.add(new BasicDBObject("conventionID", new BasicDBObject("$eq", conventionID)));
+    // find duplicate conflict
     List<BasicDBObject> findDuplicate = new ArrayList<BasicDBObject>();
     findDuplicate.add(new BasicDBObject("conflicts.event1",
         BasicDBObject.parse(gson.toJson(newConflict.event1))));
@@ -238,15 +236,7 @@ public class DatabaseUtility {
     andDuplicate.append("conventionID", conventionID);
     andDuplicate.append("$and", findDuplicate);
 
-    // BasicDBObject criteria = new
-    // BasicDBObject("conflicts.event1",BasicDBObject.parse(gson.toJson(newConflict.event1)));
-    // criteria
-    // (new BasicDBObject("conflicts.event1",
-    // new BasicDBObject("$eq", BasicDBObject.parse(gson.toJson(newConflict.event1)))));
-    // criteria.add(new BasicDBObject("conflicts.event2",
-    // new BasicDBObject("$eq", BasicDBObject.parse(gson.toJson(newConflict.event2)))));
-    // FindIterable<Document> findIterable = conflictCollection
-    // .find(andDuplicate);
+    // if the conflict doesn't exist
     if (existingConflict.first() == null || existingConflict.first().isEmpty()) {
       BasicDBObject update = new BasicDBObject();
       BasicDBObject query = new BasicDBObject("conventionID",
@@ -255,19 +245,16 @@ public class DatabaseUtility {
       conflictCollection.updateOne(query, update);
       return true;
     } else {
-      // System.out.println("found document");
       List<BasicDBObject> conflictArray = new ArrayList<>();
       Document doc = existingConflict.first();
-//      System.out.println("adding conflict " + newConflict);
-//      System.out.println("found an existing conflict " + doc);
       if (existingConflict.first() == null) {
         System.out.println("null");
       }
-      // System.out.println(doc.toJson());
-//      String weight = doc.getString("conventionID");
+
       List<Document> conflicts = (List<Document>) doc.get("conflicts");
       for (Document d : conflicts) {
 
+        // increment weight
         Document e1 = (Document) d.get("event1");
         Event event1 = new Event(e1.getInteger("id"), e1.getString("name"),
             e1.getString("description"));
@@ -282,13 +269,12 @@ public class DatabaseUtility {
         BasicDBObject obj1 = BasicDBObject.parse(gson.toJson(conflict));
         conflictArray.add(obj1);
       }
+      // update the conflict if it exists
       BasicDBObject update = new BasicDBObject();
-      // BasicDBObject query = new BasicDBObject("$and", criteria);
       update.put("$set", new BasicDBObject("conflicts", conflictArray));
       conflictCollection.updateOne(andDuplicate, update);
       return true;
     }
-    // check if event is already there
   }
 
   /**
@@ -317,30 +303,14 @@ public class DatabaseUtility {
     return true;
   }
 
-  public Boolean addCollaborator(String userEmail, String conventionID) {
-    // try to load existing document from MongoDB
-    Document document = userCollection
-        .find(new BasicDBObject("email", new BasicDBObject("$eq", userEmail))).first();
-    if (document == null) {
-      return false;// user doesn't exist
-    }
-
-    List<BasicDBObject> criteria = new ArrayList<BasicDBObject>();
-    criteria.add(new BasicDBObject("email", new BasicDBObject("$eq", userEmail)));
-    criteria.add(new BasicDBObject("conventions", new BasicDBObject("$eq", conventionID)));
-
-    FindIterable<Document> findIterable = userCollection.find(new BasicDBObject("$and", criteria));
-    if (findIterable.first() == null || findIterable.first().isEmpty()) {
-      BasicDBObject update = new BasicDBObject();
-      BasicDBObject query = new BasicDBObject("$and", criteria);
-      update.put("$push", new BasicDBObject("convention", conventionID));
-      userCollection.updateOne(query, update);
-      return true;
-    }
-    return false;
-  }
-
-  // another attempt at addCollaborator
+  /**
+   * Method to add collaborator
+   *
+   * @param userEmail - email for the collaborator
+   * @param conventionID - conventionID to add
+   *
+   * @return - true if added, false otherwise
+   */
   public Boolean addConvIDCollaborator(String userEmail, String conventionID) {
     Document document = userCollection
         .find(new BasicDBObject("email", new BasicDBObject("$eq", userEmail))).first();
@@ -349,8 +319,12 @@ public class DatabaseUtility {
     }
 
     // the key to this document is the convention id
-    BasicDBObject query = new BasicDBObject();
     Document conventionExist = userCollection.find(all("conventions", conventionID)).first();
+
+    // convention doesn't exist
+    if (conventionExist == null) {
+      return false;
+    }
 
     userCollection.updateOne(new Document("email", userEmail),
         new Document("$push", new Document("conventions", conventionID)));
@@ -369,7 +343,7 @@ public class DatabaseUtility {
     Set<Conflict> edges = new HashSet<>();
     BasicDBObject query = new BasicDBObject();
     query.put("conventionID", conventionIDParam);
-    // System.out.println(conventionIDParam);
+
     // iterate through the events found
     List<Document> conflictList = (List<Document>) conflictCollection.find(query)
         .projection(fields(include("conflicts"), excludeId()))
@@ -380,6 +354,7 @@ public class DatabaseUtility {
       return new HashSet<>();
     }
 
+    // get all conflicts
     for (int i = 0; i < conflictList.size(); i++) {
       Document conflictDoc = conflictList.get(i);
       Document event1Doc = (Document) conflictDoc.get("event1");
@@ -418,6 +393,7 @@ public class DatabaseUtility {
     Document findConvInEvent = eventCollection.find(equery).first();
     Document findIterable = eventCollection.find(eq("event.name", newEvent.getName())).first();
 
+    // check if event is already there
     Map<String, Object> newConventionString = new HashMap<>();
     if ((findConvInEvent == null || findConvInEvent.isEmpty())
         && (findIterable == null || findIterable.isEmpty())) {
@@ -428,47 +404,12 @@ public class DatabaseUtility {
       eventCollection.insertOne(new Document(newConventionString));
       return true;
     } else if (findIterable == null || findIterable.isEmpty()) {
-//      System.out.println("obj:" + obj);
-//      System.out.println("conventionIDLL: " + conventionID);
       eventCollection.updateOne(eq("conventionID", conventionID), Updates.addToSet("events", obj));
       return true;
     } else {
       return false;
     }
-    // check if event is already there
   }
-
-//  public Boolean addEvent(String conventionID, Event newEvent) {
-//
-//    Gson gson = new Gson();
-//
-//    BasicDBObject obj = BasicDBObject.parse(gson.toJson(newEvent));
-//    System.out.println("addEvent");
-//
-//    // try to load existing document from MongoDB
-//    Document document = eventCollection.find(eq("conventionID", conventionID)).first();
-//    if (document == null) {
-//      System.out.println("cannot find given convention");
-//      return false;
-//    }
-//
-//    FindIterable<Document> findIterable = eventCollection
-//        .find(eq("event.name", newEvent.getName()));
-//    System.out.println(findIterable.first().toJson());
-//    if (findIterable.first() == null || findIterable.first().isEmpty()) {
-//      System.out.println("no duplicate");
-//      BasicDBObject update = new BasicDBObject();
-//      BasicDBObject query = new BasicDBObject();
-//      update.put("$push", new BasicDBObject("events", obj));
-//      eventCollection.updateOne(query, update);
-//      System.out.println("in addEvent2");
-//      return true;
-//    } else {
-//      return false;
-//    }
-//
-//    // check if event is already there
-//  }
 
   /**
    * gets the convention data for a certain convention
@@ -485,14 +426,11 @@ public class DatabaseUtility {
       return null;
     }
 
+    // create the convention object to return
     String id = doc.getString("id");
     String name = doc.getString("name");
     Date sdtDateTime = (Date) doc.get("startDateTime");
-    // System.out.println("stdDateTime" + sdtDateTime);
     Date et = (Date) doc.get("endDateTime");
-    // System.out.println(sdtDateTime);
-
-//    LocalDateTime ldt = sdtDateTime.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
     ZoneOffset offset = ZoneOffset.ofHours(0);
     LocalDateTime ldt = sdtDateTime.toInstant().atZone(ZoneId.ofOffset("GMT", offset))
         .toLocalDateTime();
@@ -501,13 +439,6 @@ public class DatabaseUtility {
     int eventDuration = doc.getInteger("eventDuration");
     LocalDateTime endDateTime = et.toInstant().atZone(ZoneId.ofOffset("GMT", offset))
         .toLocalDateTime();
-
-    // System.out.println("start local: " + ldt);
-    // System.out.println("end local: " + endDateTime);
-
-    // Document et = (Document) doc.get("endTime");
-    // LocalTime endTime = LocalTime.of(et.getInteger("hour"), et.getInteger("minute"),
-    // et.getInteger("second"), et.getInteger("nano"));
 
     return new Convention(id, name, ldt, numDays, eventDuration, endDateTime);
   }
@@ -561,6 +492,7 @@ public class DatabaseUtility {
     Document findIterable = attendeeCollection.find(eq("attendeeEmail", attendeeEmail)).first();
     Map<String, Object> newConventionString = new HashMap<>();
 
+    // add email
     if ((findConvInAttendee == null || findConvInAttendee.isEmpty())
         && (findIterable == null || findIterable.isEmpty())) {
       List<String> emailArray = new ArrayList<>();

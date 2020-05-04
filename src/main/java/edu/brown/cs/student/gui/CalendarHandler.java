@@ -26,8 +26,11 @@ public class CalendarHandler implements Route {
   @Override
   public String handle(Request req, Response res) {
     String conventionID = req.params(":id");
-    System.out.println("collegeName " + WebScraper.collegeName);
+    String college = WebScraper.collegeName;
     WebScraper scraper = new WebScraper(conventionID);
+    WebScraper.setCollege(college);
+    System.out.println("collegeName " + WebScraper.collegeName);
+
     String correspondingID = scraper.scrape();
     if (correspondingID == null || correspondingID.isEmpty()) {
       System.out.println("this is not an exam");

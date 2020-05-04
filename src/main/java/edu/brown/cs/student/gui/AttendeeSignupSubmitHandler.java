@@ -49,6 +49,8 @@ public class AttendeeSignupSubmitHandler implements TemplateViewRoute {
       if (queryMap.value(event.getID() + "") != null) {
         // the attendee wants to go to this event
         eventsToAttend.add(event);
+
+        System.out.println("attendee wants to attend " + event.getName()); // delete;
       }
     }
 
@@ -60,6 +62,9 @@ public class AttendeeSignupSubmitHandler implements TemplateViewRoute {
 
       for (int j = i + 1; j < numEventsToAttend; j++) {
         Conflict newConflict = new Conflict(currEvent, eventsToAttend.get(j), 1);
+
+        System.out.println("adding conflict between " + currEvent.getName() + " and "
+            + eventsToAttend.get(j).getName()); // delete;
 
         if (!database.addConflict(conventionID, newConflict)) {
           System.err.println("error adding the conflict between " + currEvent.getName() + " and "

@@ -1,5 +1,6 @@
 package edu.brown.cs.student.gui;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -49,25 +50,19 @@ public class EmailAttendeeHandler implements Route {
 
     QueryParamsMap queryMap = request.queryMap();
     String eventString = queryMap.value("events");
-    System.out.println("event string is " + eventString);
     Gson g = new Gson();
     List<CalendarEvent> events = g.fromJson(eventString, new TypeToken<List<CalendarEvent>>() {
     }.getType());
 
-    System.out.println("num events is" + events.size());
-
     String emailContent = "";
     for (CalendarEvent event : events) {
       emailContent = emailContent + "<p>" + event.getTitle() + ": "
-          + friendlyDate(event.getStart().toString()) + " to "
-          + friendlyDate(event.getEnd().toString()) + "</p>";
+          + friendlyDate(event.getStart(), event.getEnd()) + "</p>";
     }
 
     Convention myConv = db.getConvention(conventionID);
 
-    List<String> attendeeEmails = db.getAttendeeEmailsFromConventionID(conventionID); // add
-                                                                                      // this!!!!!!!!!!!!!!!
-    attendeeEmails.add("rachel_fuller@brown.edu"); // delete
+    List<String> attendeeEmails = db.getAttendeeEmailsFromConventionID(conventionID);
     // attendeeEmails.add("abby_goldberg@brown.edu");
     String message;
     if (attendeeEmails.isEmpty()) {
@@ -94,8 +89,6 @@ public class EmailAttendeeHandler implements Route {
    */
   private boolean sendEmails(List<CalendarEvent> events, List<String> emails, String convName,
       String emailContent) {
-    // use the
-    // events!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
     String sender = "sked.organizer@gmail.com";
 
     String host = "smtp.gmail.com";
@@ -140,12 +133,75 @@ public class EmailAttendeeHandler implements Route {
 
   }
 
-  String friendlyDate(String dateString) {
-    // 2020-12-21T09:00
+  /**
+   * This method turns the start date/time and end date/time into a String that is easily
+   * understandable for the schedule receiver
+   *
+   * @param startString - a String, in the format of a LocalDateTime turned into a String, which
+   *        represents the start date and time for an event
+   * @param endString - a String, in the format of a LocalDateTime turned into a String, which
+   *        represents the end date and time for an event
+   *
+   * @return a String, which represents the time of the event in a form that is easily
+   *         understandable for the schedule receiver
+   */
+  private String friendlyDate(String startString, String endString) {
     String res = "";
-    String[] dateTime = dateString.split("T");
-    res = res + dateTime[0] + " " + dateTime[1];
-    return res;
+    String[] startDateTime = startString.split("T");
+    String[] endDateTime = endString.split("T");
+
+    String[] date = startDateTime[0].split("-");
+    String[] startTime = startDateTime[1].split(":");
+    String[] endTime = endDateTime[1].split(":");
+
+    try {
+      int year = Integer.parseInt(date[0]);
+      int month = Integer.parseInt(date[1]);
+      int day = Integer.parseInt(date[2]);
+      int startHour = Integer.parseInt(startTime[0]);
+      int startMin = Integer.parseInt(startTime[1]);
+      int endHour = Integer.parseInt(endTime[0]);
+      int endtMin = Integer.parseInt(endTime[1]);
+
+      LocalDateTime locDateTime = LocalDateTime.of(year, month, day, startHour, startMin);
+      String startAmPm = "AM";
+      String endAmPm = "AM";
+
+      if (startHour > 12) {
+        startAmPm = "PM";
+        startHour = startHour - 12;
+      }
+
+      if (endHour > 12) {
+        endAmPm = "PM";
+        endHour = endHour - 12;
+      }
+
+      String startMinute = startMin + "";
+      String endMinute = endtMin + "";
+
+      if (startMinute.length() == 1) {
+        startMinute = "0" + startMinute;
+      }
+
+      if (endMinute.length() == 1) {
+        endMinute = "0" + endMinute;
+      }
+
+      String dayAllCaps = locDateTime.getDayOfWeek().toString();
+      String dayString = dayAllCaps.substring(0, 1)
+          + dayAllCaps.substring(1, dayAllCaps.length()).toLowerCase();
+
+      String monthAllCaps = locDateTime.getMonth().toString();
+      String monthString = monthAllCaps.substring(0, 1)
+          + monthAllCaps.substring(1, monthAllCaps.length()).toLowerCase();
+
+      return dayString + ", " + monthString + " " + day + " from " + startHour + ":" + startMinute
+          + " " + startAmPm + " to " + endHour + ":" + endMinute + " " + endAmPm;
+    } catch (NumberFormatException err) {
+      System.err.println("ERROR: invalid date-time for event");
+      return "Unable to get date information for an event";
+    }
   }
 
 }

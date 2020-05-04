@@ -99,9 +99,9 @@ public class SchedExamSubmitHandler implements TemplateViewRoute {
           "Please select a school from the list.");
       return new ModelAndView(variables, "create_exam_conv.ftl");
     }
-    System.out.println(schoolID);
+    System.out.println("schoolname: " + schoolName);
 
-    scraper.setCollege(schoolID);
+    WebScraper.setCollege(schoolName);
     db.addConvIDCollaborator(userEmail, id);
 
     // schedule this exam

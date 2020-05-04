@@ -96,9 +96,9 @@ public class SchedExamSubmitHandler implements TemplateViewRoute {
       Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "schoolSuggestions",
           schoolSuggestions, "currDay", date, "id", id.toString(), "errorMessage",
           "Please select a school from the list.");
-      System.out.println(schoolID);
       return new ModelAndView(variables, "create_exam_conv.ftl");
     }
+    System.out.println(schoolID);
 
     scraper.setCollege(schoolID);
     db.addConvIDCollaborator(userEmail, id);

@@ -94,8 +94,9 @@ public class WebScraper {
    * @return coursesToIDs
    */
   public Map<String, String> getcoursesToIDs() {
-    return this.coursesToIDs;
-  }
+      this.getAllColleges();
+      return this.coursesToIDs;
+    }  
 
   /**
    * Get all the conflicts from a particular project
@@ -294,7 +295,7 @@ public class WebScraper {
 //      System.out.println("conventionID from nameToIDs: " + null);
       return null;
     }
-//    System.out.println("conventionID from nameToIDs: " + convention.getString("conventionID"));
+   System.out.println("conventionID from nameToIDs: " + convention.getString("conventionID"));
     return convention.getString("conventionID");
   }
 

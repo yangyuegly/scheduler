@@ -30,8 +30,8 @@ public class CalendarHandler implements Route {
     WebScraper scraper = new WebScraper(conventionID);
     WebScraper.setCollege(college);
     System.out.println("collegeName " + WebScraper.collegeName);
-
-    String correspondingID = scraper.scrape();
+    scraper.scrape();
+    String correspondingID = null;
     if (correspondingID == null || correspondingID.isEmpty()) {
       System.out.println("this is not an exam");
       correspondingID = null;

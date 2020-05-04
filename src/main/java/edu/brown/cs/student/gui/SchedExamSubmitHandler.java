@@ -26,6 +26,7 @@ public class SchedExamSubmitHandler implements TemplateViewRoute {
 
   @Override
   public ModelAndView handle(Request request, Response response) {
+    DatabaseUtility db = new DatabaseUtility();
     String userEmail = request.cookie("user");
     String id = request.params(":id");
 
@@ -56,9 +57,8 @@ public class SchedExamSubmitHandler implements TemplateViewRoute {
       eventDur = Integer.parseInt(eventDuration);
       newConv = new Convention(id, schoolName + " Final Exams", startDate, numDays, eventDur,
           startTime, endTime);
-
       // add this convention to the database
-      DatabaseUtility db = new DatabaseUtility();
+      
       db.addConventionData(newConv);
 
     } catch (NumberFormatException err) {
@@ -99,12 +99,12 @@ public class SchedExamSubmitHandler implements TemplateViewRoute {
       Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "schoolSuggestions",
           schoolSuggestions, "currDay", date, "id", id.toString(), "errorMessage",
           "Please select a school from the list.");
-
       return new ModelAndView(variables, "create_exam_conv.ftl");
     }
+    System.out.println(schoolID);
 
     scraper.setCollege(schoolID);
-    scraper.scrape();
+    db.addConvIDCollaborator(userEmail, id);
 
     // schedule this exam
     response.redirect("/schedule/" + id);

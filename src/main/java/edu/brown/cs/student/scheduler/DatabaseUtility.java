@@ -7,19 +7,6 @@ import static com.mongodb.client.model.Projections.excludeId;
 import static com.mongodb.client.model.Projections.fields;
 import static com.mongodb.client.model.Projections.include;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.bson.Document;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.gson.Gson;
@@ -33,14 +20,23 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.ReplaceOptions;
 import com.mongodb.client.model.Updates;
-
 import edu.brown.cs.student.main.Main;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import org.bson.Document;
 
 /**
  * This class contains all the Database CRUD functions necessary
  */
 public class DatabaseUtility {
-
   /**
    * Collections stored in MongoDB database
    */
@@ -91,7 +87,6 @@ public class DatabaseUtility {
    * @return - true if user has access and false otherwise
    */
   public boolean checkPermission(String userEmail, String conventionID) {
-
     BasicDBObject andQuery = new BasicDBObject();
     List<BasicDBObject> obj = new ArrayList<BasicDBObject>();
     obj.add(new BasicDBObject("email", userEmail));
@@ -100,7 +95,6 @@ public class DatabaseUtility {
 
     long count = userCollection.countDocuments(andQuery);
     return count != 0;
-
   }
 
   /**
@@ -127,6 +121,7 @@ public class DatabaseUtility {
     for (Document event : eventList) {
       Event e = new Event(event.getInteger("id"), event.getString("name"),
           event.getString("description"));
+      System.out.println("get event:" + e);
       result.add(e);
     }
     return result;
@@ -141,7 +136,6 @@ public class DatabaseUtility {
    *         added; false if operation fails
    */
   public Boolean addConventionData(Convention convention) {
-
     Map<String, Object> conventionString = new HashMap<>();
     // fields to add
     conventionString.put("id", convention.getID());
@@ -188,7 +182,6 @@ public class DatabaseUtility {
     Boolean err = addConflictHelper(conventionID, newConflict);
     Boolean err2 = addConflictHelper(conventionID, reverse);
     return err && err2;
-
   }
 
   /**
@@ -253,7 +246,6 @@ public class DatabaseUtility {
 
       List<Document> conflicts = (List<Document>) doc.get("conflicts");
       for (Document d : conflicts) {
-
         // increment weight
         Document e1 = (Document) d.get("event1");
         Event event1 = new Event(e1.getInteger("id"), e1.getString("name"),
@@ -294,7 +286,7 @@ public class DatabaseUtility {
     Document conventionExist = userCollection.find(all("conventions", conventionID)).first();
 
     if (conventionExist != null && !conventionExist.isEmpty()) {
-      return false;// there already exists a convention with the given id
+      return false; // there already exists a convention with the given id
     }
 
     userCollection.updateOne(new Document("email", userEmail),
@@ -315,7 +307,7 @@ public class DatabaseUtility {
     Document document = userCollection
         .find(new BasicDBObject("email", new BasicDBObject("$eq", userEmail))).first();
     if (document == null) {
-      return false;// user doesn't exist
+      return false; // user doesn't exist
     }
 
     // the key to this document is the convention id
@@ -354,8 +346,9 @@ public class DatabaseUtility {
       return new HashSet<>();
     }
 
+    int conflictNum = Math.min(conflictList.size(), 100);
     // get all conflicts
-    for (int i = 0; i < conflictList.size(); i++) {
+    for (int i = 0; i < conflictNum; i++) {
       Document conflictDoc = conflictList.get(i);
       Document event1Doc = (Document) conflictDoc.get("event1");
       Document event2Doc = (Document) conflictDoc.get("event2");
@@ -365,7 +358,7 @@ public class DatabaseUtility {
       Event e2 = new Event(event2Doc.getInteger("id"), event2Doc.getString("name"),
           event2Doc.getString("description"));
       Conflict c = new Conflict(e1, e2, weight);
-      // System.out.println("got conflicts:" + c);
+      System.out.println("got conflicts:" + c);
       edges.add(c);
     }
 
@@ -484,7 +477,7 @@ public class DatabaseUtility {
     Document conventionExist = userCollection.find(all("conventions", conventionID)).first();
 
     if (conventionExist == null && conventionExist.isEmpty()) {
-      return false;// there are no conventions with the given id
+      return false; // there are no conventions with the given id
     }
 
     BasicDBObject equery = new BasicDBObject("conventionID", conventionID);
@@ -538,4 +531,57 @@ public class DatabaseUtility {
     return emails;
   }
 
+  // Should map from the original unordered id to ordered
+  public HashMap<Integer, Integer> updateEventID(String conventionID) {
+    List<BasicDBObject> eventArray = new ArrayList<>();
+    BasicDBObject query = new BasicDBObject();
+    query.put("conventionID", conventionID);
+    Document doc = eventCollection.find(query).first();
+    List<Document> eventList = (List<Document>) doc.get("events");
+    int eventID = 0;
+    Gson gson = new Gson();
+    HashMap<Integer, Integer> fixID = new HashMap<>();
+    for (Document event : eventList) {
+      Event e = new Event(eventID, event.getString("name"), event.getString("description"));
+      fixID.put(event.getInteger("id"), eventID);
+      eventID++;
+      BasicDBObject obj1 = BasicDBObject.parse(gson.toJson(e));
+      eventArray.add(obj1);
+    }
+
+    BasicDBObject update = new BasicDBObject();
+    update.put("$set", new BasicDBObject("events", eventArray));
+    eventCollection.updateOne(query, update);
+
+    return fixID;
+  }
+
+  public Boolean updateConflict(String conventionID, HashMap<Integer, Integer> map) {
+    List<BasicDBObject> conflictArray = new ArrayList<>();
+    BasicDBObject query = new BasicDBObject();
+    query.put("conventionID", conventionID);
+    Document doc = conflictCollection.find(query).first();
+    Gson gson = new Gson();
+    List<Document> conflicts = (List<Document>) doc.get("conflicts");
+    for (Document d : conflicts) {
+      // change event id according to mapping
+      Document e1 = (Document) d.get("event1");
+      Integer newID1 = map.get(e1.getInteger("id"));
+
+      Event event1 = new Event(newID1, e1.getString("name"), e1.getString("description"));
+
+      Document e2 = (Document) d.get("event2");
+      Integer newID2 = map.get(e2.getInteger("id"));
+
+      Event event2 = new Event(newID2, e2.getString("name"), e1.getString("description"));
+      Conflict conflict = new Conflict(event1, event2, d.getInteger("weight"));
+      BasicDBObject obj1 = BasicDBObject.parse(gson.toJson(conflict));
+      conflictArray.add(obj1);
+    }
+    // update the conflict if it exists
+    BasicDBObject update = new BasicDBObject();
+    update.put("$set", new BasicDBObject("conflicts", conflictArray));
+    conflictCollection.updateOne(query, update);
+    return true;
+  }
 }

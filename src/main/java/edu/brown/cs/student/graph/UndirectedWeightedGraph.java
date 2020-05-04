@@ -92,15 +92,17 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
    * @param edges
    */
   public void addAllEdges(Set<E> edges) {
-
+    System.out.println("in addAllEdges");
+ 
     for (E e : edges) {
       this.weightMatrix[e.getHead().getID()][e.getTail().getID()] = e.getWeight();
       this.weightMatrix[e.getTail().getID()][e.getHead().getID()] = e.getWeight();
+      System.out.println(nodes.get(e.getHead().getID()) + " this");
       nodes.get(e.getHead().getID()).addToAdjList(e);
     }
-    // for (Map.Entry<Integer, V> n : nodes.entrySet()) {
-    //   System.out.println(n.getValue().getID() + " " + n.getValue().getAdjList());
-    // }
+    for (Map.Entry<Integer, V> n : nodes.entrySet()) {
+      System.out.println(n.getValue().getID() + " " + n.getValue().getAdjList());
+    }
     setDegree();
   }
 
@@ -155,6 +157,7 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
             // decrement the concurrency limit for a color
             colors.get(indices.get(0))[indices.get(1)]--;
           } else {
+            System.out.println("stuck");
             throw new NullPointerException(
                 "Unable to find a conflict-free schedule for this convention.");
           }

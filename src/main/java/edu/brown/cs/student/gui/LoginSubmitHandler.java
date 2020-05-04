@@ -15,7 +15,7 @@ import spark.TemplateViewRoute;
 /**
  * This class is used to handle requests to log in. It implements TemplateViewRoute.
  */
-public class LoginHandler implements TemplateViewRoute {
+public class LoginSubmitHandler implements TemplateViewRoute {
 
   @Override
   public ModelAndView handle(Request request, Response response) {

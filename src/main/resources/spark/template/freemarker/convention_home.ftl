@@ -4,6 +4,7 @@
   <h2>${convName}</h2>
   <br>
   <h3>Existing Events:</h3>
+  <p>Click on an event to see the description</p>
   <div id="eventNames">${existingEvents}</div>
   <p id="eventsError" class="errorMessage"></p>
 

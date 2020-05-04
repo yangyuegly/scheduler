@@ -45,7 +45,11 @@ public class EmailAttendeeHandler implements Route {
     boolean authorized = db.checkPermission(userEmail, conventionID);
 
     if (!authorized) {
-      response.redirect("/unauthorized"); // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      Map<String, Object> variables = ImmutableMap.of("message",
+          "You are not authorized to send emails.");
+      Gson gson = new Gson();
+
+      return gson.toJson(variables);
     }
 
     QueryParamsMap queryMap = request.queryMap();
@@ -63,8 +67,8 @@ public class EmailAttendeeHandler implements Route {
     Convention myConv = db.getConvention(conventionID);
 
     List<String> attendeeEmails = db.getAttendeeEmailsFromConventionID(conventionID);
-    // attendeeEmails.add("abby_goldberg@brown.edu");
     String message;
+
     if (attendeeEmails.isEmpty()) {
       message = "No email sent because no attendees have signed up.";
     } else if (this.sendEmails(events, attendeeEmails, myConv.getName(), emailContent)) {
@@ -124,8 +128,7 @@ public class EmailAttendeeHandler implements Route {
       message.setContent(header + emailContent + end, "text/html");
       Transport.send(message);
     } catch (MessagingException mex) {
-      System.err.println("send failed"); // delete // do
-                                         // better!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      System.err.println("ERROR: email sending failed");
       return false;
     }
 

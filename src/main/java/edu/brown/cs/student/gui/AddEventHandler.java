@@ -31,7 +31,11 @@ public class AddEventHandler implements Route {
     boolean permission = db.checkPermission(userEmail, conventionID);
 
     if (!permission) {
-      response.redirect("/unauthorized");
+      Map<String, Object> variables = ImmutableMap.of("errorMessage",
+          "You do not have permission to view this convention.");
+
+      Gson gson = new Gson();
+      return gson.toJson(variables);
     }
 
     List<Event> priorEvents = db.getEventsFromConventionID(conventionID);

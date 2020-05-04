@@ -18,6 +18,8 @@ public class HomeHandler implements TemplateViewRoute {
 
   @Override
   public ModelAndView handle(Request request, Response response) {
+    // fix for new
+    // page!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 //    String userEmail = request.cookie("user");
 //
 //    if (userEmail != null) {

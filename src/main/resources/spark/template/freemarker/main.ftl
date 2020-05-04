@@ -25,7 +25,7 @@
       <i class="fa fa-caret-down"></i>
     </button>
     <div class="dropdown-content">
-      <a href="/home" id="notLoggedIn">Log in</a>
+      <a href="/login" id="notLoggedIn">Log in</a>
       <a href="/create_account" id="createAccount">Create account</a>
       <a href="/account" id="userEmailHeaderLink">email</a>
       <a href="/logout" id="logOut">Log Out</a>

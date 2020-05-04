@@ -29,7 +29,10 @@ public class AddCollaboratorHandler implements Route {
     boolean permission = db.checkPermission(userEmail, conventionID);
 
     if (!permission) {
-      response.redirect("/unauthorized");
+      Map<String, Object> variables = ImmutableMap.of("errorMessage",
+          "You do not have permission to add a collaborator.");
+      Gson gson = new Gson();
+      return gson.toJson(variables);
     }
 
     // adding a collaborator
@@ -37,7 +40,6 @@ public class AddCollaboratorHandler implements Route {
 
     if (!db.addConvIDCollaborator(collaboratorEmail, conventionID)) {
       // an error occurred
-      System.err.println("add collaborator had an error"); // delete
       Map<String, Object> variables = ImmutableMap.of("errorMessage",
           "An error occurred.  Please try again.");
       Gson gson = new Gson();

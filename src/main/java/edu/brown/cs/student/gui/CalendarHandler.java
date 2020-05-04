@@ -33,20 +33,28 @@ public class CalendarHandler implements Route {
     String correspondingID = scraper.scrape();
     // String correspondingID = null;
     if (correspondingID == null || correspondingID.isEmpty()) {
-      System.out.println("this is not an exam");
+      System.out.println("this is not an exam"); // delete
       correspondingID = null;
     }
     String userEmail = req.cookie("user");
 
     if (userEmail == null) {
-      res.redirect("/home");
+      Map<String, Object> variables = ImmutableMap.of("eventsForSchedule", "", "defaultDate", "",
+          "error", "You do not have permission to view this schedule.");
+      Gson gson = new Gson();
+
+      return gson.toJson(variables);
     }
 
     DatabaseUtility db = new DatabaseUtility();
     boolean authorized = db.checkPermission(userEmail, conventionID);
 
     if (!authorized) {
-      res.redirect("/unauthorized");
+      Map<String, Object> variables = ImmutableMap.of("eventsForSchedule", "", "defaultDate", "",
+          "error", "You do not have permission to view this schedule.");
+      Gson gson = new Gson();
+
+      return gson.toJson(variables);
     }
 
     Convention myConv = db.getConvention(conventionID);

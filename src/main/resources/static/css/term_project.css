@@ -5,11 +5,6 @@ body {
   padding: 0;
   margin: 0;
   background-image: url("/images/interlaced.png");
-  /* background-image: url("/images/december_calendar.jpeg");
-    background-repeat: no-repeat;
-    background-attachment: fixed; 
-    background-size: cover;
-    background-position: center center; */
 }
 
 .errorMessage {
@@ -92,11 +87,13 @@ a {
   background-color: inherit;
   font-family: inherit;
   margin: 0;
+  border-radius: 0px;
 }
 
 .navbar a:hover,
 .dropdown:hover .dropbtn {
   background-color: #12abdc;
+  color: white;
 }
 
 .dropdown-content {
@@ -155,42 +152,4 @@ a {
 /* Make it so the email attendees button is hidden by default and is inly displayed if the program is able to schedule the convention. */
 #emailAtt {
   display: none;
-}
-
-
-/* --------- These are for the set-up convention page ------ */
-
-.colInput {
-  width: 40%;
-}
-
-.row:after {
-  content: "";
-  display: table;
-  clear: both;
-}
-
-.col-25 {
-  float: left;
-  width: 15%;
-  margin-top: 6px;
-  padding: 10px 0;
-}
-
-.col-75 {
-  float: left;
-  width: 85%;
-  margin-top: 6px;
-  padding: 5px 0;
-}
-
-/* Responsive layout - when the screen is less than 600px wide, make the two
-columns stack on top of each other instead of next to each other */
-@media screen and (max-width: 600px) {
-  .col-25,
-  .col-75,
-  input[type="submit"] {
-    width: 100%;
-    margin-top: 0;
-  }
 }

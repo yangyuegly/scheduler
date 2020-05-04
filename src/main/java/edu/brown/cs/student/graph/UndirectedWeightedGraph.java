@@ -126,17 +126,20 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
    */
   public Set<V> graphColoring(int ts, int cl) throws NullPointerException {
     Set<V> coloredSet = new HashSet<V>();
+    System.out.println("here");
     int numColoredCourses = 0;
     Iterator<Map.Entry<Integer, V>> iter = degree.iterator();
     while (iter.hasNext()) {
       V curr = iter.next().getValue();
       // if the current node is not colored
+      System.out.println(curr);
       if (!result.contains(curr)) {
         // for the first course
         if (numColoredCourses == 0) {
           List<Integer> indices = getFirstNodeColor();
           curr.setColor(indices);
           coloredMap.put(curr.getID(), curr);
+          System.out.println("first node:" + curr);
           // coloredSet.add(curr);
           result.add(curr);
           numColoredCourses++;
@@ -174,7 +177,7 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
       }
     }
     for (Map.Entry<Integer, V> c : coloredMap.entrySet()) {
-      // System.out.println(c.getValue());
+      System.out.println(c.getValue());
       coloredSet.add(c.getValue());
     }
     return coloredSet;

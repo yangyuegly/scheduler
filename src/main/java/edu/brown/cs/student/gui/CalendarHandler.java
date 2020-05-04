@@ -12,6 +12,7 @@ import edu.brown.cs.student.scheduler.CalendarEvent;
 import edu.brown.cs.student.scheduler.Convention;
 import edu.brown.cs.student.scheduler.DatabaseUtility;
 import edu.brown.cs.student.scheduler.ScheduleCommand;
+import edu.brown.cs.student.webscraper.WebScraper;
 import spark.Request;
 import spark.Response;
 import spark.Route;
@@ -25,7 +26,12 @@ public class CalendarHandler implements Route {
   @Override
   public String handle(Request req, Response res) {
     String conventionID = req.params(":id");
-
+    WebScraper scraper = new WebScraper(conventionID);
+    String correspondingID = scraper.scrape();
+    System.out.println(WebScraper.collegeName);
+    if (correspondingID == null || correspondingID.isEmpty()) {
+      System.out.println("this is not an exam");
+    }
     String userEmail = req.cookie("user");
 
     if (userEmail == null) {
@@ -41,9 +47,9 @@ public class CalendarHandler implements Route {
 
     Convention myConv = db.getConvention(conventionID);
     int numTimeSlotsPerDay = myConv.getNumTimeSlotsPerDay();
-
+    
     ScheduleCommand schedComm = new ScheduleCommand(myConv, 100, myConv.getNumDays(),
-        numTimeSlotsPerDay);
+        numTimeSlotsPerDay, correspondingID);
     List<CalendarEvent> schedule;
 
     try {

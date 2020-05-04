@@ -24,7 +24,8 @@ public class ScheduleCommand {
   Integer TS;
   Integer CONCURENCY_LIMIT, MAX_SCHEDULE_DAYS;
   UndirectedWeightedGraph<Event, Conflict> graph;
-
+  String correspondingID;
+  Convention correspondingConvention; 
   /**
    * Constructor for scheduling events
    *
@@ -34,7 +35,7 @@ public class ScheduleCommand {
    * @param TS
    */
   public ScheduleCommand(Convention convention, Integer CONCURENCY_LIMIT, Integer MAX_SCHEDULE_DAYS,
-      Integer TS) {
+      Integer TS, String correspondingID) {
     // this.graph = graph;
     this.TS = TS;
     this.nodes = new ArrayList<>();
@@ -42,6 +43,8 @@ public class ScheduleCommand {
     this.convention = convention;
     this.CONCURENCY_LIMIT = CONCURENCY_LIMIT;
     this.MAX_SCHEDULE_DAYS = MAX_SCHEDULE_DAYS;
+    this.correspondingID = correspondingID;
+    this.correspondingConvention = new Convention(correspondingID);
   }
 
   /**
@@ -104,14 +107,25 @@ public class ScheduleCommand {
    * This method sets the nodes field to the List of Events in the Convention.
    */
   private void extractNodes() {
-    this.nodes = convention.getEvents();
+    if (correspondingID != null || !correspondingID.isEmpty()) {
+      this.nodes = correspondingConvention.getEvents();
+    } else {
+      this.nodes = this.convention.getEvents();
+    }
+
   }
+
 
   /**
    * This method sets the edges field to the List of Conflicts in the Convention.
    */
   private void extractEdges() {
-    this.edges = this.convention.getConflicts();
+    if (correspondingID != null || !correspondingID.isEmpty()) {
+      this.edges = correspondingConvention.getConflicts();
+    } else {
+      this.edges = this.convention.getConflicts();
+    }
+
   }
 
   /**

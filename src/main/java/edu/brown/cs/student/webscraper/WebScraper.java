@@ -42,14 +42,16 @@ public class WebScraper {
    * the ids of each course from coursicle conventionID to store the convention database to access
    * the MongoDB database
    */
-//  private static String USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1985.125 Safari/537.36";
-  private String collegeName = "";
+  //  private static String USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1985.125 Safari/537.36";
+  /////!!!!!!make it private back
+  public static String collegeName = "";
   public Map<String, List<String>> deptToCourses = new HashMap<>();
   private Map<String, String> conflict = new HashMap<>();
   private Map<String, String> coursesToIDs = new HashMap<>();
   private String conventionID;
   private DatabaseUtility du = new DatabaseUtility();
   private MongoDatabase database;
+  
 
   /**
    * Constructor for webscraper
@@ -82,8 +84,8 @@ public class WebScraper {
    *
    * @param collegeName - name of college to be set to
    */
-  public void setCollege(String collegeName) {
-    this.collegeName = collegeName;
+  public static void setCollege(String collegeName) {
+    collegeName = collegeName;
   }
 
   /**

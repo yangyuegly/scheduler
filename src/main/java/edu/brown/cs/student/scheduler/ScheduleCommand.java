@@ -57,6 +57,7 @@ public class ScheduleCommand {
    * @throws NullPointerException if there is no possible schedule
    */
   public List<CalendarEvent> execute() throws NullPointerException {
+    System.out.println("in schedule command");
     extractNodes();
     extractEdges();
 
@@ -85,7 +86,7 @@ public class ScheduleCommand {
     Collections.sort(eventsToSort, new CompareStartTime());
 
     for (Event event : eventsToSort) {
-      System.out.println("start time" + event.getStart());
+      // System.out.println("start time" + event.getStart());
       CalendarEvent newEvent = new CalendarEvent(event.getName(), event.getStart().toString(),
           event.getEnd().toString());
       calEvents.add(newEvent);
@@ -127,7 +128,6 @@ public class ScheduleCommand {
     } else {
       this.edges = correspondingConvention.getConflicts();
     }
-
   }
 
   /**

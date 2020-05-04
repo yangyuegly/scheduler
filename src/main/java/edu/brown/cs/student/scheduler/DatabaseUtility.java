@@ -183,11 +183,109 @@ public class DatabaseUtility {
    * @return
    */
   public Boolean addConflict(String conventionID, Conflict newConflict) {
-    Conflict reverse = new Conflict(newConflict.getTail(), newConflict.getHead(),
+    // Conflict reverse = new Conflict(newConflict.getTail(), newConflict.getHead(),
+    // newConflict.getWeight());
+    Boolean err = addConflictHelper2(conventionID, newConflict);
+    // Boolean err2 = addConflictHelper2(conventionID, reverse);
+    // return err && err2;
+    return err;
+
+  }
+
+  /**
+   * Helper method to add a conflict and its reverse to the database. Updates the existing conflict
+   * weight if the conflict exists.
+   *
+   * @param conventionID -- the id of the convention the conflict is in
+   * @param newConflict -- the new conflict
+   *
+   * @return -- true if added, false if not
+   */
+  private boolean addConflictHelper2(String conventionID, Conflict newConflict) {
+    Conflict reverseConflict = new Conflict(newConflict.getTail(), newConflict.getHead(),
         newConflict.getWeight());
-    Boolean err = addConflictHelper(conventionID, newConflict);
-    Boolean err2 = addConflictHelper(conventionID, reverse);
-    return err && err2;
+    Gson gson = new Gson();
+
+    // checking if the convention is in the database
+    BasicDBObject cQuery = new BasicDBObject("id", conventionID);
+    Document conventionDoc = conventionCollection.find(cQuery).first();
+
+    if (conventionDoc == null) {
+      System.err.println(newConflict + "could not be added due to convention not found.");
+      return false;
+    }
+
+    BasicDBObject newConflictObj = BasicDBObject.parse(gson.toJson(newConflict));
+    BasicDBObject reverseConflictObj = BasicDBObject.parse(gson.toJson(reverseConflict));
+    BasicDBObject query = new BasicDBObject();
+    query.put("conventionID", conventionID);
+
+    // iterate through the events found
+    List<Document> conflictList = (List<Document>) conflictCollection.find(query)
+        .projection(fields(include("conflicts"), excludeId()))
+        .map(document -> document.get("conflicts")).first();
+
+    // convention is not in the conflicts at all
+    if (conflictList == null) {
+      System.out.println("the convention was not in the conflicts table, adding it now");
+      Map<String, Object> newConventionString = new HashMap<>();
+      newConventionString.put("conventionID", conventionID);
+      conflictCollection.insertOne(new Document(newConventionString));
+      conflictList = new ArrayList<>();
+    }
+
+    List<BasicDBObject> dbConflictList = new ArrayList<>();
+    boolean foundNormalMatch = false;
+    boolean foundReverseMatch = false;
+    for (Document conflictDoc : conflictList) {
+      Document e1 = (Document) conflictDoc.get("event1");
+      Event event1 = new Event(e1.getInteger("id"), e1.getString("name"),
+          e1.getString("description"));
+      Document e2 = (Document) conflictDoc.get("event2");
+      Event event2 = new Event(e2.getInteger("id"), e2.getString("name"),
+          e1.getString("description"));
+      Conflict currConflict = new Conflict(event1, event2, conflictDoc.getInteger("weight"));
+
+      if (currConflict.equals(newConflict)) { // matches with existing conflict
+        currConflict.weight++;
+        foundNormalMatch = true;
+      }
+
+      if (currConflict.equals(reverseConflict)) { // matches with reversed conflict
+        currConflict.weight++;
+        foundReverseMatch = true;
+      }
+
+      BasicDBObject obj1 = BasicDBObject.parse(gson.toJson(currConflict));
+      dbConflictList.add(obj1);
+
+    }
+
+    if (foundNormalMatch && foundReverseMatch) { // found matches, need to update
+      BasicDBObject andDuplicate = new BasicDBObject();
+      andDuplicate.append("conventionID", conventionID);
+
+      BasicDBObject update = new BasicDBObject();
+      update.put("$set", new BasicDBObject("conflicts", dbConflictList));
+      conflictCollection.updateOne(andDuplicate, update);
+      return true;
+    } else if (foundNormalMatch ^ foundReverseMatch) {
+      System.err.println("only found one of the conflict and the conflict's reverse");
+      return false;
+    } else { // out of for loop without finding a match, need to add it
+      System.out.println("Conflict not found among existing conflicts, adding it now");
+      BasicDBObject update1 = new BasicDBObject();
+      BasicDBObject update2 = new BasicDBObject();
+      BasicDBObject queryAdd = new BasicDBObject("conventionID",
+          new BasicDBObject("$eq", conventionID));
+
+      update1.put("$push", new BasicDBObject("conflicts", newConflictObj));
+      update2.put("$push", new BasicDBObject("conflicts", reverseConflictObj));
+      conflictCollection.updateOne(queryAdd, update1);
+      conflictCollection.updateOne(queryAdd, update2);
+
+      return true;
+    }
 
   }
 
@@ -205,6 +303,7 @@ public class DatabaseUtility {
     // =====checking if convention collection contains current conventionID
     BasicDBObject cQuery = new BasicDBObject("id", conventionID);
     Document document = conventionCollection.find(cQuery).first();
+
     if (document == null) {
       System.out.println(newConflict + "could not be added due to convention not found.");
       return false;
@@ -220,8 +319,11 @@ public class DatabaseUtility {
       conflictCollection.insertOne(new Document(newConventionString));
     }
 
+    // just making a conflict with the same events....not checking the convention id
     String str1 = String.format("{event1: %s, event2: %s, weight: {$gt: 0}}",
         gson.toJson(newConflict.event1), gson.toJson(newConflict.event2));
+
+    // want to get all conflicts for a convention...and loop thru???
 
     FindIterable<Document> existingConflict = conflictCollection
         .find(elemMatch("conflicts", Document.parse(str1)));
@@ -232,6 +334,7 @@ public class DatabaseUtility {
         BasicDBObject.parse(gson.toJson(newConflict.event1))));
     findDuplicate.add(new BasicDBObject("conflicts.event2",
         BasicDBObject.parse(gson.toJson(newConflict.event2))));
+
     BasicDBObject andDuplicate = new BasicDBObject();
     andDuplicate.append("conventionID", conventionID);
     andDuplicate.append("$and", findDuplicate);
@@ -247,11 +350,45 @@ public class DatabaseUtility {
     } else {
       List<BasicDBObject> conflictArray = new ArrayList<>();
       Document doc = existingConflict.first();
+
       if (existingConflict.first() == null) {
         System.out.println("null");
       }
 
+      // DELETE checking out existing conflict
+
+      boolean foundMatch = false;
+      for (Document doc1 : existingConflict) {
+        String currID = (String) doc1.get("conventionID");
+        if (currID.equals(conventionID)) {
+          doc = doc1;
+          foundMatch = true;
+          System.out.println("the matching conflict was in the right convention " + currID);
+          break;
+        } else {
+          System.out.println("the matching conflict was in the wrong convention " + currID);
+        }
+
+      }
+
+      if (!foundMatch) {
+        System.out.println("no matching conflict/convention found, adding manually");
+        BasicDBObject update = new BasicDBObject();
+        BasicDBObject query = new BasicDBObject("conventionID",
+            new BasicDBObject("$eq", conventionID));
+        update.put("$push", new BasicDBObject("conflicts", obj));
+        conflictCollection.updateOne(query, update);
+        return true;
+      }
+      System.out.println("found matching conflict, now updating");
+
+      // if id is correct do this:
       List<Document> conflicts = (List<Document>) doc.get("conflicts");
+
+      String convIDCheck = (String) doc.get("conventionID");
+      System.out.println("conv id check is " + convIDCheck);
+      System.out.println("conflict list size is " + conflicts.size());
+
       for (Document d : conflicts) {
 
         // increment weight
@@ -262,8 +399,11 @@ public class DatabaseUtility {
         Event event2 = new Event(e2.getInteger("id"), e2.getString("name"),
             e1.getString("description"));
         Conflict conflict = new Conflict(event1, event2, d.getInteger("weight"));
+
         if (conflict.equals(newConflict)) {
-          System.out.println(conflict.weight);
+          System.out.println("match!! old conflict is " + conflict.toString() + " new conflict is "
+              + newConflict.toString());
+          System.out.println("conflict weight is " + conflict.weight);
           conflict.weight++;
         }
         BasicDBObject obj1 = BasicDBObject.parse(gson.toJson(conflict));

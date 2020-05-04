@@ -9,13 +9,14 @@ import edu.brown.cs.student.graph.IEdge;
  */
 public class Conflict implements IEdge<Event, Conflict> {
 
-  //fields of the class representing the pairwise conflict of events and weight
+  // fields of the class representing the pairwise conflict of events and weight
   Event event1;
   Event event2;
   Integer weight;
 
   /**
    * Constructor for Conflict
+   *
    * @param event1 - event in conflict
    * @param event2 - event in conflict
    * @param weight - weight of this edge
@@ -56,17 +57,16 @@ public class Conflict implements IEdge<Event, Conflict> {
     this.weight = weight;
   }
 
-
-
   @Override
-    public boolean equals(Object o) {
-        if (o == this)
-            return true;
-        if (!(o instanceof Conflict)) {
-            return false;
-        }
-        Conflict conflict = (Conflict) o;
-        return Objects.equals(event1, conflict.event1) && Objects.equals(event2, conflict.event2);
+  public boolean equals(Object o) {
+    if (o == this)
+      return true;
+    if (!(o instanceof Conflict)) {
+      return false;
+    }
+    Conflict conflict = (Conflict) o;
+    return event1.equals(conflict.event1) && event2.equals(conflict.event2);
+    // return Objects.equals(event1, conflict.event1) && Objects.equals(event2, conflict.event2);
   }
 
   @Override
@@ -76,11 +76,8 @@ public class Conflict implements IEdge<Event, Conflict> {
 
   @Override
   public String toString() {
-    return "{" +
-      " event1='" + getHead() + "'" +
-      ", event2='" + getTail() + "'" +
-      ", weight='" + getWeight() + "'" +
-      "}";
+    return "{" + " event1='" + getHead() + "'" + ", event2='" + getTail() + "'" + ", weight='"
+        + getWeight() + "'" + "}";
   }
 
 }

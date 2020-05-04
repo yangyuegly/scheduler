@@ -38,39 +38,35 @@ $(document).ready(() => {
   $("#addCollaborator").click(addCollaborator);
   // hide HTML elements that are used after all events are added
   $("#completedDiv").css("display", "none");
-
-
-  setTimeout(() => {  add_event(eventNamesString, true); }, 500);
-
 });
 
 /*
   This method updates the eventNamesString, so the new event is added to it.
 */
 const updateEventNamesString = () => {
-  // eventNamesString = $eventNames.html();
+  eventNamesString = $eventNames.html();
 
   console.log(eventNamesString); // delete
 
-  // if (eventNamesString == "No events yet.") {
-  //   eventNamesString = "";
-  // }
+  if (eventNamesString == "No events yet.") {
+    eventNamesString = "";
+  }
 
-  // eventNamesString += "<p></p><button type=\"button\" class=\"collapsible\">"
-  //   + $name.val() + "</button>\r\n" + "<div class=\"content\">\r\n" + "<p>";
-
-  eventNamesString = "<p></p><button type=\"button\" class=\"collapsible\">"
-    + $name.val() + "</button>\r\n" + "<div class=\"content\">\r\n" + "<p>";
-
+  eventNamesString +=
+    '<p></p><button type="button" class="collapsible">' +
+    $name.val() +
+    "</button>\r\n" +
+    '<div class="content">\r\n' +
+    "<p>";
 
   if ($description.val() == "") {
-    eventNamesString += "No description."
+    eventNamesString += "No description.";
   } else {
     eventNamesString += $description.val();
   }
 
   eventNamesString += "</p>\r\n" + "</div>";
-}
+};
 
 /*
   Function that gets called when the add event button is clicked.
@@ -102,15 +98,11 @@ const addEvent = () => {
 
         console.log("event name string " + eventNamesString); // delete
 
+        add_event(eventNamesString); //socket code
 
-        add_event(eventNamesString, false); //socket code
-
-
-      //  $eventNames.html(eventNamesString);
-
+        //  $eventNames.html(eventNamesString);
 
         console.log("just replaced");
-
 
         $("#addEventError").text("");
 
@@ -127,12 +119,10 @@ const addEvent = () => {
               content.style.display = "block";
             }
           });
-
-
         }
-          // clear the input boxes
-          $name.val("");
-          $description.val("");
+        // clear the input boxes
+        $name.val("");
+        $description.val("");
       }
     });
   }

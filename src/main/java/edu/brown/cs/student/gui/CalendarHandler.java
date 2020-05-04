@@ -31,6 +31,7 @@ public class CalendarHandler implements Route {
     System.out.println(WebScraper.collegeName);
     if (correspondingID == null || correspondingID.isEmpty()) {
       System.out.println("this is not an exam");
+      correspondingID = null;
     }
     String userEmail = req.cookie("user");
 
@@ -47,7 +48,7 @@ public class CalendarHandler implements Route {
 
     Convention myConv = db.getConvention(conventionID);
     int numTimeSlotsPerDay = myConv.getNumTimeSlotsPerDay();
-    
+
     ScheduleCommand schedComm = new ScheduleCommand(myConv, 100, myConv.getNumDays(),
         numTimeSlotsPerDay, correspondingID);
     List<CalendarEvent> schedule;

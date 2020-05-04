@@ -152,6 +152,10 @@ a {
   background-color: #d5eaf1ff;
 }
 
+/* Make it so the email attendees button is hidden by default and is inly displayed if the program is able to schedule the convention. */
+#emailAtt {
+  display: none;
+}
 
 
 /* --------- These are for the set-up convention page ------ */

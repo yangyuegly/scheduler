@@ -25,7 +25,8 @@ public class ScheduleCommand {
   Integer CONCURENCY_LIMIT, MAX_SCHEDULE_DAYS;
   UndirectedWeightedGraph<Event, Conflict> graph;
   String correspondingID;
-  Convention correspondingConvention; 
+  Convention correspondingConvention;
+
   /**
    * Constructor for scheduling events
    *
@@ -107,23 +108,24 @@ public class ScheduleCommand {
    * This method sets the nodes field to the List of Events in the Convention.
    */
   private void extractNodes() {
-    if (correspondingID != null || !correspondingID.isEmpty()) {
-      this.nodes = correspondingConvention.getEvents();
-    } else {
+
+    if (correspondingID == null) {
       this.nodes = this.convention.getEvents();
+    } else {
+      this.nodes = correspondingConvention.getEvents();
     }
 
   }
-
 
   /**
    * This method sets the edges field to the List of Conflicts in the Convention.
    */
   private void extractEdges() {
-    if (correspondingID != null || !correspondingID.isEmpty()) {
-      this.edges = correspondingConvention.getConflicts();
-    } else {
+
+    if (correspondingID == null) {
       this.edges = this.convention.getConflicts();
+    } else {
+      this.edges = correspondingConvention.getConflicts();
     }
 
   }

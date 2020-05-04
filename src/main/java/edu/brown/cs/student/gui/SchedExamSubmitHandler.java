@@ -46,8 +46,6 @@ public class SchedExamSubmitHandler implements TemplateViewRoute {
     String endTime = queryMap.value("endTime");
     String submitType = queryMap.value("submitType");
 
-    System.out.println("schoolName: " + schoolName); // delete
-
     int numDays;
     int eventDur;
     Convention newConv;
@@ -58,7 +56,7 @@ public class SchedExamSubmitHandler implements TemplateViewRoute {
       newConv = new Convention(id, schoolName + " Final Exams", startDate, numDays, eventDur,
           startTime, endTime);
       // add this convention to the database
-      
+
       db.addConventionData(newConv);
 
     } catch (NumberFormatException err) {

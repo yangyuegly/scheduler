@@ -11,13 +11,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
   $.get("/calendar_events/" + id, response => {
     responseObject = JSON.parse(response);
-    
+
 
     if (responseObject.error == "") {
      myEvents = responseObject.eventsForSchedule;
      startDate = responseObject.defaultDate;
      makeCalendar(startDate, myEvents);
 
+    $("#emailAtt").css("display", "visible");
      document.getElementById("emailAtt").addEventListener(
        "click", event => emailAttendees(responseObject.eventsForSchedule));
 
@@ -25,6 +26,7 @@ document.addEventListener('DOMContentLoaded', function() {
       var error = document.getElementById('error');
       error = responseObject.error;
       $("#calendarError").text(error);
+      $("#emailAtt").css("display", "none");
     }
   });
 });
@@ -62,7 +64,7 @@ const emailAttendees = (events) => {
   const url = window.location.href;
   var splitURL = url.split("/");
   var convID = splitURL[4];
-  
+
 
 
   // post request to "/add_event/id with added events

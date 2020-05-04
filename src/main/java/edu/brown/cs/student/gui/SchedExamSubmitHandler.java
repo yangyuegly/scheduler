@@ -101,7 +101,7 @@ public class SchedExamSubmitHandler implements TemplateViewRoute {
     }
     System.out.println("schoolname: " + schoolName);
 
-    WebScraper.setCollege(schoolName);
+    WebScraper.setCollege(schoolID);
     db.addConvIDCollaborator(userEmail, id);
 
     // schedule this exam

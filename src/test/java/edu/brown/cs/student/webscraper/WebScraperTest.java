@@ -13,8 +13,7 @@ public class WebScraperTest {
 
   @Before
   public void setUp() {
-    web.setCollege("acu");
-    web1.setCollege("invalid_id");
+    WebScraper.setCollege("brown");
   }
 
   // test for getting all colleges
@@ -27,10 +26,10 @@ public class WebScraperTest {
     assertEquals(coursesToIDs.get("Albany State University"), "asurams");
   }
 
-  // @Test
+  @Test
   public void testScrape() {
-    assertEquals("864584", web.scrape());
-    assertEquals(null, web1.scrape());
+    assertEquals("616997", web.scrape());
+//    assertEquals(null, web1.scrape());
   }
 
 }

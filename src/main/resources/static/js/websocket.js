@@ -43,6 +43,26 @@ let setup_live_event_updates = () => {
         console.log("this is the payload" + data.payload.text); //is duplica
 
         $("#eventNames").html(data.payload.text);
+        var collap = document.getElementsByClassName("collapsible");
+        var j;
+
+        console.log("collap " + collap); // delete
+        console.log("collap length: " + collap.length);
+
+        for (j = 0; j < collap.length; j++) {
+          collap[j].addEventListener("click", function() {
+            console.log("clicked");
+
+            this.classList.toggle("active");
+            var content = this.nextElementSibling;
+            console.log("content is " + content);
+            if (content.style.display === "block") {
+              content.style.display = "none";
+            } else {
+              content.style.display = "block";
+            }
+          });
+        }
         // $("#eventNames").replaceWith("<div id=\"eventName\">" + data.payload.text + "</div>");
         break;
     }

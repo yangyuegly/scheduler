@@ -104,8 +104,6 @@ const addEvent = () => {
 
         //  $eventNames.html(eventNamesString);
 
-        console.log("just replaced");
-
         $("#addEventError").text("");
 
         // clear the input boxes

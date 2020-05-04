@@ -7,18 +7,18 @@
 */
  $(document).ready(() => {
    const cookie = document.cookie;
-  
+
    if (cookie == "") {
      // the user is not logged in
      $('#notLoggedIn').css("display", "block");
      $('#createAccount').css("display", "block");
-     
+
      $('#userEmailHeaderLink').css("display", "none");
      $('#logOut').css("display", "none");
    } else {
      const splitCookie = cookie.split("=")
      const userEmail = splitCookie[1];
-     
+
      $('#notLoggedIn').css("display", "none");
      $('#createAccount').css("display", "none");
      $loginStatusLink.text(userEmail);
@@ -37,7 +37,5 @@ if (cookie != "") {
   const splitCookie = cookie.split("=")
   const userEmail = splitCookie[1];
 
-
   $userEmailHeaderLink.text("Logged in as " + userEmail);
-
 }

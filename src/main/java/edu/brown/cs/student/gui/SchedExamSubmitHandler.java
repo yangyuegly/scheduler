@@ -44,6 +44,9 @@ public class SchedExamSubmitHandler implements TemplateViewRoute {
     String startTime = queryMap.value("startTime");
     String endTime = queryMap.value("endTime");
     String submitType = queryMap.value("submitType");
+
+    System.out.println("schoolName: " + schoolName); // delete
+
     int numDays;
     int eventDur;
     Convention newConv;

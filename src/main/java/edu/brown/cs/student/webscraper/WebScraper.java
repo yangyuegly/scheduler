@@ -3,7 +3,6 @@ package edu.brown.cs.student.webscraper;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +15,6 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
-import com.google.gson.Gson;
 import com.mongodb.BasicDBObject;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
@@ -31,18 +29,27 @@ import edu.brown.cs.student.scheduler.Conflict;
 import edu.brown.cs.student.scheduler.DatabaseUtility;
 import edu.brown.cs.student.scheduler.Event;
 
+/**
+ * Class to scrape the web (initially)
+ */
 public class WebScraper {
 
   // might have to change this
 
-  public static String USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1985.125 Safari/537.36";
+  /**
+   * Fields include USER_AGENT for webscraping, collegeName to set it to deptToCourses to store all
+   * the courses in one department conflict to store all pairwise conflicts coursesToIDs to store
+   * the ids of each course from coursicle conventionID to store the convention database to access
+   * the MongoDB database
+   */
+//  private static String USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1985.125 Safari/537.36";
   private String collegeName = "";
   public Map<String, List<String>> deptToCourses = new HashMap<>();
   private Map<String, String> conflict = new HashMap<>();
   private Map<String, String> coursesToIDs = new HashMap<>();
   private String conventionID;
-  DatabaseUtility du = new DatabaseUtility();
-  MongoDatabase database;
+  private DatabaseUtility du = new DatabaseUtility();
+  private MongoDatabase database;
 
   /**
    * Constructor for webscraper
@@ -97,6 +104,13 @@ public class WebScraper {
     return this.conflict;
   }
 
+  /**
+   * Disable SSL verification solely for webscraping purposes since we're not entering any sensitive
+   * information
+   *
+   * @throws NoSuchAlgorithmException
+   * @throws KeyManagementException
+   */
   private void disableSSLCertCheck() throws NoSuchAlgorithmException, KeyManagementException {
     // Create a trust manager that does not validate certificate chains
     TrustManager[] trustAllCerts = new TrustManager[] {
@@ -138,6 +152,7 @@ public class WebScraper {
    * Method to get all colleges from coursicle website
    */
   public void getAllColleges() {
+    // for unit testing purposes
     if (Main.getDatabase() == null) {
       ConnectionString connString = new ConnectionString(
           "mongodb://sduraide:cs32scheduler@scheduler-shard-00-00-rw75k.mongodb.net:27017,scheduler-shard-00-01-rw75k.mongodb.net:27017,scheduler-shard-00-02-rw75k.mongodb.net:27017/test?ssl=true&replicaSet=scheduler-shard-0&authSource=admin&retryWrites=true&w=majority");
@@ -153,6 +168,7 @@ public class WebScraper {
     MongoCollection<org.bson.Document> collegesCollection = database.getCollection("colleges");
     FindIterable<org.bson.Document> docs = collegesCollection.find();
 
+    // load all the data needed from the database
     for (org.bson.Document d : docs) {
       String fullname = d.getString("fullname");
       String id = d.getString("id");
@@ -249,6 +265,11 @@ public class WebScraper {
 //    }
 //  }
 
+  /**
+   * Return the scraping results
+   *
+   * @return the conventionID which contains the result
+   */
   public String scrape() {
     System.out.println("in scraping");
     if (Main.getDatabase() == null) {
@@ -263,14 +284,15 @@ public class WebScraper {
     } else {
       database = Main.getDatabase();
     }
+    // get the collection from the database
     MongoCollection<org.bson.Document> namesCollection = database.getCollection("nameToIDs");
     org.bson.Document convention = namesCollection
         .find(new BasicDBObject("name", new BasicDBObject("$eq", collegeName))).first();
     if (convention == null) {
-      System.out.println("conventionID from nameToIDs: " + null);
+//      System.out.println("conventionID from nameToIDs: " + null);
       return null;
     }
-    System.out.println("conventionID from nameToIDs: " + convention.getString("conventionID"));
+//    System.out.println("conventionID from nameToIDs: " + convention.getString("conventionID"));
     return convention.getString("conventionID");
   }
 
@@ -278,35 +300,14 @@ public class WebScraper {
    * Method to add conflicts to the database
    */
   public void addConflicts() {
+    // get the list of departments
     Set<String> keys = deptToCourses.keySet();
     int eventID = 0;
-    MongoCollection<org.bson.Document> collection;
-    MongoCollection<org.bson.Document> ecollection;
     System.out.println("here");
     int countConflicts = 0;
     // for unit testing purposes
-//    if (Main.getDatabase() == null) {
-//      ConnectionString connString = new ConnectionString(
-//          "mongodb://sduraide:cs32scheduler@scheduler-shard-00-00-rw75k.mongodb.net:27017,scheduler-shard-00-01-rw75k.mongodb.net:27017,scheduler-shard-00-02-rw75k.mongodb.net:27017/test?ssl=true&replicaSet=scheduler-shard-0&authSource=admin&retryWrites=true&w=majority");
-//
-//      MongoClientSettings settings = MongoClientSettings.builder().applyConnectionString(connString)
-//          .retryWrites(true).build();
-//      MongoClient mongo = MongoClients.create(settings);
-//      // created db in cluster in MongoDBAtlas including collections: users, events, conflicts
-//      MongoDatabase database = mongo.getDatabase("test");
-//      collection = database.getCollection("conflicts");
-//      ecollection = database.getCollection("events");
-//    } else {
-//      collection = Main.getDatabase().getCollection("conflicts");
-//      ecollection = Main.getDatabase().getCollection("events");
-//    }
 
-    Gson gson = new Gson();
-    List<BasicDBObject> conflictArray = new ArrayList<>();
-    List<BasicDBObject> eventArray = new ArrayList<>();
-
-    BasicDBObject query = new BasicDBObject();
-
+    // iterate through each department's courses to determine conflicts
     for (String k : keys) {
       List<String> courses = deptToCourses.get(k);
 
@@ -314,6 +315,8 @@ public class WebScraper {
         String first = courses.get(i);
         Event event1 = new Event(eventID, first, "");
         eventID++;
+
+        // check to not add empty events
         if (!event1.getName().equals("")) {
           du.addEvent(conventionID, event1);
         } else {
@@ -321,6 +324,7 @@ public class WebScraper {
         }
 
         for (int j = i + 1; j < courses.size(); j = j + 5) {
+          // limit the number of conflicts
           if (countConflicts > 60) {
             countConflicts = 0;
             return;
@@ -329,30 +333,20 @@ public class WebScraper {
           // System.out.println("here2");
           Event event2 = new Event(eventID, second, "");
           eventID++;
-          if (!(event2.getName().equals(""))) {
-//            du.addEvent(conventionID, event1);
-          } else {
+          if ((event2.getName().equals(""))) {
             continue;
           }
-//          du.addEvent(conventionID, event2);
-
-          BasicDBObject eventObject = BasicDBObject.parse(gson.toJson(event1));
-          eventArray.add(eventObject);
-          BasicDBObject eventObject1 = BasicDBObject.parse(gson.toJson(event2));
-          eventArray.add(eventObject1);
           Conflict conflict = new Conflict(event1, event2, 100);
 //          System.out.println(conflict.toString());
-          BasicDBObject obj = BasicDBObject.parse(gson.toJson(conflict));
           if (!event1.equals(event2)) {
             du.addConflict(conventionID, conflict);
             countConflicts++;
-            conflictArray.add(obj);
           }
 
         }
       }
     }
-    // System.out.println("here4");
+    // reset the hashmaps
     deptToCourses = new HashMap<>();
     conflict = new HashMap<>();
   }

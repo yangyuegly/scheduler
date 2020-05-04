@@ -84,8 +84,8 @@ public class WebScraper {
    *
    * @param collegeName - name of college to be set to
    */
-  public static void setCollege(String collegeName) {
-    collegeName = collegeName;
+  public static void setCollege(String college) {
+    collegeName = college;
   }
 
   /**
@@ -292,7 +292,7 @@ public class WebScraper {
     org.bson.Document convention = namesCollection
         .find(new BasicDBObject("name", new BasicDBObject("$eq", collegeName))).first();
     if (convention == null) {
-//      System.out.println("conventionID from nameToIDs: " + null);
+// System.out.println("conventionID from nameToIDs: " + null);
       return null;
     }
    System.out.println("conventionID from nameToIDs: " + convention.getString("conventionID"));

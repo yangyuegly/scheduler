@@ -61,6 +61,7 @@ public class CalendarHandler implements Route {
 
     ScheduleCommand schedComm = new ScheduleCommand(myConv, 5, myConv.getNumDays(),
         numTimeSlotsPerDay, correspondingID);
+
     List<CalendarEvent> schedule;
 
     try {

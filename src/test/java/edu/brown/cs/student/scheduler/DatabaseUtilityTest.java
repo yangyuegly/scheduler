@@ -2,29 +2,47 @@ package edu.brown.cs.student.scheduler;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
+import org.junit.Test;
+
 public class DatabaseUtilityTest {
   DatabaseUtility du = new DatabaseUtility();
 
-//  @Test
+  @Test
   public void checkPermissionTest() {
-    assertEquals(du.checkPermission("abby_goldberg@brown.edu", "211716"), true);
+    // when the user has permission to view the convention
+    assertEquals(du.checkPermission("abby_goldberg@brown.edu", "104559"), true);
+
+    // when the convention ID does not exist
     assertEquals(du.checkPermission("abby_goldberg@brown.edu", "NonExistingID"), false);
+
+    // when the convention exists, but the user does not have permission to access it
+    assertEquals(du.checkPermission("abby_goldberg@brown.edu", "417498"), false);
   }
 
-  // @Test
+  @Test
   public void getEventsFromConventionIDTest() {
-    List<Event> events = du.getEventsFromConventionID("442715");
-    Event e1 = new Event(0, "Javascript/CSS", "");
-    Event e2 = new Event(1, "C++", "");
+    // when there are no events in a convention
+    List<Event> emptyEvents = du.getEventsFromConventionID("315288");
+    assertTrue(emptyEvents.isEmpty());
 
+    // when there are several events in a convention
+    List<Event> events = du.getEventsFromConventionID("292679");
+    Event e1 = new Event(0, "Event 1", "event 1");
+    Event e2 = new Event(1, "Event 2", "");
+
+    assertEquals(2, events.size());
     assertTrue(events.contains(e1));
     assertTrue(events.contains(e2));
+
+    // when the convention was not set up
+    assertNull(du.getEventsFromConventionID("absolutely not a real ID"));
   }
 
 //  @Test
@@ -41,13 +59,26 @@ public class DatabaseUtilityTest {
     assertEquals(du.addConvID("abby_goldberg@brown.edu", "testConvention1"), false);
   }
 
-///  @Test
-  public void getConflictsTest() {// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    Set<Conflict> conflicts = du.getConflictsFromConventionID("c1");
-    Event e1 = new Event(0, "e1", "");
-    Event e2 = new Event(1, "e2", "");
-    Conflict conflict = new Conflict(e1, e2, 1);
-    assertTrue(conflicts.contains(conflict));
+  @Test
+  public void getConflictsTest() {
+    // when there are no conflicts
+    Set<Conflict> emptyConflicts = du.getConflictsFromConventionID("121644");
+    assertTrue(emptyConflicts.isEmpty());
+
+    // when there are several conflicts
+    Set<Conflict> conflicts = du.getConflictsFromConventionID("506840");
+    Event e1 = new Event(0, "Event 1", "");
+    Event e2 = new Event(1, "Event 2", "");
+    Event e3 = new Event(2, "Event 3", "");
+    Conflict conflict1 = new Conflict(e1, e2, 1);
+    Conflict conflict2 = new Conflict(e2, e1, 1);
+    Conflict conflict3 = new Conflict(e2, e3, 1);
+    Conflict conflict4 = new Conflict(e3, e2, 1);
+    assertEquals(conflicts.size(), 4);
+    assertTrue(conflicts.contains(conflict1));
+    assertTrue(conflicts.contains(conflict2));
+    assertTrue(conflicts.contains(conflict3));
+    assertTrue(conflicts.contains(conflict4));
   }
 
 //  @Test

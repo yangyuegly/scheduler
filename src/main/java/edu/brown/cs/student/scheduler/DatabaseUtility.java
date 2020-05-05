@@ -7,6 +7,19 @@ import static com.mongodb.client.model.Projections.excludeId;
 import static com.mongodb.client.model.Projections.fields;
 import static com.mongodb.client.model.Projections.include;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.bson.Document;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.gson.Gson;
@@ -20,18 +33,8 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.ReplaceOptions;
 import com.mongodb.client.model.Updates;
+
 import edu.brown.cs.student.main.Main;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import org.bson.Document;
 
 /**
  * This class contains all the Database CRUD functions necessary
@@ -102,11 +105,20 @@ public class DatabaseUtility {
    *
    * @param conventionID
    *
-   * @return list of events
+   * @return list of events or null if the convention was never set up
    */
   public List<Event> getEventsFromConventionID(String conventionID) {
     List<Event> result = new ArrayList<Event>();
     BasicDBObject query = new BasicDBObject();
+
+    BasicDBObject cQuery = new BasicDBObject("id", conventionID);
+    Document document = conventionCollection.find(cQuery).first();
+
+    if (document == null) {
+      // this convention was never set up
+      return null;
+    }
+
     query.put("conventionID", conventionID);
     Document doc = eventCollection.find(query).first();
 

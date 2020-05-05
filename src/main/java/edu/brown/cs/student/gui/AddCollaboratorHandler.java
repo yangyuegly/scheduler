@@ -30,7 +30,7 @@ public class AddCollaboratorHandler implements Route {
 
     if (!permission) {
       Map<String, Object> variables = ImmutableMap.of("errorMessage",
-          "You do not have permission to add a collaborator.");
+          "You do not have permission to add a collaborator.", "successMessage", "");
       Gson gson = new Gson();
       return gson.toJson(variables);
     }
@@ -41,12 +41,12 @@ public class AddCollaboratorHandler implements Route {
     if (!db.addConvIDCollaborator(collaboratorEmail, conventionID)) {
       // an error occurred
       Map<String, Object> variables = ImmutableMap.of("errorMessage",
-          "An error occurred.  Please try again.");
+          "An error occurred.  Please try again.", "successMessage", "");
       Gson gson = new Gson();
       return gson.toJson(variables);
     }
 
-    Map<String, Object> variables = ImmutableMap.of("errorMessage", "");
+    Map<String, Object> variables = ImmutableMap.of("errorMessage", "", "successMessage", "Added!");
 
     Gson gson = new Gson();
     return gson.toJson(variables);

@@ -130,13 +130,17 @@ const addCollaborator = () => {
   $.post("/add_collaborator/" + convID, postParameters, (responseJSON) => {
     responseObject = JSON.parse(responseJSON);
     errorMessage = responseObject.errorMessage;
+    successMessage = responseObject.successMessage;
 
     if (errorMessage != "") {
       // an error occurred
       $("#addCollaboratorError").text(errorMessage);
+      $("#addCollaboratorSuccess").text("");
     } else {
       // clear the email input box
       $emailInput.val("");
+      $("#addCollaboratorError").text("");
+      $("#addCollaboratorSuccess").text(successMessage);
     }
   });
 };

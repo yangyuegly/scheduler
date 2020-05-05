@@ -4,7 +4,7 @@ body {
   font-size: 18px;
   padding: 0;
   margin: 0;
-  background-image: url("/images/interlaced.png"); 
+  background-image: url("/images/interlaced.png");
 }
 
 .demo_cal {
@@ -13,7 +13,7 @@ body {
   margin-left: auto;
   margin-right: auto;
   width: 50%;
-  
+
   }
 
 
@@ -28,7 +28,7 @@ body {
   height: 100%;
   padding: 10px 18px 10px 18px;
   z-index: 30;
-  background-image: url("/images/interlaced.png"); 
+  background-image: url("/images/interlaced.png");
 
 }
 
@@ -184,6 +184,11 @@ a {
   display: none;
 }
 
+/* On hover, add a black background color with a little bit see-through */
+.prev:hover, .next:hover {
+  background-color: rgba(26,37,47,0.8);
+}
+
 /* Next & previous buttons */
 .prev, .next {
   cursor: pointer;
@@ -192,15 +197,16 @@ a {
   width: auto;
   margin-top: -22px;
   padding: 16px;
-  color: white;
+  /* color: white; */
+  color: black;
   font-weight: bold;
   font-size: 18px;
   transition: 0.6s ease;
   border-radius: 0 3px 3px 0;
   user-select: none;
-  
-   background-color: rgba(26,37,47,0.8); 
 
+  /* background-color: rgba(26,37,47,0.8); */
+  background-color: rgba(243, 241, 241, 0.8);
 }
 
 /* Position the "next button" to the right */

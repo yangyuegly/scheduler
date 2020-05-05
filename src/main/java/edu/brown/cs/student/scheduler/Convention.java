@@ -226,16 +226,26 @@ public class Convention {
   }
 
   /**
-   * This method adds an event to this convention.
+   * This method adds an event to this convention and the database.
    *
    * @param newEvent - an Event object, which represents the event being added
+   *
+   * @return a boolean, true if the adding was successful, false otherwise
    */
-  public void addEvent(Event newEvent) {
-    if (events == null) {
-      events = new ArrayList<>();
-    }
+  public boolean addEvent(Event newEvent) {
+    DatabaseUtility du = new DatabaseUtility();
 
-    events.add(newEvent);
+    if (du.addEvent(id, newEvent)) {
+      if (events == null) {
+        events = new ArrayList<>();
+      }
+
+      events.add(newEvent);
+      return true;
+
+    } else {
+      return false;
+    }
   }
 
   /**
@@ -296,7 +306,7 @@ public class Convention {
 
   /**
    * Getter for conflicts
-   * 
+   *
    * @return - set of conflicts
    */
   public Set<Conflict> getConflicts() {

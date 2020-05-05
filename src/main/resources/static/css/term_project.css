@@ -152,8 +152,8 @@ a {
   font-size: 15px;
 }
 
-/* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
-.active,
+/* Add a background color to the button if it is clicked on (add the .collap-active class with JS), and when you move the mouse over it (hover) */
+.collap-active,
 .collapsible:hover {
   background-color: #c2e5f2;
 }

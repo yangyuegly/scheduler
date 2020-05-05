@@ -27,7 +27,7 @@ public class CalendarHandler implements Route {
   @Override
   public String handle(Request req, Response res) {
     String conventionID = req.params(":id");
-    String college = WebScraper.collegeName;
+    String college = WebScraper.getcollegeID();
     WebScraper scraper = new WebScraper(conventionID);
     WebScraper.setCollege(college);
     String correspondingID = scraper.scrape();

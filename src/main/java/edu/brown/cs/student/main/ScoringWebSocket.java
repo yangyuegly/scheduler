@@ -9,9 +9,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
+import org.eclipse.jetty.websocket.api.annotations.OnWebSocketError;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
-import org.eclipse.jetty.websocket.api.annotations.OnWebSocketError;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -29,8 +29,6 @@ public class ScoringWebSocket {
   private static enum MESSAGE_TYPE {
     CONNECT, EVENT, UPDATE
   }
-
-
 
   @OnWebSocketConnect
   public void connected(Session session) throws IOException {
@@ -78,6 +76,7 @@ public class ScoringWebSocket {
     JsonObject newPayload = new JsonObject();
     newPayload.add("id", payload.get("id"));
 
+    // receive data from front end
     String currString = map.get(currURI);
     currString = payload.get("text").getAsString();
     map.put(currURI, currString);

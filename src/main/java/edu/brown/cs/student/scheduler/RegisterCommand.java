@@ -28,19 +28,19 @@ import edu.brown.cs.student.main.Main;
  */
 public class RegisterCommand {
 
-  public static final String DESEDE_ENCRYPTION_SCHEME = "DESede";
+  private static final String DESEDE_ENCRYPTION_SCHEME = "DESede";
 
-  SecretKey key;
-  static Logger logger;
+  private SecretKey key;
+  private static Logger logger;
 
   /**
    * Method that registers a user
-   * 
+   *
    * @param email - user email
    * @param password - user password
-   * 
+   *
    * @return - true if successful
-   * 
+   *
    * @throws UserAuthenticationException otherwise
    */
   public boolean execute(String email, String password) throws UserAuthenticationException {
@@ -80,10 +80,10 @@ public class RegisterCommand {
 
   /**
    * Encrypt password
-   * 
+   *
    * @param password - password user input
    * @param salt - salt String
-   * 
+   *
    * @return
    */
   public static String encrypt(String password, byte[] salt) {

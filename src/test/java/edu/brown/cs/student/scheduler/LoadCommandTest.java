@@ -10,10 +10,13 @@ import java.util.Set;
 public class LoadCommandTest {
   DatabaseUtility db = new DatabaseUtility();
 
+  /**
+   * Test for no conflicts
+   */
 //  @Test
   public void testLoadNoConflicts() {
     LoadCommand lc = new LoadCommand();
-    Convention convention = new Convention("testConvention1", "testName1");
+    Convention convention = new Convention("testConvention4", "testName1");
     List<List<String>> input = new ArrayList<List<String>>();
     List<String> a = new ArrayList<>();
     a.add("attendee1");
@@ -27,8 +30,8 @@ public class LoadCommandTest {
     input.add(b);
     lc.execute(input, convention);
 
-    List<Event> events = db.getEventsFromConventionID("testConvention1");
-    Set<Conflict> conflicts = db.getConflictsFromConventionID("testConvention1");
+    List<Event> events = db.getEventsFromConventionID("testConvention4");
+    Set<Conflict> conflicts = db.getConflictsFromConventionID("testConvention4");
     List<String> eventNames = new ArrayList<>();
 
     for (Event e : events) {
@@ -43,7 +46,7 @@ public class LoadCommandTest {
 //  @Test
   public void testLoadConflicts() {
     LoadCommand lc = new LoadCommand();
-    Convention convention = new Convention("testConvention2");
+    Convention convention = new Convention("testConvention5");
     List<List<String>> input = new ArrayList<List<String>>();
     List<String> a = new ArrayList<>();
     a.add("attendee1");
@@ -57,7 +60,7 @@ public class LoadCommandTest {
     input.add(b);
     lc.execute(input, convention);
 
-    List<Event> events = db.getEventsFromConventionID("testConvention2");
+    List<Event> events = db.getEventsFromConventionID("testConvention5");
     List<String> eventNames = new ArrayList<>();
 
     for (Event e : events) {
@@ -67,7 +70,7 @@ public class LoadCommandTest {
     assertTrue(eventNames.contains("event1") && eventNames.contains("event2")
         && eventNames.contains("event3"));
 
-    Set<Conflict> conflicts = db.getConflictsFromConventionID("testConvention2");
+    Set<Conflict> conflicts = db.getConflictsFromConventionID("testConvention5");
 
     Conflict c = new Conflict(new Event(1, "event2", ""), new Event(2, "event3", ""), 1);
     assertTrue(conflicts.contains(c));
@@ -78,11 +81,11 @@ public class LoadCommandTest {
 //  @Test
   public void testEmptyFile() {
     LoadCommand lc = new LoadCommand();
-    Convention convention = new Convention("testConvention3");
+    Convention convention = new Convention("testConvention6");
     List<List<String>> input = new ArrayList<List<String>>();
     lc.execute(input, convention);
 
-    List<Event> events = db.getEventsFromConventionID("testConvention");
+    List<Event> events = db.getEventsFromConventionID("testConvention6");
     assertTrue(events.isEmpty());
   }
 

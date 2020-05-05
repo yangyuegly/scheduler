@@ -109,7 +109,7 @@ a {
 
 .navbar a:hover,
 .dropdown:hover .dropbtn {
-  background-color: #12abdc;
+  background-color: #79d2f2;
   color: white;
 }
 
@@ -141,7 +141,7 @@ a {
 
 /* Style the button that is used to open and close the collapsible content */
 .collapsible {
-  background-color: #8bcbe0;
+  background-color: #79d2f2;
   color: #000000;
   cursor: pointer;
   padding: 18px;
@@ -155,7 +155,7 @@ a {
 /* Add a background color to the button if it is clicked on (add the .collap-active class with JS), and when you move the mouse over it (hover) */
 .collap-active,
 .collapsible:hover {
-  background-color: #d5eaf1ff;
+  background-color: #c2e5f2;
 }
 
 /* Style the collapsible content. Note: hidden by default */

@@ -111,14 +111,6 @@ public class DatabaseUtility {
     List<Event> result = new ArrayList<Event>();
     BasicDBObject query = new BasicDBObject();
 
-    BasicDBObject cQuery = new BasicDBObject("id", conventionID);
-    Document document = conventionCollection.find(cQuery).first();
-
-    if (document == null) {
-      // this convention was never set up
-      return null;
-    }
-
     query.put("conventionID", conventionID);
     Document doc = eventCollection.find(query).first();
 

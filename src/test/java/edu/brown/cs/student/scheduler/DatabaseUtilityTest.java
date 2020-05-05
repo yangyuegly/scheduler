@@ -2,7 +2,6 @@ package edu.brown.cs.student.scheduler;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.time.LocalDateTime;
@@ -42,7 +41,7 @@ public class DatabaseUtilityTest {
     assertTrue(events.contains(e2));
 
     // when the convention was not set up
-    assertNull(du.getEventsFromConventionID("absolutely not a real ID"));
+    assertTrue(du.getEventsFromConventionID("absolutely not a real ID").isEmpty());
   }
 
 //  @Test
@@ -90,6 +89,7 @@ public class DatabaseUtilityTest {
 
   // @Test
   public void addConflictTest() { // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
     Event e1 = new Event(1, "x", "");
     Event e2 = new Event(2, "y", "");
     Conflict c = new Conflict(e1, e2, 100);
@@ -100,18 +100,18 @@ public class DatabaseUtilityTest {
 //    assertFalse(du.addEvent("nonExistingConvention", new Event(0, "justATest")));
   }
 
-//  @Test
+  @Test
   public void getConvention() {
-    Convention c1 = du.getConvention("496457");
-    assertEquals(c1.getName(), "Test Upload 2");
+    Convention c1 = du.getConvention("506840");
+    assertEquals(c1.getName(), "2 Pairs of Conflicts");
 
     Integer numDays1 = 3;
-    Integer eventDur1 = 30;
+    Integer eventDur1 = 60;
     assertEquals(c1.getNumDays(), numDays1);
     assertEquals(c1.getEventDuration(), eventDur1);
 
-    LocalDateTime startTime1 = LocalDateTime.of(2020, 12, 13, 22, 52);
-    LocalDateTime endTime1 = LocalDateTime.of(2020, 12, 16, 23, 50);
+    LocalDateTime startTime1 = LocalDateTime.of(2020, 5, 20, 9, 0);
+    LocalDateTime endTime1 = LocalDateTime.of(2020, 5, 23, 21, 00);
     assertEquals(c1.getStartDateTime(), startTime1);
     assertEquals(c1.getEndDateTime(), endTime1);
 
@@ -129,13 +129,11 @@ public class DatabaseUtilityTest {
     assertEquals(c2.getEndDateTime(), endTime2);
   }
 
-//  @Test
+  @Test
   public void getUserConventionsTest() {
-    List<Convention> conventions = du.getUserConventions("abbyjg730@gmail.com");
-    assertTrue(conventions.get(0).getID().equals("388982"));
-    assertTrue(conventions.get(1).getID().equals("727744"));
-    assertTrue(conventions.get(2).getID().equals("509857"));
-    assertTrue(conventions.get(3).getID().equals("748488"));
+    List<Convention> conventions = du.getUserConventions("rachel@comcast.net");
+    assertTrue(conventions.get(0).getID().equals("816365"));
+    assertTrue(conventions.get(1).getID().equals("452446"));
 
     List<Convention> conventions2 = du.getUserConventions("user_with_one_conv@gmail.com");
     assertTrue(conventions2.get(0).getID().equals("230478"));
@@ -154,17 +152,26 @@ public class DatabaseUtilityTest {
     assertFalse(du.addConvIDCollaborator("shenadurai1@gmail.com", "000001"));
   }
 
-//  @Test
+  @Test
   public void testAddAttendeeEmail() {
     assertTrue(du.addAttendeeEmail("493210", "abby_goldberg@brown.edu"));
+    List<String> emails = du.getAttendeeEmailsFromConventionID("493210");
+    assertTrue(emails.contains("abby_goldberg@brown.edu"));
+
+    assertTrue(du.addAttendeeEmail("185296", "rachel_fuller@brown.edu"));
+    List<String> emails2 = du.getAttendeeEmailsFromConventionID("185296");
+    assertTrue(emails2.contains("rachel_fuller@brown.edu"));
+
   }
 
-//  @Test
+  @Test
   public void testGetAttendeeEmailsFromConventionID() {
     List<String> emails = du.getAttendeeEmailsFromConventionID("493210");
     assertEquals(emails.size(), 2);
     assertEquals(emails.get(0), "rachel_fuller@brown.edu");
     assertEquals(emails.get(1), "abby_goldberg@brown.edu");
+
+    assertTrue(du.getAttendeeEmailsFromConventionID("816365").isEmpty());
   }
 
 }

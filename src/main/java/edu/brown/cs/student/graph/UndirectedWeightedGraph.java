@@ -13,46 +13,78 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import edu.brown.cs.student.exception.SchedulingException;
+
 //source: https://www.researchgate.net/publication/220413840_A_New_Exam_Scheduling_Algorithm_Using_Graph_Coloring
 /**
  * The Graph class takes in a V that extends Vertex and E that extends Edge. It gets information
  * from a DataStore and runs a dynamic dikstra's algorithm to find the shortest path between to
  * nodes in the graph.
  *
- * @param <V> an object that implements Vertex
- * @param <E> an object that implements Edge
+ * @param V - a class that implements Vertex
+ * @param E - a class that implements Edge
  */
 public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V, E>> {
-  // edge table keeps track of weights
-  private int[][] weightMatrix;
-  private int numColor; // the max num of color a user can take in
-  private int numVertices;// the number of mini-events
-  private int TS; // time slots
-  private int examBreak = 0;
-  private Map<Integer, V> nodes; // map node Id to vertex object
 
+  /**
+   * These are fields for this class.
+   *
+   * weightMatrix - a array of int arrays, which keeps track of weights
+   *
+   * numColor - an int, which represents the max num of color a user can take in
+   *
+   * numVertices - an int, which represents the number of vertices in this graph
+   *
+   * TS - an int, which represents the max number of time slots in a day
+   *
+   * examBreak - an int, which represents the amount of time wanted for a break
+   *
+   * nodes - a Map of Integers to V, which maps node Id to vertex object
+   *
+   * CONCURRENCY_LIMIT - an int, which represents the max number of events that can happen at the
+   * same time
+   *
+   * degree - a SortedSet
+   *
+   * result - a Set of V
+   *
+   * colors - a List of Integer arrays, which represent double indexed colors; the length of the
+   * inner arrays is the number of time slots in a day; the arrayList index is the day of the exam
+   * (to be minimized); value is the current concurrency limit
+   *
+   * k - an int, which represents the range of num of time slots, concurency level
+   *
+   * MAX_SCHEDULE_DAYS - an int, which represents the max number of days over which this graph can
+   * be scheduled
+   *
+   * coloredMap - a Map of Integers to V
+   */
+  private int[][] weightMatrix;
+  private int numColor;
+  private int numVertices;
+  private int TS;
+  private int examBreak = 0;
+  private Map<Integer, V> nodes;
   private final int CONCURENCY_LIMIT;
-  private SortedSet<Map.Entry<Integer, V>> degree; // a sorted set
-  private HashSet<V> result;
-  private List<Integer[]> colors = new ArrayList<Integer[]>(); // double indexed color
-  // the length of array: time slots (provided by registrar)
-  // arrayList index: day of the exam (to be minimized)
-  // value: current concurrency limit
-  private int k; // the range of num of time slots, concurency level
+  private SortedSet<Map.Entry<Integer, V>> degree;
+  private Set<V> result;
+  private List<Integer[]> colors = new ArrayList<Integer[]>();
+  private int k;
   private final int MAX_SCHEDULE_DAYS;
   private Map<Integer, V> coloredMap = new HashMap<>();
 
   /**
-   * Constructor for the graph. It takes in a list of vertices
+   * Constructor for the graph.
    *
-   * @param vertices
-   * @param CONCURENCY_LIMIT
-   * @param MAX_SCHEDULE_DAYS
+   * @param vertices - a List of objects of type V, which represents the vertices of this graph
+   * @param CONCURENCY_LIMIT - an int, which represents the max number of events that can happen at
+   *        the same time
+   * @param MAX_SCHEDULE_DAYS - an int, which represents the max number of days over which this
+   *        graph can be scheduled
+   * @param TS - - an int, which represents the max number of time slots in a day
    */
   public UndirectedWeightedGraph(List<V> vertices, int CONCURENCY_LIMIT, int MAX_SCHEDULE_DAYS,
       int TS) {
-    // two nodes may be connected iff 1) they were in the same movie 2) they share
-    // initial
     this.numVertices = vertices.size();
     this.CONCURENCY_LIMIT = CONCURENCY_LIMIT;
     this.TS = TS;
@@ -87,13 +119,13 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
   }
 
   /**
-   * Add all edges to the graph
+   * Add all edges to the graph.
    *
-   * @param edges
+   * @param edges - a Set of objects of type E, which represent the edges of this graph
    */
   public void addAllEdges(Set<E> edges) {
     System.out.println("in addAllEdges");
- 
+
     for (E e : edges) {
       this.weightMatrix[e.getHead().getID()][e.getTail().getID()] = e.getWeight();
       this.weightMatrix[e.getTail().getID()][e.getHead().getID()] = e.getWeight();
@@ -107,26 +139,27 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
   }
 
   /**
-   * Find the degree of vertices
+   * Find the degree of the given vertex.
    *
-   * @param id
+   * @param id - an int, which represents the ID of a node
    *
-   * @return the size of the node's adjacency list
+   * @return an int, which represents the size of the node's adjacency list
    */
   public int findDegrees(int id) {
     return nodes.get(id).getAdjList().size();
   }
 
   /**
-   *
+   * This method
+   * 
    * @return colored nodes
    *
    * @param ts
    * @param cl
    *
-   * @throws NullPointer Exception if a schedule is not possible
+   * @throws SchedulingException if a schedule is not possible
    */
-  public Set<V> graphColoring(int ts, int cl) throws NullPointerException {
+  public Set<V> graphColoring(int ts, int cl) throws SchedulingException {
     Set<V> coloredSet = new HashSet<V>();
     System.out.println("here");
     int numColoredCourses = 0;
@@ -158,7 +191,7 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
             colors.get(indices.get(0))[indices.get(1)]--;
           } else {
             System.out.println("stuck");
-            throw new NullPointerException(
+            throw new SchedulingException(
                 "Unable to find a conflict-free schedule for this convention.");
           }
         }

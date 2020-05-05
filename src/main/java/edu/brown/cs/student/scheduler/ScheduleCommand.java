@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import edu.brown.cs.student.exception.SchedulingException;
 import edu.brown.cs.student.graph.UndirectedWeightedGraph;
 
 /**
@@ -56,11 +57,11 @@ public class ScheduleCommand {
    * @return a List of CalendarEvents, which represent the scheduled Events in a format that is
    *         compatible with the FullCalendar API.
    *
-   * @throws NullPointerException if there is no possible schedule
+   * @throws SchedulingException if there is no possible schedule
    */
-  public List<CalendarEvent> execute() throws NullPointerException {
+  public List<CalendarEvent> execute() throws SchedulingException {
     System.out.println("in schedule command");
-    
+
     extractNodes();
     Map<String, Integer> findNames = new HashMap<>();
     for (Event eve : this.nodes) {
@@ -71,12 +72,12 @@ public class ScheduleCommand {
       if (curr.getTail().getID() == null || curr.getTail().getID() < 0) {
         // System.out.println("tail" + curr.getTail());
         System.out.println("find names:" + curr.getTail().getName());
-        System.out.println("dict"+findNames.get(curr.getTail().getName()));
+        System.out.println("dict" + findNames.get(curr.getTail().getName()));
         curr.getTail().setId(findNames.get(curr.getTail().getName()));
         // System.out.println("modified" + curr.getTail());
 
-      } 
-      if (curr.getHead().getID() == null||curr.getHead().getID()<0) {
+      }
+      if (curr.getHead().getID() == null || curr.getHead().getID() < 0) {
         System.out.println("head" + curr.getHead());
 
         curr.getHead().setId(findNames.get(curr.getHead().getName()));
@@ -85,7 +86,7 @@ public class ScheduleCommand {
     for (Conflict curr : this.edges) {
       System.out.println("conflict:" + curr);
     }
-      this.graph = new UndirectedWeightedGraph<Event, Conflict>(this.nodes, this.CONCURENCY_LIMIT,
+    this.graph = new UndirectedWeightedGraph<Event, Conflict>(this.nodes, this.CONCURENCY_LIMIT,
         this.MAX_SCHEDULE_DAYS, this.TS);
     graph.addAllEdges(this.edges);
 

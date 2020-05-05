@@ -34,7 +34,6 @@ public class CalendarHandler implements Route {
     // String correspondingID = null;
     if (correspondingID == null || correspondingID.isEmpty()) {
       System.out.println("this is not an exam"); // delete
-      correspondingID = null;
     }
     String userEmail = req.cookie("user");
 
@@ -60,7 +59,7 @@ public class CalendarHandler implements Route {
     Convention myConv = db.getConvention(conventionID);
     int numTimeSlotsPerDay = myConv.getNumTimeSlotsPerDay();
 
-    ScheduleCommand schedComm = new ScheduleCommand(myConv, 100, myConv.getNumDays(),
+    ScheduleCommand schedComm = new ScheduleCommand(myConv, 5, myConv.getNumDays(),
         numTimeSlotsPerDay, correspondingID);
     List<CalendarEvent> schedule;
 

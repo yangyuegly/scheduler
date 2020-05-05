@@ -110,7 +110,7 @@ public class DatabaseUtility {
   public List<Event> getEventsFromConventionID(String conventionID) {
     List<Event> result = new ArrayList<Event>();
     BasicDBObject query = new BasicDBObject();
-
+    System.out.println("hear:"+ conventionID);
     query.put("conventionID", conventionID);
     Document doc = eventCollection.find(query).first();
 
@@ -121,11 +121,10 @@ public class DatabaseUtility {
 
     // iterate through the events found
     List<Document> eventList = (List<Document>) doc.get("events");
-
+    System.out.println("checkpoint:" + conventionID);
     for (Document event : eventList) {
       Event e = new Event(event.getInteger("id"), event.getString("name"),
           event.getString("description"));
-      System.out.println("get event:" + e);
       result.add(e);
     }
     return result;
@@ -503,7 +502,7 @@ public class DatabaseUtility {
       Event e2 = new Event(event2Doc.getInteger("id"), event2Doc.getString("name"),
           event2Doc.getString("description"));
       Conflict c = new Conflict(e1, e2, weight);
-      System.out.println("got conflicts:" + c);
+      // System.out.println("got conflicts:" + c);
       edges.add(c);
     }
 

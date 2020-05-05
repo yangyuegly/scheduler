@@ -3,8 +3,10 @@ package edu.brown.cs.student.scheduler;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import edu.brown.cs.student.graph.UndirectedWeightedGraph;
@@ -58,10 +60,32 @@ public class ScheduleCommand {
    */
   public List<CalendarEvent> execute() throws NullPointerException {
     System.out.println("in schedule command");
+    
     extractNodes();
+    Map<String, Integer> findNames = new HashMap<>();
+    for (Event eve : this.nodes) {
+      findNames.put(eve.getName(), eve.getID());
+    }
     extractEdges();
+    for (Conflict curr : this.edges) {
+      if (curr.getTail().getID() == null || curr.getTail().getID() < 0) {
+        // System.out.println("tail" + curr.getTail());
+        System.out.println("find names:" + curr.getTail().getName());
+        System.out.println("dict"+findNames.get(curr.getTail().getName()));
+        curr.getTail().setId(findNames.get(curr.getTail().getName()));
+        // System.out.println("modified" + curr.getTail());
 
-    this.graph = new UndirectedWeightedGraph<Event, Conflict>(this.nodes, this.CONCURENCY_LIMIT,
+      } 
+      if (curr.getHead().getID() == null||curr.getHead().getID()<0) {
+        System.out.println("head" + curr.getHead());
+
+        curr.getHead().setId(findNames.get(curr.getHead().getName()));
+      }
+    }
+    for (Conflict curr : this.edges) {
+      System.out.println("conflict:" + curr);
+    }
+      this.graph = new UndirectedWeightedGraph<Event, Conflict>(this.nodes, this.CONCURENCY_LIMIT,
         this.MAX_SCHEDULE_DAYS, this.TS);
     graph.addAllEdges(this.edges);
 
@@ -113,6 +137,7 @@ public class ScheduleCommand {
     if (correspondingID == null) {
       this.nodes = this.convention.getEvents();
     } else {
+      System.out.println("corressponding convention");
       this.nodes = correspondingConvention.getEvents();
     }
 

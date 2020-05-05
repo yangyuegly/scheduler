@@ -1,13 +1,8 @@
 package edu.brown.cs.student.webscraper;
 
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
-import java.util.ArrayList;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,11 +14,6 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.ConnectionString;
@@ -64,9 +54,9 @@ public class WebScraper {
   private MongoDatabase database;
 
   /**
-   * Constructor for webscraper
+   * Constructor for webscraper.
    *
-   * @param conventionID - convention id
+   * @param conventionID - a String, which represents the convention id
    */
   public WebScraper(String conventionID) {
     collegeName = "";
@@ -77,7 +67,10 @@ public class WebScraper {
     // for unit testing purposes
     if (Main.getDatabase() == null) {
       ConnectionString connString = new ConnectionString(
-          "mongodb://sduraide:cs32scheduler@scheduler-shard-00-00-rw75k.mongodb.net:27017,scheduler-shard-00-01-rw75k.mongodb.net:27017,scheduler-shard-00-02-rw75k.mongodb.net:27017/test?ssl=true&replicaSet=scheduler-shard-0&authSource=admin&retryWrites=true&w=majority");
+          "mongodb://sduraide:cs32scheduler@scheduler-shard-00-00-rw75k.mongodb.net:27017,"
+              + "scheduler-shard-00-01-rw75k.mongodb.net:27017,scheduler-shard-00-02-rw75k."
+              + "mongodb.net:27017/test?ssl=true&replicaSet=scheduler-shard-0&authSource="
+              + "admin&retryWrites=true&w=majority");
 
       MongoClientSettings settings = MongoClientSettings.builder().applyConnectionString(connString)
           .retryWrites(true).build();
@@ -90,18 +83,18 @@ public class WebScraper {
   }
 
   /**
-   * Set college name
+   * Set college name of this scraper.
    *
-   * @param collegeName - name of college to be set to
+   * @param college - name of college to be set to
    */
   public static void setCollege(String college) {
     collegeName = college;
   }
 
   /**
-   * Get all the courses from coursicle website
+   * Get all the courses from coursicle website.
    *
-   * @return coursesToIDs
+   * @return the coursesToIDs field, which is a Map of Strings to Strings
    */
   public Map<String, String> getcoursesToIDs() {
     this.getAllColleges();
@@ -109,9 +102,9 @@ public class WebScraper {
   }
 
   /**
-   * Get all the conflicts from a particular project
+   * Get all the conflicts from a particular project.
    *
-   * @return
+   * @return a Map of Strings to Strings
    */
   public Map<String, String> getconflicts() {
     return this.conflict;
@@ -119,10 +112,11 @@ public class WebScraper {
 
   /**
    * Disable SSL verification solely for webscraping purposes since we're not entering any sensitive
-   * information
+   * information.
    *
-   * @throws NoSuchAlgorithmException
-   * @throws KeyManagementException
+   * @throws NoSuchAlgorithmException when a cryptographic algorithm is requested but is not
+   *         available
+   * @throws KeyManagementException when there is an issue with key management
    */
   private void disableSSLCertCheck() throws NoSuchAlgorithmException, KeyManagementException {
     // Create a trust manager that does not validate certificate chains
@@ -162,13 +156,16 @@ public class WebScraper {
   }
 
   /**
-   * Method to get all colleges from coursicle website
+   * Method to get all colleges from coursicle website.
    */
   public void getAllColleges() {
     // for unit testing purposes
     if (Main.getDatabase() == null) {
       ConnectionString connString = new ConnectionString(
-          "mongodb://sduraide:cs32scheduler@scheduler-shard-00-00-rw75k.mongodb.net:27017,scheduler-shard-00-01-rw75k.mongodb.net:27017,scheduler-shard-00-02-rw75k.mongodb.net:27017/test?ssl=true&replicaSet=scheduler-shard-0&authSource=admin&retryWrites=true&w=majority");
+          "mongodb://sduraide:cs32scheduler@scheduler-shard-00-00-rw75k.mongodb.net:27017,"
+              + "scheduler-shard-00-01-rw75k.mongodb.net:27017,scheduler-shard-00-02-rw75k.mongodb"
+              + ".net:27017/test?ssl=true&replicaSet=scheduler-shard-0&authSource=admin&retry"
+              + "Writes=true&w=majority");
 
       MongoClientSettings settings = MongoClientSettings.builder().applyConnectionString(connString)
           .retryWrites(true).build();
@@ -213,7 +210,6 @@ public class WebScraper {
 //     try {
 //       disableSSLCertCheck();
 
-      
 //       // check if website exists
 //       String authString = "d6b45471a621460d8c2f6b5beb872671";
 //       String encodedAuthString = Base64.getEncoder().encodeToString(authString.getBytes());
@@ -280,39 +276,39 @@ public class WebScraper {
 //     }
 //   }
 
- /**
-  * Return the scraping results
-  *
-  * @return the conventionID which contains the result
-  */
- public String scrape() {
-   System.out.println("in scraping");
-   if (Main.getDatabase() == null) {
-     ConnectionString connString = new ConnectionString(
-         "mongodb://sduraide:cs32scheduler@scheduler-shard-00-00-rw75k.mongodb.net:27017,scheduler-shard-00-01-rw75k.mongodb.net:27017,scheduler-shard-00-02-rw75k.mongodb.net:27017/test?ssl=true&replicaSet=scheduler-shard-0&authSource=admin&retryWrites=true&w=majority");
+  /**
+   * Return the scraping results.
+   *
+   * @return the conventionID which contains the result
+   */
+  public String scrape() {
+    System.out.println("in scraping");
+    if (Main.getDatabase() == null) {
+      ConnectionString connString = new ConnectionString(
+          "mongodb://sduraide:cs32scheduler@scheduler-shard-00-00-rw75k.mongodb.net:27017,scheduler-shard-00-01-rw75k.mongodb.net:27017,scheduler-shard-00-02-rw75k.mongodb.net:27017/test?ssl=true&replicaSet=scheduler-shard-0&authSource=admin&retryWrites=true&w=majority");
 
-     MongoClientSettings settings = MongoClientSettings.builder().applyConnectionString(connString)
-         .retryWrites(true).build();
-     MongoClient mongo = MongoClients.create(settings);
-     // created db in cluster in MongoDBAtlas including collections: users, events, conflicts
-     database = mongo.getDatabase("test");
-   } else {
-     database = Main.getDatabase();
-   }
-   // get the collection from the database
-   MongoCollection<org.bson.Document> namesCollection = database.getCollection("nameToIDs");
-   org.bson.Document convention = namesCollection
-       .find(new BasicDBObject("name", new BasicDBObject("$eq", collegeName))).first();
-   if (convention == null) {
-     System.out.println("conventionID from nameToIDs: " + null);
-     return null;
-   }
-   System.out.println("conventionID from nameToIDs: " + convention.getString("conventionID"));
-   return convention.getString("conventionID");
- }
+      MongoClientSettings settings = MongoClientSettings.builder().applyConnectionString(connString)
+          .retryWrites(true).build();
+      MongoClient mongo = MongoClients.create(settings);
+      // created db in cluster in MongoDBAtlas including collections: users, events, conflicts
+      database = mongo.getDatabase("test");
+    } else {
+      database = Main.getDatabase();
+    }
+    // get the collection from the database
+    MongoCollection<org.bson.Document> namesCollection = database.getCollection("nameToIDs");
+    org.bson.Document convention = namesCollection
+        .find(new BasicDBObject("name", new BasicDBObject("$eq", collegeName))).first();
+    if (convention == null) {
+      System.out.println("conventionID from nameToIDs: " + null);
+      return null;
+    }
+    System.out.println("conventionID from nameToIDs: " + convention.getString("conventionID"));
+    return convention.getString("conventionID");
+  }
 
   /**
-   * Method to add conflicts to the database
+   * Method to add conflicts to the database.
    */
   private void addConflicts() {
     // get the list of departments

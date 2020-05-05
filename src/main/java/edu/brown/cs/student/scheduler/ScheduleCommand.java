@@ -13,13 +13,13 @@ import edu.brown.cs.student.exception.SchedulingException;
 import edu.brown.cs.student.graph.UndirectedWeightedGraph;
 
 /**
- * This class is used to schedule the user's convention. It implements the ICommand interface.
+ * This class is used to schedule the user's convention.
  */
 public class ScheduleCommand {
 
   /**
    * Fields denoting the set of nodes, edges, the convention to schedule, time slot, concurrency
-   * limit and the graph
+   * limit and the graph.
    */
   List<Event> nodes;
   Set<Conflict> edges;
@@ -31,16 +31,15 @@ public class ScheduleCommand {
   Convention correspondingConvention;
 
   /**
-   * Constructor for scheduling events
+   * Constructor for the ScheduleCommand class.
    *
    * @param convention - convention to schedule
    * @param CONCURENCY_LIMIT - Limit for concurrency threads
    * @param MAX_SCHEDULE_DAYS - Convention duration in days
-   * @param TS
+   * @param TS - the maximum number of time slots in a given day
    */
   public ScheduleCommand(Convention convention, Integer CONCURENCY_LIMIT, Integer MAX_SCHEDULE_DAYS,
       Integer TS, String correspondingID) {
-    // this.graph = graph;
     this.TS = TS;
     this.nodes = new ArrayList<>();
     this.edges = new HashSet<>();
@@ -60,41 +59,35 @@ public class ScheduleCommand {
    * @throws SchedulingException if there is no possible schedule
    */
   public List<CalendarEvent> execute() throws SchedulingException {
-    System.out.println("in schedule command");
-
     extractNodes();
     Map<String, Integer> findNames = new HashMap<>();
+
     for (Event eve : this.nodes) {
       findNames.put(eve.getName(), eve.getID());
     }
+
     extractEdges();
+
     for (Conflict curr : this.edges) {
       if (curr.getTail().getID() == null || curr.getTail().getID() < 0) {
-        // System.out.println("tail" + curr.getTail());
-        System.out.println("find names:" + curr.getTail().getName());
-        System.out.println("dict" + findNames.get(curr.getTail().getName()));
         curr.getTail().setId(findNames.get(curr.getTail().getName()));
-        // System.out.println("modified" + curr.getTail());
-
       }
-      if (curr.getHead().getID() == null || curr.getHead().getID() < 0) {
-        System.out.println("head" + curr.getHead());
 
+      if (curr.getHead().getID() == null || curr.getHead().getID() < 0) {
         curr.getHead().setId(findNames.get(curr.getHead().getName()));
       }
     }
-    for (Conflict curr : this.edges) {
-      System.out.println("conflict:" + curr);
-    }
+
     this.graph = new UndirectedWeightedGraph<Event, Conflict>(this.nodes, this.CONCURENCY_LIMIT,
         this.MAX_SCHEDULE_DAYS, this.TS);
     graph.addAllEdges(this.edges);
-
     Set<Event> colored = graph.graphColoring(this.TS, this.CONCURENCY_LIMIT);
 
     List<CalendarEvent> calEvents = new ArrayList<>();
     List<Event> eventsToSort = new ArrayList<>();
 
+    // turn the scheduled events into CalendarEvents that are compatible with the API used to
+    // display the calendar
     for (Event event : colored) {
       eventsToSort.add(event);
       LocalDateTime currStart = this.getTimeSlotStart(event.getColor());
@@ -105,13 +98,9 @@ public class ScheduleCommand {
       LocalDateTime currEnd = currStart.plusMinutes(eventDur);
       event.setEnd(currEnd);
     }
-    System.out.println("is null?? " + (eventsToSort == null));
-
-    System.out.println("sorted list length is " + eventsToSort.size());
     Collections.sort(eventsToSort, new CompareStartTime());
 
     for (Event event : eventsToSort) {
-      // System.out.println("start time" + event.getStart());
       CalendarEvent newEvent = new CalendarEvent(event.getName(), event.getStart().toString(),
           event.getEnd().toString());
       calEvents.add(newEvent);
@@ -122,15 +111,6 @@ public class ScheduleCommand {
   }
 
   /**
-   * Getter for graph
-   *
-   * @return - graph
-   */
-  public UndirectedWeightedGraph<Event, Conflict> getGraph() {
-    return this.graph;
-  }
-
-  /**
    * This method sets the nodes field to the List of Events in the Convention.
    */
   private void extractNodes() {
@@ -138,7 +118,6 @@ public class ScheduleCommand {
     if (correspondingID == null) {
       this.nodes = this.convention.getEvents();
     } else {
-      System.out.println("corressponding convention");
       this.nodes = correspondingConvention.getEvents();
     }
 
@@ -179,7 +158,7 @@ public class ScheduleCommand {
 
   @Override
   public String toString() {
-    return "{" + " graph='" + getGraph() + "'" + "}";
+    return "{" + " graph='" + graph + "'" + "}";
   }
 
 }

@@ -150,12 +150,12 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
   }
 
   /**
-   * This method
-   * 
-   * @return colored nodes
+   * This method colors the graph using the graph coloring algorithm.
    *
-   * @param ts
-   * @param cl
+   * @param ts - an int, which represents the max number of time slots in a day
+   * @param cl - an int, which represents the max number of events that can happen at the same time
+   *
+   * @return a Set of vertices, which represent the colored nodes
    *
    * @throws SchedulingException if a schedule is not possible
    */
@@ -220,11 +220,9 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
   }
 
   /**
-   * Return an arraylist of two integers representing color 0: the day 1: the time slot
+   * Return a list of two integers representing color 0: the day 1: the time slot.
    *
-   * @param courseID - the course to be colored
-   *
-   * @return the color assigned or null
+   * @return a List of Integers, which represents the color assigned or null
    */
   public List<Integer> getFirstNodeColor() {
     List<Integer> result = new ArrayList<Integer>();
@@ -245,21 +243,21 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
    * define the weight of a color to be W (RIJ) = (I-1)*k + J; k is the range of J. A color RIJ is
    * said to be smaller than color RGH if the weight W (RIJ) is smaller than W (RGH).
    *
-   * @param i
-   * @param j
+   * @param i - an int
+   * @param j - an int
    *
-   * @return
+   * @return an int, which represents the weight of a color
    */
   public int calculateColorWeight(int i, int j) {
     return (i - 1) * k + j;
   }
 
   /**
-   * Get the smallest available color
+   * Get the smallest available color.
    *
-   * @param courseID
+   * @param courseID - an int, which represents the id of a node
    *
-   * @return
+   * @return a List of Integers, which represents the smallest available color
    */
   public List<Integer> getSmallestAvailableColor(int courseID) {
 
@@ -306,12 +304,13 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
   }
 
   /**
-   * Calculate the internal distance between the color i.e. how many time slots apart
+   * Calculate the internal distance between the color i.e. how many time slots apart.
    *
-   * @param a
-   * @param b
+   * @param a - a List of Integers, which represents a time slot
+   * @param b - a List of Integers, which represents a time slot
    *
-   * @return
+   * @return an Integer, which represents the internal distance between colors a and b (how many
+   *         time slots apart they are)
    */
   public Integer calculateInternalDistance(List<Integer> a, List<Integer> b) {
     assert (a.size() == 2 && b.size() == 2);
@@ -319,112 +318,53 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
   }
 
   /**
-   * Calculate the external distance between the color i.e. how many time days apart
+   * Calculate the external distance between the color i.e. how many time days apart.
    *
-   * @param a
-   * @param b
+   * @param a - a List of Integers, which represents a time slot
+   * @param b - a List of Integers, which represents a time slot
    *
-   * @return
+   * @return n Integer, which represents the external distance between colors a and b (how many days
+   *         apart they are)
    */
   public Integer calculateExternalDistance(List<Integer> a, List<Integer> b) {
     assert (a.size() == 2 && b.size() == 2);
     return (Math.abs(a.get(0) - b.get(0)));
   }
 
-  public int[][] getWeightMatrix() {
-    return this.weightMatrix;
-  }
-
-  public void setWeightMatrix(int[][] weightMatrix) {
-    this.weightMatrix = weightMatrix;
-  }
-
-  public int getNumColor() {
-    return this.numColor;
-  }
-
-  public void setNumColor(int numColor) {
-    this.numColor = numColor;
-  }
-
   public int getNumVertices() {
     return this.numVertices;
   }
 
-  public void setNumVertices(int numVertices) {
-    this.numVertices = numVertices;
-  }
-
-  public Map<Integer, V> getNodes() {
-    return this.nodes;
+  /**
+   * Calculate all nodes' degrees.
+   */
+  public void setDegree() {
+    degree = entriesSortedByValues(nodes);
   }
 
   /**
-   * calculate all nodes' degrees
+   * This method gets the colors field.
+   *
+   * @return a List of Integer arrays, which represent double indexed colors
    */
-  public void setDegree() {
-
-    degree = entriesSortedByValues(nodes);
-
-  }
-
-  public int getK() {
-    return this.k;
-  }
-
-  public int getTS() {
-    return this.TS;
-  }
-
-  public void setTS(int TS) {
-    this.TS = TS;
-  }
-
-  public int getExamBreak() {
-    return this.examBreak;
-  }
-
-  public void setExameBreak(int examBreak) {
-    this.examBreak = examBreak;
-  }
-
-  public int getCONCURENCY_LIMIT() {
-    return this.CONCURENCY_LIMIT;
-  }
-
-  public SortedSet<Map.Entry<Integer, V>> getDegree() {
-    return this.degree;
-  }
-
   public List<Integer[]> getColors() {
     return this.colors;
   }
 
-  public void setColors(ArrayList<Integer[]> colors) {
-    this.colors = colors;
-  }
-
-  public int getMAX_SCHEDULE_DAYS() {
-    return this.MAX_SCHEDULE_DAYS;
-  }
-
-  public void setK(int k) {
-    this.k = k;
-  }
-
   /**
-   * Util method that sorts the map based on values
+   * Util method that sorts the map based on values.
    * https://stackoverflow.com/questions/2864840/treemap-sort-by-value
    *
-   * @param Map<K,V>
+   * @param map - a Map of objects of type K to objects of type T, which represents a map
    *
-   * @return SortedSet<>
+   * @return SortedSet of map entries, which is sorted based on values
    */
   private <K, T extends IVertex<T, E>> SortedSet<Map.Entry<K, T>> entriesSortedByValues(
       Map<K, T> map) {
     SortedSet<Map.Entry<K, T>> sortedEntries = new TreeSet<Map.Entry<K, T>>(
         // sort the nodes in the weight matrix in a descending
         // order based on the degree of nodes.
+
         new Comparator<Map.Entry<K, T>>() {
           @Override
           public int compare(Map.Entry<K, T> e1, Map.Entry<K, T> e2) {
@@ -443,7 +383,9 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
             }
           }
         });
+
     sortedEntries.addAll(map.entrySet());
+
     return sortedEntries;
   }
 
@@ -468,9 +410,9 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
 
   @Override
   public String toString() {
-    return "{" + "'" + ", weightMatrix='" + getWeightMatrix() + "'" + ", numColor='" + getNumColor()
-        + "'" + ", numVertices='" + getNumVertices() + "'" + ", ts='" + "'" + ", degree='" + "'"
-        + ", colors='" + getColors() + "'" + ", k='" + getK() + "'" + "}";
+    return "{" + "'" + ", weightMatrix='" + weightMatrix + "'" + ", numColor='" + numColor + "'"
+        + ", numVertices='" + numVertices + "'" + ", ts='" + "'" + ", degree='" + "'" + ", colors='"
+        + getColors() + "'" + ", k='" + k + "'" + "}";
   }
 
 }

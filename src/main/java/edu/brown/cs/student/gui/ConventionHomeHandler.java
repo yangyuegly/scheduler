@@ -9,6 +9,7 @@ import com.google.common.collect.ImmutableMap;
 import edu.brown.cs.student.scheduler.Convention;
 import edu.brown.cs.student.scheduler.DatabaseUtility;
 import edu.brown.cs.student.scheduler.Event;
+import edu.brown.cs.student.webscraper.WebScraper;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
@@ -21,8 +22,6 @@ public class ConventionHomeHandler implements TemplateViewRoute {
 
   @Override
   public ModelAndView handle(Request request, Response response) {
-    System.out.println("in convnetion home handler"); // delete!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
     String conventionID = request.params(":id");
     String userEmail = request.cookie("user");
 
@@ -38,6 +37,17 @@ public class ConventionHomeHandler implements TemplateViewRoute {
 
     if (!authorized) {
       response.redirect("/unauthorized");
+    }
+
+    // checking if this is an exam
+    String college = WebScraper.collegeName;
+    WebScraper scraper = new WebScraper(conventionID);
+    WebScraper.setCollege(college);
+    String correspondingID = scraper.scrape();
+
+    if (correspondingID != null && !correspondingID.isEmpty()) {
+      // this id is associated with an exam
+      conventionID = correspondingID;
     }
 
     Convention currConv = new Convention(conventionID);

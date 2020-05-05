@@ -28,7 +28,7 @@ import edu.brown.cs.student.main.Main;
 public class LoginCommand {
 
   /**
-   * Fields for password decryption and encryption
+   * Fields for password decryption and encryption.
    */
   private static final String UNICODE_FORMAT = "UTF8";
   public static final String DESEDE_ENCRYPTION_SCHEME = "DESede";
@@ -40,7 +40,7 @@ public class LoginCommand {
   SecretKey key;
 
   /**
-   * Method that logs the user in
+   * Method that logs the user in.
    *
    * @param email - user email
    * @param password - user password
@@ -52,7 +52,10 @@ public class LoginCommand {
     // for unit testing purposes
     if (Main.getDatabase() == null) {
       ConnectionString connString = new ConnectionString(
-          "mongodb://sduraide:cs32scheduler@scheduler-shard-00-00-rw75k.mongodb.net:27017,scheduler-shard-00-01-rw75k.mongodb.net:27017,scheduler-shard-00-02-rw75k.mongodb.net:27017/test?ssl=true&replicaSet=scheduler-shard-0&authSource=admin&retryWrites=true&w=majority");
+          "mongodb://sduraide:cs32scheduler@scheduler-shard-00-00-rw75k.mongodb.net:27017"
+              + ",scheduler-shard-00-01-rw75k.mongodb.net:27017,scheduler-shard-00-02-rw75k."
+              + "mongodb.net:27017/test?ssl=true&replicaSet=scheduler-shard-0&authSource="
+              + "admin&retryWrites=true&w=majority");
 
       MongoClientSettings settings = MongoClientSettings.builder().applyConnectionString(connString)
           .retryWrites(true).build();
@@ -86,7 +89,7 @@ public class LoginCommand {
    * @param userInputPassword - password user input
    * @param salt - salt string
    *
-   * @return
+   * @return a String, which represents the decrypted password
    */
   public String decryptePassword(String userInputPassword, String salt) {
 

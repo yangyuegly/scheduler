@@ -1,3 +1,5 @@
+/* --------------------------  General Style -------------------------- */
+
 body {
   background-color: white;
   font-family: Cabin;
@@ -5,26 +7,6 @@ body {
   padding: 0;
   margin: 0;
   background-image: url("/images/interlaced.png");
-}
-
-.demo_cal {
-
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  width: 50%;
-
-  }
-
-
-
-
-.errorMessage {
-  color: red;
-}
-
-.successMessage {
-  color: green;
 }
 
 .main-content {
@@ -46,6 +28,7 @@ input {
 .column {
   max-width: 450px;
 }
+
 button,
 input[type="submit"] {
   background-color: #12abdc;
@@ -59,6 +42,7 @@ input[type="submit"] {
   cursor: pointer;
   border-radius: 5px;
 }
+
 .ui.link.items {
   font-size: 18px;
   padding-bottom: 8rem;
@@ -75,9 +59,12 @@ a {
   display: none;
 }
 
+
+/* --------------------------  Navigation Bar -------------------------- */
+
 .navbar {
   overflow: hidden;
-  background-color: #1a252f; /* #333; */
+  background-color: #1a252f;
   line-height: "50";
 }
 
@@ -110,7 +97,7 @@ a {
 .navbar a:hover,
 .dropdown:hover .dropbtn {
   background-color: #79d2f2;
-  color: white;
+  color: #1a252f;;
 }
 
 .dropdown-content {
@@ -133,11 +120,16 @@ a {
 
 .dropdown-content a:hover {
   background-color: #ddd;
+  color: black;
 }
 
 .dropdown:hover .dropdown-content {
   display: block;
 }
+
+
+/* ----------- Event Collapsibles on the Convention Home Page ---------- */
+
 
 /* Style the button that is used to open and close the collapsible content */
 .collapsible {
@@ -152,8 +144,16 @@ a {
   font-size: 15px;
 }
 
-/* Add a background color to the button if it is clicked on (add the .collap-active class with JS), and when you move the mouse over it (hover) */
-.collap-active,
+/* Add a background color to the button if it is clicked on (add the
+  .collap-active class with JS)
+*/
+.collap-active {
+  background-color: #d5eaf1ff;
+}
+
+/*
+  Changes the background color for the collapsible when you move the mouse over it (hover
+*/
 .collapsible:hover {
   background-color: #c2e5f2;
 }
@@ -166,12 +166,8 @@ a {
   background-color: #d5eaf1ff;
 }
 
-/* Make it so the email attendees button is hidden by default and is inly displayed if the program is able to schedule the convention. */
-#emailAtt {
-  display: none;
-}
 
-
+/* --------------------  Home Page Slideshow ---------------------- */
 
 
 * {box-sizing:border-box}
@@ -201,16 +197,13 @@ a {
   width: auto;
   margin-top: -22px;
   padding: 16px;
-  /* color: white; */
   color: black;
   font-weight: bold;
   font-size: 18px;
   transition: 0.6s ease;
   border-radius: 0 3px 3px 0;
   user-select: none;
-
-  /* background-color: rgba(26,37,47,0.8); */
-  background-color: rgba(243, 241, 241, 0.8);
+  background-color: rgba(243, 241, 241, 0.5);
 }
 
 /* Position the "next button" to the right */
@@ -218,8 +211,6 @@ a {
   right: 0;
   border-radius: 3px 0 0 3px;
 }
-
-
 
 /* Caption text */
 .text {
@@ -230,15 +221,6 @@ a {
   bottom: 8px;
   width: 100%;
   text-align: center;
-}
-
-/* Number text (1/3 etc) */
-.numbertext {
-font-family: Cabin;
-  font-size: 12px;
-  padding: 8px 12px;
-  position: absolute;
-  top: 0;
 }
 
 /* The dots/bullets/indicators */
@@ -273,4 +255,37 @@ font-family: Cabin;
 @keyframes fade {
   from {opacity: .4}
   to {opacity: 1}
+}
+
+
+/* --------------------------  Calendar Page -------------------------- */
+
+/*
+  For the calendar itself
+*/
+.demo_cal {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}
+
+/*
+   Make it so the email attendees button is hidden by default and is only
+   displayed if the program is able to schedule the convention.
+*/
+#emailAtt {
+  display: none;
+}
+
+
+/* ---------------------------  Error/Success Messages ---------------------------- */
+
+
+.errorMessage {
+  color: red;
+}
+
+.successMessage {
+  color: green;
 }

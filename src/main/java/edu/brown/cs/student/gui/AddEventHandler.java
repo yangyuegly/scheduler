@@ -10,6 +10,7 @@ import com.google.gson.reflect.TypeToken;
 import edu.brown.cs.student.scheduler.Convention;
 import edu.brown.cs.student.scheduler.DatabaseUtility;
 import edu.brown.cs.student.scheduler.Event;
+import edu.brown.cs.student.webscraper.WebScraper;
 import spark.QueryParamsMap;
 import spark.Request;
 import spark.Response;
@@ -34,7 +35,22 @@ public class AddEventHandler implements Route {
 
     if (!permission) {
       Map<String, Object> variables = ImmutableMap.of("errorMessage",
-          "You do not have permission to view this convention.");
+          "You do not have permission to edit this convention.");
+
+      Gson gson = new Gson();
+      return gson.toJson(variables);
+    }
+
+    // checking if this is an exam
+    String college = WebScraper.collegeName;
+    WebScraper scraper = new WebScraper(conventionID);
+    WebScraper.setCollege(college);
+    String correspondingID = scraper.scrape();
+
+    if (correspondingID != null && !correspondingID.isEmpty()) {
+      // this id is associated with an exam
+      Map<String, Object> variables = ImmutableMap.of("errorMessage",
+          "This is an exam convention.  You cannot add events to it.");
 
       Gson gson = new Gson();
       return gson.toJson(variables);

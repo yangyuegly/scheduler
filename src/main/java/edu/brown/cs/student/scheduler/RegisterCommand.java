@@ -28,19 +28,21 @@ import edu.brown.cs.student.main.Main;
  */
 public class RegisterCommand {
 
+  /**
+   * These are fields for this class.
+   */
   public static final String DESEDE_ENCRYPTION_SCHEME = "DESede";
-
-  SecretKey key;
-  static Logger logger;
+  private SecretKey key;
+  private static Logger logger;
 
   /**
-   * Method that registers a user
-   * 
+   * Method that registers a user.
+   *
    * @param email - user email
    * @param password - user password
-   * 
-   * @return - true if successful
-   * 
+   *
+   * @return - true if successful, false otherwise
+   *
    * @throws UserAuthenticationException otherwise
    */
   public boolean execute(String email, String password) throws UserAuthenticationException {
@@ -54,7 +56,10 @@ public class RegisterCommand {
     // for unit testing purposes
     if (Main.getDatabase() == null) {
       ConnectionString connString = new ConnectionString(
-          "mongodb://sduraide:cs32scheduler@scheduler-shard-00-00-rw75k.mongodb.net:27017,scheduler-shard-00-01-rw75k.mongodb.net:27017,scheduler-shard-00-02-rw75k.mongodb.net:27017/test?ssl=true&replicaSet=scheduler-shard-0&authSource=admin&retryWrites=true&w=majority");
+          "mongodb://sduraide:cs32scheduler@scheduler-shard-00-00-rw75k.mongodb.net:27017,"
+              + "scheduler-shard-00-01-rw75k.mongodb.net:27017,scheduler-shard-00-02-rw75k."
+              + "mongodb.net:27017/test?ssl=true&replicaSet=scheduler-shard-0&authSource="
+              + "admin&retryWrites=true&w=majority");
 
       MongoClientSettings settings = MongoClientSettings.builder().applyConnectionString(connString)
           .retryWrites(true).build();
@@ -79,14 +84,14 @@ public class RegisterCommand {
   }
 
   /**
-   * Encrypt password
-   * 
+   * Encrypt the user's password.
+   *
    * @param password - password user input
    * @param salt - salt String
-   * 
-   * @return
+   *
+   * @return a String, which represents the encrypted password
    */
-  public static String encrypt(String password, byte[] salt) {
+  private static String encrypt(String password, byte[] salt) {
     try {
       // Create key and cipher
       Key aesKey = new SecretKeySpec(salt, "AES");
@@ -110,7 +115,12 @@ public class RegisterCommand {
     }
   }
 
-  public static byte[] getSalt() {
+  /**
+   * This method creates a random salt to be used for encryption.
+   *
+   * @return an array of bytes, which represents a salt
+   */
+  private static byte[] getSalt() {
     byte[] salt = new byte[16];// bytes to be filled
     SecureRandom sr = new SecureRandom(); // secureRandom number
     sr.nextBytes(salt);// fill bytes

@@ -65,11 +65,10 @@ public class Convention {
   }
 
   /**
-   * This is a constructor for this class.
+   * This is a constructor for this class. This is used when we only have access to the id.
    *
    * @param convId - a String, which represents the id of this convention
    */
-
   public Convention(String convId) {
     id = convId;
     // load in the rest of the fields from the database
@@ -88,20 +87,9 @@ public class Convention {
   }
 
   /**
-   * This is a constructor for this class.
-   *
-   * @param convId - a String, which represents the id of this convention
-   */
-
-  public Convention(String convId, String convName) {
-    id = convId;
-    // load in the rest of the fields from the database
-    this.name = convName;
-
-  }
-
-  /**
-   * This is another constructor for this class.
+   * This is another constructor for this class. It is used when the user fills out the form on the
+   * setup convention home page. We use this constructor to fill in the data, and then we load this
+   * convention into the database.
    *
    * @param convName - a String, which represents the name of this convention
    * @param convId - a String, which represents the id of this convention
@@ -140,7 +128,7 @@ public class Convention {
    * @param endTime -- a String of the format "hh:mm" (in military time), which represents the
    *        latest the convention can end on a given day
    *
-   * @throws NumberFormatException
+   * @throws NumberFormatException if the dates are in an invalid format
    */
   public Convention(String convId, String convName, String startDate, Integer numDays,
       Integer eventDuration, String startTime, String endTime) throws NumberFormatException {
@@ -291,7 +279,7 @@ public class Convention {
    * constraints given when the Convention was created to determine how many events of the given
    * duration can fit in the time range.
    *
-   * @return an int, which represents the max number of time slots on a given day
+   * @return an Integer, which represents the max number of time slots on a given day
    */
   public Integer getNumTimeSlotsPerDay() {
     LocalDate startDateLocalDate = startDateTime.toLocalDate();
@@ -305,9 +293,9 @@ public class Convention {
   }
 
   /**
-   * Getter for conflicts
+   * Getter for conflicts.
    *
-   * @return - set of conflicts
+   * @return - set of conflicts that are in this convention
    */
   public Set<Conflict> getConflicts() {
     DatabaseUtility du = new DatabaseUtility();

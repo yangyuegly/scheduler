@@ -13,7 +13,7 @@ public class LoadCommandTest {
 //  @Test
   public void testLoadNoConflicts() {
     LoadCommand lc = new LoadCommand();
-    Convention convention = new Convention("testConvention1", "testName1");
+    Convention convention = new Convention("testConvention1");
     List<List<String>> input = new ArrayList<List<String>>();
     List<String> a = new ArrayList<>();
     a.add("attendee1");

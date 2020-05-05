@@ -11,20 +11,17 @@
 
   <!-- Full-width images with number and caption text -->
   <div class="mySlides fade">
-    <!-- <div class="numbertext">1 / 5</div> -->
     <img src="/images/attendees.png" style="width:100%">
     <div class="text">Step 1</div>
   </div>
 
   <div class="mySlides fade">
-    <!-- <div class="numbertext">2 / 5</div> -->
     <img src="/images/add_events.png" style="width:100%">
     <div class="text">Step 2</div>
   </div>
 
 
   <div class="mySlides fade">
-    <!-- <div class="numbertext">3 / 5</div> -->
      <img src="/images/create_convention.png" style="width:100%">
 
     <div class="text">Step 3</div>
@@ -33,7 +30,6 @@
 
 
   <div class="mySlides fade">
-    <!-- <div class="numbertext">4 / 5</div> -->
      <img src="/images/final_schedule.png" style="width:100%">
 
     <div class="text">Step 4</div>
@@ -41,7 +37,6 @@
 
 
   <div class="mySlides fade">
-    <!-- <div class="numbertext">5 / 5</div> -->
      <img src="/images/features.png" style="width:100%">
 
     <div class="text">More features</div>

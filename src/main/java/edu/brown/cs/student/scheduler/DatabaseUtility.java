@@ -339,7 +339,7 @@ public class DatabaseUtility {
   /**
    * Method to get conflicts based on a convention id.
    *
-   * @param conventionID -- the id of the convention
+   * @param conventionIDParam -- the id of the convention
    *
    * @return -- a Set of all the conflicts in this convention
    */

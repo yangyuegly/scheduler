@@ -50,7 +50,7 @@ public class Event implements IVertex<Event, Conflict> {
   }
 
   /**
-   * Get the heaviest weight among v's adjacency list to aid sorting
+   * Get the heaviest weight among v's adjacency list to aid sorting.
    *
    * @return - heaviest weight
    */
@@ -65,7 +65,7 @@ public class Event implements IVertex<Event, Conflict> {
   }
 
   /**
-   * Setter method for id
+   * Setter method for id.
    *
    * @param id - id of the event to set it to
    */
@@ -73,26 +73,26 @@ public class Event implements IVertex<Event, Conflict> {
     this.id = id;
   }
 
-  /**
-   * Setter for adjList
-   *
-   * @param adjList - val to set it to
-   */
-  public void setAdjList(List<Conflict> adjList) {
-    this.adjList = adjList;
-  }
+//  /**
+//   * Setter for adjList.
+//   *
+//   * @param adjList - val to set it to
+//   */
+//  public void setAdjList(List<Conflict> adjList) {
+//    this.adjList = adjList;
+//  }
+
+//  /**
+//   * Setter for degree
+//   *
+//   * @param degree - degree of the vertex to set it to
+//   */
+//  public void setDegree(Integer degree) {
+//    this.degree = degree;
+//  }
 
   /**
-   * Setter for degree
-   *
-   * @param degree - degree of the vertex to set it to
-   */
-  public void setDegree(Integer degree) {
-    this.degree = degree;
-  }
-
-  /**
-   * Getter for name
+   * Getter for name.
    *
    * @return - name of event
    */
@@ -163,7 +163,7 @@ public class Event implements IVertex<Event, Conflict> {
   /**
    * Method to set the end time of an event after it has been found by the graph.
    *
-   * @param start -- the start time of the event.
+   * @param end -- the end time of the event.
    */
   public void setEnd(LocalDateTime end) {
     this.end = end;

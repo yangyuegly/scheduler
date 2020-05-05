@@ -5,6 +5,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -174,4 +175,11 @@ public class DatabaseUtilityTest {
     assertTrue(du.getAttendeeEmailsFromConventionID("816365").isEmpty());
   }
 
+  //@Test
+  // public void testGeorgeTown() {
+  //   HashMap<Integer, Integer> map = du.updateEventID("604605");
+  //   Boolean ret = du.updateConflict("604605", map);
+  //   System.out.println("iu");
+  //   assertTrue(ret);
+  // }
 }

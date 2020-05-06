@@ -22,6 +22,7 @@ document.addEventListener("DOMContentLoaded", function() {
         .addEventListener("click", (event) =>
           emailAttendees(responseObject.eventsForSchedule)
         );
+
     } else {
       var error = document.getElementById("error");
       error = responseObject.error;

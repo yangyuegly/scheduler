@@ -53,7 +53,7 @@ let setup_live_event_updates = () => {
           collap[j].addEventListener("click", function() {
             console.log("clicked");
 
-            this.classList.toggle("active");
+            this.classList.toggle("collap-active");
             var content = this.nextElementSibling;
             console.log("content is " + content);
             if (content.style.display === "block") {

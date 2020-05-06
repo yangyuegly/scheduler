@@ -42,13 +42,30 @@ import edu.brown.cs.student.main.Main;
  */
 
 public class LoadCommand {
+  /**
+   * Fields for conflicts and connecting to database
+   */
   private List<Conflict> conflict;
+  private MongoDatabase database;
 
   /**
    * Constructor for LoadCommand
    */
   public LoadCommand() {
     conflict = new ArrayList<>();
+    // for unit testing purposes
+    if (Main.getDatabase() == null) {
+      ConnectionString connString = new ConnectionString(
+          "mongodb://sduraide:cs32scheduler@scheduler-shard-00-00-rw75k.mongodb.net:27017,scheduler-shard-00-01-rw75k.mongodb.net:27017,scheduler-shard-00-02-rw75k.mongodb.net:27017/test?ssl=true&replicaSet=scheduler-shard-0&authSource=admin&retryWrites=true&w=majority");
+
+      MongoClientSettings settings = MongoClientSettings.builder().applyConnectionString(connString)
+          .retryWrites(true).build();
+      MongoClient mongo = MongoClients.create(settings);
+      // created db in cluster in MongoDBAtlas
+      this.database = mongo.getDatabase("test");
+    } else {
+      this.database = Main.getDatabase();
+    }
   }
 
   /**
@@ -107,20 +124,8 @@ public class LoadCommand {
 
     Document currEvent = new Document("conventionID", convention.getID()).append("events",
         eventArray);
-    // for unit testing purposes
-    if (Main.getDatabase() == null) {
-      ConnectionString connString = new ConnectionString(
-          "mongodb://sduraide:cs32scheduler@scheduler-shard-00-00-rw75k.mongodb.net:27017,scheduler-shard-00-01-rw75k.mongodb.net:27017,scheduler-shard-00-02-rw75k.mongodb.net:27017/test?ssl=true&replicaSet=scheduler-shard-0&authSource=admin&retryWrites=true&w=majority");
 
-      MongoClientSettings settings = MongoClientSettings.builder().applyConnectionString(connString)
-          .retryWrites(true).build();
-      MongoClient mongo = MongoClients.create(settings);
-      // created db in cluster in MongoDBAtlas including collections: users, events, conflicts
-      MongoDatabase database = mongo.getDatabase("test");
-      database.getCollection("events").insertOne(currEvent);
-    } else {
-      Main.getDatabase().getCollection("events").insertOne(currEvent);
-    }
+    database.getCollection("events").insertOne(currEvent);
 
     for (Map.Entry<Conflict, Integer> entry : frequencyMap.entrySet()) {
       // set weight for each conflict
@@ -132,20 +137,7 @@ public class LoadCommand {
     Document doc = new Document("conventionID", convention.getID()).append("conflicts",
         conflictArray);
 
-    // for unit testing purposes
-    if (Main.getDatabase() == null) {
-      ConnectionString connString = new ConnectionString(
-          "mongodb://sduraide:cs32scheduler@scheduler-shard-00-00-rw75k.mongodb.net:27017,scheduler-shard-00-01-rw75k.mongodb.net:27017,scheduler-shard-00-02-rw75k.mongodb.net:27017/test?ssl=true&replicaSet=scheduler-shard-0&authSource=admin&retryWrites=true&w=majority");
-
-      MongoClientSettings settings = MongoClientSettings.builder().applyConnectionString(connString)
-          .retryWrites(true).build();
-      MongoClient mongo = MongoClients.create(settings);
-      // created db in cluster in MongoDBAtlas including collections: users, events, conflicts
-      MongoDatabase database = mongo.getDatabase("test");
-      database.getCollection("conflicts").insertOne(doc);
-    } else {
-      Main.getDatabase().getCollection("conflicts").insertOne(doc);
-    }
+    database.getCollection("conflicts").insertOne(doc);
 
   }
 

@@ -21,14 +21,14 @@ public class ScheduleCommand {
    * Fields denoting the set of nodes, edges, the convention to schedule, time slot, concurrency
    * limit and the graph.
    */
-  List<Event> nodes;
-  Set<Conflict> edges;
-  Convention convention;
-  Integer TS;
-  Integer CONCURENCY_LIMIT, MAX_SCHEDULE_DAYS;
-  UndirectedWeightedGraph<Event, Conflict> graph;
-  String correspondingID;
-  Convention correspondingConvention;
+  private List<Event> nodes;
+  private Set<Conflict> edges;
+  private Convention convention;
+  private Integer TS;
+  private Integer CONCURENCY_LIMIT, MAX_SCHEDULE_DAYS;
+  private UndirectedWeightedGraph<Event, Conflict> graph;
+  private String correspondingID;
+  private Convention correspondingConvention;
 
   /**
    * Constructor for the ScheduleCommand class.

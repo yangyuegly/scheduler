@@ -1,12 +1,9 @@
 package edu.brown.cs.student.scheduler;
 
 import java.security.Key;
-import java.security.spec.KeySpec;
 import java.util.Base64;
 
 import javax.crypto.Cipher;
-import javax.crypto.SecretKey;
-import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.SecretKeySpec;
 
 import org.bson.Document;
@@ -28,19 +25,7 @@ import edu.brown.cs.student.main.Main;
 public class LoginCommand {
 
   /**
-   * Fields for password decryption and encryption.
-   */
-  private static final String UNICODE_FORMAT = "UTF8";
-  public static final String DESEDE_ENCRYPTION_SCHEME = "DESede";
-  private KeySpec ks;
-  private SecretKeyFactory skf;
-  private Cipher cipher;
-  private String myEncryptionKey;
-  private String myEncryptionScheme;
-  SecretKey key;
-
-  /**
-   * Method that logs the user in.
+   * Method that logs the user in
    *
    * @param email - user email
    * @param password - user password

@@ -41,9 +41,9 @@ public class RegisterCommand {
    * @param email - user email
    * @param password - user password
    *
-   * @return - true if successful, false otherwise
+   * @return - true if the user email is in the database and the password is correct
    *
-   * @throws UserAuthenticationException otherwise
+   * @throws UserAuthenticationException if the user did not successfully login
    */
   public boolean execute(String email, String password) throws UserAuthenticationException {
     BasicDBList list = new BasicDBList();
@@ -84,12 +84,16 @@ public class RegisterCommand {
   }
 
   /**
-   * Encrypt the user's password.
+   * <<<<<<< HEAD Encrypt the user's password. ======= Encrypt password >>>>>>>
+   * 32f83163441fc8763673d7911e9508d9747e8e04
    *
    * @param password - password user input
    * @param salt - salt String
    *
-   * @return a String, which represents the encrypted password
+   *        <<<<<<< HEAD
+   * 
+   * @return a String, which represents the encrypted password =======
+   * @return >>>>>>> 32f83163441fc8763673d7911e9508d9747e8e04
    */
   private static String encrypt(String password, byte[] salt) {
     try {

@@ -40,7 +40,7 @@ public class ConventionHomeHandler implements TemplateViewRoute {
     }
 
     // checking if this is an exam
-    String college = WebScraper.collegeName;
+    String college = WebScraper.getcollegeID();
     WebScraper scraper = new WebScraper(conventionID);
     WebScraper.setCollege(college);
     String correspondingID = scraper.scrape();

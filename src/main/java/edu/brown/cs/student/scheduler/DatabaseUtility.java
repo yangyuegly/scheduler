@@ -52,6 +52,7 @@ public class DatabaseUtility {
   private MongoCollection<Document> attendeeCollection;
   private MongoDatabase database;
   private ObjectMapper mapper = new ObjectMapper();
+  private static final int CONFLICT_MAX = 100;
 
   /**
    * Constructor for DatabaseUtility.
@@ -353,7 +354,7 @@ public class DatabaseUtility {
       return new HashSet<>();
     }
 
-    int conflictNum = Math.min(conflictList.size(), 100);
+    int conflictNum = Math.min(conflictList.size(), CONFLICT_MAX);
     // get all conflicts
     for (int i = 0; i < conflictNum; i++) {
       Document conflictDoc = conflictList.get(i);

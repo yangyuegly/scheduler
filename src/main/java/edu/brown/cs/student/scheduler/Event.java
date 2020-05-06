@@ -49,12 +49,6 @@ public class Event implements IVertex<Event, Conflict> {
     return description;
   }
 
-  /**
-   * Get the heaviest weight among v's adjacency list to aid sorting.
-   *
-   * @return - heaviest weight
-   */
-
   @Override
   public Integer getHeaviestWeight() {
     int max = 0;

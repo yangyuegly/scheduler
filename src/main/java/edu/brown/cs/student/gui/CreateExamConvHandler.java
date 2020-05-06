@@ -19,9 +19,19 @@ import spark.TemplateViewRoute;
 
 /**
  * This class is used to display the create_exam_conv page, so the user can schedule final exams for
- * the college of their choice.
+ * the college of their choice. It implements TemplateViewRoute.
  */
 public class CreateExamConvHandler implements TemplateViewRoute {
+
+  /**
+   * These are fields for this class.
+   *
+   * ID_UPPER_BOUND - an int, which is used as an upper bound when generating random convention IDs
+   *
+   * ID_LOWER_BOUND - an int, which is used as a lower bound when generating random convention IDs
+   */
+  private static final int ID_UPPER_BOUND = (999999 - 100000) + 1;
+  private static final int ID_LOWER_BOUND = 100000;
 
   @Override
   public ModelAndView handle(Request request, Response response) {
@@ -43,7 +53,7 @@ public class CreateExamConvHandler implements TemplateViewRoute {
     Integer id = null;
 
     while (!avail) {
-      id = rand.nextInt((999999 - 100000) + 1) + 100000;
+      id = rand.nextInt(ID_UPPER_BOUND) + ID_LOWER_BOUND;
       DatabaseUtility db = new DatabaseUtility();
 
       // if avail is true, this ID is not yet used

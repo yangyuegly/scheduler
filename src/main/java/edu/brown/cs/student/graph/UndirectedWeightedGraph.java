@@ -21,8 +21,8 @@ import edu.brown.cs.student.exception.SchedulingException;
  * from a DataStore and runs a dynamic dikstra's algorithm to find the shortest path between to
  * nodes in the graph.
  *
- * @param V - a class that implements Vertex
- * @param E - a class that implements Edge
+ * @param <V> - a class that implements Vertex
+ * @param <E> - a class that implements Edge
  */
 public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V, E>> {
 
@@ -35,13 +35,13 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
    *
    * numVertices - an int, which represents the number of vertices in this graph
    *
-   * TS - an int, which represents the max number of time slots in a day
+   * numTimeSlotsInDay - an int, which represents the max number of time slots in a day
    *
    * examBreak - an int, which represents the amount of time wanted for a break
    *
    * nodes - a Map of Integers to V, which maps node Id to vertex object
    *
-   * CONCURRENCY_LIMIT - an int, which represents the max number of events that can happen at the
+   * concurrencyLimit - an int, which represents the max number of events that can happen at the
    * same time
    *
    * degree - a SortedSet
@@ -52,44 +52,44 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
    * inner arrays is the number of time slots in a day; the arrayList index is the day of the exam
    * (to be minimized); value is the current concurrency limit
    *
-   * k - an int, which represents the range of num of time slots, concurency level
+   * k - an int, which represents the range of num of time slots, concurrency level
    *
-   * MAX_SCHEDULE_DAYS - an int, which represents the max number of days over which this graph can
-   * be scheduled
+   * maxScheduleDays - an int, which represents the max number of days over which this graph can be
+   * scheduled
    *
    * coloredMap - a Map of Integers to V
    */
   private int[][] weightMatrix;
   private int numColor;
   private int numVertices;
-  private int TS;
+  private final int numTimeSlotsInDay;
   private int examBreak = 0;
   private Map<Integer, V> nodes;
-  private final int CONCURENCY_LIMIT;
+  private final int concurrencyLimit;
   private SortedSet<Map.Entry<Integer, V>> degree;
   private Set<V> result;
   private List<Integer[]> colors = new ArrayList<Integer[]>();
   private int k;
-  private final int MAX_SCHEDULE_DAYS;
+  private final int maxScheduleDays;
   private Map<Integer, V> coloredMap = new HashMap<>();
 
   /**
    * Constructor for the graph.
    *
    * @param vertices - a List of objects of type V, which represents the vertices of this graph
-   * @param CONCURENCY_LIMIT - an int, which represents the max number of events that can happen at
+   * @param concurrencyLimit - an int, which represents the max number of events that can happen at
    *        the same time
-   * @param MAX_SCHEDULE_DAYS - an int, which represents the max number of days over which this
-   *        graph can be scheduled
-   * @param TS - - an int, which represents the max number of time slots in a day
+   * @param maxScheduleDays - an int, which represents the max number of days over which this graph
+   *        can be scheduled
+   * @param numTimeSlotsInDay - - an int, which represents the max number of time slots in a day
    */
-  public UndirectedWeightedGraph(List<V> vertices, int CONCURENCY_LIMIT, int MAX_SCHEDULE_DAYS,
-      int TS) {
+  public UndirectedWeightedGraph(List<V> vertices, int concurrencyLimit, int maxScheduleDays,
+      int numTimeSlotsInDay) {
     this.numVertices = vertices.size();
-    this.CONCURENCY_LIMIT = CONCURENCY_LIMIT;
-    this.TS = TS;
+    this.concurrencyLimit = concurrencyLimit;
+    this.numTimeSlotsInDay = numTimeSlotsInDay;
     this.result = new HashSet<>();
-    this.MAX_SCHEDULE_DAYS = MAX_SCHEDULE_DAYS;
+    this.maxScheduleDays = maxScheduleDays;
     this.nodes = new HashMap<Integer, V>();
     for (V i : vertices) {
       nodes.put(i.getID(), i);
@@ -102,11 +102,11 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
       }
     }
 
-    for (int j = 0; j < MAX_SCHEDULE_DAYS; j++) {
+    for (int j = 0; j < maxScheduleDays; j++) {
       // initializing the color array
-      Integer[] ts = new Integer[TS];
-      for (int i = 0; i < TS; i++) {
-        ts[i] = CONCURENCY_LIMIT;
+      Integer[] ts = new Integer[numTimeSlotsInDay];
+      for (int i = 0; i < numTimeSlotsInDay; i++) {
+        ts[i] = concurrencyLimit;
       }
       colors.add(ts);
     }
@@ -225,14 +225,14 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
    * @return a List of Integers, which represents the color assigned or null
    */
   public List<Integer> getFirstNodeColor() {
-    List<Integer> result = new ArrayList<Integer>();
-    for (int i = 0; i < MAX_SCHEDULE_DAYS; i++) {
-      for (int j = 0; j < TS; j++) {
+    List<Integer> resultList = new ArrayList<Integer>();
+    for (int i = 0; i < maxScheduleDays; i++) {
+      for (int j = 0; j < numTimeSlotsInDay; j++) {
         if (colors.get(i)[j] > 0) {
           colors.get(i)[j]--;
-          result.add(i);
-          result.add(j);
-          return result;
+          resultList.add(i);
+          resultList.add(j);
+          return resultList;
         }
       }
     }
@@ -264,8 +264,8 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
     // System.out.println("the current course id " + courseID);
     boolean valid = false;
     List<E> adj = nodes.get(courseID).getAdjList();
-    for (int i = 0; i < this.MAX_SCHEDULE_DAYS; i++) {
-      for (int j = 0; j < this.TS; j++) {
+    for (int i = 0; i < this.maxScheduleDays; i++) {
+      for (int j = 0; j < this.numTimeSlotsInDay; j++) {
         List<Integer> currColor = new ArrayList<>(List.of(i, j));
         valid = true;
         for (int r = 0; r < adj.size(); r++) {
@@ -283,9 +283,8 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
                 if (calculateInternalDistance(color, currColor) <= this.examBreak) {
                   valid = false;
                 }
-              }
-              // if the color has been used up to its cl
-              else if (colors.get(i)[j] <= 0) {
+              } else if (colors.get(i)[j] <= 0) {
+                // if the color has been used up to its cl
                 valid = false;
               }
             } else {
@@ -331,6 +330,11 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
     return (Math.abs(a.get(0) - b.get(0)));
   }
 
+  /**
+   * This method gets the number of vertices in this graph.
+   *
+   * @return an int, which represents the number of vertices in this graph.
+   */
   public int getNumVertices() {
     return this.numVertices;
   }
@@ -398,14 +402,16 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
   // }
   // UndirectedWeightedGraph<V,E> undirectedWeightedGraph = (UndirectedWeightedGraph<V,E>) o;
   // return Objects.equals(weightMatrix, undirectedWeightedGraph.weightMatrix) && numColor ==
-  // undirectedWeightedGraph.numColor && numVertices == undirectedWeightedGraph.numVertices && TS ==
-  // undirectedWeightedGraph.TS && Objects.equals(degree, undirectedWeightedGraph.degree) &&
+  // undirectedWeightedGraph.numColor && numVertices == undirectedWeightedGraph.numVertices &&
+  // numTimeSlotsInDay ==
+  // undirectedWeightedGraph.numTimeSlotsInDay && Objects.equals(degree,
+  // undirectedWeightedGraph.degree) &&
   // Objects.equals(colors, undirectedWeightedGraph.colors) && k == undirectedWeightedGraph.k;
   // }
 
   // @Override
   // public int hashCode() {
-  // return Objects.hash(weightMatrix, numColor, numVertices, TS, degree, colors, k);
+  // return Objects.hash(weightMatrix, numColor, numVertices, numTimeSlotsInDay, degree, colors, k);
   // }
 
   @Override

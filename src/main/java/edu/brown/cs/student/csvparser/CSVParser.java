@@ -11,7 +11,7 @@ import java.util.List;
 public class CSVParser {
 
   /**
-   * Method to parse the CSV file
+   * Method to parse the CSV file.
    *
    * @param textBuilder - filename
    *

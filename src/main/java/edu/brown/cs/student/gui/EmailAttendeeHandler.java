@@ -31,6 +31,13 @@ import spark.Route;
  */
 public class EmailAttendeeHandler implements Route {
 
+  /**
+   * This is a field for this class.
+   *
+   * AM_TO_PM_BOUNDARY - an int, which is used to determine if a time is in AM or PM
+   */
+  private static final int AM_TO_PM_BOUNDARY = 12;
+
   @Override
   public Object handle(Request request, Response response) throws Exception {
     String conventionID = request.params(":id");
@@ -38,7 +45,11 @@ public class EmailAttendeeHandler implements Route {
     String userEmail = request.cookie("user");
 
     if (userEmail == null) {
-      response.redirect("/home"); // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      Map<String, Object> variables = ImmutableMap.of("message",
+          "You are not authorized to send emails.");
+      Gson gson = new Gson();
+
+      return gson.toJson(variables);
     }
 
     DatabaseUtility db = new DatabaseUtility();
@@ -124,7 +135,8 @@ public class EmailAttendeeHandler implements Route {
       message.setSubject("Schedule for " + convName);
 
       String header = "<body> <h1>Here's the schedule for " + convName + " </h1>";
-      String end = "<p>This schedule made with Sked and sent by the convention organizer.</p></body>";
+      String end = "<p>This schedule made with Sked and sent by the convention organizer."
+          + "</p></body>";
       message.setContent(header + emailContent + end, "text/html");
       Transport.send(message);
     } catch (MessagingException mex) {
@@ -133,12 +145,11 @@ public class EmailAttendeeHandler implements Route {
     }
 
     return true;
-
   }
 
   /**
    * This method turns the start date/time and end date/time into a String that is easily
-   * understandable for the schedule receiver
+   * understandable for the schedule receiver.
    *
    * @param startString - a String, in the format of a LocalDateTime turned into a String, which
    *        represents the start date and time for an event
@@ -170,14 +181,14 @@ public class EmailAttendeeHandler implements Route {
       String startAmPm = "AM";
       String endAmPm = "AM";
 
-      if (startHour > 12) {
+      if (startHour > AM_TO_PM_BOUNDARY) {
         startAmPm = "PM";
-        startHour = startHour - 12;
+        startHour = startHour - AM_TO_PM_BOUNDARY;
       }
 
-      if (endHour > 12) {
+      if (endHour > AM_TO_PM_BOUNDARY) {
         endAmPm = "PM";
-        endHour = endHour - 12;
+        endHour = endHour - AM_TO_PM_BOUNDARY;
       }
 
       String startMinute = startMin + "";

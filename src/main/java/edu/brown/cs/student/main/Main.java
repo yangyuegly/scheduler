@@ -52,16 +52,22 @@ public final class Main {
    *
    * DEFAULT_PORT - an int, which represents the default port of this program
    *
+   * connString - a ConnectionString
+   *
+   * settings - a MongoClientSettings
+   *
+   * mongo - a MongoClient
+   *
+   * database - a MongoDatabase, which is used to access the database
+   *
+   * args - a String array, which represents the arguments to Main
    */
   private static final int DEFAULT_PORT = 4567;
-
-  ConnectionString connString;
-
-  MongoClientSettings settings;
-  MongoClient mongo;
-
-  // Accessing the database
-  static MongoDatabase database;
+  private ConnectionString connString;
+  private MongoClientSettings settings;
+  private MongoClient mongo;
+  private static MongoDatabase database;
+  private String[] args;
 
   /**
    * The initial method called when execution begins.
@@ -72,34 +78,44 @@ public final class Main {
     new Main(args).run();
   }
 
-  private String[] args;
-
   private Main(String[] args) {
     this.args = args;
   }
 
+  /**
+   * This method is used to get the database.
+   *
+   * @return a MongoDatabase, which is used to access the database
+   */
   public static MongoDatabase getDatabase() {
     return Main.database;
   }
 
+  /**
+   * This method gets the heroku assigned port.
+   *
+   * @return an int, which represents the heroku assigned port.
+   */
   static int getHerokuAssignedPort() {
     ProcessBuilder processBuilder = new ProcessBuilder();
     if (processBuilder.environment().get("PORT") != null) {
       return Integer.parseInt(processBuilder.environment().get("PORT"));
     }
-    return 4567; // return default port if heroku-port isn't set (i.e. on localhost)
+    return DEFAULT_PORT; // return default port if heroku-port isn't set (i.e. on localhost)
   }
 
   private void run() {
     // Parse command line arguments
-    
     OptionParser parser = new OptionParser();
     parser.accepts("gui");
     parser.accepts("port").withRequiredArg().ofType(Integer.class).defaultsTo(DEFAULT_PORT);
     OptionSet options = parser.parse(args);
-    
+
     connString = new ConnectionString(
-        "mongodb://sduraide:cs32scheduler@scheduler-shard-00-00-rw75k.mongodb.net:27017,scheduler-shard-00-01-rw75k.mongodb.net:27017,scheduler-shard-00-02-rw75k.mongodb.net:27017/test?ssl=true&replicaSet=scheduler-shard-0&authSource=admin&retryWrites=true&w=majority");
+        "mongodb://sduraide:cs32scheduler@scheduler-shard-00-00-rw75k.mongodb.net:27017,"
+            + "scheduler-shard-00-01-rw75k.mongodb.net:27017,scheduler-shard-00-02-rw75k."
+            + "mongodb.net:27017/test?ssl=true&replicaSet=scheduler-shard-0&authSource="
+            + "admin&retryWrites=true&w=majority");
 
     settings = MongoClientSettings.builder().applyConnectionString(connString).retryWrites(true)
         .build();

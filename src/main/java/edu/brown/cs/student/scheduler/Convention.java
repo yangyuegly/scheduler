@@ -55,7 +55,7 @@ public class Convention {
   @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
   private LocalDateTime endDateTime;
   private List<Event> events = null;
-  boolean loadedInDb = false;
+  private boolean loadedInDb = false;
 
   @Override
   public String toString() {
@@ -87,9 +87,8 @@ public class Convention {
   }
 
   /**
-   * This is another constructor for this class. It is used when the user fills out the form on the
-   * setup convention home page. We use this constructor to fill in the data, and then we load this
-   * convention into the database.
+   * This is another constructor for this class. It is used when the convention data is gotten from
+   * the database.
    *
    * @param convName - a String, which represents the name of this convention
    * @param convId - a String, which represents the id of this convention
@@ -113,7 +112,9 @@ public class Convention {
   }
 
   /**
-   * Alternative constructor
+   * Alternative constructor. It is used when the user fills out the form on the setup convention
+   * home page. We use this constructor to fill in the data, and then we load this convention into
+   * the database.
    *
    * @param convId -- a String, which represents the id of the convention
    *

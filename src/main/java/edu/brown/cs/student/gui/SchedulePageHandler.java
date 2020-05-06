@@ -12,6 +12,10 @@ import spark.Request;
 import spark.Response;
 import spark.TemplateViewRoute;
 
+/**
+ * This is a class used to display the schedule page without the calendar. It implements
+ * TemplateViewRoute.
+ */
 public class SchedulePageHandler implements TemplateViewRoute {
 
   @Override

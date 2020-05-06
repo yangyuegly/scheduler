@@ -5,17 +5,25 @@ import java.util.Objects;
 import edu.brown.cs.student.graph.IEdge;
 
 /**
- * Class that represents a conflict Edge
+ * Class that represents a conflict Edge. It implements IEdge for the parameters Event and Conflict.
  */
 public class Conflict implements IEdge<Event, Conflict> {
 
-  // fields of the class representing the pairwise conflict of events and weight
-  Event event1;
-  Event event2;
-  Integer weight;
+  /**
+   * These are fields for this class.
+   *
+   * event1 - an Event, which represents the first conflicting event (conflicts are ordered)
+   *
+   * event2 - an Event, which represents the second conflicting event
+   *
+   * weight - an Integer, which represents the weight of the conflict
+   */
+  private Event event1;
+  private Event event2;
+  private Integer weight;
 
   /**
-   * Constructor for Conflict
+   * Constructor for Conflict.
    *
    * @param event1 - event in conflict
    * @param event2 - event in conflict
@@ -33,8 +41,8 @@ public class Conflict implements IEdge<Event, Conflict> {
   }
 
   @Override
-  public void setHead(Event event1) {
-    this.event1 = event1;
+  public void setHead(Event head) {
+    this.event1 = head;
   }
 
   @Override
@@ -43,8 +51,8 @@ public class Conflict implements IEdge<Event, Conflict> {
   }
 
   @Override
-  public void setTail(Event event2) {
-    this.event2 = event2;
+  public void setTail(Event tail) {
+    this.event2 = tail;
   }
 
   @Override
@@ -57,16 +65,25 @@ public class Conflict implements IEdge<Event, Conflict> {
     this.weight = weight;
   }
 
+  /**
+   * This method is used to increment the weight of the Conflict by 1.
+   */
+  public void incrementWeight() {
+    this.weight++;
+  }
+
   @Override
   public boolean equals(Object o) {
-    if (o == this)
+    if (o == this) {
       return true;
+    }
+
     if (!(o instanceof Conflict)) {
       return false;
     }
+
     Conflict conflict = (Conflict) o;
     return event1.equals(conflict.event1) && event2.equals(conflict.event2);
-    // return Objects.equals(event1, conflict.event1) && Objects.equals(event2, conflict.event2);
   }
 
   @Override

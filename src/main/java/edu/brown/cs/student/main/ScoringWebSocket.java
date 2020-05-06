@@ -17,19 +17,29 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 /**
- * Class to manage collaboration
+ * Class to manage collaboration on the convention home page.
  */
 @WebSocket
 public class ScoringWebSocket {
   private static final Gson GSON = new Gson();
   private static Map<String, List<Session>> sessions = new ConcurrentHashMap<>();
   private static int nextId = 0;
-  static Map<String, String> map = new ConcurrentHashMap<>();
+  private static Map<String, String> map = new ConcurrentHashMap<>();
 
+  /**
+   * This is an enum. It is used to represent the type of socket message being sent.
+   */
   private static enum MESSAGE_TYPE {
     CONNECT, EVENT, UPDATE
   }
 
+  /**
+   * This method occurs when a connect message is sent.
+   *
+   * @param session - a Session
+   *
+   * @throws IOException if there is a problem related to input and output
+   */
   @OnWebSocketConnect
   public void connected(Session session) throws IOException {
     String currURI = session.getUpgradeRequest().getRequestURI().toString();

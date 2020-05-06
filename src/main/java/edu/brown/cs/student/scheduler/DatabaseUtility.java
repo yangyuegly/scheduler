@@ -238,12 +238,12 @@ public class DatabaseUtility {
       Conflict currConflict = new Conflict(event1, event2, conflictDoc.getInteger("weight"));
 
       if (currConflict.equals(newConflict)) { // matches with existing conflict
-        currConflict.weight++;
+        currConflict.incrementWeight();
         foundNormalMatch = true;
       }
 
       if (currConflict.equals(reverseConflict)) { // matches with reversed conflict
-        currConflict.weight++;
+        currConflict.incrementWeight();
         foundReverseMatch = true;
       }
 

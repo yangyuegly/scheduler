@@ -56,8 +56,6 @@ public class ScoringWebSocket {
     currConvention.add(session);
     sessions.put(currURI, currConvention);
 
-    System.err.println("currURI " + currURI + " added to sessions"); // delete
-
     JsonObject message = new JsonObject();
     message.addProperty("type", MESSAGETYPE.CONNECT.ordinal());
     JsonObject payload = new JsonObject();
@@ -127,10 +125,6 @@ public class ScoringWebSocket {
     newPayload.addProperty("text", currString);
 
     toSend.add("payload", newPayload);
-
-    for (Map.Entry<String, String> m : map.entrySet()) {
-      System.out.println(m.getKey() + " " + m.getValue());
-    }
     String toSendStr = GSON.toJson(toSend);
 
     List<Session> sessionsForURI = sessions.get(currURI);

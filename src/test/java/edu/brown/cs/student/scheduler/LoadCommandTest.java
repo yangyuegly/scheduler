@@ -7,13 +7,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.junit.Test;
+
 public class LoadCommandTest {
   DatabaseUtility db = new DatabaseUtility();
 
   /**
    * Test for no conflicts
    */
-//  @Test
+  @Test
   public void testLoadNoConflicts() {
     LoadCommand lc = new LoadCommand();
     Convention convention = new Convention("testConvention1");
@@ -43,7 +45,7 @@ public class LoadCommandTest {
   }
 
   // test with conflicts
-//  @Test
+  @Test
   public void testLoadConflicts() {
     LoadCommand lc = new LoadCommand();
     Convention convention = new Convention("testConvention5");
@@ -78,7 +80,7 @@ public class LoadCommandTest {
   }
 
   // test empty file
-//  @Test
+  @Test
   public void testEmptyFile() {
     LoadCommand lc = new LoadCommand();
     Convention convention = new Convention("testConvention6");

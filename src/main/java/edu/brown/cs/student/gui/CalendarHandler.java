@@ -28,6 +28,9 @@ public class CalendarHandler implements Route {
   public String handle(Request req, Response res) {
     String conventionID = req.params(":id");
     String college = WebScraper.getcollegeID();
+
+    System.out.println("in calendar handler; collegeID is " + college); // delete
+
     WebScraper scraper = new WebScraper(conventionID);
     WebScraper.setCollege(college);
     String correspondingID = scraper.scrape();

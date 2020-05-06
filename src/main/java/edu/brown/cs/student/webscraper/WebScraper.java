@@ -146,12 +146,12 @@ public class WebScraper {
       }
     };
 
-//Install the all-trusting host verifier
+    // Install the all-trusting host verifier
     HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
   }
 
   /**
-   * Method to get all colleges from coursicle website.
+   * Method to get all colleges from the database.
    */
   public void getAllColleges() {
     MongoCollection<org.bson.Document> collegesCollection = database.getCollection("colleges");
@@ -172,6 +172,8 @@ public class WebScraper {
    * @return the conventionID which contains the result
    */
   public String scrape() {
+    System.out.println("in scrape; collegeID is " + collegeID); // delete
+
     // get the collection from the database
     MongoCollection<org.bson.Document> namesCollection = database.getCollection("nameToIDs");
     org.bson.Document convention = namesCollection

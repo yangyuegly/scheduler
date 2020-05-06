@@ -9,7 +9,7 @@ import java.util.List;
 import org.junit.Test;
 
 /**
- * Class to test the Register Command
+ * Class to test the ScheduleCommand class.
  *
  */
 public class ScheduleCommandTest {

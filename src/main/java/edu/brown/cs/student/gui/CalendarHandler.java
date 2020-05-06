@@ -30,26 +30,19 @@ public class CalendarHandler implements Route {
     String conventionID = req.params(":id");
     String college = WebScraper.getcollegeID();
 
-    System.out.println("in calendar handler; collegeID is " + college); // delete
-
     WebScraper scraper = new WebScraper(conventionID);
     Map<String, String> schoolNameToIDMap = scraper.getcoursesToIDs();
     Convention school = du.getConvention(conventionID);
     String schoolN = school.getName();
     String[] schoolNameArray = schoolN.split(" ");
     String schoolName = "";
+
     for (int i = 0; i < schoolNameArray.length - 2; i++) {
       schoolName += schoolNameArray[i] + " ";
     }
     String schoolID = schoolNameToIDMap.get(schoolName.trim());
     WebScraper.setCollege(schoolID);
-    System.out.println("schoolID: " + schoolID);
     String correspondingID = scraper.scrape();
-    // String correspondingID = null;
-    if (correspondingID == null || correspondingID.isEmpty()) {
-      System.out.println("this is not an exam"); // delete
-      // correspondingID = null;
-    }
     String userEmail = req.cookie("user");
 
     if (userEmail == null) {

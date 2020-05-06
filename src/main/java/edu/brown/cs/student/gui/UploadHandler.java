@@ -49,7 +49,7 @@ public class UploadHandler implements TemplateViewRoute {
       // user is not logged in
       Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "message",
           "Please log in");
-      return new ModelAndView(variables, "home.ftl");
+      return new ModelAndView(variables, "login.ftl");
     }
 
     StringBuilder textBuilder = new StringBuilder();

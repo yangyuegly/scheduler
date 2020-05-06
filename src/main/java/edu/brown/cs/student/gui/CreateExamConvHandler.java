@@ -41,7 +41,7 @@ public class CreateExamConvHandler implements TemplateViewRoute {
       // user is not logged in
       Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "message",
           "Please log in");
-      return new ModelAndView(variables, "home.ftl");
+      return new ModelAndView(variables, "login.ftl");
     }
 
     // gets the current date (we don't want the user to schedule an event in the past)

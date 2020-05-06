@@ -31,7 +31,7 @@ public class LoginSubmitHandler implements TemplateViewRoute {
       String message = e.getMessage();
 
       Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "message", message);
-      return new ModelAndView(variables, "home.ftl");
+      return new ModelAndView(variables, "login.ftl");
     }
 
     response.cookie("user", email);

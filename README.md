@@ -93,7 +93,7 @@ Our project is a scheduler for a set of events, which we call a convention. For 
 
 ## How to Build and Run
 
-<link to URL>
+https://cryptic-bastion-80345.herokuapp.com/home
 
 Go to the website and create an account.  When you have an account and are logged in, you can create a new convention by clicking "Create a new convention."  Then, you specify the time range for your convention and the duration of the convention's sub-events.  Afterwards, you have the option to add events manually or upload a CSV file.  
 

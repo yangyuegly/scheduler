@@ -42,7 +42,17 @@ public class ConventionHomeHandler implements TemplateViewRoute {
     // checking if this is an exam
     String college = WebScraper.getcollegeID();
     WebScraper scraper = new WebScraper(conventionID);
-    WebScraper.setCollege(college);
+    Map<String, String> schoolNameToIDMap = scraper.getcoursesToIDs();
+    Convention school = db.getConvention(conventionID);
+    String schoolN = school.getName();
+    String[] schoolNameArray = schoolN.split(" ");
+    String schoolName = "";
+    for (int i = 0; i < schoolNameArray.length - 2; i++) {
+      schoolName += schoolNameArray[i] + " ";
+    }
+    String schoolID = schoolNameToIDMap.get(schoolName.trim());
+    WebScraper.setCollege(schoolID);
+    System.out.println("schoolID: " + schoolID);
     String correspondingID = scraper.scrape();
 
     if (correspondingID != null && !correspondingID.isEmpty()) {

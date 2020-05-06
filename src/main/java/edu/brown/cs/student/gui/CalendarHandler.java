@@ -26,10 +26,21 @@ public class CalendarHandler implements Route {
 
   @Override
   public String handle(Request req, Response res) {
+    DatabaseUtility du = new DatabaseUtility();
     String conventionID = req.params(":id");
     String college = WebScraper.getcollegeID();
     WebScraper scraper = new WebScraper(conventionID);
-    WebScraper.setCollege(college);
+    Map<String, String> schoolNameToIDMap = scraper.getcoursesToIDs();
+    Convention school = du.getConvention(conventionID);
+    String schoolN = school.getName();
+    String[] schoolNameArray = schoolN.split(" ");
+    String schoolName = "";
+    for (int i = 0; i < schoolNameArray.length - 2; i++) {
+      schoolName += schoolNameArray[i] + " ";
+    }
+    String schoolID = schoolNameToIDMap.get(schoolName.trim());
+    WebScraper.setCollege(schoolID);
+    System.out.println("schoolID: " + schoolID);
     String correspondingID = scraper.scrape();
     // String correspondingID = null;
     if (correspondingID == null || correspondingID.isEmpty()) {

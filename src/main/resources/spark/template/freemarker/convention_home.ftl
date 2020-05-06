@@ -47,7 +47,7 @@
 
   <div id="addCollaboratorDiv">
     <h3 id="addCollaboratorLabel">Add a collaborator for this convention:</h3>
-    <label for="colEmail" id="colEmailLabel">User email: </label><br>
+    <label for="colEmail" id="colEmailLabel">User Email: </label><br>
     <input name="colEmail" id="colEmail" size="30" required><br>
     <p id="addCollaboratorError" class="errorMessage"></p>
     <p id="addCollaboratorSuccess" class="successMessage"></p>

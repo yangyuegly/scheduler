@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.eclipse.jetty.websocket.api.RemoteEndpoint;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
@@ -17,7 +18,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 /**
- * Class to manage collaboration on the convention home page.
+ * Class used to update the convention home page with new events from other windows or
+ * collaborators.
  */
 @WebSocket
 public class ScoringWebSocket {
@@ -53,6 +55,9 @@ public class ScoringWebSocket {
     List<Session> currConvention = sessions.getOrDefault(currURI, new ArrayList<Session>());
     currConvention.add(session);
     sessions.put(currURI, currConvention);
+
+    System.err.println("currURI " + currURI + " added to sessions"); // delete
+
     JsonObject message = new JsonObject();
     message.addProperty("type", MESSAGETYPE.CONNECT.ordinal());
     JsonObject payload = new JsonObject();
@@ -82,7 +87,16 @@ public class ScoringWebSocket {
    */
   @OnWebSocketClose
   public void closed(Session session, int statusCode, String reason) {
-    sessions.remove(session);
+    String currURI = session.getUpgradeRequest().getRequestURI().toString();
+    List<Session> sessionsForURI = sessions.get(currURI);
+
+    if (sessionsForURI == null) {
+      System.err.println("ERROR: URI is not in sessions when closing");
+    }
+
+    // remove the session from the Map
+    sessionsForURI.remove(session);
+    sessions.replace(currURI, sessionsForURI);
   }
 
   /**
@@ -118,8 +132,16 @@ public class ScoringWebSocket {
       System.out.println(m.getKey() + " " + m.getValue());
     }
     String toSendStr = GSON.toJson(toSend);
-    for (Session s : sessions.get(currURI)) {
-      s.getRemote().sendString(toSendStr);
+
+    List<Session> sessionsForURI = sessions.get(currURI);
+
+    if (sessionsForURI == null) {
+      System.err.println("currURI " + currURI + " is not in sessions");
+    } else {
+      for (Session s : sessionsForURI) {
+        RemoteEndpoint remote = s.getRemote();
+        remote.sendString(toSendStr);
+      }
     }
   }
 }

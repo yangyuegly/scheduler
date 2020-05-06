@@ -15,7 +15,7 @@
 
 
 <div class="navbar">
-  <a href="/home"><img src="/images/sked_logo2.png" width="40" height="35"></a>
+  <a href="/home"><img src="/images/sked_logo2.png" width="38" height="35"></a>
 
   <a href="/account">My conventions</a>
   <a href="/create_convention">Create a convention</a>

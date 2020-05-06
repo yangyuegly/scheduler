@@ -57,13 +57,6 @@ public class Convention {
   private List<Event> events = null;
   private boolean loadedInDb = false;
 
-  @Override
-  public String toString() {
-    return "Convention [name=" + name + ", id=" + id + ", startDateTime=" + startDateTime
-        + ", numDays=" + numDays + ", eventDuration=" + eventDuration + ", endDateTime="
-        + endDateTime + "]";
-  }
-
   /**
    * This is a constructor for this class. This is used when we only have access to the id.
    *
@@ -301,5 +294,12 @@ public class Convention {
   public Set<Conflict> getConflicts() {
     DatabaseUtility du = new DatabaseUtility();
     return du.getConflictsFromConventionID(this.id);
+  }
+
+  @Override
+  public String toString() {
+    return "Convention [name=" + name + ", id=" + id + ", startDateTime=" + startDateTime
+        + ", numDays=" + numDays + ", eventDuration=" + eventDuration + ", endDateTime="
+        + endDateTime + "]";
   }
 }

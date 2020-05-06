@@ -88,7 +88,7 @@ public class DatabaseUtilityTest {
   }
 
   // @Test
-  public void addConflictTest() { // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  public void addConflictTest() {
 
     Event e1 = new Event(1, "x", "");
     Event e2 = new Event(2, "y", "");

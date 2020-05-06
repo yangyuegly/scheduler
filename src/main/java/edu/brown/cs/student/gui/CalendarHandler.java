@@ -29,6 +29,9 @@ public class CalendarHandler implements Route {
     DatabaseUtility du = new DatabaseUtility();
     String conventionID = req.params(":id");
     String college = WebScraper.getcollegeID();
+
+    System.out.println("in calendar handler; collegeID is " + college); // delete
+
     WebScraper scraper = new WebScraper(conventionID);
     Map<String, String> schoolNameToIDMap = scraper.getcoursesToIDs();
     Convention school = du.getConvention(conventionID);

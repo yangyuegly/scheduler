@@ -50,6 +50,7 @@ public class ConventionHomeHandler implements TemplateViewRoute {
     for (int i = 0; i < schoolNameArray.length - 2; i++) {
       schoolName += schoolNameArray[i] + " ";
     }
+    // remove "Final Exams"
     String schoolID = schoolNameToIDMap.get(schoolName.trim());
     WebScraper.setCollege(schoolID);
     System.out.println("schoolID: " + schoolID);

@@ -17,7 +17,7 @@ let myId = -1;
 
 let setup_live_event_updates = () => {
   conn = new WebSocket(
-    "ws://" + window.location.host + window.location.pathname + "/websocket"
+    "wss://" + window.location.host + window.location.pathname + "/websocket"
   );
 
   conn.onerror = (err) => {

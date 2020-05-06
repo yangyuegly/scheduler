@@ -35,7 +35,7 @@ import com.mongodb.client.model.Updates;
 import edu.brown.cs.student.main.Main;
 
 /**
- * This class contains all the Database CRUD functions necessary
+ * This class contains all the Database CRUD functions necessary.
  */
 public class DatabaseUtility {
   /**
@@ -58,7 +58,7 @@ public class DatabaseUtility {
   private ObjectMapper mapper = new ObjectMapper();
 
   /**
-   * Constructor for DatabaseUtility
+   * Constructor for DatabaseUtility.
    */
   public DatabaseUtility() {
     mapper.registerModule(new JavaTimeModule());
@@ -90,7 +90,7 @@ public class DatabaseUtility {
   }
 
   /**
-   * Method to check if user has access to a particular convention
+   * Method to check if user has access to a particular convention.
    *
    * @param userEmail - email of the user
    * @param conventionID - convention ID to check
@@ -553,8 +553,14 @@ public class DatabaseUtility {
     return emails;
   }
 
-  // Should map from the original unordered id to ordered
-  public HashMap<Integer, Integer> updateEventID(String conventionID) {
+  /**
+   * This method is used to update event IDs in a convention.
+   *
+   * @param conventionID - a String, which represents the ID of the convention to modify
+   *
+   * @return a Map of Integers to Integers (original unordered id to order id)
+   */
+  public Map<Integer, Integer> updateEventID(String conventionID) {
     List<BasicDBObject> eventArray = new ArrayList<>();
     BasicDBObject query = new BasicDBObject();
     query.put("conventionID", conventionID);
@@ -578,7 +584,15 @@ public class DatabaseUtility {
     return fixID;
   }
 
-  public Boolean updateConflict(String conventionID, HashMap<Integer, Integer> map) {
+  /**
+   * This method is used to update the conflicts in a convention.
+   *
+   * @param conventionID - a String, which represents the ID of the convention to modify
+   * @param map - a Map of Integers to Integers
+   *
+   * @return a Boolean, true if the method was successful
+   */
+  public Boolean updateConflict(String conventionID, Map<Integer, Integer> map) {
     List<BasicDBObject> conflictArray = new ArrayList<>();
     BasicDBObject query = new BasicDBObject();
     query.put("conventionID", conventionID);

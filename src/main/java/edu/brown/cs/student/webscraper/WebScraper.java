@@ -30,7 +30,7 @@ import edu.brown.cs.student.scheduler.DatabaseUtility;
 import edu.brown.cs.student.scheduler.Event;
 
 /**
- * Class to scrape the web (initially)
+ * Class to scrape the web (initially).
  */
 public class WebScraper {
 
@@ -38,7 +38,7 @@ public class WebScraper {
    * Fields include USER_AGENT for webscraping, collegeName to set it to deptToCourses to store all
    * the courses in one department conflict to store all pairwise conflicts coursesToIDs to store
    * the ids of each course from coursicle conventionID to store the convention database to access
-   * the MongoDB database
+   * the MongoDB database.
    */
   // private static String USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36
   // (KHTML, like Gecko) Chrome/36.0.1985.125 Safari/537.36";
@@ -97,7 +97,7 @@ public class WebScraper {
   }
 
   /**
-   * Getter for collegeID
+   * Getter for collegeID.
    *
    * @return String representing collegeID
    */
@@ -167,7 +167,7 @@ public class WebScraper {
   }
 
   /**
-   * Return the scraping results
+   * Return the scraping results.
    *
    * @return the conventionID which contains the result
    */
@@ -190,9 +190,13 @@ public class WebScraper {
 //   public void InitialScrape() {
 //     if (Main.getDatabase() == null) {
 //       ConnectionString connString = new ConnectionString(
-//           "mongodb://sduraide:cs32scheduler@scheduler-shard-00-00-rw75k.mongodb.net:27017,scheduler-shard-00-01-rw75k.mongodb.net:27017,scheduler-shard-00-02-rw75k.mongodb.net:27017/test?ssl=true&replicaSet=scheduler-shard-0&authSource=admin&retryWrites=true&w=majority");
+//           "mongodb://sduraide:cs32scheduler@scheduler-shard-00-00-rw75k.mongodb.net:27017,"
+//             + "scheduler-shard-00-01-rw75k.mongodb.net:27017,scheduler-shard-00-02-rw75k."
+//             + "mongodb.net:27017/test?ssl=true&replicaSet=scheduler-shard-0&authSource="
+//             + "admin&retryWrites=true&w=majority");
 
-//       MongoClientSettings settings = MongoClientSettings.builder().applyConnectionString(connString)
+//       MongoClientSettings settings =
+//         MongoClientSettings.builder().applyConnectionString(connString)
 //           .retryWrites(true).build();
 //       MongoClient mongo = MongoClients.create(settings);
 //       // created db in cluster in MongoDBAtlas including collections: users, events, conflicts

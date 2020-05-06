@@ -29,7 +29,7 @@ public class ScoringWebSocket {
   /**
    * This is an enum. It is used to represent the type of socket message being sent.
    */
-  private static enum MESSAGE_TYPE {
+  private enum MESSAGETYPE {
     CONNECT, EVENT, UPDATE
   }
 
@@ -54,7 +54,7 @@ public class ScoringWebSocket {
     currConvention.add(session);
     sessions.put(currURI, currConvention);
     JsonObject message = new JsonObject();
-    message.addProperty("type", MESSAGE_TYPE.CONNECT.ordinal());
+    message.addProperty("type", MESSAGETYPE.CONNECT.ordinal());
     JsonObject payload = new JsonObject();
     payload.addProperty("id", nextId);
     payload.addProperty("text", payloadText);
@@ -63,26 +63,46 @@ public class ScoringWebSocket {
     nextId++;
   }
 
+  /**
+   * This method is used when there is a socket error.
+   *
+   * @param e - a Throwable
+   */
   @OnWebSocketError
   public void onWebSocketError(Throwable e) {
     System.out.println(e);
   }
 
+  /**
+   * This method is used when the socket is closed.
+   *
+   * @param session - a Session
+   * @param statusCode - an int, which represents the status code of the closure
+   * @param reason - a String, which represents the reason the socket closed
+   */
   @OnWebSocketClose
   public void closed(Session session, int statusCode, String reason) {
     sessions.remove(session);
   }
 
+  /**
+   * This method is used when a message is sent over the socket.
+   *
+   * @param session - a Session
+   * @param message - a String, which represents the message that was sent
+   *
+   * @throws IOException if an error occurs
+   */
   @OnWebSocketMessage
   public synchronized void message(Session session, String message) throws IOException {
     String currURI = session.getUpgradeRequest().getRequestURI().toString();
     JsonObject received = GSON.fromJson(message, JsonObject.class);
-    assert received.get("type").getAsInt() == MESSAGE_TYPE.EVENT.ordinal();
+    assert received.get("type").getAsInt() == MESSAGETYPE.EVENT.ordinal();
 
     JsonObject payload = received.get("payload").getAsJsonObject();
 
     JsonObject toSend = new JsonObject();
-    toSend.addProperty("type", MESSAGE_TYPE.UPDATE.ordinal());
+    toSend.addProperty("type", MESSAGETYPE.UPDATE.ordinal());
     JsonObject newPayload = new JsonObject();
     newPayload.add("id", payload.get("id"));
 

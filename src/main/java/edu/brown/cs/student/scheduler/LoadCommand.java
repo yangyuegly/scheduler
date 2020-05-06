@@ -18,45 +18,28 @@ import com.mongodb.client.MongoDatabase;
 import edu.brown.cs.student.main.Main;
 
 /**
- * {
- *  conventionID: 1,
- *  conflicts: [
- *    {
- *      event1: 1,
- *      event2: 2,
- *      weight: 3
- *  },
- *  {
- *      event1: 1,
- *      event2: 3,
- *      weight: 3
- *  }
- * ],
- *
- * }
- *
- */
-
-/**
  * This class is used to load in a file.
  */
 
 public class LoadCommand {
   /**
-   * Fields for conflicts and connecting to database
+   * Fields for conflicts and connecting to database.
    */
   private List<Conflict> conflict;
   private MongoDatabase database;
 
   /**
-   * Constructor for LoadCommand
+   * Constructor for LoadCommand.
    */
   public LoadCommand() {
     conflict = new ArrayList<>();
     // for unit testing purposes
     if (Main.getDatabase() == null) {
       ConnectionString connString = new ConnectionString(
-          "mongodb://sduraide:cs32scheduler@scheduler-shard-00-00-rw75k.mongodb.net:27017,scheduler-shard-00-01-rw75k.mongodb.net:27017,scheduler-shard-00-02-rw75k.mongodb.net:27017/test?ssl=true&replicaSet=scheduler-shard-0&authSource=admin&retryWrites=true&w=majority");
+          "mongodb://sduraide:cs32scheduler@scheduler-shard-00-00-rw75k.mongodb.net:27017"
+              + ",scheduler-shard-00-01-rw75k.mongodb.net:27017,scheduler-shard-00-02-rw75k."
+              + "mongodb.net:27017/test?ssl=true&replicaSet=scheduler-shard-0&authSource="
+              + "admin&retryWrites=true&w=majority");
 
       MongoClientSettings settings = MongoClientSettings.builder().applyConnectionString(connString)
           .retryWrites(true).build();
@@ -69,7 +52,7 @@ public class LoadCommand {
   }
 
   /**
-   * Method to insert data in NoSQL
+   * Method to insert data in NoSQL.
    *
    * @param input - data from csv file in the form of a List of Lists of Strings, where each inner
    *        list is a row from the file
@@ -97,13 +80,13 @@ public class LoadCommand {
             nameToId.put(second, count);
             count++;
           }
-          Conflict conflict = new Conflict(new Event(nameToId.get(first), first, ""),
+          Conflict currConflict = new Conflict(new Event(nameToId.get(first), first, ""),
               new Event(nameToId.get(second), second, ""), null);
-          this.conflict.add(conflict);
+          this.conflict.add(currConflict);
           Conflict reverse = new Conflict(new Event(nameToId.get(second), second, ""),
               new Event(nameToId.get(first), first, ""), null);
           // add to the weight if the conflict doesn't exist or add the conflict itself
-          frequencyMap.put(conflict, frequencyMap.getOrDefault(conflict, 0) + 1);
+          frequencyMap.put(currConflict, frequencyMap.getOrDefault(conflict, 0) + 1);
           frequencyMap.put(reverse, frequencyMap.getOrDefault(reverse, 0) + 1);
 
         }

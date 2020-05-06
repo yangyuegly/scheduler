@@ -24,8 +24,8 @@ public class ScheduleCommand {
   private List<Event> nodes;
   private Set<Conflict> edges;
   private Convention convention;
-  private Integer TS;
-  private Integer CONCURENCY_LIMIT, MAX_SCHEDULE_DAYS;
+  private Integer numTimeSlotsInDay;
+  private Integer concurrencyLimit, maxScheduleDays;
   private UndirectedWeightedGraph<Event, Conflict> graph;
   private String correspondingID;
   private Convention correspondingConvention;
@@ -34,18 +34,20 @@ public class ScheduleCommand {
    * Constructor for the ScheduleCommand class.
    *
    * @param convention - convention to schedule
-   * @param CONCURENCY_LIMIT - Limit for concurrency threads
-   * @param MAX_SCHEDULE_DAYS - Convention duration in days
-   * @param TS - the maximum number of time slots in a given day
+   * @param concurrencyLimit - Limit for concurrency threads
+   * @param maxScheduleDays - Convention duration in days
+   * @param numTimeSlotsInDay - the maximum number of time slots in a given day
+   * @param correspondingID - a String, which represents the convention ID of the exam period
+   *        associated with convention; else null
    */
-  public ScheduleCommand(Convention convention, Integer CONCURENCY_LIMIT, Integer MAX_SCHEDULE_DAYS,
-      Integer TS, String correspondingID) {
-    this.TS = TS;
+  public ScheduleCommand(Convention convention, Integer concurrencyLimit, Integer maxScheduleDays,
+      Integer numTimeSlotsInDay, String correspondingID) {
+    this.numTimeSlotsInDay = numTimeSlotsInDay;
     this.nodes = new ArrayList<>();
     this.edges = new HashSet<>();
     this.convention = convention;
-    this.CONCURENCY_LIMIT = CONCURENCY_LIMIT;
-    this.MAX_SCHEDULE_DAYS = MAX_SCHEDULE_DAYS;
+    this.concurrencyLimit = concurrencyLimit;
+    this.maxScheduleDays = maxScheduleDays;
     this.correspondingID = correspondingID;
     this.correspondingConvention = new Convention(correspondingID);
   }
@@ -78,10 +80,10 @@ public class ScheduleCommand {
       }
     }
 
-    this.graph = new UndirectedWeightedGraph<Event, Conflict>(this.nodes, this.CONCURENCY_LIMIT,
-        this.MAX_SCHEDULE_DAYS, this.TS);
+    this.graph = new UndirectedWeightedGraph<Event, Conflict>(this.nodes, this.concurrencyLimit,
+        this.maxScheduleDays, this.numTimeSlotsInDay);
     graph.addAllEdges(this.edges);
-    Set<Event> colored = graph.graphColoring(this.TS, this.CONCURENCY_LIMIT);
+    Set<Event> colored = graph.graphColoring(this.numTimeSlotsInDay, this.concurrencyLimit);
 
     List<CalendarEvent> calEvents = new ArrayList<>();
     List<Event> eventsToSort = new ArrayList<>();

@@ -24,7 +24,7 @@ import edu.brown.cs.student.exception.UserAuthenticationException;
 import edu.brown.cs.student.main.Main;
 
 /**
- * Command that registers the user
+ * Command that registers the user for Sked (lets the user create a new account).
  */
 public class RegisterCommand {
 
@@ -34,6 +34,7 @@ public class RegisterCommand {
   public static final String DESEDE_ENCRYPTION_SCHEME = "DESede";
   private SecretKey key;
   private static Logger logger;
+  private static final int NUM_BYTES = 16;
 
   /**
    * Method that registers a user.
@@ -50,7 +51,8 @@ public class RegisterCommand {
     byte[] salt = getSalt();
     String encryptedPassword = encrypt(password, salt);
 
-    String saltToString = Base64.getEncoder().encodeToString(salt);// convert salt to string
+    // convert salt to string
+    String saltToString = Base64.getEncoder().encodeToString(salt);
 
     MongoCollection<org.bson.Document> userCollection;
     // for unit testing purposes
@@ -84,16 +86,12 @@ public class RegisterCommand {
   }
 
   /**
-   * <<<<<<< HEAD Encrypt the user's password. ======= Encrypt password >>>>>>>
-   * 32f83163441fc8763673d7911e9508d9747e8e04
+   * Encrypt the user's password.
    *
    * @param password - password user input
    * @param salt - salt String
    *
-   *        <<<<<<< HEAD
-   * 
-   * @return a String, which represents the encrypted password =======
-   * @return >>>>>>> 32f83163441fc8763673d7911e9508d9747e8e04
+   * @return a String, which represents the encrypted password
    */
   private static String encrypt(String password, byte[] salt) {
     try {
@@ -125,9 +123,9 @@ public class RegisterCommand {
    * @return an array of bytes, which represents a salt
    */
   private static byte[] getSalt() {
-    byte[] salt = new byte[16];// bytes to be filled
+    byte[] salt = new byte[NUM_BYTES]; // bytes to be filled
     SecureRandom sr = new SecureRandom(); // secureRandom number
-    sr.nextBytes(salt);// fill bytes
+    sr.nextBytes(salt); // fill bytes
     return salt;
   }
 

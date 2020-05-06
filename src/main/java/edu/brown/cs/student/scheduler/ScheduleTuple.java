@@ -3,14 +3,26 @@ package edu.brown.cs.student.scheduler;
 import java.util.List;
 
 /**
- * Class to represent the schedule tuple
+ * Class to represent the schedule tuple. This is used so the CalendarHandler has both
+ * CalendarEvents (which are compatible with the FullCalendar API) and Events, which are used for
+ * sending emails.
  */
 public class ScheduleTuple {
+
+  /**
+   * These are fields for this class.
+   *
+   * calEvents - a List of CalendarEvents, which represent the events in this schedule in a form
+   * that is compatible with the FullCalendar API
+   *
+   * events - a List of Events, which represent the events in this schedule in a form that is
+   * compatible with the java code
+   */
   private List<CalendarEvent> calEvents;
   private List<Event> events;
 
   /**
-   * Constructor for schedule tuple
+   * Constructor for schedule tuple.
    *
    * @param calEvents - list of calendar events
    * @param events - list of events
@@ -21,14 +33,14 @@ public class ScheduleTuple {
   }
 
   /**
-   * Constructor for ScheduleTuple
+   * Constructor for ScheduleTuple.
    */
   public ScheduleTuple() {
 
   }
 
   /**
-   * Getter for calendar events
+   * Getter for calendar events.
    *
    * @return - list of calendar event
    */
@@ -37,7 +49,7 @@ public class ScheduleTuple {
   }
 
   /**
-   * Getter for events
+   * Getter for events.
    *
    * @return - list of events
    */

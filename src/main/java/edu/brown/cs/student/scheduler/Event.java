@@ -8,21 +8,22 @@ import java.util.Objects;
 import edu.brown.cs.student.graph.IVertex;
 
 /**
- * Represents an Event which is the vertex of the graph
+ * Represents an Event which is the vertex of the graph. It implements IVertex for the parameters
+ * Event and Conflict.
  */
 public class Event implements IVertex<Event, Conflict> {
 
   /**
    * Id of event, list of edges, degree of vertex, color of vertex name and description of vertex.
    */
-  Integer id;
-  List<Conflict> adjList;
-  Integer degree; //
-  List<Integer> color;
-  String name;
-  String description;
-  LocalDateTime start;
-  LocalDateTime end;
+  private Integer id;
+  private List<Conflict> adjList;
+  private Integer degree; //
+  private List<Integer> color;
+  private String name;
+  private String description;
+  private LocalDateTime start;
+  private LocalDateTime end;
 
   /**
    * Constructor of an event.
@@ -66,24 +67,6 @@ public class Event implements IVertex<Event, Conflict> {
   public void setId(Integer id) {
     this.id = id;
   }
-
-//  /**
-//   * Setter for adjList.
-//   *
-//   * @param adjList - val to set it to
-//   */
-//  public void setAdjList(List<Conflict> adjList) {
-//    this.adjList = adjList;
-//  }
-
-//  /**
-//   * Setter for degree
-//   *
-//   * @param degree - degree of the vertex to set it to
-//   */
-//  public void setDegree(Integer degree) {
-//    this.degree = degree;
-//  }
 
   /**
    * Getter for name.
@@ -165,11 +148,14 @@ public class Event implements IVertex<Event, Conflict> {
 
   @Override
   public boolean equals(Object o) {
-    if (o == this)
+    if (o == this) {
       return true;
+    }
+
     if (!(o instanceof Event)) {
       return false;
     }
+
     Event event = (Event) o;
     return Objects.equals(id, event.id) && Objects.equals(name, event.name);
   }

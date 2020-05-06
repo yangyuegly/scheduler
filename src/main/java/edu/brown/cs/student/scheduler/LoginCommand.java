@@ -20,12 +20,12 @@ import edu.brown.cs.student.exception.UserAuthenticationException;
 import edu.brown.cs.student.main.Main;
 
 /**
- * Method that carries out the login
+ * Method that carries out the login.
  */
 public class LoginCommand {
 
   /**
-   * Method that logs the user in
+   * Method that logs the user in.
    *
    * @param email - user email
    * @param password - user password
@@ -69,7 +69,7 @@ public class LoginCommand {
   }
 
   /**
-   * Method to decrypt the password
+   * Method to decrypt the password.
    *
    * @param userInputPassword - password user input
    * @param salt - salt string

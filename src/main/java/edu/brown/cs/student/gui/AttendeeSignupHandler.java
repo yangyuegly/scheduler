@@ -48,7 +48,7 @@ public class AttendeeSignupHandler implements TemplateViewRoute {
       eventCheckboxes += "<input type=\"checkbox\" name=\"" + eventID + "\" id=\"" + eventID + "\""
           + "value=\"" + eventName + "\"><label for=\"" + eventID + "\"> " + eventName;
 
-      if ((description != null) && (description != "")) {
+      if ((description != null) && (!description.equals(""))) {
         eventCheckboxes += ": " + description;
       }
 

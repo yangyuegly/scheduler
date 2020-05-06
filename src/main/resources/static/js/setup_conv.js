@@ -7,11 +7,6 @@ const $endTime = $("#endTime");
   after the start time.
 */
 function validate() {
-  console.log($startTime.val());
-  console.log($endTime.val());
-  console.log("done");
-
-
   var startTimeObject = new Date();
   var splitTime1 = $startTime.val().split(":");
   var hour1 = splitTime1[0];

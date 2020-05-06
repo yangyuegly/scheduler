@@ -87,6 +87,12 @@ _On your first meeting with your mentor TA, you should plan dates for at least t
 
 **Adversary Checkpoint:** _(Schedule for on or before April 29 once you are assigned an adversary TA)_
 
+## What the project is
+
+A scheduler for a convention. A convention is the main event which contains sub-events. For example, a hackathon would be a convention and the workshops would be sub events. Our project also supports scheduling final exams for courses from multiple departments of the college of your choice. You could also add collaborators to your conventions.
+
 ## How to Build and Run
 
-_A necessary part of any README!_
+<link to URL>
+To schedule a final exam: After logging in, click the schedule exam button either on the navigation bar or the "Schedule Exams for the college of your choice" button. This will take you to the page where you can enter details about your convention. Choose your college from the drop down list, start date of the convention either manually or through the calendar drop down, total number of days of the convention and the start and end time of the convention by typing in the respective time slots. After you're done, click the schedule now button. This will take you to the calendar page.
+

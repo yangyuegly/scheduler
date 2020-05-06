@@ -101,7 +101,7 @@ public class SchedExamSubmitHandler implements TemplateViewRoute {
     }
 
     WebScraper.setCollege(schoolID);
-    db.addConvIDCollaborator(userEmail, id);
+    db.addConvIDCollaborator(userEmail, schoolID);
 
     // schedule this exam
     response.redirect("/schedule/" + id);

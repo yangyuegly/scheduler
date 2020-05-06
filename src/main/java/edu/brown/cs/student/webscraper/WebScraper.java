@@ -48,6 +48,8 @@ public class WebScraper {
   private String conventionID;
   private DatabaseUtility du = new DatabaseUtility();
   private MongoDatabase database;
+  private static final int COUNT_CONFLICTS_MAX = 60;
+  private static final int EXAM_WEIGHT = 100;
 
   /**
    * Constructor for webscraper.
@@ -307,7 +309,7 @@ public class WebScraper {
 
         for (int j = i + 1; j < courses.size(); j = j + 5) {
           // limit the number of conflicts
-          if (countConflicts > 60) {
+          if (countConflicts > COUNT_CONFLICTS_MAX) {
             countConflicts = 0;
             return;
           }
@@ -316,7 +318,7 @@ public class WebScraper {
           if ((event2.getName().equals(""))) {
             continue;
           }
-          Conflict conflict = new Conflict(event1, event2, 100);
+          Conflict conflict = new Conflict(event1, event2, EXAM_WEIGHT);
           if (!event1.equals(event2)) {
             du.addConflict(conventionID, conflict);
             countConflicts++;

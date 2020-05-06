@@ -112,6 +112,10 @@ public class ScheduleCommand {
     return calEvents;
   }
 
+  public List<Event> getNodes() {
+    return this.nodes;
+  }
+
   /**
    * This method sets the nodes field to the List of Events in the Convention.
    */

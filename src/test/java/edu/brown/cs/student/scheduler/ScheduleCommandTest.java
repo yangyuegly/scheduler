@@ -40,7 +40,7 @@ public class ScheduleCommandTest {
     assertEquals(101,events.size());
     ScheduleCommand sched = new ScheduleCommand(myConv, 30, 10, 5, "616997");
     sched.setNodes(events);
-    assertEquals(101, sched.nodes.size());
+    assertEquals(101, sched.getNodes().size());
     List<CalendarEvent> result = sched.execute();
     assertEquals(101, result.size());
     tearDown();

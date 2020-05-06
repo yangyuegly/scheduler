@@ -112,6 +112,9 @@ public class ScheduleCommand {
     return calEvents;
   }
 
+  /**
+   * @return the list of events
+   */
   public List<Event> getNodes() {
     return this.nodes;
   }

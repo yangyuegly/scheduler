@@ -69,16 +69,9 @@ public class ScheduleCommand {
     extractEdges();
     for (Conflict curr : this.edges) {
       if (curr.getTail().getID() == null || curr.getTail().getID() < 0) {
-        // System.out.println("tail" + curr.getTail());
-        System.out.println("find names:" + curr.getTail().getName());
-        System.out.println("dict"+findNames.get(curr.getTail().getName()));
         curr.getTail().setId(findNames.get(curr.getTail().getName()));
-        // System.out.println("modified" + curr.getTail());
-
       } 
       if (curr.getHead().getID() == null||curr.getHead().getID()<0) {
-        System.out.println("head" + curr.getHead());
-
         curr.getHead().setId(findNames.get(curr.getHead().getName()));
       }
     }
@@ -137,10 +130,18 @@ public class ScheduleCommand {
     if (correspondingID == null) {
       this.nodes = this.convention.getEvents();
     } else {
-      System.out.println("corressponding convention");
+      // System.out.println("corressponding convention");
       this.nodes = correspondingConvention.getEvents();
     }
 
+  }
+
+  /**
+   * Set nodes 
+   * @param nodes 
+   */
+  public void setNodes(List<Event> nodes) {
+    this.nodes = nodes;
   }
 
   /**

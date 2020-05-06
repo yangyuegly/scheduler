@@ -41,7 +41,8 @@ public class AddCollaboratorHandler implements Route {
     if (!db.addConvIDCollaborator(collaboratorEmail, conventionID)) {
       // an error occurred
       Map<String, Object> variables = ImmutableMap.of("errorMessage",
-          "An error occurred.  Please try again.", "successMessage", "");
+          "An error occurred.  Make sure your collaborator has an account associated with that email.",
+          "successMessage", "");
       Gson gson = new Gson();
       return gson.toJson(variables);
     }

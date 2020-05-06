@@ -89,10 +89,19 @@ _On your first meeting with your mentor TA, you should plan dates for at least t
 
 ## What the project is
 
-A scheduler for a convention. A convention is the main event which contains sub-events. For example, a hackathon would be a convention and the workshops would be sub events. Our project also supports scheduling final exams for courses from multiple departments of the college of your choice. You could also add collaborators to your conventions.
+Our project is a scheduler for a set of events, which we call a convention. For example, a hackathon would be a convention and the workshops would be sub events. Our project also supports scheduling final exams for courses from multiple departments of the college of your choice. Each user can make and schedule new conventions, and they can add other users as collaborators to a convention, allowing those other users to modfiy the convention. 
 
 ## How to Build and Run
 
 <link to URL>
-To schedule a final exam: After logging in, click the schedule exam button either on the navigation bar or the "Schedule Exams for the college of your choice" button. This will take you to the page where you can enter details about your convention. Choose your college from the drop down list, start date of the convention either manually or through the calendar drop down, total number of days of the convention and the start and end time of the convention by typing in the respective time slots. After you're done, click the schedule now button. This will take you to the calendar page.
+
+Go to the website and create an account.  When you have an account and are logged in, you can create a new convention by clicking "Create a new convention."  Then, you specify the time range for your convention and the duration of the convention's sub-events.  Afterwards, you have the option to add events manually or upload a CSV file.  
+
+If you add events manually, you enter the name of your events and their descriptions.  Once you are done adding events, we generate a URL that you can send to your attendees to have them sign up for the convention.  On these forms, attendees can select the events they wish to attend, and we will schedule the events so that all users can go to all of the events they wish to attend.  Additionally, you can add other users to your convention, allowing them to add events to the convention.  To do this, simply enter the email address that is used for the collaborator's account. 
+
+If you choose to upload a file instead of adding events manually, you can download an example file that demonstrates the format of the file to be uploaded.  Then, you should create your own file with that format.
+
+Once your convention has been created, you can click the Schedule button.  Using a graph coloring algorithm, we will create a schedule that allows all of your attendees to go to their desired events!
+
+You also have the option to schedule final exams for a college.  After logging in, click the schedule exam button either on the navigation bar or the "Schedule Exams for the college of your choice" button. This will take you to the page where you can enter details about your convention. Choose your college from the drop down list, start date of the convention either manually or through the calendar drop down, total number of days of the convention and the start and end time of the convention by typing in the respective time slots. After you're done, click the schedule now button. This will take you to the calendar page.
 

@@ -5,7 +5,7 @@
   <p> Let us help you schedule the events at your next convention.
      We'll make the optimal schedule for all your attendees.
      <br>For Final Exams, Hackathons, Book Fairs, Cheese Tasting Conventions, and everything in between.</p>
- <a href="/login">Start Scheduling!</a>
+ <a href="/login">Login and Start Scheduling!</a>
 <!-- Slideshow container -->
 <div class="slideshow-container">
 

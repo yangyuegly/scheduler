@@ -39,21 +39,17 @@ import edu.brown.cs.student.main.Main;
  */
 public class DatabaseUtility {
   /**
-   * These are collections stored in MongoDB database.
+   * These are fields for this class. The first few are collections stored in MongoDB database.
+   *
+   * database - a MongoDatabase, which is the database to access the MongoDB database
+   *
+   * mapper - an ObjectMapper, which provides functionality for reading and writing JSON
    */
   private MongoCollection<Document> userCollection;
   private MongoCollection<Document> conventionCollection;
   private MongoCollection<Document> eventCollection;
   private MongoCollection<Document> conflictCollection;
   private MongoCollection<Document> attendeeCollection;
-
-  /**
-   * These are more fields for this class.
-   *
-   * database - a MongoDatabase, which is the database to access the MongoDB database
-   *
-   * mapper - an ObjectMapper, which provides functionality for reading and writing JSON
-   */
   private MongoDatabase database;
   private ObjectMapper mapper = new ObjectMapper();
 
@@ -75,8 +71,7 @@ public class DatabaseUtility {
           .retryWrites(true).build();
       MongoClient mongo = MongoClients.create(settings);
       database = mongo.getDatabase("test");
-      // created db in cluster in MongoDBAtlas including collections: users, events,
-      // conflicts
+      // created db in cluster in MongoDBAtlas including collections: users, events, conflicts
     } else {
       database = Main.getDatabase();
     }
@@ -211,7 +206,6 @@ public class DatabaseUtility {
     BasicDBObject query = new BasicDBObject();
     query.put("conventionID", conventionID);
 
-    // iterate through the events found
     List<Document> conflictList = (List<Document>) conflictCollection.find(query)
         .projection(fields(include("conflicts"), excludeId()))
         .map(document -> document.get("conflicts")).first();
@@ -228,6 +222,7 @@ public class DatabaseUtility {
     List<BasicDBObject> dbConflictList = new ArrayList<>();
     boolean foundNormalMatch = false;
     boolean foundReverseMatch = false;
+
     for (Document conflictDoc : conflictList) {
       Document e1 = (Document) conflictDoc.get("event1");
       Event event1 = new Event(e1.getInteger("id"), e1.getString("name"),

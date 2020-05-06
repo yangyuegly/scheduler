@@ -36,15 +36,13 @@ public class CalendarHandler implements Route {
     String schoolN = school.getName();
     String[] schoolNameArray = schoolN.split(" ");
     String schoolName = "";
+
     for (int i = 0; i < schoolNameArray.length - 2; i++) {
       schoolName += schoolNameArray[i] + " ";
     }
     String schoolID = schoolNameToIDMap.get(schoolName.trim());
     WebScraper.setCollege(schoolID);
     String correspondingID = scraper.scrape();
-    if (correspondingID == null || correspondingID.isEmpty()) {
-      System.out.println("this is not an exam"); // delete
-    }
     String userEmail = req.cookie("user");
 
     if (userEmail == null) {

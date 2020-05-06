@@ -74,7 +74,6 @@ const emailAttendees = (events) => {
   // post request to "/add_event/id with added events
   $.post("/email_attendees/" + convID, postParameters, (responseJSON) => {
     responseObject = JSON.parse(responseJSON);
-    console.log(responseObject);
     message = responseObject.message;
     $("#emailMessage").text(message);
   });

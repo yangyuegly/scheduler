@@ -1,6 +1,5 @@
 package edu.brown.cs.student.gui;
 
-//integrated
 import java.util.Map;
 
 import com.google.common.collect.ImmutableMap;
@@ -18,16 +17,6 @@ public class HomeHandler implements TemplateViewRoute {
 
   @Override
   public ModelAndView handle(Request request, Response response) {
-    // fix for new
-    // page!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-//    String userEmail = request.cookie("user");
-//
-//    if (userEmail != null) {
-//      // they are already logged in
-//      response.redirect("/account");
-//      return null;
-//    }
-
     Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "message", "");
     return new ModelAndView(variables, "home.ftl");
   }

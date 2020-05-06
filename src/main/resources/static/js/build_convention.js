@@ -19,8 +19,6 @@ $(document).ready(() => {
   var coll = document.getElementsByClassName("collapsible");
   var i;
 
-  console.log("coll " + coll); // delete
-
   for (i = 0; i < coll.length; i++) {
     coll[i].addEventListener("click", function() {
       this.classList.toggle("collap-active");
@@ -47,8 +45,6 @@ $(document).ready(() => {
 */
 const updateEventNamesString = () => {
   eventNamesString = $eventNames.html();
-
-  console.log(eventNamesString); // delete
 
   if (eventNamesString == "No events yet.") {
     eventNamesString = "";

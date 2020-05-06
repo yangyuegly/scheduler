@@ -26,7 +26,7 @@ public class CreateConvSubmitHandler implements TemplateViewRoute {
 
     if (userEmail == null) {
       // user is not logged in
-      response.redirect("/home");
+      response.redirect("/login");
       return null; // this line will not be reached
     }
 

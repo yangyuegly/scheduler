@@ -113,6 +113,13 @@ public class ScheduleCommand {
   }
 
   /**
+   * @return the list of events
+   */
+  public List<Event> getNodes() {
+    return this.nodes;
+  }
+
+  /**
    * This method sets the nodes field to the List of Events in the Convention.
    */
   private void extractNodes() {
@@ -120,9 +127,18 @@ public class ScheduleCommand {
     if (correspondingID == null) {
       this.nodes = this.convention.getEvents();
     } else {
+      // System.out.println("corressponding convention");
       this.nodes = correspondingConvention.getEvents();
     }
 
+  }
+
+  /**
+   * Set nodes 
+   * @param nodes 
+   */
+  public void setNodes(List<Event> nodes) {
+    this.nodes = nodes;
   }
 
   /**

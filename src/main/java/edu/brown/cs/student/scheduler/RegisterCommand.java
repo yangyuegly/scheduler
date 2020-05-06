@@ -32,8 +32,6 @@ public class RegisterCommand {
    * These are fields for this class.
    */
   public static final String DESEDE_ENCRYPTION_SCHEME = "DESede";
-  private SecretKey key;
-  private static Logger logger;
   private static final int NUM_BYTES = 16;
 
   /**

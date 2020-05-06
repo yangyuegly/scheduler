@@ -204,7 +204,6 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
               i.setColor(adjColors);
               coloredMap.put(i.getID(), i);
               result.add(i);
-              // coloredSet.add(i);
               numColoredCourses++;
               colors.get(adjColors.get(0))[adjColors.get(1)]--;
             }

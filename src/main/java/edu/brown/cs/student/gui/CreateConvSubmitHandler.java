@@ -13,6 +13,11 @@ import spark.Request;
 import spark.Response;
 import spark.TemplateViewRoute;
 
+/**
+ * This class is used to handle POST requests that submit the form data related to setting up a
+ * convention. It implements TemplateViewRoute.
+ *
+ */
 public class CreateConvSubmitHandler implements TemplateViewRoute {
 
   @Override

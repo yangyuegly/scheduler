@@ -13,51 +13,83 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import edu.brown.cs.student.exception.SchedulingException;
+
 //source: https://www.researchgate.net/publication/220413840_A_New_Exam_Scheduling_Algorithm_Using_Graph_Coloring
 /**
  * The Graph class takes in a V that extends Vertex and E that extends Edge. It gets information
  * from a DataStore and runs a dynamic dikstra's algorithm to find the shortest path between to
  * nodes in the graph.
  *
- * @param <V> an object that implements Vertex
- * @param <E> an object that implements Edge
+ * @param <V> - a class that implements Vertex
+ * @param <E> - a class that implements Edge
  */
 public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V, E>> {
-  // edge table keeps track of weights
-  private int[][] weightMatrix;
-  private int numColor; // the max num of color a user can take in
-  private int numVertices;// the number of mini-events
-  private int TS; // time slots
-  private int examBreak = 0;
-  private Map<Integer, V> nodes; // map node Id to vertex object
 
-  private final int CONCURENCY_LIMIT;
-  private SortedSet<Map.Entry<Integer, V>> degree; // a sorted set
-  private HashSet<V> result;
-  private List<Integer[]> colors = new ArrayList<Integer[]>(); // double indexed color
-  // the length of array: time slots (provided by registrar)
-  // arrayList index: day of the exam (to be minimized)
-  // value: current concurrency limit
-  private int k; // the range of num of time slots, concurency level
-  private final int MAX_SCHEDULE_DAYS;
+  /**
+   * These are fields for this class.
+   *
+   * weightMatrix - a array of int arrays, which keeps track of weights
+   *
+   * numColor - an int, which represents the max num of color a user can take in
+   *
+   * numVertices - an int, which represents the number of vertices in this graph
+   *
+   * numTimeSlotsInDay - an int, which represents the max number of time slots in a day
+   *
+   * examBreak - an int, which represents the amount of time wanted for a break
+   *
+   * nodes - a Map of Integers to V, which maps node Id to vertex object
+   *
+   * concurrencyLimit - an int, which represents the max number of events that can happen at the
+   * same time
+   *
+   * degree - a SortedSet
+   *
+   * result - a Set of V
+   *
+   * colors - a List of Integer arrays, which represent double indexed colors; the length of the
+   * inner arrays is the number of time slots in a day; the arrayList index is the day of the exam
+   * (to be minimized); value is the current concurrency limit
+   *
+   * k - an int, which represents the range of num of time slots, concurrency level
+   *
+   * maxScheduleDays - an int, which represents the max number of days over which this graph can be
+   * scheduled
+   *
+   * coloredMap - a Map of Integers to V
+   */
+  private int[][] weightMatrix;
+  private int numColor;
+  private int numVertices;
+  private final int numTimeSlotsInDay;
+  private int examBreak = 0;
+  private Map<Integer, V> nodes;
+  private final int concurrencyLimit;
+  private SortedSet<Map.Entry<Integer, V>> degree;
+  private Set<V> result;
+  private List<Integer[]> colors = new ArrayList<Integer[]>();
+  private int k;
+  private final int maxScheduleDays;
   private Map<Integer, V> coloredMap = new HashMap<>();
 
   /**
-   * Constructor for the graph. It takes in a list of vertices
+   * Constructor for the graph.
    *
-   * @param vertices
-   * @param CONCURENCY_LIMIT
-   * @param MAX_SCHEDULE_DAYS
+   * @param vertices - a List of objects of type V, which represents the vertices of this graph
+   * @param concurrencyLimit - an int, which represents the max number of events that can happen at
+   *        the same time
+   * @param maxScheduleDays - an int, which represents the max number of days over which this graph
+   *        can be scheduled
+   * @param numTimeSlotsInDay - - an int, which represents the max number of time slots in a day
    */
-  public UndirectedWeightedGraph(List<V> vertices, int CONCURENCY_LIMIT, int MAX_SCHEDULE_DAYS,
-      int TS) {
-    // two nodes may be connected iff 1) they were in the same movie 2) they share
-    // initial
+  public UndirectedWeightedGraph(List<V> vertices, int concurrencyLimit, int maxScheduleDays,
+      int numTimeSlotsInDay) {
     this.numVertices = vertices.size();
-    this.CONCURENCY_LIMIT = CONCURENCY_LIMIT;
-    this.TS = TS;
+    this.concurrencyLimit = concurrencyLimit;
+    this.numTimeSlotsInDay = numTimeSlotsInDay;
     this.result = new HashSet<>();
-    this.MAX_SCHEDULE_DAYS = MAX_SCHEDULE_DAYS;
+    this.maxScheduleDays = maxScheduleDays;
     this.nodes = new HashMap<Integer, V>();
     for (V i : vertices) {
       nodes.put(i.getID(), i);
@@ -70,11 +102,11 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
       }
     }
 
-    for (int j = 0; j < MAX_SCHEDULE_DAYS; j++) {
+    for (int j = 0; j < maxScheduleDays; j++) {
       // initializing the color array
-      Integer[] ts = new Integer[TS];
-      for (int i = 0; i < TS; i++) {
-        ts[i] = CONCURENCY_LIMIT;
+      Integer[] ts = new Integer[numTimeSlotsInDay];
+      for (int i = 0; i < numTimeSlotsInDay; i++) {
+        ts[i] = concurrencyLimit;
       }
       colors.add(ts);
     }
@@ -87,13 +119,13 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
   }
 
   /**
-   * Add all edges to the graph
+   * Add all edges to the graph.
    *
-   * @param edges
+   * @param edges - a Set of objects of type E, which represent the edges of this graph
    */
   public void addAllEdges(Set<E> edges) {
     System.out.println("in addAllEdges");
- 
+
     for (E e : edges) {
       this.weightMatrix[e.getHead().getID()][e.getTail().getID()] = e.getWeight();
       this.weightMatrix[e.getTail().getID()][e.getHead().getID()] = e.getWeight();
@@ -107,26 +139,27 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
   }
 
   /**
-   * Find the degree of vertices
+   * Find the degree of the given vertex.
    *
-   * @param id
+   * @param id - an int, which represents the ID of a node
    *
-   * @return the size of the node's adjacency list
+   * @return an int, which represents the size of the node's adjacency list
    */
   public int findDegrees(int id) {
     return nodes.get(id).getAdjList().size();
   }
 
   /**
+   * This method colors the graph using the graph coloring algorithm.
    *
-   * @return colored nodes
+   * @param ts - an int, which represents the max number of time slots in a day
+   * @param cl - an int, which represents the max number of events that can happen at the same time
    *
-   * @param ts
-   * @param cl
+   * @return a Set of vertices, which represent the colored nodes
    *
-   * @throws NullPointer Exception if a schedule is not possible
+   * @throws SchedulingException if a schedule is not possible
    */
-  public Set<V> graphColoring(int ts, int cl) throws NullPointerException {
+  public Set<V> graphColoring(int ts, int cl) throws SchedulingException {
     Set<V> coloredSet = new HashSet<V>();
     System.out.println("here");
     int numColoredCourses = 0;
@@ -158,7 +191,7 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
             colors.get(indices.get(0))[indices.get(1)]--;
           } else {
             System.out.println("stuck");
-            throw new NullPointerException(
+            throw new SchedulingException(
                 "Unable to find a conflict-free schedule for this convention.");
           }
         }
@@ -186,21 +219,19 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
   }
 
   /**
-   * Return an arraylist of two integers representing color 0: the day 1: the time slot
+   * Return a list of two integers representing color 0: the day 1: the time slot.
    *
-   * @param courseID - the course to be colored
-   *
-   * @return the color assigned or null
+   * @return a List of Integers, which represents the color assigned or null
    */
   public List<Integer> getFirstNodeColor() {
-    List<Integer> result = new ArrayList<Integer>();
-    for (int i = 0; i < MAX_SCHEDULE_DAYS; i++) {
-      for (int j = 0; j < TS; j++) {
+    List<Integer> resultList = new ArrayList<Integer>();
+    for (int i = 0; i < maxScheduleDays; i++) {
+      for (int j = 0; j < numTimeSlotsInDay; j++) {
         if (colors.get(i)[j] > 0) {
           colors.get(i)[j]--;
-          result.add(i);
-          result.add(j);
-          return result;
+          resultList.add(i);
+          resultList.add(j);
+          return resultList;
         }
       }
     }
@@ -211,29 +242,29 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
    * define the weight of a color to be W (RIJ) = (I-1)*k + J; k is the range of J. A color RIJ is
    * said to be smaller than color RGH if the weight W (RIJ) is smaller than W (RGH).
    *
-   * @param i
-   * @param j
+   * @param i - an int
+   * @param j - an int
    *
-   * @return
+   * @return an int, which represents the weight of a color
    */
   public int calculateColorWeight(int i, int j) {
     return (i - 1) * k + j;
   }
 
   /**
-   * Get the smallest available color
+   * Get the smallest available color.
    *
-   * @param courseID
+   * @param courseID - an int, which represents the id of a node
    *
-   * @return
+   * @return a List of Integers, which represents the smallest available color
    */
   public List<Integer> getSmallestAvailableColor(int courseID) {
 
     // System.out.println("the current course id " + courseID);
     boolean valid = false;
     List<E> adj = nodes.get(courseID).getAdjList();
-    for (int i = 0; i < this.MAX_SCHEDULE_DAYS; i++) {
-      for (int j = 0; j < this.TS; j++) {
+    for (int i = 0; i < this.maxScheduleDays; i++) {
+      for (int j = 0; j < this.numTimeSlotsInDay; j++) {
         List<Integer> currColor = new ArrayList<>(List.of(i, j));
         valid = true;
         for (int r = 0; r < adj.size(); r++) {
@@ -251,9 +282,8 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
                 if (calculateInternalDistance(color, currColor) <= this.examBreak) {
                   valid = false;
                 }
-              }
-              // if the color has been used up to its cl
-              else if (colors.get(i)[j] <= 0) {
+              } else if (colors.get(i)[j] <= 0) {
+                // if the color has been used up to its cl
                 valid = false;
               }
             } else {
@@ -272,12 +302,13 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
   }
 
   /**
-   * Calculate the internal distance between the color i.e. how many time slots apart
+   * Calculate the internal distance between the color i.e. how many time slots apart.
    *
-   * @param a
-   * @param b
+   * @param a - a List of Integers, which represents a time slot
+   * @param b - a List of Integers, which represents a time slot
    *
-   * @return
+   * @return an Integer, which represents the internal distance between colors a and b (how many
+   *         time slots apart they are)
    */
   public Integer calculateInternalDistance(List<Integer> a, List<Integer> b) {
     assert (a.size() == 2 && b.size() == 2);
@@ -285,112 +316,58 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
   }
 
   /**
-   * Calculate the external distance between the color i.e. how many time days apart
+   * Calculate the external distance between the color i.e. how many time days apart.
    *
-   * @param a
-   * @param b
+   * @param a - a List of Integers, which represents a time slot
+   * @param b - a List of Integers, which represents a time slot
    *
-   * @return
+   * @return n Integer, which represents the external distance between colors a and b (how many days
+   *         apart they are)
    */
   public Integer calculateExternalDistance(List<Integer> a, List<Integer> b) {
     assert (a.size() == 2 && b.size() == 2);
     return (Math.abs(a.get(0) - b.get(0)));
   }
 
-  public int[][] getWeightMatrix() {
-    return this.weightMatrix;
-  }
-
-  public void setWeightMatrix(int[][] weightMatrix) {
-    this.weightMatrix = weightMatrix;
-  }
-
-  public int getNumColor() {
-    return this.numColor;
-  }
-
-  public void setNumColor(int numColor) {
-    this.numColor = numColor;
-  }
-
+  /**
+   * This method gets the number of vertices in this graph.
+   *
+   * @return an int, which represents the number of vertices in this graph.
+   */
   public int getNumVertices() {
     return this.numVertices;
   }
 
-  public void setNumVertices(int numVertices) {
-    this.numVertices = numVertices;
-  }
-
-  public Map<Integer, V> getNodes() {
-    return this.nodes;
+  /**
+   * Calculate all nodes' degrees.
+   */
+  public void setDegree() {
+    degree = entriesSortedByValues(nodes);
   }
 
   /**
-   * calculate all nodes' degrees
+   * This method gets the colors field.
+   *
+   * @return a List of Integer arrays, which represent double indexed colors
    */
-  public void setDegree() {
-
-    degree = entriesSortedByValues(nodes);
-
-  }
-
-  public int getK() {
-    return this.k;
-  }
-
-  public int getTS() {
-    return this.TS;
-  }
-
-  public void setTS(int TS) {
-    this.TS = TS;
-  }
-
-  public int getExamBreak() {
-    return this.examBreak;
-  }
-
-  public void setExameBreak(int examBreak) {
-    this.examBreak = examBreak;
-  }
-
-  public int getCONCURENCY_LIMIT() {
-    return this.CONCURENCY_LIMIT;
-  }
-
-  public SortedSet<Map.Entry<Integer, V>> getDegree() {
-    return this.degree;
-  }
-
   public List<Integer[]> getColors() {
     return this.colors;
   }
 
-  public void setColors(ArrayList<Integer[]> colors) {
-    this.colors = colors;
-  }
-
-  public int getMAX_SCHEDULE_DAYS() {
-    return this.MAX_SCHEDULE_DAYS;
-  }
-
-  public void setK(int k) {
-    this.k = k;
-  }
-
   /**
-   * Util method that sorts the map based on values
+   * Util method that sorts the map based on values.
    * https://stackoverflow.com/questions/2864840/treemap-sort-by-value
    *
-   * @param Map<K,V>
+   * @param map - a Map of objects of type K to objects of type T, which represents a map
    *
-   * @return SortedSet<>
+   * @return SortedSet of map entries, which is sorted based on values
    */
   private <K, T extends IVertex<T, E>> SortedSet<Map.Entry<K, T>> entriesSortedByValues(
       Map<K, T> map) {
     SortedSet<Map.Entry<K, T>> sortedEntries = new TreeSet<Map.Entry<K, T>>(
         // sort the nodes in the weight matrix in a descending
         // order based on the degree of nodes.
+
         new Comparator<Map.Entry<K, T>>() {
           @Override
           public int compare(Map.Entry<K, T> e1, Map.Entry<K, T> e2) {
@@ -409,7 +386,9 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
             }
           }
         });
+
     sortedEntries.addAll(map.entrySet());
+
     return sortedEntries;
   }
 
@@ -422,21 +401,23 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
   // }
   // UndirectedWeightedGraph<V,E> undirectedWeightedGraph = (UndirectedWeightedGraph<V,E>) o;
   // return Objects.equals(weightMatrix, undirectedWeightedGraph.weightMatrix) && numColor ==
-  // undirectedWeightedGraph.numColor && numVertices == undirectedWeightedGraph.numVertices && TS ==
-  // undirectedWeightedGraph.TS && Objects.equals(degree, undirectedWeightedGraph.degree) &&
+  // undirectedWeightedGraph.numColor && numVertices == undirectedWeightedGraph.numVertices &&
+  // numTimeSlotsInDay ==
+  // undirectedWeightedGraph.numTimeSlotsInDay && Objects.equals(degree,
+  // undirectedWeightedGraph.degree) &&
   // Objects.equals(colors, undirectedWeightedGraph.colors) && k == undirectedWeightedGraph.k;
   // }
 
   // @Override
   // public int hashCode() {
-  // return Objects.hash(weightMatrix, numColor, numVertices, TS, degree, colors, k);
+  // return Objects.hash(weightMatrix, numColor, numVertices, numTimeSlotsInDay, degree, colors, k);
   // }
 
   @Override
   public String toString() {
-    return "{" + "'" + ", weightMatrix='" + getWeightMatrix() + "'" + ", numColor='" + getNumColor()
-        + "'" + ", numVertices='" + getNumVertices() + "'" + ", ts='" + "'" + ", degree='" + "'"
-        + ", colors='" + getColors() + "'" + ", k='" + getK() + "'" + "}";
+    return "{" + "'" + ", weightMatrix='" + weightMatrix + "'" + ", numColor='" + numColor + "'"
+        + ", numVertices='" + numVertices + "'" + ", ts='" + "'" + ", degree='" + "'" + ", colors='"
+        + getColors() + "'" + ", k='" + k + "'" + "}";
   }
 
 }

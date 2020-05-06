@@ -1,12 +1,9 @@
 package edu.brown.cs.student.scheduler;
 
 import java.security.Key;
-import java.security.spec.KeySpec;
 import java.util.Base64;
 
 import javax.crypto.Cipher;
-import javax.crypto.SecretKey;
-import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.SecretKeySpec;
 
 import org.bson.Document;
@@ -23,24 +20,12 @@ import edu.brown.cs.student.exception.UserAuthenticationException;
 import edu.brown.cs.student.main.Main;
 
 /**
- * Method that carries out the login
+ * Method that carries out the login.
  */
 public class LoginCommand {
 
   /**
-   * Fields for password decryption and encryption
-   */
-  private static final String UNICODE_FORMAT = "UTF8";
-  public static final String DESEDE_ENCRYPTION_SCHEME = "DESede";
-  private KeySpec ks;
-  private SecretKeyFactory skf;
-  private Cipher cipher;
-  private String myEncryptionKey;
-  private String myEncryptionScheme;
-  SecretKey key;
-
-  /**
-   * Method that logs the user in
+   * Method that logs the user in.
    *
    * @param email - user email
    * @param password - user password
@@ -52,7 +37,10 @@ public class LoginCommand {
     // for unit testing purposes
     if (Main.getDatabase() == null) {
       ConnectionString connString = new ConnectionString(
-          "mongodb://sduraide:cs32scheduler@scheduler-shard-00-00-rw75k.mongodb.net:27017,scheduler-shard-00-01-rw75k.mongodb.net:27017,scheduler-shard-00-02-rw75k.mongodb.net:27017/test?ssl=true&replicaSet=scheduler-shard-0&authSource=admin&retryWrites=true&w=majority");
+          "mongodb://sduraide:cs32scheduler@scheduler-shard-00-00-rw75k.mongodb.net:27017"
+              + ",scheduler-shard-00-01-rw75k.mongodb.net:27017,scheduler-shard-00-02-rw75k."
+              + "mongodb.net:27017/test?ssl=true&replicaSet=scheduler-shard-0&authSource="
+              + "admin&retryWrites=true&w=majority");
 
       MongoClientSettings settings = MongoClientSettings.builder().applyConnectionString(connString)
           .retryWrites(true).build();
@@ -81,12 +69,12 @@ public class LoginCommand {
   }
 
   /**
-   * Method to decrypt the password
+   * Method to decrypt the password.
    *
    * @param userInputPassword - password user input
    * @param salt - salt string
    *
-   * @return
+   * @return a String, which represents the decrypted password
    */
   public String decryptePassword(String userInputPassword, String salt) {
 

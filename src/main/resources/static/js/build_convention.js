@@ -23,7 +23,7 @@ $(document).ready(() => {
 
   for (i = 0; i < coll.length; i++) {
     coll[i].addEventListener("click", function() {
-      this.classList.toggle("active");
+      this.classList.toggle("collap-active");
       var content = this.nextElementSibling;
       if (content.style.display === "block") {
         content.style.display = "none";
@@ -97,13 +97,7 @@ const addEvent = () => {
       } else {
         // update the existing events on the page
         updateEventNamesString();
-
-        console.log("event name string " + eventNamesString); // delete
-
         add_event(eventNamesString); //socket code
-
-        //  $eventNames.html(eventNamesString);
-
         $("#addEventError").text("");
 
         // clear the input boxes
@@ -130,13 +124,17 @@ const addCollaborator = () => {
   $.post("/add_collaborator/" + convID, postParameters, (responseJSON) => {
     responseObject = JSON.parse(responseJSON);
     errorMessage = responseObject.errorMessage;
+    successMessage = responseObject.successMessage;
 
     if (errorMessage != "") {
       // an error occurred
       $("#addCollaboratorError").text(errorMessage);
+      $("#addCollaboratorSuccess").text("");
     } else {
       // clear the email input box
       $emailInput.val("");
+      $("#addCollaboratorError").text("");
+      $("#addCollaboratorSuccess").text(successMessage);
     }
   });
 };

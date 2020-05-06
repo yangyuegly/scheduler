@@ -3,7 +3,7 @@ package edu.brown.cs.student.scheduler;
 import java.util.Comparator;
 
 /**
- * Comparator to compare start time
+ * Comparator to compare start time. This class implements Comparator of Event.
  */
 public class CompareStartTime implements Comparator<Event> {
 

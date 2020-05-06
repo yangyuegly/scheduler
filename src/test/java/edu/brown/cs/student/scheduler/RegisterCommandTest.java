@@ -7,7 +7,7 @@ import org.junit.Test;
 import edu.brown.cs.student.exception.UserAuthenticationException;
 
 /**
- * Class to test the Resgiter Command
+ * Class to test the Register Command
  *
  */
 public class RegisterCommandTest {

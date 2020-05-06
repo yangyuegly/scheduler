@@ -9,43 +9,45 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import edu.brown.cs.student.exception.SchedulingException;
 import edu.brown.cs.student.graph.UndirectedWeightedGraph;
 
 /**
- * This class is used to schedule the user's convention. It implements the ICommand interface.
+ * This class is used to schedule the user's convention.
  */
 public class ScheduleCommand {
 
   /**
    * Fields denoting the set of nodes, edges, the convention to schedule, time slot, concurrency
-   * limit and the graph
+   * limit and the graph.
    */
-  List<Event> nodes;
-  Set<Conflict> edges;
-  Convention convention;
-  Integer TS;
-  Integer CONCURENCY_LIMIT, MAX_SCHEDULE_DAYS;
-  UndirectedWeightedGraph<Event, Conflict> graph;
-  String correspondingID;
-  Convention correspondingConvention;
+  private List<Event> nodes;
+  private Set<Conflict> edges;
+  private Convention convention;
+  private Integer numTimeSlotsInDay;
+  private Integer concurrencyLimit, maxScheduleDays;
+  private UndirectedWeightedGraph<Event, Conflict> graph;
+  private String correspondingID;
+  private Convention correspondingConvention;
 
   /**
-   * Constructor for scheduling events
+   * Constructor for the ScheduleCommand class.
    *
    * @param convention - convention to schedule
-   * @param CONCURENCY_LIMIT - Limit for concurrency threads
-   * @param MAX_SCHEDULE_DAYS - Convention duration in days
-   * @param TS
+   * @param concurrencyLimit - Limit for concurrency threads
+   * @param maxScheduleDays - Convention duration in days
+   * @param numTimeSlotsInDay - the maximum number of time slots in a given day
+   * @param correspondingID - a String, which represents the convention ID of the exam period
+   *        associated with convention; else null
    */
-  public ScheduleCommand(Convention convention, Integer CONCURENCY_LIMIT, Integer MAX_SCHEDULE_DAYS,
-      Integer TS, String correspondingID) {
-    // this.graph = graph;
-    this.TS = TS;
+  public ScheduleCommand(Convention convention, Integer concurrencyLimit, Integer maxScheduleDays,
+      Integer numTimeSlotsInDay, String correspondingID) {
+    this.numTimeSlotsInDay = numTimeSlotsInDay;
     this.nodes = new ArrayList<>();
     this.edges = new HashSet<>();
     this.convention = convention;
-    this.CONCURENCY_LIMIT = CONCURENCY_LIMIT;
-    this.MAX_SCHEDULE_DAYS = MAX_SCHEDULE_DAYS;
+    this.concurrencyLimit = concurrencyLimit;
+    this.maxScheduleDays = maxScheduleDays;
     this.correspondingID = correspondingID;
     this.correspondingConvention = new Convention(correspondingID);
   }
@@ -56,37 +58,38 @@ public class ScheduleCommand {
    * @return a List of CalendarEvents, which represent the scheduled Events in a format that is
    *         compatible with the FullCalendar API.
    *
-   * @throws NullPointerException if there is no possible schedule
+   * @throws SchedulingException if there is no possible schedule
    */
-  public List<CalendarEvent> execute() throws NullPointerException {
-    System.out.println("in schedule command");
-    
+  public List<CalendarEvent> execute() throws SchedulingException {
     extractNodes();
     Map<String, Integer> findNames = new HashMap<>();
+
     for (Event eve : this.nodes) {
       findNames.put(eve.getName(), eve.getID());
     }
+
     extractEdges();
+
     for (Conflict curr : this.edges) {
       if (curr.getTail().getID() == null || curr.getTail().getID() < 0) {
         curr.getTail().setId(findNames.get(curr.getTail().getName()));
-      } 
-      if (curr.getHead().getID() == null||curr.getHead().getID()<0) {
+      }
+
+      if (curr.getHead().getID() == null || curr.getHead().getID() < 0) {
         curr.getHead().setId(findNames.get(curr.getHead().getName()));
       }
     }
-    for (Conflict curr : this.edges) {
-      System.out.println("conflict:" + curr);
-    }
-      this.graph = new UndirectedWeightedGraph<Event, Conflict>(this.nodes, this.CONCURENCY_LIMIT,
-        this.MAX_SCHEDULE_DAYS, this.TS);
-    graph.addAllEdges(this.edges);
 
-    Set<Event> colored = graph.graphColoring(this.TS, this.CONCURENCY_LIMIT);
+    this.graph = new UndirectedWeightedGraph<Event, Conflict>(this.nodes, this.concurrencyLimit,
+        this.maxScheduleDays, this.numTimeSlotsInDay);
+    graph.addAllEdges(this.edges);
+    Set<Event> colored = graph.graphColoring(this.numTimeSlotsInDay, this.concurrencyLimit);
 
     List<CalendarEvent> calEvents = new ArrayList<>();
     List<Event> eventsToSort = new ArrayList<>();
 
+    // turn the scheduled events into CalendarEvents that are compatible with the API used to
+    // display the calendar
     for (Event event : colored) {
       eventsToSort.add(event);
       LocalDateTime currStart = this.getTimeSlotStart(event.getColor());
@@ -97,13 +100,9 @@ public class ScheduleCommand {
       LocalDateTime currEnd = currStart.plusMinutes(eventDur);
       event.setEnd(currEnd);
     }
-    System.out.println("is null?? " + (eventsToSort == null));
-
-    System.out.println("sorted list length is " + eventsToSort.size());
     Collections.sort(eventsToSort, new CompareStartTime());
 
     for (Event event : eventsToSort) {
-      // System.out.println("start time" + event.getStart());
       CalendarEvent newEvent = new CalendarEvent(event.getName(), event.getStart().toString(),
           event.getEnd().toString());
       calEvents.add(newEvent);
@@ -111,15 +110,6 @@ public class ScheduleCommand {
     }
 
     return calEvents;
-  }
-
-  /**
-   * Getter for graph
-   *
-   * @return - graph
-   */
-  public UndirectedWeightedGraph<Event, Conflict> getGraph() {
-    return this.graph;
   }
 
   /**
@@ -179,7 +169,7 @@ public class ScheduleCommand {
 
   @Override
   public String toString() {
-    return "{" + " graph='" + getGraph() + "'" + "}";
+    return "{" + " graph='" + graph + "'" + "}";
   }
 
 }

@@ -55,21 +55,13 @@ public class Convention {
   @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
   private LocalDateTime endDateTime;
   private List<Event> events = null;
-  boolean loadedInDb = false;
-
-  @Override
-  public String toString() {
-    return "Convention [name=" + name + ", id=" + id + ", startDateTime=" + startDateTime
-        + ", numDays=" + numDays + ", eventDuration=" + eventDuration + ", endDateTime="
-        + endDateTime + "]";
-  }
+  private boolean loadedInDb = false;
 
   /**
-   * This is a constructor for this class.
+   * This is a constructor for this class. This is used when we only have access to the id.
    *
    * @param convId - a String, which represents the id of this convention
    */
-
   public Convention(String convId) {
     id = convId;
     // load in the rest of the fields from the database
@@ -88,20 +80,8 @@ public class Convention {
   }
 
   /**
-   * This is a constructor for this class.
-   *
-   * @param convId - a String, which represents the id of this convention
-   */
-
-  public Convention(String convId, String convName) {
-    id = convId;
-    // load in the rest of the fields from the database
-    this.name = convName;
-
-  }
-
-  /**
-   * This is another constructor for this class.
+   * This is another constructor for this class. It is used when the convention data is gotten from
+   * the database.
    *
    * @param convName - a String, which represents the name of this convention
    * @param convId - a String, which represents the id of this convention
@@ -125,7 +105,9 @@ public class Convention {
   }
 
   /**
-   * Alternative constructor
+   * Alternative constructor. It is used when the user fills out the form on the setup convention
+   * home page. We use this constructor to fill in the data, and then we load this convention into
+   * the database.
    *
    * @param convId -- a String, which represents the id of the convention
    *
@@ -140,7 +122,7 @@ public class Convention {
    * @param endTime -- a String of the format "hh:mm" (in military time), which represents the
    *        latest the convention can end on a given day
    *
-   * @throws NumberFormatException
+   * @throws NumberFormatException if the dates are in an invalid format
    */
   public Convention(String convId, String convName, String startDate, Integer numDays,
       Integer eventDuration, String startTime, String endTime) throws NumberFormatException {
@@ -226,16 +208,26 @@ public class Convention {
   }
 
   /**
-   * This method adds an event to this convention.
+   * This method adds an event to this convention and the database.
    *
    * @param newEvent - an Event object, which represents the event being added
+   *
+   * @return a boolean, true if the adding was successful, false otherwise
    */
-  public void addEvent(Event newEvent) {
-    if (events == null) {
-      events = new ArrayList<>();
-    }
+  public boolean addEvent(Event newEvent) {
+    DatabaseUtility du = new DatabaseUtility();
 
-    events.add(newEvent);
+    if (du.addEvent(id, newEvent)) {
+      if (events == null) {
+        events = new ArrayList<>();
+      }
+
+      events.add(newEvent);
+      return true;
+
+    } else {
+      return false;
+    }
   }
 
   /**
@@ -281,7 +273,7 @@ public class Convention {
    * constraints given when the Convention was created to determine how many events of the given
    * duration can fit in the time range.
    *
-   * @return an int, which represents the max number of time slots on a given day
+   * @return an Integer, which represents the max number of time slots on a given day
    */
   public Integer getNumTimeSlotsPerDay() {
     LocalDate startDateLocalDate = startDateTime.toLocalDate();
@@ -295,12 +287,19 @@ public class Convention {
   }
 
   /**
-   * Getter for conflicts
-   * 
-   * @return - set of conflicts
+   * Getter for conflicts.
+   *
+   * @return - set of conflicts that are in this convention
    */
   public Set<Conflict> getConflicts() {
     DatabaseUtility du = new DatabaseUtility();
     return du.getConflictsFromConventionID(this.id);
+  }
+
+  @Override
+  public String toString() {
+    return "Convention [name=" + name + ", id=" + id + ", startDateTime=" + startDateTime
+        + ", numDays=" + numDays + ", eventDuration=" + eventDuration + ", endDateTime="
+        + endDateTime + "]";
   }
 }

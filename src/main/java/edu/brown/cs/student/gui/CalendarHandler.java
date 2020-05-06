@@ -8,6 +8,7 @@ import java.util.Map;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 
+import edu.brown.cs.student.exception.SchedulingException;
 import edu.brown.cs.student.scheduler.CalendarEvent;
 import edu.brown.cs.student.scheduler.Convention;
 import edu.brown.cs.student.scheduler.DatabaseUtility;
@@ -25,15 +26,29 @@ public class CalendarHandler implements Route {
 
   @Override
   public String handle(Request req, Response res) {
+    DatabaseUtility du = new DatabaseUtility();
     String conventionID = req.params(":id");
-    String college = WebScraper.collegeName;
+    String college = WebScraper.getcollegeID();
+
+    System.out.println("in calendar handler; collegeID is " + college); // delete
+
     WebScraper scraper = new WebScraper(conventionID);
-    WebScraper.setCollege(college);
-    // System.out.println("collegeName " + WebScraper.collegeName);
+    Map<String, String> schoolNameToIDMap = scraper.getcoursesToIDs();
+    Convention school = du.getConvention(conventionID);
+    String schoolN = school.getName();
+    String[] schoolNameArray = schoolN.split(" ");
+    String schoolName = "";
+    for (int i = 0; i < schoolNameArray.length - 2; i++) {
+      schoolName += schoolNameArray[i] + " ";
+    }
+    String schoolID = schoolNameToIDMap.get(schoolName.trim());
+    WebScraper.setCollege(schoolID);
+    System.out.println("schoolID: " + schoolID);
     String correspondingID = scraper.scrape();
     // String correspondingID = null;
     if (correspondingID == null || correspondingID.isEmpty()) {
       System.out.println("this is not an exam"); // delete
+      // correspondingID = null;
     }
     String userEmail = req.cookie("user");
 
@@ -61,11 +76,12 @@ public class CalendarHandler implements Route {
 
     ScheduleCommand schedComm = new ScheduleCommand(myConv, 5, myConv.getNumDays(),
         numTimeSlotsPerDay, correspondingID);
+
     List<CalendarEvent> schedule;
 
     try {
       schedule = schedComm.execute();
-    } catch (NullPointerException err) {
+    } catch (SchedulingException err) {
       // there was an error with the scheduling
       Map<String, Object> variables = ImmutableMap.of("eventsForSchedule", "", "defaultDate", "",
           "error", "We're sorry, we couldn't make a schedule for you. There was no way to avoid"
@@ -73,6 +89,18 @@ public class CalendarHandler implements Route {
       Gson gson = new Gson();
 
       return gson.toJson(variables);
+
+    } catch (NullPointerException err) {
+      System.err.println("Null pointer occurred while scheduling");
+
+      // there was an error with the scheduling
+      Map<String, Object> variables = ImmutableMap.of("eventsForSchedule", "", "defaultDate", "",
+          "error", "We're sorry, we couldn't make a schedule for you. There was no way to avoid"
+              + " conflicts between your events.");
+      Gson gson = new Gson();
+
+      return gson.toJson(variables);
+
     }
 
     LocalDateTime convStartWithTime = myConv.getStartDateTime();

@@ -16,7 +16,7 @@ public class LogoutHandler implements TemplateViewRoute {
     // remove the cookie for this user
     response.removeCookie("user");
 
-    response.redirect("/home");
+    response.redirect("/login");
     return null; // this line will not be reached
   }
 

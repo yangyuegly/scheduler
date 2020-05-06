@@ -9,6 +9,7 @@ import com.google.common.collect.ImmutableMap;
 import edu.brown.cs.student.scheduler.Convention;
 import edu.brown.cs.student.scheduler.DatabaseUtility;
 import edu.brown.cs.student.scheduler.Event;
+import edu.brown.cs.student.webscraper.WebScraper;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
@@ -21,8 +22,6 @@ public class ConventionHomeHandler implements TemplateViewRoute {
 
   @Override
   public ModelAndView handle(Request request, Response response) {
-    System.out.println("in convnetion home handler"); // delete!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
     String conventionID = request.params(":id");
     String userEmail = request.cookie("user");
 
@@ -38,6 +37,27 @@ public class ConventionHomeHandler implements TemplateViewRoute {
 
     if (!authorized) {
       response.redirect("/unauthorized");
+    }
+
+    // checking if this is an exam
+    String college = WebScraper.getcollegeID();
+    WebScraper scraper = new WebScraper(conventionID);
+    Map<String, String> schoolNameToIDMap = scraper.getcoursesToIDs();
+    Convention school = db.getConvention(conventionID);
+    String schoolN = school.getName();
+    String[] schoolNameArray = schoolN.split(" ");
+    String schoolName = "";
+    for (int i = 0; i < schoolNameArray.length - 2; i++) {
+      schoolName += schoolNameArray[i] + " ";
+    }
+    String schoolID = schoolNameToIDMap.get(schoolName.trim());
+    WebScraper.setCollege(schoolID);
+    System.out.println("schoolID: " + schoolID);
+    String correspondingID = scraper.scrape();
+
+    if (correspondingID != null && !correspondingID.isEmpty()) {
+      // this id is associated with an exam
+      conventionID = correspondingID;
     }
 
     Convention currConv = new Convention(conventionID);
@@ -66,8 +86,6 @@ public class ConventionHomeHandler implements TemplateViewRoute {
     if (existingEvents.equals("")) {
       existingEvents = "No events yet.";
     }
-
-    System.out.println("existing events " + existingEvents);
 
     Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "id", conventionID,
         "convName", convName, "existingEvents", existingEvents);

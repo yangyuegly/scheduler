@@ -5,7 +5,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -89,7 +88,7 @@ public class DatabaseUtilityTest {
   }
 
   // @Test
-  public void addConflictTest() { // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  public void addConflictTest() {
 
     Event e1 = new Event(1, "x", "");
     Event e2 = new Event(2, "y", "");
@@ -163,6 +162,8 @@ public class DatabaseUtilityTest {
     List<String> emails2 = du.getAttendeeEmailsFromConventionID("185296");
     assertTrue(emails2.contains("rachel_fuller@brown.edu"));
 
+    // the ID is not in the database
+    assertFalse(du.addAttendeeEmail("not a real id!!!", "rachel_fuller@brown.edu"));
   }
 
   @Test
@@ -175,11 +176,11 @@ public class DatabaseUtilityTest {
     assertTrue(du.getAttendeeEmailsFromConventionID("816365").isEmpty());
   }
 
-  //@Test
+  // @Test
   // public void testGeorgeTown() {
-  //   HashMap<Integer, Integer> map = du.updateEventID("604605");
-  //   Boolean ret = du.updateConflict("604605", map);
-  //   System.out.println("iu");
-  //   assertTrue(ret);
+  // HashMap<Integer, Integer> map = du.updateEventID("604605");
+  // Boolean ret = du.updateConflict("604605", map);
+  // System.out.println("iu");
+  // assertTrue(ret);
   // }
 }

@@ -9,12 +9,19 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 
 /**
- * Class to store local date and time
+ * Class to store local date and time. It extends StdSerializer for LocalDateTime.
  */
 public class LocalDateTimeSerializer extends StdSerializer<LocalDateTime> {
 
   /**
-   * Constructor for LocalDateTimeSerializer
+   * This is a field for this class.
+   *
+   * serialVersionUID - a long
+   */
+  private static final long serialVersionUID = 1684060049056007127L;
+
+  /**
+   * Constructor for LocalDateTimeSerializer.
    */
   public LocalDateTimeSerializer() {
     super(LocalDateTime.class);

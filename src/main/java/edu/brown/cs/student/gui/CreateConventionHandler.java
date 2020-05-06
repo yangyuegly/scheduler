@@ -13,10 +13,20 @@ import spark.Response;
 import spark.TemplateViewRoute;
 
 /**
- * Class that is a handler for the creating a convention page.
+ * Class that is a handler for the creating a convention page. It implements TemplateViewRoute.
  *
  */
 public class CreateConventionHandler implements TemplateViewRoute {
+
+  /**
+   * These are fields for this class.
+   *
+   * ID_UPPER_BOUND - an int, which is used as an upper bound when generating random convention IDs
+   *
+   * ID_LOWER_BOUND - an int, which is used as a lower bound when generating random convention IDs
+   */
+  private static final int ID_UPPER_BOUND = (999999 - 100000) + 1;
+  private static final int ID_LOWER_BOUND = 100000;
 
   @Override
   public ModelAndView handle(Request request, Response response) {
@@ -38,7 +48,7 @@ public class CreateConventionHandler implements TemplateViewRoute {
     Integer id = null;
 
     while (!avail) {
-      id = rand.nextInt((999999 - 100000) + 1) + 100000;
+      id = rand.nextInt(ID_UPPER_BOUND) + ID_LOWER_BOUND;
       DatabaseUtility db = new DatabaseUtility();
 
       // if avail is true, this ID has not yet been used

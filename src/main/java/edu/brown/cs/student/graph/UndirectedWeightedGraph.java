@@ -167,7 +167,6 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
           List<Integer> indices = getFirstNodeColor();
           curr.setColor(indices);
           coloredMap.put(curr.getID(), curr);
-          System.out.println("colored map" + coloredMap.get(curr.getID()));
           // coloredSet.add(curr);
           result.add(curr);
           numColoredCourses++;

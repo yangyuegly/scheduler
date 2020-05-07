@@ -25,14 +25,14 @@ public class LoadCommand {
   /**
    * Fields for conflicts and connecting to database.
    */
-  private List<Conflict> conflict;
+  // private List<Conflict> conflict;
   private MongoDatabase database;
 
   /**
    * Constructor for LoadCommand.
    */
   public LoadCommand() {
-    conflict = new ArrayList<>();
+    // conflict = new ArrayList<>();
     // for unit testing purposes
     if (Main.getDatabase() == null) {
       ConnectionString connString = new ConnectionString(
@@ -59,9 +59,10 @@ public class LoadCommand {
    * @param convention - the convention containing all the events in the file
    */
   public void execute(List<List<String>> input, Convention convention) {
+    DatabaseUtility du = new DatabaseUtility();
     int count = 0;
     // map conflict to number of conflicts
-    Map<Conflict, Integer> frequencyMap = new HashMap<>();
+    // Map<Conflict, Integer> frequencyMap = new HashMap<>();
     Map<String, Integer> nameToId = new HashMap<>();
     // loop through rows in csv
     for (List<String> row : input) {
@@ -81,13 +82,16 @@ public class LoadCommand {
             count++;
           }
           Conflict currConflict = new Conflict(new Event(nameToId.get(first), first, ""),
-              new Event(nameToId.get(second), second, ""), null);
-          this.conflict.add(currConflict);
+              new Event(nameToId.get(second), second, ""), 1);
+          // this.conflict.add(currConflict);
           Conflict reverse = new Conflict(new Event(nameToId.get(second), second, ""),
-              new Event(nameToId.get(first), first, ""), null);
-          // add to the weight if the conflict doesn't exist or add the conflict itself
-          frequencyMap.put(currConflict, frequencyMap.getOrDefault(conflict, 0) + 1);
-          frequencyMap.put(reverse, frequencyMap.getOrDefault(reverse, 0) + 1);
+              new Event(nameToId.get(first), first, ""), 1);
+          du.addConflict(convention.getID(), currConflict);
+          du.addConflict(convention.getID(), reverse);
+
+          // // add to the weight if the conflict doesn't exist or add the conflict itself
+          // frequencyMap.put(currConflict, frequencyMap.getOrDefault(conflict, 0) + 1);
+          // frequencyMap.put(reverse, frequencyMap.getOrDefault(reverse, 0) + 1);
 
         }
       }
@@ -95,7 +99,7 @@ public class LoadCommand {
     }
 
     Gson gson = new Gson();
-    List<BasicDBObject> conflictArray = new ArrayList<>();
+    // List<BasicDBObject> conflictArray = new ArrayList<>();
     List<BasicDBObject> eventArray = new ArrayList<>();
 
     // insert into the event table
@@ -110,17 +114,17 @@ public class LoadCommand {
 
     database.getCollection("events").insertOne(currEvent);
 
-    for (Map.Entry<Conflict, Integer> entry : frequencyMap.entrySet()) {
-      // set weight for each conflict
-      entry.getKey().setWeight(entry.getValue());
-      BasicDBObject obj = BasicDBObject.parse(gson.toJson(entry.getKey()));
-      conflictArray.add(obj);
-    }
+    // for (Map.Entry<Conflict, Integer> entry : frequencyMap.entrySet()) {
+    //   // set weight for each conflict
+    //   entry.getKey().setWeight(entry.getValue());
+    //   BasicDBObject obj = BasicDBObject.parse(gson.toJson(entry.getKey()));
+    //   conflictArray.add(obj);
+    // }
 
-    Document doc = new Document("conventionID", convention.getID()).append("conflicts",
-        conflictArray);
+    // Document doc = new Document("conventionID", convention.getID()).append("conflicts",
+    //     conflictArray);
 
-    database.getCollection("conflicts").insertOne(doc);
+    // database.getCollection("conflicts").insertOne(doc);
 
   }
 

@@ -52,7 +52,7 @@ public class DatabaseUtility {
   private MongoCollection<Document> attendeeCollection;
   private MongoDatabase database;
   private ObjectMapper mapper = new ObjectMapper();
-  private static final int CONFLICT_MAX = 100;
+  private static final int CONFLICT_MAX = 200;
 
   /**
    * Constructor for DatabaseUtility.
@@ -187,6 +187,7 @@ public class DatabaseUtility {
    * @return a Boolean, true if the method was successful, false otherwise
    */
   public Boolean addConflict(String conventionID, Conflict newConflict) {
+
     Conflict reverseConflict = new Conflict(newConflict.getTail(), newConflict.getHead(),
         newConflict.getWeight());
     Gson gson = new Gson();

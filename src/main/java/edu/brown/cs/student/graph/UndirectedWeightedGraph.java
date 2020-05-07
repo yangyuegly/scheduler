@@ -124,9 +124,13 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
    */
   public void addAllEdges(Set<E> edges) {
     for (E e : edges) {
+      System.out.println("e:" + e);
       this.weightMatrix[e.getHead().getID()][e.getTail().getID()] = e.getWeight();
       this.weightMatrix[e.getTail().getID()][e.getHead().getID()] = e.getWeight();
       nodes.get(e.getHead().getID()).addToAdjList(e);
+      // if (e.getHead().getID() == 0) {
+      //   System.out.println("node:" +  nodes.get(e.getHead().getID()).getAdjList());
+      // }
     }
 
     setDegree();
@@ -166,9 +170,11 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
           List<Integer> indices = getFirstNodeColor();
           curr.setColor(indices);
           coloredMap.put(curr.getID(), curr);
+          System.out.println("colored map" + coloredMap.get(curr.getID()));
           // coloredSet.add(curr);
           result.add(curr);
           numColoredCourses++;
+          colors.get(indices.get(0))[indices.get(1)]--;
         } else {
           // color the current course
           List<Integer> indices = getSmallestAvailableColor(curr.getID());
@@ -248,6 +254,8 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
    * @return a List of Integers, which represents the smallest available color
    */
   public List<Integer> getSmallestAvailableColor(int courseID) {
+
+
 
     boolean valid = false;
     List<E> adj = nodes.get(courseID).getAdjList();

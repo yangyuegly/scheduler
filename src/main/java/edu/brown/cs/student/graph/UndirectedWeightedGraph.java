@@ -383,27 +383,6 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
     return sortedEntries;
   }
 
-  // @Override
-  // public boolean equals(Object o) {
-  // if (o == this)
-  // return true;
-  // if (!(o instanceof UndirectedWeightedGraph)) {
-  // return false;
-  // }
-  // UndirectedWeightedGraph<V,E> undirectedWeightedGraph = (UndirectedWeightedGraph<V,E>) o;
-  // return Objects.equals(weightMatrix, undirectedWeightedGraph.weightMatrix) && numColor ==
-  // undirectedWeightedGraph.numColor && numVertices == undirectedWeightedGraph.numVertices &&
-  // numTimeSlotsInDay ==
-  // undirectedWeightedGraph.numTimeSlotsInDay && Objects.equals(degree,
-  // undirectedWeightedGraph.degree) &&
-  // Objects.equals(colors, undirectedWeightedGraph.colors) && k == undirectedWeightedGraph.k;
-  // }
-
-  // @Override
-  // public int hashCode() {
-  // return Objects.hash(weightMatrix, numColor, numVertices, numTimeSlotsInDay, degree, colors, k);
-  // }
-
   @Override
   public String toString() {
     return "{" + "'" + ", weightMatrix='" + weightMatrix + "'" + ", numColor='" + numColor + "'"

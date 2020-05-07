@@ -19,12 +19,11 @@ public class CreateAccountHandler implements TemplateViewRoute {
     String currUserEmail = request.cookie("user");
 
     if (currUserEmail != null) {
+      // the user is logged in and does not need to make an account
       response.redirect("/account");
-      return null;
     }
 
     Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "errorMessage", "");
-
     return new ModelAndView(variables, "create_account.ftl");
   }
 }

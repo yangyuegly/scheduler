@@ -22,9 +22,6 @@ public class AddCollaboratorHandler implements Route {
     String userEmail = req.cookie("user");
     String conventionID = req.params(":id");
 
-    QueryParamsMap queryMap = req.queryMap();
-    String eventString = queryMap.value("event");
-
     DatabaseUtility db = new DatabaseUtility();
     boolean permission = db.checkPermission(userEmail, conventionID);
 
@@ -35,7 +32,7 @@ public class AddCollaboratorHandler implements Route {
       return gson.toJson(variables);
     }
 
-    // adding a collaborator
+    QueryParamsMap queryMap = req.queryMap();
     String collaboratorEmail = queryMap.value("colEmail");
 
     if (!db.addConvIDCollaborator(collaboratorEmail, conventionID)) {

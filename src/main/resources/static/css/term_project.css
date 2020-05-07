@@ -275,7 +275,7 @@ a {
    displayed if the program is able to schedule the convention.
 */
 #emailAtt {
-  display: visible;
+  display: none;
 }
 
 

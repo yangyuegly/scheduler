@@ -26,31 +26,13 @@ public class CalendarHandler implements Route {
 
   @Override
   public String handle(Request req, Response res) {
-    DatabaseUtility du = new DatabaseUtility();
+    Gson gson = new Gson();
     String conventionID = req.params(":id");
-    String college = WebScraper.getcollegeID();
-
-    WebScraper scraper = new WebScraper(conventionID);
-    Map<String, String> schoolNameToIDMap = scraper.getcoursesToIDs();
-    Convention school = du.getConvention(conventionID);
-    String schoolN = school.getName();
-    String[] schoolNameArray = schoolN.split(" ");
-    String schoolName = "";
-
-    for (int i = 0; i < schoolNameArray.length - 2; i++) {
-      schoolName += schoolNameArray[i] + " ";
-    }
-    // remove "Final Exams"
-    String schoolID = schoolNameToIDMap.get(schoolName.trim());
-    WebScraper.setCollege(schoolID);
-    String correspondingID = scraper.scrape();
     String userEmail = req.cookie("user");
 
     if (userEmail == null) {
       Map<String, Object> variables = ImmutableMap.of("eventsForSchedule", "", "defaultDate", "",
-          "error", "You do not have permission to view this schedule.");
-      Gson gson = new Gson();
-
+          "error", "You must be logged in to view a schedule.");
       return gson.toJson(variables);
     }
 
@@ -60,28 +42,42 @@ public class CalendarHandler implements Route {
     if (!authorized) {
       Map<String, Object> variables = ImmutableMap.of("eventsForSchedule", "", "defaultDate", "",
           "error", "You do not have permission to view this schedule.");
-      Gson gson = new Gson();
-
       return gson.toJson(variables);
     }
 
+    // see if this convention is an exam schedule
     Convention myConv = db.getConvention(conventionID);
-    int numTimeSlotsPerDay = myConv.getNumTimeSlotsPerDay();
+    WebScraper scraper = new WebScraper(conventionID);
+    Map<String, String> schoolNameToIDMap = scraper.getcoursesToIDs();
+    String convName = myConv.getName();
+    String[] schoolNameArray = convName.split(" ");
+    String schoolName = "";
 
+    // remove "Final Exams" from the name of the convention, giving us the name of the school
+    for (int i = 0; i < schoolNameArray.length - 2; i++) {
+      schoolName += schoolNameArray[i] + " ";
+    }
+
+    String schoolID = schoolNameToIDMap.get(schoolName.trim());
+    WebScraper.setCollege(schoolID);
+
+    // this ID will be null if this convention is not an exam, otherwise it will be the ID of the
+    // school whose exams are in this convention
+    String correspondingID = scraper.scrape();
+
+    int numTimeSlotsPerDay = myConv.getNumTimeSlotsPerDay();
     ScheduleCommand schedComm = new ScheduleCommand(myConv, 5, myConv.getNumDays(),
         numTimeSlotsPerDay, correspondingID);
-
     List<CalendarEvent> schedule;
 
     try {
       schedule = schedComm.execute();
+
     } catch (SchedulingException err) {
       // there was an error with the scheduling
       Map<String, Object> variables = ImmutableMap.of("eventsForSchedule", "", "defaultDate", "",
           "error", "We're sorry, we couldn't make a schedule for you. There was no way to avoid"
               + " conflicts between your events.");
-      Gson gson = new Gson();
-
       return gson.toJson(variables);
 
     } catch (NullPointerException err) {
@@ -91,10 +87,7 @@ public class CalendarHandler implements Route {
       Map<String, Object> variables = ImmutableMap.of("eventsForSchedule", "", "defaultDate", "",
           "error", "We're sorry, we couldn't make a schedule for you. There was no way to avoid"
               + " conflicts between your events.");
-      Gson gson = new Gson();
-
       return gson.toJson(variables);
-
     }
 
     LocalDateTime convStartWithTime = myConv.getStartDateTime();
@@ -102,8 +95,6 @@ public class CalendarHandler implements Route {
 
     Map<String, Object> variables = ImmutableMap.of("eventsForSchedule", schedule, "defaultDate",
         convStartDay.toString(), "error", "");
-    Gson gson = new Gson();
-
     return gson.toJson(variables);
   }
 

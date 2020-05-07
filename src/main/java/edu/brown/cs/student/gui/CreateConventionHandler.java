@@ -34,9 +34,7 @@ public class CreateConventionHandler implements TemplateViewRoute {
 
     if (userEmail == null) {
       // user is not logged in
-      Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "message",
-          "Please log in");
-      return new ModelAndView(variables, "login.ftl");
+      response.redirect("/not_logged_in");
     }
 
     // gets the current date (we don't want the user to schedule an event in the past)
@@ -57,7 +55,6 @@ public class CreateConventionHandler implements TemplateViewRoute {
 
     Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "currDay", today, "id",
         id.toString(), "errorMessage", "");
-
     return new ModelAndView(variables, "setup_conv.ftl");
   }
 

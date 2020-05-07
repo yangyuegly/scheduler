@@ -39,9 +39,7 @@ public class CreateExamConvHandler implements TemplateViewRoute {
 
     if (userEmail == null) {
       // user is not logged in
-      Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "message",
-          "Please log in");
-      return new ModelAndView(variables, "login.ftl");
+      response.redirect("/not_logged_in");
     }
 
     // gets the current date (we don't want the user to schedule an event in the past)
@@ -70,6 +68,7 @@ public class CreateExamConvHandler implements TemplateViewRoute {
       schoolNamesList.add(schoolName);
     }
 
+    // put the names in alphabetical order
     Collections.sort(schoolNamesList);
 
     for (String schoolName : schoolNamesList) {
@@ -79,7 +78,6 @@ public class CreateExamConvHandler implements TemplateViewRoute {
 
     Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "schoolSuggestions",
         schoolSuggestions, "currDay", today, "id", id.toString(), "errorMessage", "");
-
     return new ModelAndView(variables, "create_exam_conv.ftl");
   }
 

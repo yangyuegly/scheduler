@@ -72,7 +72,7 @@ const updateEventNamesString = () => {
   is stored in the database.
 */
 const addEvent = () => {
-  if ($name.val() != "") {
+  if ($name.val().trim() != "") {
     let newEvent = [$name.val(), $description.val()];
     existingEvents.push(newEvent);
 

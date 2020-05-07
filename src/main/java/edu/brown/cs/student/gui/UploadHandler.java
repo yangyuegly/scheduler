@@ -38,6 +38,11 @@ public class UploadHandler implements TemplateViewRoute {
     String userEmail = request.cookie("user");
     String id = request.params(":id");
 
+    if (userEmail == null) {
+      // user is not logged in
+      response.redirect("/not_logged_in");
+    }
+
     DatabaseUtility db = new DatabaseUtility();
     boolean permission = db.checkPermission(userEmail, id);
 
@@ -45,13 +50,7 @@ public class UploadHandler implements TemplateViewRoute {
       response.redirect("/unauthorized");
     }
 
-    if (userEmail == null) {
-      // user is not logged in
-      Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "message",
-          "Please log in");
-      return new ModelAndView(variables, "login.ftl");
-    }
-
+    // turn the uploaded file into a StringBuilder that can be parsed
     StringBuilder textBuilder = new StringBuilder();
     request.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
 
@@ -92,7 +91,7 @@ public class UploadHandler implements TemplateViewRoute {
     // go to the schedule page
     response.redirect("/schedule/" + id);
 
-    return null;
+    return null; // this line will not be reached
   }
 
 }

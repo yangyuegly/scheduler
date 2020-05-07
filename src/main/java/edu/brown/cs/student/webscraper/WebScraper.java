@@ -174,17 +174,13 @@ public class WebScraper {
    * @return the conventionID which contains the result
    */
   public String scrape() {
-    System.out.println("in scrape; collegeID is " + collegeID); // delete
-
     // get the collection from the database
     MongoCollection<org.bson.Document> namesCollection = database.getCollection("nameToIDs");
     org.bson.Document convention = namesCollection
         .find(new BasicDBObject("name", new BasicDBObject("$eq", collegeID))).first();
     if (convention == null) {
-      System.out.println("conventionID from nameToIDs: " + null);
       return null;
     }
-    System.out.println("conventionID from nameToIDs: " + convention.getString("conventionID"));
     return convention.getString("conventionID");
   }
 
@@ -287,7 +283,6 @@ public class WebScraper {
     // get the list of departments
     Set<String> keys = deptToCourses.keySet();
     int eventID = 0;
-    System.out.println("here");
     int countConflicts = 0;
     // for unit testing purposes
 

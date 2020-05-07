@@ -32,9 +32,13 @@ public class SchedExamSubmitHandler implements TemplateViewRoute {
 
     if (userEmail == null) {
       // user is not logged in
-      Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "message",
-          "Please log in");
-      return new ModelAndView(variables, "login.ftl");
+      response.redirect("/not_logged_in");
+    }
+
+    boolean authorized = db.checkPermission(userEmail, id);
+
+    if (!authorized) {
+      response.redirect("/unauthorized");
     }
 
     QueryParamsMap queryMap = request.queryMap();
@@ -44,39 +48,19 @@ public class SchedExamSubmitHandler implements TemplateViewRoute {
     String eventDuration = queryMap.value("eventDuration");
     String startTime = queryMap.value("startTime");
     String endTime = queryMap.value("endTime");
-    String submitType = queryMap.value("submitType");
 
-    int numDays;
-    int eventDur;
-    Convention newConv;
-
-    try {
-      numDays = Integer.parseInt(numDaysString);
-      eventDur = Integer.parseInt(eventDuration);
-      newConv = new Convention(id, schoolName + " Final Exams", startDate, numDays, eventDur,
-          startTime, endTime);
-      // add this convention to the database
-
-      db.addConventionData(newConv);
-
-    } catch (NumberFormatException err) {
-      Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "id", id.toString(),
-          "errorMessage", "The number of days and the date/time fields must be integers.");
-      return new ModelAndView(variables, "setup_conv.ftl");
-    }
-
-    // Use the WebScraper to add the events and conflicts to the convention
+    // make sure the selected school is available to scrape
     WebScraper scraper = new WebScraper(id);
     Map<String, String> schoolNameToIDMap = scraper.getcoursesToIDs();
     String schoolID = schoolNameToIDMap.get(schoolName);
 
     if (schoolID == null) {
-      // the user selected a name that is not available to scrape
+      // the user selected a name that is not available to scrape and we want to reload the create
+      // exam convention page with the appropriate error message
       Calendar cal = Calendar.getInstance();
       int month = cal.get(Calendar.MONTH) + 1;
       int day = cal.get(Calendar.DAY_OF_MONTH);
       int year = cal.get(Calendar.YEAR);
-
       String date = year + "-" + month + "-" + day;
 
       List<String> schoolNamesList = new ArrayList<>();
@@ -84,7 +68,6 @@ public class SchedExamSubmitHandler implements TemplateViewRoute {
 
       for (String currSchoolName : schoolNameToIDMap.keySet()) {
         schoolNamesList.add(currSchoolName);
-
       }
 
       Collections.sort(schoolNamesList);
@@ -98,6 +81,24 @@ public class SchedExamSubmitHandler implements TemplateViewRoute {
           schoolSuggestions, "currDay", date, "id", id.toString(), "errorMessage",
           "Please select a school from the list.");
       return new ModelAndView(variables, "create_exam_conv.ftl");
+    }
+
+    // add the convention data to the database
+    int numDays;
+    int eventDur;
+    Convention newConv;
+
+    try {
+      numDays = Integer.parseInt(numDaysString);
+      eventDur = Integer.parseInt(eventDuration);
+      newConv = new Convention(id, schoolName + " Final Exams", startDate, numDays, eventDur,
+          startTime, endTime);
+      db.addConventionData(newConv);
+
+    } catch (NumberFormatException err) {
+      Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "id", id.toString(),
+          "errorMessage", "The number of days and the date/time fields must be integers.");
+      return new ModelAndView(variables, "setup_conv.ftl");
     }
 
     WebScraper.setCollege(schoolID);

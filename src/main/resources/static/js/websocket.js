@@ -63,7 +63,6 @@ let setup_live_event_updates = () => {
             }
           });
         }
-        // $("#eventNames").replaceWith("<div id=\"eventName\">" + data.payload.text + "</div>");
         break;
     }
   };
@@ -71,7 +70,7 @@ let setup_live_event_updates = () => {
 
 const add_event = (eventNamesString) => {
   console.log("in add_event"); // delete
-  console.log("eventNamesString in websocket is " + eventNamesString); //not dupli
+  console.log("eventNamesString in websocket is " + eventNamesString);
 
   const JSONevents = JSON.stringify({
     type: MESSAGE_TYPE.EVENT,
@@ -80,6 +79,5 @@ const add_event = (eventNamesString) => {
       text: eventNamesString,
     },
   });
-  console.log("json is " + JSONevents);
   conn.send(JSONevents);
 };

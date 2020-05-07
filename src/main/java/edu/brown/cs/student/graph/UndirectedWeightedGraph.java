@@ -106,14 +106,13 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
       // initializing the color array
       Integer[] ts = new Integer[numTimeSlotsInDay];
       for (int i = 0; i < numTimeSlotsInDay; i++) {
-        ts[i] = concurrencyLimit;
+        ts[i] = this.concurrencyLimit;
       }
       colors.add(ts);
     }
 
     // wij denotes the number of students in both i and j
     // k is the range of J given by the user
-    // this.db = db;
     this.degree = new TreeSet<Map.Entry<Integer, V>>();
     this.result = new HashSet<V>();
   }
@@ -124,17 +123,12 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
    * @param edges - a Set of objects of type E, which represent the edges of this graph
    */
   public void addAllEdges(Set<E> edges) {
-    System.out.println("in addAllEdges");
-
     for (E e : edges) {
       this.weightMatrix[e.getHead().getID()][e.getTail().getID()] = e.getWeight();
       this.weightMatrix[e.getTail().getID()][e.getHead().getID()] = e.getWeight();
-      System.out.println(nodes.get(e.getHead().getID()) + " this");
       nodes.get(e.getHead().getID()).addToAdjList(e);
     }
-    for (Map.Entry<Integer, V> n : nodes.entrySet()) {
-      System.out.println(n.getValue().getID() + " " + n.getValue().getAdjList());
-    }
+
     setDegree();
   }
 
@@ -161,20 +155,17 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
    */
   public Set<V> graphColoring(int ts, int cl) throws SchedulingException {
     Set<V> coloredSet = new HashSet<V>();
-    System.out.println("here");
     int numColoredCourses = 0;
     Iterator<Map.Entry<Integer, V>> iter = degree.iterator();
     while (iter.hasNext()) {
       V curr = iter.next().getValue();
       // if the current node is not colored
-      System.out.println(curr);
       if (!result.contains(curr)) {
         // for the first course
         if (numColoredCourses == 0) {
           List<Integer> indices = getFirstNodeColor();
           curr.setColor(indices);
           coloredMap.put(curr.getID(), curr);
-          System.out.println("first node:" + curr);
           // coloredSet.add(curr);
           result.add(curr);
           numColoredCourses++;
@@ -190,7 +181,6 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
             // decrement the concurrency limit for a color
             colors.get(indices.get(0))[indices.get(1)]--;
           } else {
-            System.out.println("stuck");
             throw new SchedulingException(
                 "Unable to find a conflict-free schedule for this convention.");
           }
@@ -212,7 +202,6 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
       }
     }
     for (Map.Entry<Integer, V> c : coloredMap.entrySet()) {
-      System.out.println(c.getValue());
       coloredSet.add(c.getValue());
     }
     return coloredSet;
@@ -260,7 +249,6 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
    */
   public List<Integer> getSmallestAvailableColor(int courseID) {
 
-    // System.out.println("the current course id " + courseID);
     boolean valid = false;
     List<E> adj = nodes.get(courseID).getAdjList();
     for (int i = 0; i < this.maxScheduleDays; i++) {
@@ -268,15 +256,12 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
         List<Integer> currColor = new ArrayList<>(List.of(i, j));
         valid = true;
         for (int r = 0; r < adj.size(); r++) {
-          // System.out.println(nodes.get((adj.get(r).getTail().getID())));
           // get the color of the adjacent node
           List<Integer> color;
           if (coloredMap.containsKey(adj.get(r).getTail().getID())) {
-            // System.out.println("colors:" + color);
             // check if that color is the same as the current
             color = coloredMap.get(adj.get(r).getTail().getID()).getColor();
             if (color.get(0) != i || color.get(1) != j) {
-              // System.out.println("i:" + i + " j " + j);
               if (calculateExternalDistance(color, currColor) == 0) {
                 // if we don't want back-to-back exams
                 if (calculateInternalDistance(color, currColor) <= this.examBreak) {
@@ -292,13 +277,11 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
           }
         }
         if (valid) {
-          // System.out.println("outside of loop: " + currColor);
           return currColor;
         }
       }
     }
     return null;
-    // throw new NullPointerException("Unable to find a schedue for the current convention");
   }
 
   /**

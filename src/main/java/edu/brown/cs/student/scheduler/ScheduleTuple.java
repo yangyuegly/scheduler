@@ -33,13 +33,6 @@ public class ScheduleTuple {
   }
 
   /**
-   * Constructor for ScheduleTuple.
-   */
-  public ScheduleTuple() {
-
-  }
-
-  /**
    * Getter for calendar events.
    *
    * @return - list of calendar event

@@ -27,9 +27,7 @@ public class ConventionHomeHandler implements TemplateViewRoute {
 
     if (userEmail == null) {
       // user is not logged in
-      Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "message",
-          "Please log in");
-      return new ModelAndView(variables, "login.ftl");
+      response.redirect("/not_logged_in");
     }
 
     DatabaseUtility db = new DatabaseUtility();
@@ -39,31 +37,35 @@ public class ConventionHomeHandler implements TemplateViewRoute {
       response.redirect("/unauthorized");
     }
 
-    // checking if this is an exam
-    String college = WebScraper.getcollegeID();
+    // see if this convention is an exam schedule
+    Convention myConv = db.getConvention(conventionID);
     WebScraper scraper = new WebScraper(conventionID);
     Map<String, String> schoolNameToIDMap = scraper.getcoursesToIDs();
-    Convention school = db.getConvention(conventionID);
-    String schoolN = school.getName();
-    String[] schoolNameArray = schoolN.split(" ");
+    String convName = myConv.getName();
+    String[] schoolNameArray = convName.split(" ");
     String schoolName = "";
+
+    // remove "Final Exams" from the name of the convention, giving us the name of the school
     for (int i = 0; i < schoolNameArray.length - 2; i++) {
       schoolName += schoolNameArray[i] + " ";
     }
-    // remove "Final Exams"
+
     String schoolID = schoolNameToIDMap.get(schoolName.trim());
     WebScraper.setCollege(schoolID);
-    System.out.println("schoolID: " + schoolID);
+
+    // this ID will be null if this convention is not an exam, otherwise it will be the ID of the
+    // school whose exams are in this convention
     String correspondingID = scraper.scrape();
 
     if (correspondingID != null && !correspondingID.isEmpty()) {
-      // this id is associated with an exam
+      // if the current convention is associated with an exam, we want to get the events from the
+      // exam convention
       conventionID = correspondingID;
     }
 
-    Convention currConv = new Convention(conventionID);
+    Convention myConvOrExamConv = new Convention(conventionID);
 
-    if (!currConv.isLoaded()) {
+    if (!myConvOrExamConv.isLoaded()) {
       // this convention was never set up with the name and time information
 
       // gets the current date (we don't want the user to schedule an event in the past)
@@ -71,12 +73,10 @@ public class ConventionHomeHandler implements TemplateViewRoute {
 
       Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "currDay", today, "id",
           conventionID, "errorMessage", "");
-
       return new ModelAndView(variables, "setup_conv.ftl");
     }
 
-    String convName = currConv.getName();
-    List<Event> events = currConv.getEvents();
+    List<Event> events = myConvOrExamConv.getEvents();
     String existingEvents = "";
 
     // this creates a string that tells the user what events are already in this convention
@@ -90,7 +90,6 @@ public class ConventionHomeHandler implements TemplateViewRoute {
 
     Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "id", conventionID,
         "convName", convName, "existingEvents", existingEvents);
-
     return new ModelAndView(variables, "convention_home.ftl");
   }
 

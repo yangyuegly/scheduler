@@ -28,6 +28,7 @@ import edu.brown.cs.student.gui.HomeHandler;
 import edu.brown.cs.student.gui.LoginPageHandler;
 import edu.brown.cs.student.gui.LoginSubmitHandler;
 import edu.brown.cs.student.gui.LogoutHandler;
+import edu.brown.cs.student.gui.NotLoggedInHandler;
 import edu.brown.cs.student.gui.SchedExamSubmitHandler;
 import edu.brown.cs.student.gui.SchedulePageHandler;
 import edu.brown.cs.student.gui.UnauthorizedHandler;
@@ -153,6 +154,7 @@ public final class Main {
     Spark.post("/create_account", new CreateAccountSubmitHandler(), freeMarker);
     Spark.get("/account", new AccountHomeHandler(), freeMarker);
     Spark.get("/login", new LoginPageHandler(), freeMarker);
+    Spark.get("/not_logged_in", new NotLoggedInHandler(), freeMarker);
     Spark.post("/account", new LoginSubmitHandler(), freeMarker);
     Spark.get("/create_convention", new CreateConventionHandler(), freeMarker);
     Spark.post("/create_convention/:id", new CreateConvSubmitHandler(), freeMarker);

@@ -23,6 +23,11 @@ public class SchedulePageHandler implements TemplateViewRoute {
     String userEmail = request.cookie("user");
     String conventionID = request.params(":id");
 
+    if (userEmail == null) {
+      // user is not logged in
+      response.redirect("/not_logged_in");
+    }
+
     DatabaseUtility db = new DatabaseUtility();
     boolean permission = db.checkPermission(userEmail, conventionID);
 
@@ -30,14 +35,8 @@ public class SchedulePageHandler implements TemplateViewRoute {
       response.redirect("/unauthorized");
     }
 
-    if (userEmail == null) {
-      // user is not logged in
-      Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "message",
-          "Please log in");
-      return new ModelAndView(variables, "login.ftl");
-    }
-
     Convention myConv = new Convention(conventionID);
+    String name = myConv.getName();
 
     if (!myConv.isLoaded()) {
       LocalDate today = LocalDate.now();
@@ -47,8 +46,6 @@ public class SchedulePageHandler implements TemplateViewRoute {
 
       return new ModelAndView(variables, "setup_conv.ftl");
     }
-
-    String name = myConv.getName();
 
     Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "name", name);
     return new ModelAndView(variables, "calendar_page.ftl");

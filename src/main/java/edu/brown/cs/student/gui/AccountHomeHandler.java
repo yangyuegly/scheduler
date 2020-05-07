@@ -19,14 +19,12 @@ import spark.TemplateViewRoute;
 public class AccountHomeHandler implements TemplateViewRoute {
 
   @Override
-  public ModelAndView handle(Request req, Response res) {
-    String userEmail = req.cookie("user");
+  public ModelAndView handle(Request request, Response response) {
+    String userEmail = request.cookie("user");
 
     if (userEmail == null) {
       // user is not logged in
-      Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "message",
-          "Please log in");
-      return new ModelAndView(variables, "login.ftl");
+      response.redirect("/not_logged_in");
     }
 
     User currUser = new User(userEmail);

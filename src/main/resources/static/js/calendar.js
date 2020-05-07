@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", function() {
       startDate = responseObject.defaultDate;
       makeCalendar(startDate, myEvents);
 
-      $("#emailAtt").css("display", "visible");
+      $("#emailAtt").css("display", "block");
       document
         .getElementById("emailAtt")
         .addEventListener("click", (event) =>

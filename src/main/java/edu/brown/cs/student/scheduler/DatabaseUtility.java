@@ -115,7 +115,6 @@ public class DatabaseUtility {
   public List<Event> getEventsFromConventionID(String conventionID) {
     List<Event> result = new ArrayList<Event>();
     BasicDBObject query = new BasicDBObject();
-    System.out.println("hear:" + conventionID);
     query.put("conventionID", conventionID);
     Document doc = eventCollection.find(query).first();
 
@@ -126,7 +125,6 @@ public class DatabaseUtility {
 
     // iterate through the events found
     List<Document> eventList = (List<Document>) doc.get("events");
-    System.out.println("checkpoint:" + conventionID);
     for (Document event : eventList) {
       Event e = new Event(event.getInteger("id"), event.getString("name"),
           event.getString("description"));
@@ -213,7 +211,6 @@ public class DatabaseUtility {
 
     // convention is not in the conflicts at all
     if (conflictList == null) {
-      System.out.println("the convention was not in the conflicts table, adding it now");
       Map<String, Object> newConventionString = new HashMap<>();
       newConventionString.put("conventionID", conventionID);
       conflictCollection.insertOne(new Document(newConventionString));
@@ -257,10 +254,9 @@ public class DatabaseUtility {
       conflictCollection.updateOne(andDuplicate, update);
       return true;
     } else if (foundNormalMatch ^ foundReverseMatch) {
-      System.err.println("only found one of the conflict and the conflict's reverse");
+      System.err.println("ERROR: only found one of the conflict and the conflict's reverse");
       return false;
     } else { // out of for loop without finding a match, need to add it
-      System.out.println("Conflict not found among existing conflicts, adding it now");
       BasicDBObject update1 = new BasicDBObject();
       BasicDBObject update2 = new BasicDBObject();
       BasicDBObject queryAdd = new BasicDBObject("conventionID",

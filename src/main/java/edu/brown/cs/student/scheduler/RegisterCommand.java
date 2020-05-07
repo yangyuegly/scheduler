@@ -1,12 +1,10 @@
 package edu.brown.cs.student.scheduler;
 
-import java.lang.System.Logger;
 import java.security.Key;
 import java.security.SecureRandom;
 import java.util.Base64;
 
 import javax.crypto.Cipher;
-import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
 import org.bson.Document;

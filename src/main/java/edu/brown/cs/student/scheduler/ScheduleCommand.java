@@ -113,10 +113,21 @@ public class ScheduleCommand {
   }
 
   /**
+   * This method is used to get the nodes field.
+   *
    * @return the list of events
    */
   public List<Event> getNodes() {
     return this.nodes;
+  }
+
+  /**
+   * Set the nodes field.
+   *
+   * @param nodes - a List of Events, which represents the events to be scheduled
+   */
+  public void setNodes(List<Event> nodes) {
+    this.nodes = nodes;
   }
 
   /**
@@ -127,18 +138,9 @@ public class ScheduleCommand {
     if (correspondingID == null) {
       this.nodes = this.convention.getEvents();
     } else {
-      // System.out.println("corressponding convention");
       this.nodes = correspondingConvention.getEvents();
     }
 
-  }
-
-  /**
-   * Set nodes 
-   * @param nodes 
-   */
-  public void setNodes(List<Event> nodes) {
-    this.nodes = nodes;
   }
 
   /**

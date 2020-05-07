@@ -23,15 +23,21 @@ public class CreateConvSubmitHandler implements TemplateViewRoute {
   @Override
   public ModelAndView handle(Request request, Response response) {
     String userEmail = request.cookie("user");
+    String id = request.params(":id");
 
     if (userEmail == null) {
       // user is not logged in
-      response.redirect("/login");
-      return null; // this line will not be reached
+      response.redirect("/not_logged_in");
+    }
+
+    DatabaseUtility db = new DatabaseUtility();
+    boolean authorized = db.checkPermission(userEmail, id);
+
+    if (!authorized) {
+      response.redirect("/unauthorized");
     }
 
     QueryParamsMap queryMap = request.queryMap();
-    String id = request.params(":id");
     String name = queryMap.value("convName");
     String startDate = queryMap.value("startDate");
     String startTime = queryMap.value("startTime");
@@ -55,7 +61,6 @@ public class CreateConvSubmitHandler implements TemplateViewRoute {
       return new ModelAndView(variables, "setup_conv.ftl");
     }
 
-    DatabaseUtility db = new DatabaseUtility();
     boolean added = db.addConventionData(newConv);
 
     if (!added) {
@@ -72,7 +77,9 @@ public class CreateConvSubmitHandler implements TemplateViewRoute {
       // go to the convention home page
       response.redirect("/convention/" + id.toString());
       return null; // it will never reach this line
+
     } else {
+      // the user clicked "Upload a file"
       Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "convName", name, "id",
           id.toString(), "message", "");
       return new ModelAndView(variables, "upload_conv.ftl");

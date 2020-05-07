@@ -41,14 +41,12 @@ public class EmailAttendeeHandler implements Route {
   @Override
   public Object handle(Request request, Response response) throws Exception {
     String conventionID = request.params(":id");
-
     String userEmail = request.cookie("user");
+    Gson gson = new Gson();
 
     if (userEmail == null) {
       Map<String, Object> variables = ImmutableMap.of("message",
-          "You are not authorized to send emails.");
-      Gson gson = new Gson();
-
+          "You are not logged in, so you are not authorized to send emails.");
       return gson.toJson(variables);
     }
 
@@ -57,18 +55,16 @@ public class EmailAttendeeHandler implements Route {
 
     if (!authorized) {
       Map<String, Object> variables = ImmutableMap.of("message",
-          "You are not authorized to send emails.");
-      Gson gson = new Gson();
-
+          "You are not authorized to send emails for this convention.");
       return gson.toJson(variables);
     }
 
     QueryParamsMap queryMap = request.queryMap();
     String eventString = queryMap.value("events");
-    Gson g = new Gson();
-    List<CalendarEvent> events = g.fromJson(eventString, new TypeToken<List<CalendarEvent>>() {
+    List<CalendarEvent> events = gson.fromJson(eventString, new TypeToken<List<CalendarEvent>>() {
     }.getType());
 
+    // create the content of the email message
     String emailContent = "";
     for (CalendarEvent event : events) {
       emailContent = emailContent + "<p>" + event.getTitle() + ": "
@@ -76,34 +72,31 @@ public class EmailAttendeeHandler implements Route {
     }
 
     Convention myConv = db.getConvention(conventionID);
-
     List<String> attendeeEmails = db.getAttendeeEmailsFromConventionID(conventionID);
     String message;
 
     if (attendeeEmails.isEmpty()) {
-      message = "No email sent because no attendees have signed up.";
-    } else if (this.sendEmails(events, attendeeEmails, myConv.getName(), emailContent)) {
+      message = "No email sent because no attendees have signed up with their emails.";
+    } else if (this.sendEmails(attendeeEmails, myConv.getName(), emailContent)) {
       message = "Schedule sent!";
     } else {
       message = "Email could not be sent.";
     }
 
     Map<String, Object> variables = ImmutableMap.of("message", message);
-    Gson gson = new Gson();
-
     return gson.toJson(variables);
   }
 
   /**
    * Method to send emails to attendees.
    *
-   * @param events -- events to send to the attendees.
    * @param emails -- the emails of the attendees.
+   * @param convName - a String, which represents the name of this convention
+   * @param emailContent -- a String, which represents the content to be included in the emails
    *
    * @return -- true if sent, false if could not be sent.
    */
-  private boolean sendEmails(List<CalendarEvent> events, List<String> emails, String convName,
-      String emailContent) {
+  private boolean sendEmails(List<String> emails, String convName, String emailContent) {
     String sender = "sked.organizer@gmail.com";
 
     String host = "smtp.gmail.com";
@@ -135,10 +128,11 @@ public class EmailAttendeeHandler implements Route {
       message.setSubject("Schedule for " + convName);
 
       String header = "<body> <h1>Here's the schedule for " + convName + " </h1>";
-      String end = "<p>This schedule made with Sked and sent by the convention organizer."
+      String end = "<br><p>This schedule made with Sked and sent by the convention organizer."
           + "</p></body>";
       message.setContent(header + emailContent + end, "text/html");
       Transport.send(message);
+
     } catch (MessagingException mex) {
       System.err.println("ERROR: email sending failed");
       return false;
@@ -160,10 +154,8 @@ public class EmailAttendeeHandler implements Route {
    *         understandable for the schedule receiver
    */
   private String friendlyDate(String startString, String endString) {
-    String res = "";
     String[] startDateTime = startString.split("T");
     String[] endDateTime = endString.split("T");
-
     String[] date = startDateTime[0].split("-");
     String[] startTime = startDateTime[1].split(":");
     String[] endTime = endDateTime[1].split(":");
@@ -202,6 +194,8 @@ public class EmailAttendeeHandler implements Route {
         endMinute = "0" + endMinute;
       }
 
+      // turn the day of the week and month into Strings that are in lowercase except the first
+      // characters
       String dayAllCaps = locDateTime.getDayOfWeek().toString();
       String dayString = dayAllCaps.substring(0, 1)
           + dayAllCaps.substring(1, dayAllCaps.length()).toLowerCase();
@@ -212,9 +206,10 @@ public class EmailAttendeeHandler implements Route {
 
       return dayString + ", " + monthString + " " + day + " from " + startHour + ":" + startMinute
           + " " + startAmPm + " to " + endHour + ":" + endMinute + " " + endAmPm;
+
     } catch (NumberFormatException err) {
       System.err.println("ERROR: invalid date-time for event");
-      return "Unable to get date information for an event";
+      return "Unable to get date information for an event.";
     }
   }
 

@@ -21,7 +21,6 @@ public class LoginPageHandler implements TemplateViewRoute {
     if (userEmail != null) {
       // they are already logged in
       response.redirect("/account");
-      return null;
     }
 
     Map<String, Object> variables = ImmutableMap.of("title", "Scheduler", "message", "");

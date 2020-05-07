@@ -124,13 +124,10 @@ public class UndirectedWeightedGraph<V extends IVertex<V, E>, E extends IEdge<V,
    */
   public void addAllEdges(Set<E> edges) {
     for (E e : edges) {
-      System.out.println("e:" + e);
       this.weightMatrix[e.getHead().getID()][e.getTail().getID()] = e.getWeight();
       this.weightMatrix[e.getTail().getID()][e.getHead().getID()] = e.getWeight();
       nodes.get(e.getHead().getID()).addToAdjList(e);
-      // if (e.getHead().getID() == 0) {
-      //   System.out.println("node:" +  nodes.get(e.getHead().getID()).getAdjList());
-      // }
+
     }
 
     setDegree();

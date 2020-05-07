@@ -52,7 +52,7 @@ public class DatabaseUtility {
   private MongoCollection<Document> attendeeCollection;
   private MongoDatabase database;
   private ObjectMapper mapper = new ObjectMapper();
-  private static final int CONFLICT_MAX = 200;
+  private static final int CONFLICT_MAX = 5000;
 
   /**
    * Constructor for DatabaseUtility.

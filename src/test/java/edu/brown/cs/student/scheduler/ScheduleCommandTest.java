@@ -31,20 +31,20 @@ public class ScheduleCommandTest {
      myConv = null;
 
   }
-  @Test
-  public void testExecute() {
-    setUp();
-    assertEquals("Brown University Final Exams", myConv.getName());
-    System.out.println(myConv);
-    List<Event> events = du.getEventsFromConventionID("616997");
-    assertEquals(101,events.size());
-    ScheduleCommand sched = new ScheduleCommand(myConv, 30, 10, 5, "616997");
-    sched.setNodes(events);
-    assertEquals(101, sched.getNodes().size());
-    List<CalendarEvent> result = sched.execute();
-    assertEquals(101, result.size());
-    tearDown();
-  }
+  // @Test
+  // public void testExecute() {
+  //   setUp();
+  //   assertEquals("Brown University Final Exams", myConv.getName());
+  //   System.out.println(myConv);
+  //   List<Event> events = du.getEventsFromConventionID("616997");
+  //   assertEquals(101,events.size());
+  //   ScheduleCommand sched = new ScheduleCommand(myConv, 30, 10, 5, "616997");
+  //   sched.setNodes(events);
+  //   assertEquals(101, sched.getNodes().size());
+  //   List<CalendarEvent> result = sched.execute();
+  //   assertEquals(101, result.size());
+  //   tearDown();
+  // }
 
 
   @Test

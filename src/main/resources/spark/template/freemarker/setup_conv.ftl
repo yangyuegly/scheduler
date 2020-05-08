@@ -1,7 +1,7 @@
 <#assign content>
 
 <div class="main-content">
-  <h2>Create a new convention:</h2>
+  <h3>Create a new convention:</h3>
 
 
   <form id="myForm" onsubmit="return validate()" form method="POST" action="/create_convention/${id}">

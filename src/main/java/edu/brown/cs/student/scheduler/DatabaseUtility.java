@@ -128,7 +128,9 @@ public class DatabaseUtility {
     for (Document event : eventList) {
       Event e = new Event(event.getInteger("id"), event.getString("name"),
           event.getString("description"));
-      result.add(e);
+      if (e.getID() != null) {
+        result.add(e);
+      }
     }
     return result;
   }
@@ -363,7 +365,9 @@ public class DatabaseUtility {
       Event e2 = new Event(event2Doc.getInteger("id"), event2Doc.getString("name"),
           event2Doc.getString("description"));
       Conflict c = new Conflict(e1, e2, weight);
-      edges.add(c);
+      if (e1.getID() != null && e2.getID() != null) {
+        edges.add(c);
+      }
     }
 
     return edges;

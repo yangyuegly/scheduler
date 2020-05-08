@@ -14,8 +14,7 @@ body {
   height: 100%;
   padding: 10px 18px 10px 18px;
   z-index: 30;
-  background-image: url("/images/interlaced.png");
-
+  /* background-image: url("/images/interlaced.png"); */
 }
 
 textarea,

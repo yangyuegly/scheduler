@@ -66,8 +66,9 @@ function makeCalendar(startDate, parsedEvents) {
   can tell attendees when the events are.
 */
 const emailAttendees = (events) => {
+  const timeZone = new Date().toString().match(/\(([A-Za-z\s].*)\)/)[1]
   const eventsJSON = JSON.stringify(events);
-  const postParameters = { events: eventsJSON };
+  const postParameters = { events: eventsJSON, timeZone: timeZone };
   const url = window.location.href;
   var splitURL = url.split("/");
   var convID = splitURL[4];

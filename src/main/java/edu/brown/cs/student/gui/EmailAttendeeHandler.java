@@ -61,6 +61,7 @@ public class EmailAttendeeHandler implements Route {
 
     QueryParamsMap queryMap = request.queryMap();
     String eventString = queryMap.value("events");
+    String timeZone = queryMap.value("timeZone");
     List<CalendarEvent> events = gson.fromJson(eventString, new TypeToken<List<CalendarEvent>>() {
     }.getType());
 
@@ -77,7 +78,7 @@ public class EmailAttendeeHandler implements Route {
 
     if (attendeeEmails.isEmpty()) {
       message = "No email sent because no attendees have signed up with their emails.";
-    } else if (this.sendEmails(attendeeEmails, myConv.getName(), emailContent)) {
+    } else if (this.sendEmails(attendeeEmails, myConv.getName(), emailContent, timeZone)) {
       message = "Schedule sent!";
     } else {
       message = "Email could not be sent.";
@@ -93,10 +94,12 @@ public class EmailAttendeeHandler implements Route {
    * @param emails -- the emails of the attendees.
    * @param convName - a String, which represents the name of this convention
    * @param emailContent -- a String, which represents the content to be included in the emails
+   * @param timeZone -- a String, which represents the timeZone of the convention
    *
    * @return -- true if sent, false if could not be sent.
    */
-  private boolean sendEmails(List<String> emails, String convName, String emailContent) {
+  private boolean sendEmails(List<String> emails, String convName, String emailContent,
+      String timeZone) {
     String sender = "sked.organizer@gmail.com";
 
     String host = "smtp.gmail.com";
@@ -127,7 +130,8 @@ public class EmailAttendeeHandler implements Route {
 
       message.setSubject("Schedule for " + convName);
 
-      String header = "<body> <h1>Here's the schedule for " + convName + " </h1>";
+      String header = "<body> <h2>Here's the schedule for " + convName
+          + " </h2><h3>All times are in " + timeZone + ".</h3><br>";
       String end = "<br><p>This schedule made with Sked and sent by the convention organizer."
           + "</p></body>";
       message.setContent(header + emailContent + end, "text/html");

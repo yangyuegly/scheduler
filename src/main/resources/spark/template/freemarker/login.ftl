@@ -6,6 +6,7 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css"
     />
+    <link rel="stylesheet" href="/css/term_project.css">
 </head>
 <div class="ui middle aligned center aligned grid">
   <div class="column">
@@ -30,7 +31,7 @@
           </div>
         </div>
 
-     <br><br>
+     <br>
      <input type="submit" value="Sign in" size="30">
   </form>
   <br>
